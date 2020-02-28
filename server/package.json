@@ -5,23 +5,15 @@
   "dependencies": {
     "bootstrap": "^4.4.1",
     "core-js": "^3.6.4",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "jquery": "^3.4.1",
     "nodemon": "^2.0.2",
-    "react": "^16.13.0",
-    "react-dom": "^16.13.0",
-    "react-scripts": "3.4.0",
     "socket.io": "^2.3.0",
     "socket.io-client": "^2.3.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
+    "start": "nodemon server"
   },
   "browserslist": {
     "production": [

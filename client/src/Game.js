@@ -1,14 +1,16 @@
 import React, {Component} from 'react';
-import { socket } from "../Router";
 
 class Game extends Component{
 
     componentDidMount() {
         console.log("in game mounting");
-        console.log("socket" + socket);
+        //console.log("socket" + socket);
+        /*
         socket.on('hello', ()=>{
-           console.log("hello!!!");
+            console.log("hello!!!");
         });
+
+         */
     }
 
     render(){
@@ -21,4 +23,4 @@ class Game extends Component{
     }
 }
 
-export default Game
+export default Game;

@@ -3,23 +3,32 @@ const app = express();
 const path = require('path');
 const server = require('http').createServer(app);
 const socket_io = require('socket.io');
-const io = socket_io(server);
+const io = socket_io.listen(server);
+const cors = require('cors');
 
-const port = process.env.PORT || 3000;
 
-app.use('/static', express.static(__dirname + '/static'));// Routing
-app.get('/', function(request, response) {
-    response.sendFile(path.join(__dirname, 'index.html'));
+
+const port = process.env.PORT || 3001;
+
+app.use(cors());
+app.use('/src', express.static(__dirname + '\\src'));// Routing
+//app.use('/static', express.static(__dirname + '/src'));// Routing
+//app.use('/public', express.static(__dirname + "\\public"));
+console.log(__dirname + '\\src');
+app.get('/', function(req, res) {
+    res.send("API working properly");
+    //res.sendFile(path.join(__dirname, '\\public\\index.html'));
 });
 
 
 // create players object
 let players = {};
+
 io.on('connection', (socket) => {
     console.log("A User has connected");
 
     socket.emit('hello');
-
+    console.log("Emitting hello!");
     // when a player joins the game, I should provide them with a starting coordinate
     socket.on('new player', () => {
         players[socket.id] = {
@@ -48,11 +57,12 @@ io.on('connection', (socket) => {
     });
 });
 
+/*
 // this is how often I am emitting the state of the players (position)
 setInterval(()=>{
    io.sockets.emit("state", players);
 }, 1000/20);
-
+*/
 
 // our http server listens to port 4000
 server.listen(port, (err) => {
