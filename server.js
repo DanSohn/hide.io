@@ -1,10 +1,18 @@
 const express = require('express');
 const app = express();
+const path = require('path');
 const server = require('http').createServer(app);
 const socket_io = require('socket.io');
 const io = socket_io(server);
 
 const port = process.env.PORT || 4000;
+
+app.use('/static', express.static(__dirname + '/static'));// Routing
+app.get('/', function(request, response) {
+    response.sendFile(path.join(__dirname, 'index.html'));
+});
+
+
 // create players object
 let players = {};
 io.on('connection', (socket) => {
@@ -45,7 +53,7 @@ setInterval(()=>{
 
 
 // our http server listens to port 4000
-server.listen(PORT, (err) => {
+server.listen(port, (err) => {
     if (err) throw err;
-    console.log('listening on *:' + PORT);
+    console.log('listening on *:' + port);
 });

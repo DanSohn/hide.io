@@ -50,3 +50,19 @@ socket.emit("new player");
 setInterval(()=>{
    socket.emit("movement", movement);
 }, 1000/5);
+
+
+let canvas = document.getElementById('canvas');
+canvas.width = 800;
+canvas.height = 600;
+let context = canvas.getContext('2d');
+socket.on('state', function(players) {
+    context.clearRect(0, 0, 800, 600);
+    context.fillStyle = 'green';
+    for (let id in players) {
+        let player = players[id];
+        context.beginPath();
+        context.arc(player.x, player.y, 10, 0, 2 * Math.PI);
+        context.fill();
+    }
+});
