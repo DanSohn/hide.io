@@ -1,0 +1,29 @@
+{
+  "name": "hide.io",
+  "version": "1.0.0",
+  "description": "SENG513 game",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DanSohn/hide.io.git"
+  },
+  "keywords": [
+    "SENG513",
+    "IO",
+    "HideIO",
+    "Express",
+    "MongoDB",
+    "NodeJS",
+    "React",
+    "Javascript"
+  ],
+  "author": "Jung Hyun Sohn, Ali Alkhazaly, Favian Silva, Kyoung Hwan Namkoong, Trilok Patel, Parsa Honarmand",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DanSohn/hide.io/issues"
+  },
+  "homepage": "https://github.com/DanSohn/hide.io#readme"
+}
