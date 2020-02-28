@@ -25,5 +25,26 @@
   "bugs": {
     "url": "https://github.com/DanSohn/hide.io/issues"
   },
-  "homepage": "https://github.com/DanSohn/hide.io#readme"
+  "homepage": "https://github.com/DanSohn/hide.io#readme",
+  "dependencies": {
+    "bootstrap": "^4.4.1",
+    "core-js": "^3.6.4",
+    "express": "^4.17.1",
+    "jquery": "^3.4.1",
+    "mongoose": "^5.9.2",
+    "nodemon": "^2.0.2",
+    "popper.js": "^1.16.1",
+    "react": "^16.13.0",
+    "react-bootstrap": "^1.0.0-beta.16",
+    "react-bootstrap-validation": "^0.1.11",
+    "react-dom": "^16.13.0",
+    "react-pose": "^4.0.10",
+    "react-router-dom": "^5.1.2",
+    "react-router-transition": "^2.0.0",
+    "react-scripts": "^3.4.0",
+    "socket.io": "^2.3.0",
+    "socket.io-client": "^2.3.0",
+    "styled-components": "^5.0.1",
+    "universal-cookie": "^4.0.3"
+  }
 }
