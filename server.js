@@ -5,7 +5,7 @@ const server = require('http').createServer(app);
 const socket_io = require('socket.io');
 const io = socket_io(server);
 
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 3000;
 
 app.use('/static', express.static(__dirname + '/static'));// Routing
 app.get('/', function(request, response) {
@@ -17,6 +17,8 @@ app.get('/', function(request, response) {
 let players = {};
 io.on('connection', (socket) => {
     console.log("A User has connected");
+
+    socket.emit('hello');
 
     // when a player joins the game, I should provide them with a starting coordinate
     socket.on('new player', () => {
