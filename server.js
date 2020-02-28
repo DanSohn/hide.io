@@ -31,16 +31,16 @@ io.on('connection', (socket) => {
         let player = players[socket.id];
 
         if(movement_obj.left){
-            player.x -= 5;
+            player.x -= 10;
         }
         if(movement_obj.right){
-            player.x += 5;
+            player.x += 10;
         }
         if(movement_obj.up){
-            player.y -= 5;
+            player.y -= 10;
         }
         if(movement_obj.down){
-            player.y += 5;
+            player.y += 10;
         }
 
     });
@@ -49,7 +49,7 @@ io.on('connection', (socket) => {
 // this is how often I am emitting the state of the players (position)
 setInterval(()=>{
    io.sockets.emit("state", players);
-}, 1000/5);
+}, 1000/20);
 
 
 // our http server listens to port 4000

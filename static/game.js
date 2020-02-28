@@ -49,20 +49,21 @@ socket.emit("new player");
 // send movements 60 times a second (1000/60). Changing it to be 5 times a second
 setInterval(()=>{
    socket.emit("movement", movement);
-}, 1000/5);
+}, 1000/20);
 
 
 let canvas = document.getElementById('canvas');
-canvas.width = 800;
-canvas.height = 600;
+canvas.width = 1200;
+canvas.height = 800;
 let context = canvas.getContext('2d');
 socket.on('state', function(players) {
-    context.clearRect(0, 0, 800, 600);
+    context.clearRect(0, 0, 1200, 800);
     context.fillStyle = 'green';
     for (let id in players) {
         let player = players[id];
         context.beginPath();
-        context.arc(player.x, player.y, 10, 0, 2 * Math.PI);
-        context.fill();
+        //context.arc(player.x, player.y, 10, 0, 2 * Math.PI);
+        context.fillRect(player.x, player.y, 20, 20);
+        context.stroke();
     }
 });
