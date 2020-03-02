@@ -9,24 +9,33 @@ import socket from './socket';
 class Router extends Component {
     // might need to import props at another time?
     constructor(props){
+        console.log("Router constructor");
         super(props);
-        this.state = { apiResponse: ""};
+        this.state = { apiResponse: "",
+                        client: socket()
+        };
         // initialize my socket
         //socket = io();
 
     }
 
     callAPI() {
+        console.log("Router callAPI");
+
         fetch("http://localhost:3001/")
             .then(res => res.text())
             .then(res => this.setState({ apiResponse: res }));
     }
 
     componentWillMount() {
+        console.log("Router componentWillMount");
+
         this.callAPI();
     }
 
     render() {
+        console.log("Router render");
+
         return (
             <div className="App">
                 <Game/>
