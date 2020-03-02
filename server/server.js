@@ -11,7 +11,13 @@ const cors = require('cors');
 const port = process.env.PORT || 3001;
 
 app.use(cors());
+app.get('/', (req, res) =>{
+    res.send("API working properly!");
+});
+/*
 app.use('/src', express.static(__dirname + '\\src'));// Routing
+console.log(__dirname + '\\src');
+
 //app.use('/static', express.static(__dirname + '/src'));// Routing
 //app.use('/public', express.static(__dirname + "\\public"));
 console.log(__dirname + '\\src');
@@ -20,6 +26,8 @@ app.get('/', function(req, res) {
     //res.sendFile(path.join(__dirname, '\\public\\index.html'));
 });
 
+ */
+
 
 // create players object
 let players = {};
@@ -27,9 +35,12 @@ let players = {};
 io.on('connection', (socket) => {
     console.log("A User has connected");
 
+    socket.broadcast.emit('hello');
     socket.emit('hello');
+
     console.log("Emitting hello!");
     // when a player joins the game, I should provide them with a starting coordinate
+    /*
     socket.on('new player', () => {
         players[socket.id] = {
             x: 300,
@@ -55,6 +66,8 @@ io.on('connection', (socket) => {
         }
 
     });
+
+     */
 });
 
 /*
