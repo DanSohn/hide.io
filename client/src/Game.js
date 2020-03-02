@@ -1,5 +1,9 @@
 import React, {Component} from 'react';
 
+import background_img from "./assets/Background.png";
+import Background from './Background';
+
+
 class Game extends Component {
     constructor(props) {
         super(props);
@@ -62,20 +66,28 @@ class Game extends Component {
     */
     render() {
         console.log("in game rendering");
+        /*
         return (
             <div>
                 <canvas ref="canvas" style={{backgroundColor: 'yellow'}} width={1800} height={700}/>
             </div>
         )
+         */
 
         return (
             <div onKeyDown={this.onKeyDown} tabIndex="0">
-                <Background backgroundImage={backgroundImg}
+                <Background backgroundImage={background_img}
                             windowWidth={this.state.windowWidth} windowHeight={this.state.windowHeight}/>
-                <Car carImage={carImg} centreX={this.state.playerX}
+
+
+            </div>
+        )
+
+        /*
+        <Car carImage={carImg} centreX={this.state.playerX}
                      centreY={this.state.playerY} width={this.playerWidth}
                      height={this.playerHeight}/>
-            </div>)
+         */
     }
 }
 
