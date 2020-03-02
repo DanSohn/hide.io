@@ -17,7 +17,7 @@ class Game extends Component{
         console.log("in game rendering");
         return (
             <div>
-                <canvas ref="canvas" width={1200} height={800} />
+                <canvas ref="canvas" style={{backgroundColor: 'yellow'}} width={1800} height={700} />
             </div>
         )
     }
