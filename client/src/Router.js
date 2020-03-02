@@ -2,10 +2,6 @@ import React, {Component} from 'react';
 import Game from './Game';
 import socket from './socket';
 
-
-// socket stuff
-//import socketIOClient from "socket.io-client";
-
 class Router extends Component {
     // might need to import props at another time?
     constructor(props){
