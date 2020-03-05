@@ -61,7 +61,7 @@ class Game extends Component {
 
 
     componentDidMount() {
-        console.log("in game mounting");
+        //console.log("in game mounting");
         //console.log("socket" + socket);
 
         socket.on('hello', () => {
@@ -104,7 +104,7 @@ class Game extends Component {
     }
 
     render() {
-        console.log("in game rendering");
+        //console.log("in game rendering");
         // temporary component
         let component = this.create_player_component();
 

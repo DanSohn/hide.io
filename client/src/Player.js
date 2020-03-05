@@ -5,10 +5,10 @@ import React, {Component} from 'react';
 
 class Player extends Component{
 
-    constructor(props) {
+    /*constructor(props) {
         super(props);
 
-    }
+    }*/
 
 
     render() {
