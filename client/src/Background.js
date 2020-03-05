@@ -10,7 +10,10 @@ function Background(props) {
     };
 
     return (
-        <img src={props.backgroundImage} style={background_attr} />
+        <img src={props.backgroundImage}
+             style={background_attr}
+             alt="background_img"
+             />
     );
 }
 
