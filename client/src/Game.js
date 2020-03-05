@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
 
 import background_img from "./assets/Background.png";
+import player_img from "./assets/player.png";
 import Background from './Background';
+import Player from './Player';
 import {socket} from './socket'
 
 class Game extends Component {
@@ -81,7 +83,8 @@ class Game extends Component {
             <div onKeyDown={this.onKeyDown} tabIndex="0">
                 <Background backgroundImage={background_img}
                             windowWidth={this.state.windowWidth} windowHeight={this.state.windowHeight}/>
-                            
+
+                <Player playerImage={player_img} />
             </div>
         )
         /*

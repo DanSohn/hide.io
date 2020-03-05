@@ -1,20 +1,32 @@
-import React from 'react';
+import React, {Component} from 'react';
 
-function Background(props) {
-    const background_attr = {
-        width: `calc(${props.windowWidth}px)`,
-        height: `calc(${props.windowHeight}px)`,
-        top: 0,
-        left: 0,
-        position: 'absolute'
-    };
 
-    return (
-        <img src={props.backgroundImage}
-             style={background_attr}
-             alt="Background screen for the game"
-        />
-    );
+
+
+class Player extends Component{
+
+    constructor(props) {
+        super(props);
+
+    }
+
+
+    render() {
+        const player_attr = {
+            width: 20,
+            height: 20,
+            top: 500,
+            left: 500,
+            position: 'absolute'
+        };
+
+        return (
+            <img src={this.props.playerImage}
+                 style={player_attr}
+                 alt="Player sprite for the game"
+            />
+        );
+    }
 }
 
-export default Background;
+export default Player;
