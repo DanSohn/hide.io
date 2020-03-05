@@ -14,6 +14,10 @@ class Router extends Component {
 
     }
 
+
+/*
+
+EXAMPLE OF FETCHING API CALL FROM THE SERVER
     callAPI() {
         console.log("Router callAPI");
 
@@ -28,6 +32,8 @@ class Router extends Component {
         this.callAPI();
     }
 
+
+ */
     render() {
         console.log("Router render");
 
