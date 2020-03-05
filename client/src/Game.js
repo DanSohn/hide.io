@@ -61,6 +61,10 @@ class Game extends Component {
             console.log("hello from game.js");
         });
 
+        socket.on("new player", () => {
+            console.log("New player has joined. Inside Game.js");
+        })
+
     }
 
 
@@ -77,8 +81,7 @@ class Game extends Component {
             <div onKeyDown={this.onKeyDown} tabIndex="0">
                 <Background backgroundImage={background_img}
                             windowWidth={this.state.windowWidth} windowHeight={this.state.windowHeight}/>
-
-
+                            
             </div>
         )
         /*

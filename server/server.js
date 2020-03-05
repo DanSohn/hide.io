@@ -34,9 +34,8 @@ let players = {};
 io.on('connection', (socket) => {
     console.log("A User has connected");
 
-    socket.broadcast.emit('hello');
-    socket.emit('hello');
-
+    io.emit('hello');
+    io.emit("new player");
     console.log("Emitting hello!");
     // when a player joins the game, I should provide them with a starting coordinate
     /*
