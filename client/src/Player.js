@@ -15,8 +15,8 @@ class Player extends Component{
         const player_attr = {
             width: 20,
             height: 20,
-            top: 500,
-            left: 500,
+            top: this.props.yPos,
+            left: this.props.xPos,
             position: 'absolute'
         };
 

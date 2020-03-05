@@ -1,14 +1,14 @@
 import React, {Component} from 'react';
 
-import keyIndex from 'react-key-index';
-
-
 import background_img from "./assets/Background.png";
 import player_img from "./assets/player.png";
 import Background from './Background';
 import Player from './Player';
+
 import {socket} from './socket'
 
+const starting_pos_module = require(__dirname + "/starting_positions");
+let starting_pos = starting_pos_module.starting_positions;
 
 class Game extends Component {
     constructor(props) {
@@ -76,11 +76,24 @@ class Game extends Component {
 
     // this function creates multiple player components
     create_player_component(){
+
+        // this function will take in the index of the player and return a x y coordinate
+        function get_starting_position(i) {
+            return starting_pos[i];
+        }
+
+
+
         // initialize the array of players
         let component_insides = [];
+
+
+
         // iterate through number of players and add a player react component to the array, passing in the player_img
         for (let i = 0; i < this.props.numPlayers; i++) {
-            component_insides.push(<Player playerImage={player_img} key={i}/>);
+            // get the starting position of the player
+            let position = get_starting_position(i);
+            component_insides.push(<Player playerImage={player_img} key={i} xPos={position.x} yPos={position.y}/>);
         }
         // this is for react-key-index.
         // https://stackoverflow.com/questions/28329382/understanding-unique-keys-for-array-children-in-react-js
