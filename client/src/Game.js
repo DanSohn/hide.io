@@ -1,10 +1,14 @@
 import React, {Component} from 'react';
 
+import keyIndex from 'react-key-index';
+
+
 import background_img from "./assets/Background.png";
 import player_img from "./assets/player.png";
 import Background from './Background';
 import Player from './Player';
 import {socket} from './socket'
+
 
 class Game extends Component {
     constructor(props) {
@@ -24,6 +28,7 @@ class Game extends Component {
         };
 
         this.onKeyDown = this.onKeyDown.bind(this);
+        this.create_player_component = this.create_player_component.bind(this);
 
     }
 
@@ -69,17 +74,26 @@ class Game extends Component {
 
     }
 
+    // this function creates multiple player components
+    create_player_component(){
+        // initialize the array of players
+        let component_insides = [];
+        // iterate through number of players and add a player react component to the array, passing in the player_img
+        for (let i = 0; i < this.props.numPlayers; i++) {
+            component_insides.push(<Player playerImage={player_img} key={i}/>);
+        }
+        // this is for react-key-index.
+        // https://stackoverflow.com/questions/28329382/understanding-unique-keys-for-array-children-in-react-js
+        // not working, so switched to key being index. THIS MAY CAUSE PROBLEMS DOWN THE LINE POTENTIALLY
+        //component_insides = keyIndex(component_insides, 1);
+
+        return <div>{component_insides}</div>;
+    }
 
     render() {
         console.log("in game rendering");
         // temporary component
-        let component_insides = [];
-
-        for (let i = 0; i < this.props.numPlayers; i++) {
-            component_insides.push(<Player playerImage={player_img}/>);
-        }
-
-        let component = <div>{component_insides}</div>;
+        let component = this.create_player_component();
 
             return (
                 <div onKeyDown={this.onKeyDown} tabIndex="0">
