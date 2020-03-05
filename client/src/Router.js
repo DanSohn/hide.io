@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import Game from './Game';
-import socket from './socket';
+import {socket} from './socket';
 
 class Router extends Component {
     // might need to import props at another time?

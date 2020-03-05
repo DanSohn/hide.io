@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 
 import background_img from "./assets/Background.png";
 import Background from './Background';
-
+import {socket} from './socket'
 
 class Game extends Component {
     constructor(props) {
@@ -52,18 +52,18 @@ class Game extends Component {
         });
     }
 
-    /*
-        componentDidMount() {
-            console.log("in game mounting");
-            //console.log("socket" + socket);
 
-            socket.on('hello', ()=>{
-                console.log("hello!!!");
-            });
+    componentDidMount() {
+        console.log("in game mounting");
+        //console.log("socket" + socket);
+
+        socket.on('hello', () => {
+            console.log("hello from game.js");
+        });
+
+    }
 
 
-        }
-    */
     render() {
         console.log("in game rendering");
         /*
@@ -73,7 +73,6 @@ class Game extends Component {
             </div>
         )
          */
-
         return (
             <div onKeyDown={this.onKeyDown} tabIndex="0">
                 <Background backgroundImage={background_img}
@@ -82,7 +81,6 @@ class Game extends Component {
 
             </div>
         )
-
         /*
         <Car carImage={carImg} centreX={this.state.playerX}
                      centreY={this.state.playerY} width={this.playerWidth}

@@ -1,8 +1,12 @@
 const io = require('socket.io-client');
 
+export const socket = io.connect('http://localhost:3001');
 
+
+/*
 export default function () {
-    const socket = io.connect('http://localhost:3001');
+*/
+/*
 
     function registerHandler(onMessageReceived) {
         socket.on('hello', () => {
@@ -15,12 +19,12 @@ export default function () {
     }
 
     socket.on('hello', () => {
-        console.log("HELLOOOOOOOOO");
+        console.log("hello from socket.js");
     });
 
     socket.on('error', function (err) {
-        console.log('received socket error:')
-        console.log(err)
+        console.log('received socket error:');
+        console.log(err);
     });
 
     function register(name, cb) {
@@ -58,3 +62,4 @@ export default function () {
         unregisterHandler
     }
 }
+*/
