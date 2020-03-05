@@ -39,7 +39,7 @@ EXAMPLE OF FETCHING API CALL FROM THE SERVER
 
         return (
             <div className="App">
-                <Game/>
+                <Game numPlayers={2}/>
                 <p className="App-intro">;{this.state.apiResponse}</p>
             </div>
         );

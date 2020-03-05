@@ -19,8 +19,8 @@ class Game extends Component {
             playerX: 300,
             playerY: 300,
             playerSpeed: 10,
-            msg: ""
-
+            msg: "",
+            num_of_players: this.props.numPlayers
         };
 
         this.onKeyDown = this.onKeyDown.bind(this);
@@ -72,27 +72,31 @@ class Game extends Component {
 
     render() {
         console.log("in game rendering");
-        /*
-        return (
-            <div>
-                <canvas ref="canvas" style={{backgroundColor: 'yellow'}} width={1800} height={700}/>
-            </div>
-        )
-         */
-        return (
-            <div onKeyDown={this.onKeyDown} tabIndex="0">
-                <Background backgroundImage={background_img}
-                            windowWidth={this.state.windowWidth} windowHeight={this.state.windowHeight}/>
+        // temporary component
+        let component_insides = [];
 
-                <Player playerImage={player_img} />
-            </div>
-        )
-        /*
-        <Car carImage={carImg} centreX={this.state.playerX}
-                     centreY={this.state.playerY} width={this.playerWidth}
-                     height={this.playerHeight}/>
-         */
+        for (let i = 0; i < this.props.numPlayers; i++) {
+            component_insides.push(<Player playerImage={player_img}/>);
+        }
+
+        let component = <div>{component_insides}</div>;
+
+            return (
+                <div onKeyDown={this.onKeyDown} tabIndex="0">
+                    <Background backgroundImage={background_img}
+                                windowWidth={this.state.windowWidth} windowHeight={this.state.windowHeight}/>
+
+                    {component}
+                </div>
+            )
+            /*
+            <Car carImage={carImg} centreX={this.state.playerX}
+                         centreY={this.state.playerY} width={this.playerWidth}
+                         height={this.playerHeight}/>
+             */
+        }
     }
-}
 
-export default Game;
+    export
+    default
+    Game;
