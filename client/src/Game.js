@@ -32,7 +32,6 @@ class Game extends Component {
 
     }
 
-
     onKeyDown(e) {
         switch (e.which) {
             case 37: // Left
@@ -75,7 +74,7 @@ class Game extends Component {
     }
 
     // this function creates multiple player components
-    create_player_component(){
+    create_player_component() {
 
         // this function will take in the index of the player and return a x y coordinate
         function get_starting_position(i) {
@@ -83,10 +82,8 @@ class Game extends Component {
         }
 
 
-
         // initialize the array of players
         let component_insides = [];
-
 
 
         // iterate through number of players and add a player react component to the array, passing in the player_img
@@ -108,22 +105,20 @@ class Game extends Component {
         // temporary component
         let component = this.create_player_component();
 
-            return (
-                <div onKeyDown={this.onKeyDown} tabIndex="0">
-                    <Background backgroundImage={background_img}
-                                windowWidth={this.state.windowWidth} windowHeight={this.state.windowHeight}/>
+        return (
+            <div onKeyDown={this.onKeyDown} tabIndex="0">
+                <Background backgroundImage={background_img}
+                            windowWidth={this.state.windowWidth} windowHeight={this.state.windowHeight}/>
 
-                    {component}
-                </div>
-            )
-            /*
-            <Car carImage={carImg} centreX={this.state.playerX}
-                         centreY={this.state.playerY} width={this.playerWidth}
-                         height={this.playerHeight}/>
-             */
-        }
+                {component}
+            </div>
+        )
+        /*
+        <Car carImage={carImg} centreX={this.state.playerX}
+                     centreY={this.state.playerY} width={this.playerWidth}
+                     height={this.playerHeight}/>
+         */
     }
+}
 
-    export
-    default
-    Game;
+export default Game;
