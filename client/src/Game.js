@@ -22,7 +22,6 @@ class Game extends Component {
 
             playerX: 300,
             playerY: 300,
-            playerSpeed: 10,
             msg: "",
             num_of_players: this.props.numPlayers
         };

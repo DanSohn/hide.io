@@ -8,11 +8,16 @@ class Player extends Component {
 
         this.state = {
             playerX: this.props.xPos,
-            playerY: this.props.yPos
+            playerY: this.props.yPos,
+            playerSpeed: 10,
+
         };
         this.onKeyDown = this.onKeyDown.bind(this);
 
+    }
 
+    componentDidMount() {
+        window.onkeydown = this.onKeyDown;
     }
 
 
