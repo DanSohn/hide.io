@@ -27,36 +27,10 @@ class Game extends Component {
             num_of_players: this.props.numPlayers
         };
 
-        this.onKeyDown = this.onKeyDown.bind(this);
         this.create_player_component = this.create_player_component.bind(this);
 
     }
 
-    onKeyDown(e) {
-        switch (e.which) {
-            case 37: // Left
-                this.playerMove(this.state.playerX - this.state.playerSpeed, this.state.playerY);
-                break;
-            case 38: // Up
-                this.playerMove(this.state.playerX, this.state.playerY - this.state.playerSpeed);
-                break;
-            case 39: // Right
-                this.playerMove(this.state.playerX + this.state.playerSpeed, this.state.playerY);
-                break;
-            case 40: // Down
-                this.playerMove(this.state.playerX, this.state.playerY + this.state.playerSpeed);
-                break;
-            default:
-                break;
-        }
-    }
-
-    playerMove(x, y) {
-        this.setState({
-            playerX: x,
-            playerY: y
-        });
-    }
 
 
     componentDidMount() {
