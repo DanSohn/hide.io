@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import player_img from "./assets/player.png";
 
 
 class Player extends Component {
@@ -9,7 +10,7 @@ class Player extends Component {
         this.state = {
             playerX: this.props.xPos,
             playerY: this.props.yPos,
-            playerSpeed: 10,
+            playerSpeed: 50,
 
         };
         this.onKeyDown = this.onKeyDown.bind(this);
@@ -60,7 +61,8 @@ class Player extends Component {
         };
 
         return (
-            <img src={this.props.playerImage}
+            <img src={player_img}
+                 width={200}
                  style={player_attr}
                  alt="Player sprite for the game"
             />
