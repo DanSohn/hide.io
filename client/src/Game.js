@@ -6,8 +6,6 @@ import Player from './Player';
 
 import {socket} from './socket'
 
-const starting_pos_module = require(__dirname + "/starting_positions");
-let starting_pos = starting_pos_module.starting_positions;
 
 class Game extends Component {
     constructor(props) {
@@ -22,7 +20,8 @@ class Game extends Component {
             playerX: 300,
             playerY: 300,
             msg: "",
-            num_of_players: this.props.numPlayers
+            num_of_players: this.props.numPlayers,
+            players: this.props.players
         };
 
         this.create_player_component = this.create_player_component.bind(this);
@@ -38,11 +37,6 @@ class Game extends Component {
         socket.on('hello', () => {
             console.log("hello from game.js");
         });
-
-        socket.on("new player", () => {
-            console.log("New player has joined. Inside Game.js");
-        });
-
         socket.on("Redraw positions", (players) =>{
             console.log("Redrawing positions with: ");
             console.log(players);
@@ -51,17 +45,27 @@ class Game extends Component {
     }
 
     // this function creates multiple player components
-    create_player_component() {
+    create_player_component(){
+        console.log("creating players");
+        let component_insides = [];
+        console.log(this.state.players);
 
+        Object.keys(this.state.players).forEach((key, index) =>{
+            console.log(this.state.players);
+            component_insides.push(<Player key={this.state.players.key} xPos={this.state.players.key.x} yPos={this.state.players.key.y}/>);
+
+        });
+
+        return <div>{component_insides}</div>;
+
+    }
+    /*create_player_component() {
         // this function will take in the index of the player and return a x y coordinate
         function get_starting_position(i) {
             return starting_pos[i];
         }
-
-
         // initialize the array of players
         let component_insides = [];
-
 
         // iterate through number of players and add a player react component to the array, passing in the player_img
         for (let i = 0; i < this.props.numPlayers; i++) {
@@ -75,7 +79,7 @@ class Game extends Component {
         //component_insides = keyIndex(component_insides, 1);
 
         return <div>{component_insides}</div>;
-    }
+    }*/
 
     render() {
         //console.log("in game rendering");
@@ -90,11 +94,6 @@ class Game extends Component {
                 {component}
             </div>
         )
-        /*
-        <Car carImage={carImg} centreX={this.state.playerX}
-                     centreY={this.state.playerY} width={this.playerWidth}
-                     height={this.playerHeight}/>
-         */
     }
 }
 
