@@ -38,14 +38,25 @@ io.on('connection', (socket) => {
     io.emit("new player");
     console.log("Emitting hello!");
     // when a player joins the game, I should provide them with a starting coordinate
-    /*
+
     socket.on('new player', () => {
+        console.log("Creating new player");
         players[socket.id] = {
             x: 300,
             y: 300
         };
     });
 
+    socket.on("Player movement", (position) => {
+        console.log("Server logging player movement");
+        players[socket.id] = {
+            x: position[0],
+            y: position[1]
+        }
+
+        socket.emit("Redraw positions", players)
+    })
+    /*
     // my movement_obj is an object with 4 keys: left, right, up, down. All are booleans
     socket.on('movement', (movement_obj) =>{
         let player = players[socket.id];

@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import player_img from "./assets/player.png";
 
+import {socket} from './socket'
 
 class Player extends Component {
 
@@ -23,7 +24,6 @@ class Player extends Component {
 
 
     onKeyDown(e) {
-        console.log("key pressed");
         switch (e.which) {
             case 37: // Left
                 this.playerMove(this.state.playerX - this.state.playerSpeed, this.state.playerY);
@@ -44,7 +44,7 @@ class Player extends Component {
 
     playerMove(x, y) {
         console.log("key pressed");
-
+        socket.emit("Player movement", [x,y]);
         this.setState({
             playerX: x,
             playerY: y
@@ -53,8 +53,8 @@ class Player extends Component {
 
     render() {
         const player_attr = {
-            width: 20,
-            height: 20,
+            width: 50,
+            height: 50,
             top: this.state.playerY,
             left: this.state.playerX,
             position: 'absolute'
@@ -62,7 +62,6 @@ class Player extends Component {
 
         return (
             <img src={player_img}
-                 width={200}
                  style={player_attr}
                  alt="Player sprite for the game"
             />

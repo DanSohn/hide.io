@@ -41,7 +41,12 @@ class Game extends Component {
 
         socket.on("new player", () => {
             console.log("New player has joined. Inside Game.js");
-        })
+        });
+
+        socket.on("Redraw positions", (players) =>{
+            console.log("Redrawing positions with: ");
+            console.log(players);
+        });
 
     }
 
