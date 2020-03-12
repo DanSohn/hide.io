@@ -7,7 +7,8 @@ class Router extends Component {
     constructor(props){
         //console.log("Router constructor");
         super(props);
-        this.state = { apiResponse: "",
+        this.state = {
+            apiResponse: ""
         };
         // initialize my socket
         //socket = io();
@@ -40,7 +41,7 @@ EXAMPLE OF FETCHING API CALL FROM THE SERVER
         return (
             <div className="App">
                 <Lobby />
-                <p className="App-intro">;{this.state.apiResponse}</p>
+                <p className="App-intro">{this.state.apiResponse}</p>
             </div>
         );
     }
