@@ -7,8 +7,9 @@ class Lobby extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            gameStarted: false
-        }
+            gameStarted: false,
+            numPlayers: 0
+        };
 
         this.startGame = this.startGame.bind(this);
     }
@@ -19,12 +20,26 @@ class Lobby extends Component {
         });
     }
 
+    /*findPlayers(){
+        socket.emit("Number of players");
+    }*/
+    componentDidMount() {
+        socket.emit("find number of players");
+        socket.on("Number of players", (num_players) => {
+            console.log("number of players ", num_players);
+            this.setState({
+                numPlayers: num_players
+            });
+        });
+    }
+
     render() {
         let comp;
         if (this.state.gameStarted === false) {
             comp = <button onClick={this.startGame}>Click here to start game </button>
         } else {
-            comp = <Game/>
+            // let numPlayers = this.findPlayers;
+            comp = <Game numPlayers={this.state.numPlayers}/>
         }
 
         return (

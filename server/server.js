@@ -30,15 +30,15 @@ app.get('/', function(req, res) {
 
 // create players object
 let players = {};
-
+let numPlayers;
 io.on('connection', (socket) => {
     console.log("A User has connected");
 
     io.emit('hello');
     io.emit("new player");
     console.log("Emitting hello!");
-    // when a player joins the game, I should provide them with a starting coordinate
 
+    // when a player joins the game, I should provide them with a starting coordinate
     socket.on('new player', () => {
         console.log("Creating new player");
         players[socket.id] = {
@@ -47,14 +47,32 @@ io.on('connection', (socket) => {
         };
     });
 
+    players[socket.id] = {
+        x: 300,
+        y: 300
+    };
+   /* console.log(players[socket.id]);
+    console.log("players ...  ", players);
+
+    console.log("number of players rn ", numPlayers.length);*/
+
+    // emit the number of current sockets connected
+    socket.on("find number of players", ()=>{
+        numPlayers = Object.keys(players);
+        socket.emit("Number of players", numPlayers.length);
+    });
+
+    // upon a player movement event, i will update the players array object with their new positions, and
+    // emit a event to redraw the new positions
     socket.on("Player movement", (position) => {
         console.log("Server logging player movement");
         players[socket.id] = {
             x: position[0],
             y: position[1]
-        }
+        };
 
-        socket.emit("Redraw positions", players)
+        // sends a broadcast to ALL sockets with the players and their positions
+        io.emit("Redraw positions", players)
     })
     /*
     // my movement_obj is an object with 4 keys: left, right, up, down. All are booleans
