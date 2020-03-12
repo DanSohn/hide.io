@@ -10,7 +10,7 @@ const cors = require('cors');
 const port = process.env.PORT || 3001;
 
 app.use(cors());
-app.get('/', (req, res) =>{
+app.get('/', (req, res) => {
     res.send("API working properly!");
 });
 /*
@@ -30,7 +30,6 @@ app.get('/', function(req, res) {
 
 // create players object
 let players = {};
-let numPlayers;
 io.on('connection', (socket) => {
     console.log("A User has connected");
 
@@ -51,16 +50,14 @@ io.on('connection', (socket) => {
         x: 300,
         y: 300
     };
-   /* console.log(players[socket.id]);
-    console.log("players ...  ", players);
+    /* console.log(players[socket.id]);
+     console.log("players ...  ", players);
 
-    console.log("number of players rn ", numPlayers.length);*/
+     console.log("number of players rn ", numPlayers.length);*/
 
     // emit the number of current sockets connected
-    socket.on("find number of players", ()=>{
-        numPlayers = Object.keys(players);
-        socket.emit("Number of players", numPlayers.length);
-    });
+    let numPlayers = Object.keys(players);
+    io.emit("Number of players", numPlayers.length);
 
     // upon a player movement event, i will update the players array object with their new positions, and
     // emit a event to redraw the new positions
@@ -73,7 +70,7 @@ io.on('connection', (socket) => {
 
         // sends a broadcast to ALL sockets with the players and their positions
         io.emit("Redraw positions", players)
-    })
+    });
     /*
     // my movement_obj is an object with 4 keys: left, right, up, down. All are booleans
     socket.on('movement', (movement_obj) =>{
@@ -95,6 +92,11 @@ io.on('connection', (socket) => {
     });
 
      */
+    socket.on("disconnect", () => {
+        delete players[socket.id];
+        let numPlayers = Object.keys(players);
+        io.emit("Number of players", numPlayers.length);
+    });
 });
 
 /*
