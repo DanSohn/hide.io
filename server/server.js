@@ -38,51 +38,47 @@ let players = {};
 
 io.on('connection', (socket) => {
     console.log("A User has connected");
-
     io.emit('hello');
-    io.emit("new player");
     console.log("Emitting hello!");
 
     // when a player joins the game, I should provide them with a starting coordinate
-    socket.on('new player', () => {
-        console.log("Creating new player");
-        let x;
-        let y;
-        // run through the starting positions, and set the first unused one to the player.
-        // then set those positions to be in use
-        for(let i=0; i<starting_pos.length; i++){
-            if(starting_pos[i].use === false){
-                x = starting_pos[i].x;
-                y = starting_pos[i].y;
-                starting_pos[i].use = true;
-                break;
-            }
-        }
-        players[socket.id] = {
-            x: x,
-            y: y
-        };
-    });
+    // this is the only place a new player is populated
 
-    /*players[socket.id] = {
-        x: 300,
-        y: 300
-    };*/
+    console.log("Creating new player");
+    let x;
+    let y;
+    // run through the starting positions, and set the first unused one to the player.
+    // then set those positions to be in use
+    for (let i = 0; i < starting_pos.length; i++) {
+        if (starting_pos[i].use === false) {
+            x = starting_pos[i].x;
+            y = starting_pos[i].y;
+            starting_pos[i].use = true;
+            break;
+        }
+    }
+
+    players[socket.id] = {
+        x: x,
+        y: y
+    };
+
+
     /* console.log(players[socket.id]);
      console.log("players ...  ", players);
 
      console.log("number of players rn ", numPlayers.length);*/
 
     // emit the number of current sockets connected
-    let numPlayers = Object.keys(players);
-    io.emit("Number of players", numPlayers.length);
+    let players_arr = Object.keys(players);
+    io.emit("Number of players", players_arr.length);
     console.log("Passing in players", players);
     io.emit("players list", players);
 
     // upon a player movement event, i will update the players array object with their new positions, and
     // emit a event to redraw the new positions
     socket.on("Player movement", (position) => {
-        console.log("Server logging player movement");
+        // console.log("Server logging player movement");
         players[socket.id] = {
             x: position[0],
             y: position[1]
@@ -114,8 +110,8 @@ io.on('connection', (socket) => {
      */
     socket.on("disconnect", () => {
         delete players[socket.id];
-        let numPlayers = Object.keys(players);
-        io.emit("Number of players", numPlayers.length);
+        let players_arr = Object.keys(players);
+        io.emit("Number of players", players_arr.length);
     });
 });
 

@@ -21,9 +21,6 @@ class Lobby extends Component {
         });
     }
 
-    /*findPlayers(){
-        socket.emit("Number of players");
-    }*/
     componentDidMount() {
         socket.on("Number of players", (num_players) => {
             console.log("number of players ", num_players);

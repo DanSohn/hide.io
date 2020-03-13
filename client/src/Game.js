@@ -24,7 +24,7 @@ class Game extends Component {
             players: this.props.players
         };
 
-        this.create_player_component = this.create_player_component.bind(this);
+        this.update_player_component = this.update_player_component.bind(this);
 
     }
 
@@ -45,17 +45,31 @@ class Game extends Component {
     }
 
     // this function creates multiple player components
-    create_player_component(){
+    update_player_component(){
         console.log("creating players");
-        let component_insides = [];
         console.log(this.state.players);
 
-        Object.keys(this.state.players).forEach((key, index) =>{
-            console.log(this.state.players);
-            component_insides.push(<Player key={this.state.players.key} xPos={this.state.players.key.x} yPos={this.state.players.key.y}/>);
+        let players_arr = Object.entries(this.state.players);
+        console.log(players_arr);
+        console.log(typeof players_arr);
 
-        });
+        let component_insides = [];
 
+        /*players_arr.forEach((element) =>{
+            console.log("iterating ...", key);
+            component_insides.push(<Player key={players_arr} xPos={   this.state.players.key.x} yPos={this.state.players.key.y}/>);
+            //component_insides.push(<Player key={key} xPos={   this.state.players.key.x} yPos={this.state.players.key.y}/>);
+
+            console.log("thank you");
+
+        });*/
+
+        for(let i=0; i<players_arr.length; i++){
+            console.log("iterating through list");
+            component_insides.push(<Player key={players_arr[i][0]} xPos={players_arr[i][1].x} yPos={players_arr[i][1].y} />);
+        }
+
+        console.log(component_insides[0]);
         return <div>{component_insides}</div>;
 
     }
@@ -84,7 +98,7 @@ class Game extends Component {
     render() {
         //console.log("in game rendering");
         // temporary component
-        let component = this.create_player_component();
+        let component = this.update_player_component();
 
         return (
             <div onKeyDown={this.onKeyDown} tabIndex="0">
