@@ -20,14 +20,6 @@ class Lobby extends Component {
     startTimer(){
         let countdown = 5;
         socket.emit("lobby start timer", 6001);
-        socket.on("lobby current timer", (countdown) =>{
-            console.log(countdown);
-            // after i reach 0, call startGame
-            if(countdown <= 0){
-                alert("Starting game");
-                console.log("starting game");
-            }
-        });
     }
     startGame(){
         this.setState({
@@ -51,7 +43,16 @@ class Lobby extends Component {
             this.setState({
                players: players
             });
-        })
+        });
+
+        socket.on("lobby current timer", (countdown) =>{
+            console.log(countdown);
+            // after i reach 0, call startGame
+            if(countdown <= 0){
+                alert("Starting game");
+                console.log("starting game");
+            }
+        });
     }
 
     render() {
