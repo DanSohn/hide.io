@@ -86,27 +86,22 @@ io.on('connection', (socket) => {
         // sends a broadcast to ALL sockets with the players and their positions
         io.emit("Redraw positions", players)
     });
-    /*
-    // my movement_obj is an object with 4 keys: left, right, up, down. All are booleans
-    socket.on('movement', (movement_obj) =>{
-        let player = players[socket.id];
 
-        if(movement_obj.left){
-            player.x -= 10;
-        }
-        if(movement_obj.right){
-            player.x += 10;
-        }
-        if(movement_obj.up){
-            player.y -= 10;
-        }
-        if(movement_obj.down){
-            player.y += 10;
-        }
+    socket.on("lobby start timer", (timer) => {
+        let countdown = 6;
+        // send to all sockets an event every second
+        let timerID = setInterval(() => {
+            console.log(countdown);
+            countdown--;
+            io.emit("lobby current timer", countdown);
+        }, 1000);
+
+        // after the timer amount of seconds (default 5), stop emitting
+        setTimeout(() =>{
+            clearInterval(timerID)
+        }, timer);
 
     });
-
-     */
     socket.on("disconnect", () => {
         delete players[socket.id];
         let players_arr = Object.keys(players);

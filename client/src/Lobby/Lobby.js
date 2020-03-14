@@ -13,13 +13,29 @@ class Lobby extends Component {
         };
 
         this.startGame = this.startGame.bind(this);
+        this.startTimer = this.startTimer.bind(this);
+
     }
 
+    startTimer(){
+        let countdown = 5;
+        socket.emit("lobby start timer", 6001);
+        socket.on("lobby current timer", (countdown) =>{
+            console.log(countdown);
+            // after i reach 0, call startGame
+            if(countdown <= 0){
+                alert("Starting game");
+                console.log("starting game");
+            }
+        });
+    }
     startGame(){
         this.setState({
            gameStarted: true
         });
     }
+
+
 
     componentDidMount() {
         socket.on("Number of players", (num_players) => {
@@ -41,7 +57,7 @@ class Lobby extends Component {
     render() {
         let comp;
         if (this.state.gameStarted === false) {
-            comp = <button onClick={this.startGame}>Click here to start game </button>
+            comp = <button onClick={this.startTimer}>Click here to start game </button>
         } else {
             // let numPlayers = this.findPlayers;
             console.log("my players: ", this.state.players);
