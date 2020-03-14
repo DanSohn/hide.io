@@ -15,4 +15,8 @@ exports.starting_positions = [
     {x: 850, y: 650, use: false},
     {x: 750, y: 650, use: false},
     {x: 650, y: 650, use: false},
+    {x: 650, y: 550, use: false},
+    {x: 650, y: 450, use: false},
+    {x: 650, y: 350, use: false},
+    {x: 650, y: 250, use: false},
 ];
