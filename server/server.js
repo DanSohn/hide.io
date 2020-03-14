@@ -60,7 +60,6 @@ io.on('connection', (socket) => {
         y: y
     };
 
-
     /* console.log(players[socket.id]);
      console.log("players ...  ", players);
 

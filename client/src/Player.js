@@ -52,6 +52,7 @@ class Player extends Component {
     }
 
     render() {
+        console.log("moving player ", this.props.keyVal);
         const player_attr = {
             width: 50,
             height: 50,
