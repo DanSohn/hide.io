@@ -49,8 +49,8 @@ class Lobby extends Component {
             console.log(countdown);
             // after i reach 0, call startGame
             if(countdown <= 0){
-                alert("Starting game");
                 console.log("starting game");
+                this.startGame();
             }
         });
     }
