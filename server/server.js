@@ -17,7 +17,6 @@ app.get('/', (req, res) => {
 const starting_pos_module = require(__dirname + "/starting_positions");
 let starting_pos = starting_pos_module.starting_positions;
 
-
 /*
 app.use('/src', express.static(__dirname + '\\src'));// Routing
 console.log(__dirname + '\\src');
