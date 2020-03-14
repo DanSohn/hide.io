@@ -43,7 +43,7 @@ class Player extends Component {
     }
 
     playerMove(x, y) {
-        console.log("key pressed");
+        console.log("Sending player movement event to server");
         socket.emit("Player movement", [x,y]);
         this.setState({
             playerX: x,

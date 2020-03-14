@@ -37,8 +37,6 @@ let players = {};
 
 io.on('connection', (socket) => {
     console.log("A User has connected");
-    io.emit('hello');
-    console.log("Emitting hello!");
 
     // when a player joins the game, I should provide them with a starting coordinate
     // this is the only place a new player is populated
@@ -78,17 +76,20 @@ io.on('connection', (socket) => {
     // emit a event to redraw the new positions
     socket.on("Player movement", (position) => {
         // console.log("Server logging player movement");
+        // console.log("Receiving player movement event from client");
+
         players[socket.id] = {
             x: position[0],
             y: position[1]
         };
 
         // sends a broadcast to ALL sockets with the players and their positions
-        io.emit("Redraw positions", players)
+        // console.log("Sending to clients to redraw positions");
+        io.emit("Redraw positions", players);
     });
 
     socket.on("lobby start timer", (timer) => {
-        let countdown = 6;
+        let countdown = Math.floor(timer/1000);
         // send to all sockets an event every second
         let timerID = setInterval(() => {
             console.log(countdown);

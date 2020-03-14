@@ -18,8 +18,8 @@ class Lobby extends Component {
     }
 
     startTimer(){
-        let countdown = 5;
-        socket.emit("lobby start timer", 6001);
+        // 3 second timer currently
+        socket.emit("lobby start timer", 3001);
     }
     startGame(){
         this.setState({

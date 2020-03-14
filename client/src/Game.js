@@ -21,7 +21,8 @@ class Game extends Component {
             playerY: 300,
             msg: "",
             num_of_players: this.props.numPlayers,
-            players: this.props.players
+            players: this.props.players,
+            game_status: "not started"
         };
 
         this.update_player_component = this.update_player_component.bind(this);
@@ -33,25 +34,51 @@ class Game extends Component {
     componentDidMount() {
         //console.log("in game mounting");
         //console.log("socket" + socket);
-
-        socket.on('hello', () => {
-            console.log("hello from game.js");
-        });
-        socket.on("Redraw positions", (players) =>{
-            console.log("Redrawing positions with: ");
-            console.log(players);
+        this.setState({game_status: "in progress"});
+        // this will only happen the first time, and will set the ball rolling to handle any updates!
+        /*socket.on("Redraw positions", (players) =>{
+            console.log("Redrawing positions in client");
+            this.setState({players: players});
+        });*/
+        socket.on("Redraw positions", (players) => {
+            console.log("client updating players");
+            // if there has been a change to players' positions, then reset the state of players to new coordinates
+            if(this.state.players !== players){
+                console.log("movement indeed");
+                this.setState({players: players});
+            }
+            let players_arr = Object.entries(this.state.players);
+            for(let i=0; i<players_arr.length; i++){
+                console.log(players_arr[i][0], players_arr[i][1].x, players_arr[i][1].y);
+            }
         });
 
     }
 
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        /*console.log("component did update");
+        socket.on("Redraw positions", (players) => {
+            console.log("client updating players");
+            // if there has been a change to players' positions, then reset the state of players to new coordinates
+            if(prevState.players !== players){
+                console.log("movement indeed");
+                this.setState({players: players});
+            }
+        })
+        let players_arr = Object.entries(this.state.players);
+        for(let i=0; i<players_arr.length; i++){
+            console.log(players_arr[i][0], players_arr[i][1].x, players_arr[i][1].y);
+        }*/
+    }
+
     // this function creates multiple player components
     update_player_component(){
-        console.log("creating players");
-        console.log(this.state.players);
+        // console.log("creating players");
+        console.log("UPDATING PLAYER COMPONENTS");
 
         let players_arr = Object.entries(this.state.players);
-        console.log(players_arr);
-        console.log(typeof players_arr);
+        // console.log(players_arr);
+        // console.log(typeof players_arr);
 
         let component_insides = [];
 
@@ -65,11 +92,11 @@ class Game extends Component {
         });*/
 
         for(let i=0; i<players_arr.length; i++){
-            console.log("iterating through list");
+            // console.log("iterating through list");
             component_insides.push(<Player key={players_arr[i][0]} xPos={players_arr[i][1].x} yPos={players_arr[i][1].y} />);
         }
 
-        console.log(component_insides[0]);
+        // console.log(component_insides[0]);
         return <div>{component_insides}</div>;
 
     }
