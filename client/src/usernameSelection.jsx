@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Lobby from "./Lobby/Lobby";
+import MenuScreen from "./menuScreen";
 
 class UsernameSelection extends Component {
     constructor(props) {
@@ -41,7 +41,7 @@ class UsernameSelection extends Component {
                 </div>
             );
         } else {
-            comp = <Lobby />;
+            comp = <MenuScreen />;
         }
         return <div>{comp}</div>;
     }

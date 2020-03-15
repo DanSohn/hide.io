@@ -5,7 +5,7 @@ import React, { Component } from "react";
 import "./App.css";
 import Lobby from "./Lobby/Lobby";
 import UsernameSelection from "./usernameSelection";
-class mainScreen extends Component {
+class LoginScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -57,4 +57,4 @@ class mainScreen extends Component {
         return <div>{comp}</div>;
     }
 }
-export default mainScreen;
+export default LoginScreen;
