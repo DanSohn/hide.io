@@ -15,6 +15,15 @@ class OtherPlayers extends Component {
         };
     }
 
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        console.log("Other players are updating location");
+        if(this.props.xPos !== prevProps.xPos || this.props.yPos !== prevProps.yPos){
+            this.setState({
+                playerX: this.props.xPos,
+                playerY: this.props.yPos
+            })
+        }
+    }
 
     render() {
         console.log("Rendering other client : ", this.props.keyVal, this.state.playerX, this.state.playerY);

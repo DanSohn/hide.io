@@ -14,8 +14,8 @@ class Game extends Component {
     constructor(props) {
         super(props);
 
-        console.log("Received props from lobby ...");
-        console.log(this.props.numPlayers, this.props.players);
+        //console.log("Received props from lobby ...");
+        //console.log(this.props.numPlayers, this.props.players);
         document.body.style.overflow = "hidden";
 
         this.state = {
@@ -38,12 +38,15 @@ class Game extends Component {
         // this will only happen the first time, and will set the ball rolling to handle any updates!
 
         socket.on("Redraw positions", (players) => {
-            console.log("client updating players");
+            //console.log("client updating players");
             // if there has been a change to players' positions, then reset the state of players to new coordinates
+            //console.log("original players ", this.state.players);
             if(this.state.players !== players){
                 console.log("movement indeed");
                 this.setState({players: players});
             }
+            //console.log("new players ", this.state.players);
+
 
         });
     }
@@ -66,7 +69,7 @@ class Game extends Component {
 
     // this function creates multiple player components
     update_player_component(){
-        console.log("UPDATING PLAYER COMPONENTS");
+        //console.log("UPDATING PLAYER COMPONENTS");
 
         let players_arr = Object.entries(this.state.players);
         // console.log(players_arr);
@@ -85,7 +88,9 @@ class Game extends Component {
             // console.log("iterating through list");
             if(players_arr[i][0] === socket.id){
                 // if its MY player then i can handle movements and such. otherwise, its just a sprite on my screen
+                //console.log("inside updating x and y are: ", players_arr[i][1].x, players_arr[i][1].y);
                 component_insides.push(<Player key={players_arr[i][0]} keyVal={players_arr[i][0]} xPos={players_arr[i][1].x} yPos={players_arr[i][1].y} />);
+                //console.log(component_insides[0].props);
             }else{
                 component_insides.push(<OtherPlayers key={players_arr[i][0]} keyVal={players_arr[i][0]} xPos={players_arr[i][1].x} yPos={players_arr[i][1].y} />);
             }
@@ -93,7 +98,6 @@ class Game extends Component {
 
         for(let i=0; i<players_arr.length; i++){
             console.log(players_arr[i][0], players_arr[i][1].x, players_arr[i][1].y);
-
         }
 
         return <div>{component_insides}</div>;
@@ -103,8 +107,10 @@ class Game extends Component {
     render() {
         //console.log("in game rendering");
         // temporary component
+        console.log("when render is called, players is: ", this.state.players);
         let component = this.update_player_component();
-        console.log("re-rendering");
+        //.log("COMPONENT:", component);
+        //console.log("re-rendering");
         return (
             <div onKeyDown={this.onKeyDown} tabIndex="0">
                  {/*<Background

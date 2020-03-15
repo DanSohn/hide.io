@@ -6,6 +6,7 @@ import {socket} from './socket'
 class Player extends Component {
 
     constructor(props) {
+        console.log("Player constructor");
         super(props);
 
         this.state = {
@@ -22,26 +23,28 @@ class Player extends Component {
         window.onkeydown = this.onKeyDown;
     }
 
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        console.log("Player is updating location");
+        if(this.props.xPos !== prevProps.xPos || this.props.yPos !== prevProps.yPos){
+            this.setState({
+                playerX: this.props.xPos,
+                playerY: this.props.yPos
+            })
+        }
+    }
 
     onKeyDown(e) {
         switch (e.which) {
             case 37: // Left
-                console.log("left");
-
                 this.playerMove(this.state.playerX - this.state.playerSpeed, this.state.playerY);
                 break;
             case 38: // Up
-                console.log("up");
-
                 this.playerMove(this.state.playerX, this.state.playerY - this.state.playerSpeed);
                 break;
             case 39: // Right
-                console.log("right");
-
                 this.playerMove(this.state.playerX + this.state.playerSpeed, this.state.playerY);
                 break;
             case 40: // Down
-                console.log("down");
                 this.playerMove(this.state.playerX, this.state.playerY + this.state.playerSpeed);
                 break;
             default:
@@ -55,7 +58,8 @@ class Player extends Component {
     }
 
     render() {
-        console.log("Rendering client : ", this.props.keyVal, this.state.playerX, this.state.playerY);
+        // console.log("Rendering client : ", this.props.keyVal, this.state.playerX, this.state.playerY);
+        console.log("Player render");
         const player_attr = {
             width: 50,
             height: 50,

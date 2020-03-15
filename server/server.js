@@ -66,12 +66,14 @@ io.on('connection', (socket) => {
         console.log("Logging movement, recieved: ", position);
         // console.log("Receiving player movement event from client");
 
+        console.log("original position", players[socket.id].x, players[socket.id].y);
+
         players[socket.id] = {
             x: position[0],
             y: position[1]
         };
 
-        console.log("moving player : ", socket.id, position[0], position[1]);
+        console.log("next position", players[socket.id].x, players[socket.id].y);
 
         // sends a broadcast to ALL sockets with the players and their positions
         // console.log("Sending to clients to redraw positions");
