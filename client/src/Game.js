@@ -107,11 +107,11 @@ class Game extends Component {
         console.log("re-rendering");
         return (
             <div onKeyDown={this.onKeyDown} tabIndex="0">
-                 <Background
+                 {/*<Background
                     backgroundImage={background_img}
                     windowWidth={this.state.windowWidth}
                     windowHeight={this.state.windowHeight}
-                />
+                />*/}
 
                 {component}
             </div>
