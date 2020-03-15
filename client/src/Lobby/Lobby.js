@@ -19,8 +19,8 @@ class Lobby extends Component {
     }
 
     startTimer(){
-        let countdown = 5;
-        socket.emit("lobby start timer", 6001);
+        // 3 second timer currently
+        socket.emit("lobby start timer", 3100);
     }
     startGame(){
         this.setState({
@@ -31,6 +31,8 @@ class Lobby extends Component {
 
 
     componentDidMount() {
+        console.log("finished rendering");
+        socket.emit("player joined");
         socket.on("Number of players", (num_players) => {
             console.log("number of players ", num_players);
             this.setState({

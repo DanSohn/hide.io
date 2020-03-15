@@ -1,8 +1,12 @@
 import React, { Component } from "react";
 import background_img from "./assets/Background.png";
-import Background from "./Background";
-import Player from "./Player";
+import Background from './Background';
+import Player from './Player';
+
+import OtherPlayers from "./OtherPlayers";
+
 import './App.css';
+
 
 import { socket } from "./socket";
 
@@ -10,6 +14,8 @@ class Game extends Component {
     constructor(props) {
         super(props);
 
+        //console.log("Received props from lobby ...");
+        //console.log(this.props.numPlayers, this.props.players);
         document.body.style.overflow = "hidden";
 
         this.state = {
@@ -20,36 +26,55 @@ class Game extends Component {
             playerY: 300,
             msg: "",
             num_of_players: this.props.numPlayers,
-            players: this.props.players
+            players: this.props.players,
+            game_status: "not started"
         };
 
         this.update_player_component = this.update_player_component.bind(this);
     }
 
-    componentDidUpdate() {
-        //console.log("in game mounting");
-        //console.log("socket" + socket);
+    componentDidMount() {
+        this.setState({game_status: "in progress"});
+        // this will only happen the first time, and will set the ball rolling to handle any updates!
 
-        socket.on("hello", () => {
-            console.log("hello from game.js");
-        });
-        socket.on("Redraw positions", players => {
-            console.log("Redrawing positions with: ");
-            console.log(players);
+        socket.on("Redraw positions", (players) => {
+            //console.log("client updating players");
+            // if there has been a change to players' positions, then reset the state of players to new coordinates
+            //console.log("original players ", this.state.players);
+            if(this.state.players !== players){
+                console.log("movement indeed");
+                this.setState({players: players});
+            }
+            //console.log("new players ", this.state.players);
+
+
         });
     }
 
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        /*console.log("component did update");
+        socket.on("Redraw positions", (players) => {
+            console.log("client updating players");
+            // if there has been a change to players' positions, then reset the state of players to new coordinates
+            if(prevState.players !== players){
+                console.log("movement indeed");
+                this.setState({players: players});
+            }
+        })
+        let players_arr = Object.entries(this.state.players);
+        for(let i=0; i<players_arr.length; i++){
+            console.log(players_arr[i][0], players_arr[i][1].x, players_arr[i][1].y);
+        }*/
+    }
+
     // this function creates multiple player components
-    update_player_component() {
-        console.log("creating players");
-        console.log(this.state.players);
+    update_player_component(){
+        //console.log("UPDATING PLAYER COMPONENTS");
 
         let players_arr = Object.entries(this.state.players);
-        console.log(players_arr);
-        console.log(typeof players_arr);
-
+        // console.log(players_arr);
+        // console.log(typeof players_arr);
         let component_insides = [];
-
         /*players_arr.forEach((element) =>{
             console.log("iterating ...", key);
             component_insides.push(<Player key={players_arr} xPos={   this.state.players.key.x} yPos={this.state.players.key.y}/>);
@@ -59,54 +84,40 @@ class Game extends Component {
 
         });*/
 
-        for (let i = 0; i < players_arr.length; i++) {
-            console.log("iterating through list");
-            component_insides.push(
-                <Player
-                    key={players_arr[i][0]}
-                    xPos={players_arr[i][1].x}
-                    yPos={players_arr[i][1].y}
-                />
-            );
+        for(let i=0; i<players_arr.length; i++){
+            // console.log("iterating through list");
+            if(players_arr[i][0] === socket.id){
+                // if its MY player then i can handle movements and such. otherwise, its just a sprite on my screen
+                //console.log("inside updating x and y are: ", players_arr[i][1].x, players_arr[i][1].y);
+                component_insides.push(<Player key={players_arr[i][0]} keyVal={players_arr[i][0]} xPos={players_arr[i][1].x} yPos={players_arr[i][1].y} />);
+                //console.log(component_insides[0].props);
+            }else{
+                component_insides.push(<OtherPlayers key={players_arr[i][0]} keyVal={players_arr[i][0]} xPos={players_arr[i][1].x} yPos={players_arr[i][1].y} />);
+            }
         }
 
-        console.log(component_insides[0]);
+        for(let i=0; i<players_arr.length; i++){
+            console.log(players_arr[i][0], players_arr[i][1].x, players_arr[i][1].y);
+        }
+
         return <div>{component_insides}</div>;
+
     }
-    /*create_player_component() {
-        // this function will take in the index of the player and return a x y coordinate
-        function get_starting_position(i) {
-            return starting_pos[i];
-        }
-        // initialize the array of players
-        let component_insides = [];
-
-        // iterate through number of players and add a player react component to the array, passing in the player_img
-        for (let i = 0; i < this.props.numPlayers; i++) {
-            // get the starting position of the player
-            let position = get_starting_position(i);
-            component_insides.push(<Player key={i} xPos={position.x} yPos={position.y}/>);
-        }
-        // this is for react-key-index.
-        // https://stackoverflow.com/questions/28329382/understanding-unique-keys-for-array-children-in-react-js
-        // not working, so switched to key being index. THIS MAY CAUSE PROBLEMS DOWN THE LINE POTENTIALLY
-        //component_insides = keyIndex(component_insides, 1);
-
-        return <div>{component_insides}</div>;
-    }*/
 
     render() {
         //console.log("in game rendering");
         // temporary component
+        console.log("when render is called, players is: ", this.state.players);
         let component = this.update_player_component();
-
+        //.log("COMPONENT:", component);
+        //console.log("re-rendering");
         return (
             <div onKeyDown={this.onKeyDown} tabIndex="0">
-                {/* <Background
+                 {/*<Background
                     backgroundImage={background_img}
                     windowWidth={this.state.windowWidth}
                     windowHeight={this.state.windowHeight}
-                /> */}
+                />*/}
 
                 {component}
             </div>
