@@ -1,10 +1,11 @@
-import React, {Component} from 'react';
+import React, { Component } from "react";
 
 // import {socket} from './socket'
 // import Game from "./Game";
-import './App.css';
-import Lobby from './Lobby/Lobby';
-class mainScreen extends Component {
+import "./App.css";
+import Lobby from "./Lobby/Lobby";
+import UsernameSelection from "./usernameSelection";
+class LoginScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -22,7 +23,7 @@ class mainScreen extends Component {
     goToLobby() {
         this.setState(state =>({
             SignIn: true
-         }));
+        }));
     }
 
     googleSDK() {
@@ -74,7 +75,7 @@ class mainScreen extends Component {
         } 
 
     render() {
-        let comp
+        let comp;
         if (this.state.SignIn === false) {
             comp = <div className = "GameWindow">
             <div className="LoginScreen">
@@ -88,11 +89,7 @@ class mainScreen extends Component {
         else {
             comp = <Lobby/>
         }
-        return (
-            <div>
-               {comp}
-            </div>
-        );
+        return <div>{comp}</div>;
     }
 }
-export default mainScreen;
+export default LoginScreen;
