@@ -3,6 +3,7 @@ import React, {Component} from 'react';
 import {socket} from '../socket'
 import Game from "../Game";
 
+
 class Lobby extends Component {
     constructor(props) {
         super(props);

@@ -1,5 +1,8 @@
 import React, {Component} from 'react';
 import Lobby from "./Lobby/Lobby";
+import Background from './Background';
+import LoginScreen from './loginScreen';
+
 //import {socket} from './socket';
 
 class Router extends Component {
@@ -40,7 +43,7 @@ EXAMPLE OF FETCHING API CALL FROM THE SERVER
         // here, or whenever I actually enter the game, I would pass in the number of players
         return (
             <div className="App">
-                <Lobby />
+            <LoginScreen/>
                 <p className="App-intro">{this.state.apiResponse}</p>
             </div>
         );
