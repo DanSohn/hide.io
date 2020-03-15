@@ -3,6 +3,7 @@ import React, {Component} from 'react';
 import {socket} from '../socket'
 import Game from "../Game";
 
+
 class Lobby extends Component {
     constructor(props) {
         super(props);
@@ -41,7 +42,7 @@ class Lobby extends Component {
     render() {
         let comp;
         if (this.state.gameStarted === false) {
-            comp = <button onClick={this.startGame}>Click here to start game </button>
+            comp = <button  onClick={this.startGame}>Click here to start game </button>
         } else {
             // let numPlayers = this.findPlayers;
             console.log("my players: ", this.state.players);

@@ -1,11 +1,10 @@
-import React, {Component} from 'react';
-
+import React, { Component } from "react";
 import background_img from "./assets/Background.png";
-import Background from './Background';
-import Player from './Player';
+import Background from "./Background";
+import Player from "./Player";
+import './App.css';
 
-import {socket} from './socket'
-
+import { socket } from "./socket";
 
 class Game extends Component {
     constructor(props) {
@@ -25,27 +24,23 @@ class Game extends Component {
         };
 
         this.update_player_component = this.update_player_component.bind(this);
-
     }
 
-
-
-    componentDidMount() {
+    componentDidUpdate() {
         //console.log("in game mounting");
         //console.log("socket" + socket);
 
-        socket.on('hello', () => {
+        socket.on("hello", () => {
             console.log("hello from game.js");
         });
-        socket.on("Redraw positions", (players) =>{
+        socket.on("Redraw positions", players => {
             console.log("Redrawing positions with: ");
             console.log(players);
         });
-
     }
 
     // this function creates multiple player components
-    update_player_component(){
+    update_player_component() {
         console.log("creating players");
         console.log(this.state.players);
 
@@ -64,14 +59,19 @@ class Game extends Component {
 
         });*/
 
-        for(let i=0; i<players_arr.length; i++){
+        for (let i = 0; i < players_arr.length; i++) {
             console.log("iterating through list");
-            component_insides.push(<Player key={players_arr[i][0]} xPos={players_arr[i][1].x} yPos={players_arr[i][1].y} />);
+            component_insides.push(
+                <Player
+                    key={players_arr[i][0]}
+                    xPos={players_arr[i][1].x}
+                    yPos={players_arr[i][1].y}
+                />
+            );
         }
 
         console.log(component_insides[0]);
         return <div>{component_insides}</div>;
-
     }
     /*create_player_component() {
         // this function will take in the index of the player and return a x y coordinate
@@ -102,12 +102,15 @@ class Game extends Component {
 
         return (
             <div onKeyDown={this.onKeyDown} tabIndex="0">
-                <Background backgroundImage={background_img}
-                            windowWidth={this.state.windowWidth} windowHeight={this.state.windowHeight}/>
+                {/* <Background
+                    backgroundImage={background_img}
+                    windowWidth={this.state.windowWidth}
+                    windowHeight={this.state.windowHeight}
+                /> */}
 
                 {component}
             </div>
-        )
+        );
     }
 }
 
