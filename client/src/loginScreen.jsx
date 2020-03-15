@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
 
-import {socket} from './socket'
-import Game from "./Game";
+// import {socket} from './socket'
+// import Game from "./Game";
 import './App.css';
 import Lobby from './Lobby/Lobby';
-class mainScreen extends React.Component {
+class mainScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {

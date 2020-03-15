@@ -14,6 +14,8 @@ class Game extends Component {
     constructor(props) {
         super(props);
 
+        console.log("Received props from lobby ...");
+        console.log(this.props.numPlayers, this.props.players);
         document.body.style.overflow = "hidden";
 
         this.state = {
@@ -31,15 +33,10 @@ class Game extends Component {
         this.update_player_component = this.update_player_component.bind(this);
     }
 
-    componentDidUpdate() {
-        //console.log("in game mounting");
-        //console.log("socket" + socket);
+    componentDidMount() {
         this.setState({game_status: "in progress"});
         // this will only happen the first time, and will set the ball rolling to handle any updates!
-        /*socket.on("Redraw positions", (players) =>{
-            console.log("Redrawing positions in client");
-            this.setState({players: players});
-        });*/
+
         socket.on("Redraw positions", (players) => {
             console.log("client updating players");
             // if there has been a change to players' positions, then reset the state of players to new coordinates
@@ -47,10 +44,7 @@ class Game extends Component {
                 console.log("movement indeed");
                 this.setState({players: players});
             }
-            /*let players_arr = Object.entries(this.state.players);
-            for(let i=0; i<players_arr.length; i++){
-                console.log(players_arr[i][0], players_arr[i][1].x, players_arr[i][1].y);
-            }*/
+
         });
     }
 
@@ -113,11 +107,11 @@ class Game extends Component {
         console.log("re-rendering");
         return (
             <div onKeyDown={this.onKeyDown} tabIndex="0">
-                {/* <Background
+                 <Background
                     backgroundImage={background_img}
                     windowWidth={this.state.windowWidth}
                     windowHeight={this.state.windowHeight}
-                /> */}
+                />
 
                 {component}
             </div>

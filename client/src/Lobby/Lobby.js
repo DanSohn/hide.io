@@ -31,6 +31,8 @@ class Lobby extends Component {
 
 
     componentDidMount() {
+        console.log("finished rendering");
+        socket.emit("player joined");
         socket.on("Number of players", (num_players) => {
             console.log("number of players ", num_players);
             this.setState({
