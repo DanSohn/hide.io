@@ -17,6 +17,7 @@ class OtherPlayers extends Component {
 
 
     render() {
+        console.log("Rendering other client : ", this.props.keyVal, this.state.playerX, this.state.playerY);
         const player_attr = {
             width: 50,
             height: 50,

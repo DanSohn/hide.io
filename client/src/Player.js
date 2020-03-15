@@ -26,15 +26,22 @@ class Player extends Component {
     onKeyDown(e) {
         switch (e.which) {
             case 37: // Left
+                console.log("left");
+
                 this.playerMove(this.state.playerX - this.state.playerSpeed, this.state.playerY);
                 break;
             case 38: // Up
+                console.log("up");
+
                 this.playerMove(this.state.playerX, this.state.playerY - this.state.playerSpeed);
                 break;
             case 39: // Right
+                console.log("right");
+
                 this.playerMove(this.state.playerX + this.state.playerSpeed, this.state.playerY);
                 break;
             case 40: // Down
+                console.log("down");
                 this.playerMove(this.state.playerX, this.state.playerY + this.state.playerSpeed);
                 break;
             default:
@@ -45,14 +52,10 @@ class Player extends Component {
     playerMove(x, y) {
         console.log("Sending player movement event to server");
         socket.emit("Player movement", [x,y]);
-        this.setState({
-            playerX: x,
-            playerY: y
-        });
     }
 
     render() {
-        console.log("moving player ", this.props.keyVal);
+        console.log("Rendering client : ", this.props.keyVal, this.state.playerX, this.state.playerY);
         const player_attr = {
             width: 50,
             height: 50,

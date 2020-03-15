@@ -74,13 +74,15 @@ io.on('connection', (socket) => {
     // upon a player movement event, i will update the players array object with their new positions, and
     // emit a event to redraw the new positions
     socket.on("Player movement", (position) => {
-        // console.log("Server logging player movement");
+        console.log("Loggin movement, receieved: ", position);
         // console.log("Receiving player movement event from client");
 
         players[socket.id] = {
             x: position[0],
             y: position[1]
         };
+
+        console.log("moving player : ", socket.id, position[0], position[1]);
 
         // sends a broadcast to ALL sockets with the players and their positions
         // console.log("Sending to clients to redraw positions");

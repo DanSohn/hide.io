@@ -48,10 +48,10 @@ class Game extends Component {
                 console.log("movement indeed");
                 this.setState({players: players});
             }
-            let players_arr = Object.entries(this.state.players);
+            /*let players_arr = Object.entries(this.state.players);
             for(let i=0; i<players_arr.length; i++){
                 console.log(players_arr[i][0], players_arr[i][1].x, players_arr[i][1].y);
-            }
+            }*/
         });
 
     }
@@ -97,6 +97,10 @@ class Game extends Component {
             }else{
                 component_insides.push(<OtherPlayers key={players_arr[i][0]} keyVal={players_arr[i][0]} xPos={players_arr[i][1].x} yPos={players_arr[i][1].y} />);
             }
+        }
+
+        for(let i=0; i<players_arr.length; i++){
+            console.log(players_arr[i][0], players_arr[i][1].x, players_arr[i][1].y);
         }
 
         return <div>{component_insides}</div>;
