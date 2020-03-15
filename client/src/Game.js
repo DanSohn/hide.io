@@ -1,12 +1,14 @@
-import React, {Component} from 'react';
-
+import React, { Component } from "react";
 import background_img from "./assets/Background.png";
 import Background from './Background';
 import Player from './Player';
 
-import {socket} from './socket'
 import OtherPlayers from "./OtherPlayers";
 
+import './App.css';
+
+
+import { socket } from "./socket";
 
 class Game extends Component {
     constructor(props) {
@@ -27,12 +29,9 @@ class Game extends Component {
         };
 
         this.update_player_component = this.update_player_component.bind(this);
-
     }
 
-
-
-    componentDidMount() {
+    componentDidUpdate() {
         //console.log("in game mounting");
         //console.log("socket" + socket);
         this.setState({game_status: "in progress"});
@@ -53,7 +52,6 @@ class Game extends Component {
                 console.log(players_arr[i][0], players_arr[i][1].x, players_arr[i][1].y);
             }*/
         });
-
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -101,6 +99,7 @@ class Game extends Component {
 
         for(let i=0; i<players_arr.length; i++){
             console.log(players_arr[i][0], players_arr[i][1].x, players_arr[i][1].y);
+
         }
 
         return <div>{component_insides}</div>;
@@ -114,12 +113,15 @@ class Game extends Component {
         console.log("re-rendering");
         return (
             <div onKeyDown={this.onKeyDown} tabIndex="0">
-                <Background backgroundImage={background_img}
-                            windowWidth={this.state.windowWidth} windowHeight={this.state.windowHeight}/>
+                {/* <Background
+                    backgroundImage={background_img}
+                    windowWidth={this.state.windowWidth}
+                    windowHeight={this.state.windowHeight}
+                /> */}
 
                 {component}
             </div>
-        )
+        );
     }
 }
 
