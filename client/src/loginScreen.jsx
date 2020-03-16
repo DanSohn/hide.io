@@ -1,10 +1,12 @@
 import React, {Component} from "react";
 
-// import {socket} from './socket'
-// import Game from "./Game";
+import {socket} from './socket'
+import Game from "./Game";
 import "./App.css";
 import Lobby from "./Lobby/Lobby";
 import UsernameSelection from "./usernameSelection";
+import MenuScreen from "./menuScreen";
+
 
 class LoginScreen extends Component {
     constructor(props) {
@@ -12,7 +14,8 @@ class LoginScreen extends Component {
         this.state = {
             SignIn: false,
             userName: "",
-            id: ""
+            id: "",
+            email: ""
         }
         this.goToLobby = this.goToLobby.bind(this);
     }
@@ -38,6 +41,14 @@ class LoginScreen extends Component {
                 });
                 this.prepareLoginButton();
             });
+            this.prepareLoginButton();
+            // this.auth2.then(() => {
+            //     this.setState({
+            //       SignIn: this.auth2.isSignedIn.get(),
+            //     });
+            //   });
+          });
+
         }
 
         (function (d, s, id) {
@@ -58,23 +69,27 @@ class LoginScreen extends Component {
 
         this.auth2.attachClickHandler(this.refs.googleLoginBtn, {},
             (googleUser) => {
-                console.log("BUTTON PRESSED")
-                let profile = googleUser.getBasicProfile();
-                console.log('Token || ' + googleUser.getAuthResponse().id_token);
-                console.log('ID: ' + profile.getId());
-                console.log('Name: ' + profile.getName());
-                console.log('Image URL: ' + profile.getImageUrl());
-                console.log('Email: ' + profile.getEmail());
+            console.log("BUTTON PRESSED")
+            let profile = googleUser.getBasicProfile();
+            console.log('Token || ' + googleUser.getAuthResponse().id_token);
+            console.log('ID: ' + profile.getId());
+            console.log('Name: ' + profile.getName());
+            console.log('Image URL: ' + profile.getImageUrl());
+            console.log('Email: ' + profile.getEmail());
+            
+            this.setState({
+                userName: profile.getName(),
+                SignIn: true,
+                id: profile.getId(),
+                email: profile.getEmail()
+            })
+         
+            },(error) => {
 
-                this.setState({
-                    userName: profile.getName(),
-                    SignIn: true
-                })
-
-            }, (error) => {
                 // alert(JSON.stringify(error, undefined, 2));
                 // If you close the popup, it still says that user is signedin
                 console.log(this.auth2.isSignedIn.get())
+                console.log("USERNAME: " + this.state.userName)
             })
     }
 
@@ -89,8 +104,13 @@ class LoginScreen extends Component {
                     <button type="button" className="btn btn-success" onClick={this.goToLobby}>Github</button>
                 </div>
             </div>
-        } else {
-            comp = <UsernameSelection />;
+        </div>
+        }
+        else {
+            // comp = <MenuScreen name={this.state.userName} id={this.state.id}/>
+            // comp = <Lobby/>
+              // this is from peter
+            comp = <UsernameSelection email={this.state.email}/>;
 
         }
         return <div>{comp}</div>;

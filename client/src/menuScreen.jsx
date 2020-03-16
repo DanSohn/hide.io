@@ -1,11 +1,13 @@
 import React, { Component } from "react";
 import Lobby from "./Lobby/Lobby";
-
+import PlayerProfile from "./PlayerProfile.js"
 class MenuScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            stage: 0
+            stage: 0,
+            userName: this.props.name,
+            email: this.props.email
         };
         this.goToPlayScreen = this.goToPlayScreen.bind(this);
         this.goToInstructions = this.goToInstructions.bind(this);
@@ -28,9 +30,11 @@ class MenuScreen extends Component {
         }));
     }
     goToLogout() {
-        this.setState(state => ({
-            stage: 4
-        }));
+        // this.setState(state => ({
+        //     stage: 4
+        // }));
+        localStorage.clear()
+        window.location.href = '/';
     }
 
     render() {
@@ -79,7 +83,7 @@ class MenuScreen extends Component {
         } else if (this.state.stage === 2) {
             comp = <Lobby />;
         } else if (this.state.stage === 3) {
-            comp = <Lobby />;
+            comp = <PlayerProfile name={this.state.userName} email={this.state.email} />
         } else if (this.state.stage === 4) {
             comp = <Lobby />;
         }
