@@ -1,10 +1,12 @@
 import React, { Component } from "react";
 
-// import {socket} from './socket'
-// import Game from "./Game";
+import {socket} from './socket'
+import Game from "./Game";
 import "./App.css";
 import Lobby from "./Lobby/Lobby";
 import UsernameSelection from "./usernameSelection";
+import MenuScreen from "./menuScreen";
+
 class LoginScreen extends Component {
     constructor(props) {
         super(props);
@@ -36,6 +38,11 @@ class LoginScreen extends Component {
               scope: 'profile email'
             });
             this.prepareLoginButton();
+            // this.auth2.then(() => {
+            //     this.setState({
+            //       SignIn: this.auth2.isSignedIn.get(),
+            //     });
+            //   });
           });
         }
        
@@ -64,13 +71,15 @@ class LoginScreen extends Component {
             
             this.setState({
                 userName: profile.getName(),
-                SignIn: true
+                SignIn: true,
+                id: profile.getId()
             })
          
             },(error) => {
                 // alert(JSON.stringify(error, undefined, 2));
                 // If you close the popup, it still says that user is signedin
                 console.log(this.auth2.isSignedIn.get())
+                console.log("USERNAME: " + this.state.userName)
             })
         } 
 
@@ -87,7 +96,7 @@ class LoginScreen extends Component {
         </div>
         }
         else {
-            comp = <Lobby/>
+            comp = <MenuScreen name={this.state.userName} id={this.state.id}/>
         }
         return <div>{comp}</div>;
     }
