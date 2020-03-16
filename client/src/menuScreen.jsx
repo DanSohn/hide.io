@@ -7,7 +7,7 @@ class MenuScreen extends Component {
         this.state = {
             stage: 0,
             userName: this.props.name,
-            id: this.props.id
+            email: this.props.email
         };
         this.goToPlayScreen = this.goToPlayScreen.bind(this);
         this.goToInstructions = this.goToInstructions.bind(this);
@@ -83,7 +83,7 @@ class MenuScreen extends Component {
         } else if (this.state.stage === 2) {
             comp = <Lobby />;
         } else if (this.state.stage === 3) {
-            comp = <PlayerProfile name={this.state.userName} id={this.state.id} />
+            comp = <PlayerProfile name={this.state.userName} email={this.state.email} />
         } else if (this.state.stage === 4) {
             comp = <Lobby />;
         }

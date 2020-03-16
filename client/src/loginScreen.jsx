@@ -13,7 +13,8 @@ class LoginScreen extends Component {
         this.state = {
             SignIn: false,
             userName: "",
-            id: ""
+            id: "",
+            email: ""
         }
         this.goToLobby = this.goToLobby.bind(this);
     }
@@ -72,7 +73,8 @@ class LoginScreen extends Component {
             this.setState({
                 userName: profile.getName(),
                 SignIn: true,
-                id: profile.getId()
+                id: profile.getId(),
+                email: profile.getEmail()
             })
          
             },(error) => {
@@ -96,7 +98,10 @@ class LoginScreen extends Component {
         </div>
         }
         else {
-            comp = <MenuScreen name={this.state.userName} id={this.state.id}/>
+            // comp = <MenuScreen name={this.state.userName} id={this.state.id}/>
+            // comp = <Lobby/>
+              // this is from peter
+            comp = <UsernameSelection email={this.state.email}/>;
         }
         return <div>{comp}</div>;
     }

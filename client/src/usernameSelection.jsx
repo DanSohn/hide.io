@@ -5,13 +5,24 @@ class UsernameSelection extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            username: ""
+            typing: "",
+            username: "",
+            email: this.props.email
         };
-        this.goToLobby = this.goToLobby.bind(this);
+        this.submitUsername = this.submitUsername.bind(this);
+        this.handleKeyboard = this.handleKeyboard.bind(this);
     }
-    goToLobby() {
+
+    handleKeyboard(e) {
+        console.log(e.target.value)
+        this.setState({
+            typing: e.target.value
+        })
+    }
+
+    submitUsername() {
         this.setState(state => ({
-            username: "notnull"
+            username: this.state.typing
         }));
     }
 
@@ -23,25 +34,29 @@ class UsernameSelection extends Component {
                     <div className="usernameSelection">
                         <h1>Hide.IO</h1>
                         <h2>Choose GamerTag</h2>
-                        <input
-                            type="text"
-                            id="username"
-                            name="username"
-                            placeholder="Ali Alkhazaly"
-                        />
-                        <br></br>
-                        <button
-                            type="button"
-                            className="btn btn-success"
-                            onClick={this.goToLobby}
-                        >
-                            Submit
-                        </button>
+                        <form onSubmit={this.submitUsername}>
+                            <input
+                                type="text"
+                                id="username"
+                                name="username"
+                                placeholder="Ali Alkhazaly"
+                                onChange={this.handleKeyboard}
+                                value={this.state.typing}
+                            />
+                            <br></br>
+                            <button
+                                type="button"
+                                className="btn btn-success"
+                                onClick={this.submitUsername}
+                            >
+                                Submit
+                            </button>
+                        </form>
                     </div>
                 </div>
             );
         } else {
-            comp = <MenuScreen />;
+            comp = <MenuScreen email={this.state.email} name={this.state.username}/>;
         }
         return <div>{comp}</div>;
     }

@@ -10,7 +10,7 @@ class PlayerProfile extends Component {
         super(props)
         this.state = {
             userName: this.props.name,
-            id: this.props.id,
+            email: this.props.email,
             signedIn: true,
             goBack: false
         }
@@ -30,7 +30,7 @@ class PlayerProfile extends Component {
             <div className="GameWindow">
                 <div className="menuScreen">
                     <h2>Name: {this.state.userName}</h2>
-                    <h2>ID: {this.state.id}</h2>
+                    <h2>Email: {this.state.email}</h2>
                     <button
                         type="button"
                         className="btn btn-success"
@@ -43,7 +43,7 @@ class PlayerProfile extends Component {
         }
         else {
             comp =
-            <MenuScreen name={this.state.userName} id={this.state.id}/>
+            <MenuScreen name={this.state.userName} id={this.state.email}/>
         }
 
         return (
