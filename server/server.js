@@ -30,12 +30,12 @@ let starting_pos = starting_pos_module.starting_positions;
 let players = {};
 console.log("Initial players list: ", players);
 io.on('connection', (socket) => {
-    console.log("A User has connected");
+    // console.log("A User has connected");
 
     // when a player is logging in through oauth, i cross-check the given info with the database to see
     // if the user already exists (email). If he does, I emit a message to go straight to main menu, otherwise to
     // go to user selection first
-    socket.on("user exist check", (email) => {
+    socket.on("user exists check", (email) => {
         User.findOne({email: email})
             .then(user => {
                 // if the user exists already in the database
@@ -69,7 +69,7 @@ io.on('connection', (socket) => {
     // when a player joins the game, I should provide them with a starting coordinate
     // this is the only place a new player is populated
 
-    console.log("Creating new player");
+    // console.log("Creating new player");
     let x;
     let y;
     // run through the starting positions, and set the first unused one to the player.
