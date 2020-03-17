@@ -5,9 +5,16 @@ const server = require('http').createServer(app);
 const socket_io = require('socket.io');
 const io = socket_io.listen(server);
 const cors = require('cors');
-
-
 const port = process.env.PORT || 3001;
+
+const mongoose = require('mongoose');
+//set up the default connection
+let db = 'mongodb+srv://dbUser:dbUserPassword@hideio-wic1l.mongodb.net/test?retryWrites=true&w=majority';
+// Connect to mongo
+mongoose.connect(db, {useNewUrlParser: true, useUnifiedTopology: true})
+    .then(() => console.log("MongoDB Connected"))
+    .catch(err => console.log(err));
+
 
 app.use(cors());
 app.get('/', (req, res) => {
