@@ -1,9 +1,7 @@
 import React, {Component} from "react";
 
 import {socket} from './socket'
-import Game from "./Game";
 import "./App.css";
-import Lobby from "./Lobby/Lobby";
 import UsernameSelection from "./usernameSelection";
 import MenuScreen from "./menuScreen";
 
@@ -27,13 +25,14 @@ class LoginScreen extends Component {
         console.log("component did mount!");
         this.googleSDK();
 
-        socket.on("user database check", (exists) => {
+        socket.on("user database check", (username) => {
             console.log("checking if user exists");
             // if the user "exists" in database, then not a new user and will go straight to main menu
             // otherwise, go to the username selection
-            if (exists) {
+            if (username !== "") {
                 this.setState({
                     newUser: false,
+                    userName: username
                 })
             } else {
                 // this else statement is a little redundant since newUser is initialized to be true
@@ -136,7 +135,7 @@ class LoginScreen extends Component {
             if(this.state.newUser){
                 comp = <UsernameSelection email={this.state.email}/>;
             }else{
-                comp = <MenuScreen name="fake name" />;
+                comp = <MenuScreen name={this.state.userName} email={this.state.email}/>;
             }
 
         }

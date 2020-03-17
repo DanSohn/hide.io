@@ -41,12 +41,13 @@ io.on('connection', (socket) => {
                 // if the user exists already in the database
                 if(user){
                     console.log("User already exists, -----> main menu");
-                    // emitting the boolean true, as in, they do exist
-                    socket.emit("user database check", true);
+                    // console.log(user);
+                    // emitting the email of the user
+                    socket.emit("user database check", user.username);
                 }else{
                     console.log("User does not exist, -----> username selection");
-                    // emitting the boolean false, as in, they don't exist
-                    socket.emit("user database check", false)
+                    // emitting an empty string representing false
+                    socket.emit("user database check", "");
                 }
             })
     });
