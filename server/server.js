@@ -51,6 +51,21 @@ io.on('connection', (socket) => {
             })
     });
 
+    socket.on("create user", (info) => {
+        // create a new user based on the schema
+        const newUser = new User({
+            username: info.username,
+            email: info.email
+        });
+
+        // save the user to mongoDB, returning a promise when it succeeds
+        newUser.save()
+            .then(user => {
+                console.log(user, " has successfully been added to the database");
+            })
+            .catch(err => console.log(err));
+    });
+
     // when a player joins the game, I should provide them with a starting coordinate
     // this is the only place a new player is populated
 
