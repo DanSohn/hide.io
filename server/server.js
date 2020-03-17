@@ -9,12 +9,13 @@ const port = process.env.PORT || 3001;
 
 const mongoose = require('mongoose');
 //set up the default connection
-let db = 'mongodb+srv://dbUser:dbUserPassword@hideio-wic1l.mongodb.net/test?retryWrites=true&w=majority';
+let db = 'mongodb+srv://dbUser:dbUserPassword@hideio-wic1l.mongodb.net/Players?retryWrites=true&w=majority';
 // Connect to mongo
 mongoose.connect(db, {useNewUrlParser: true, useUnifiedTopology: true})
     .then(() => console.log("MongoDB Connected"))
     .catch(err => console.log(err));
-
+// the Users model (schema)
+const User = require('./models/User');
 
 app.use(cors());
 app.get('/', (req, res) => {
@@ -30,6 +31,25 @@ let players = {};
 console.log("Initial players list: ", players);
 io.on('connection', (socket) => {
     console.log("A User has connected");
+
+    // when a player is logging in through oauth, i cross-check the given info with the database to see
+    // if the user already exists (email). If he does, I emit a message to go straight to main menu, otherwise to
+    // go to user selection first
+    socket.on("user exist check", (email) => {
+        User.findOne({email: email})
+            .then(user => {
+                // if the user exists already in the database
+                if(user){
+                    console.log("User already exists, -----> main menu");
+                    // emitting the boolean true, as in, they do exist
+                    socket.emit("user database check", true);
+                }else{
+                    console.log("User does not exist, -----> username selection");
+                    // emitting the boolean false, as in, they don't exist
+                    socket.emit("user database check", false)
+                }
+            })
+    });
 
     // when a player joins the game, I should provide them with a starting coordinate
     // this is the only place a new player is populated
@@ -54,9 +74,7 @@ io.on('connection', (socket) => {
     };
 
 
-    /* console.log(players[socket.id]);
-     console.log("players ...  ", players);
-     console.log("number of players rn ", numPlayers.length);*/
+
 
     // emit the number of current sockets connected
     let players_arr = Object.keys(players);
