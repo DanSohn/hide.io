@@ -43,7 +43,7 @@ class PlayerProfile extends Component {
         }
         else {
             comp =
-            <MenuScreen name={this.state.userName} id={this.state.email}/>
+            <MenuScreen name={this.state.userName} email={this.state.email}/>
         }
 
         return (

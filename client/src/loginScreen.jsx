@@ -41,13 +41,13 @@ class LoginScreen extends Component {
                 });
                 this.prepareLoginButton();
             });
-            this.prepareLoginButton();
+            // this.prepareLoginButton();
             // this.auth2.then(() => {
             //     this.setState({
             //       SignIn: this.auth2.isSignedIn.get(),
             //     });
             //   });
-          });
+        //   });
 
         }
 
@@ -104,7 +104,6 @@ class LoginScreen extends Component {
                     <button type="button" className="btn btn-success" onClick={this.goToLobby}>Github</button>
                 </div>
             </div>
-        </div>
         }
         else {
             // comp = <MenuScreen name={this.state.userName} id={this.state.id}/>
