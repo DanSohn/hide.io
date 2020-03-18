@@ -1,13 +1,20 @@
 import React, { Component } from "react";
 import Lobby from "./Lobby/Lobby";
-import PlayerProfile from "./PlayerProfile.js"
-
+import "./App.css";
+import PlayerProfile from "./PlayerProfile.js";
+import LobbyScreen from "./lobbyScreen";
+import Header from "./header";
+import Break from "./break";
 
 class MenuScreen extends Component {
     constructor(props) {
         super(props);
 
-        console.log("In menu screen, received the props: ", this.props.name, this.props.email);
+        console.log(
+            "In menu screen, received the props: ",
+            this.props.name,
+            this.props.email
+        );
         this.state = {
             stage: 0,
             userName: this.props.name,
@@ -20,7 +27,7 @@ class MenuScreen extends Component {
     }
     goToPlayScreen() {
         this.setState(state => ({
-            stage: 2
+            stage: 1
         }));
     }
     goToInstructions() {
@@ -37,8 +44,8 @@ class MenuScreen extends Component {
         // this.setState(state => ({
         //     stage: 4
         // }));
-        localStorage.clear()
-        window.location.href = '/';
+        localStorage.clear();
+        window.location.href = "/";
     }
 
     render() {
@@ -46,48 +53,53 @@ class MenuScreen extends Component {
         if (this.state.stage === 0) {
             comp = (
                 <div className="GameWindow">
-                    <div className="menuScreen">
-                        <button
-                            type="button"
-                            className="btn btn-success"
-                            onClick={this.goToPlayScreen}
-                        >
-                            Play
-                        </button>
-                        <br></br>
-                        <button
-                            type="button"
-                            className="btn btn-success"
-                            onClick={this.goToInstructions}
-                        >
-                            Instructions
-                        </button>
-                        <br></br>
-                        <button
-                            type="button"
-                            className="btn btn-success"
-                            onClick={this.goToProfile}
-                        >
-                            Profile
-                        </button>
-                        <br></br>
-                        <button
-                            type="button"
-                            className="btn btn-success"
-                            onClick={this.goToLogout}
-                        >
-                            Logout
-                        </button>
-                        <br></br>
+                    <Header />
+                    <Break />
+                    <div className="ContentScreen">
+                        <div className="menuScreen">
+                            <button
+                                type="button"
+                                className="btn btn-success"
+                                onClick={this.goToPlayScreen}
+                            >
+                                Play
+                            </button>
+                            <button
+                                type="button"
+                                className="btn btn-success"
+                                onClick={this.goToInstructions}
+                            >
+                                Instructions
+                            </button>
+                            <button
+                                type="button"
+                                className="btn btn-success"
+                                onClick={this.goToProfile}
+                            >
+                                Profile
+                            </button>
+                            <button
+                                type="button"
+                                className="btn btn-success"
+                                onClick={this.goToLogout}
+                            >
+                                Logout
+                            </button>
+                        </div>
                     </div>
                 </div>
             );
         } else if (this.state.stage === 1) {
-            comp = <Lobby />;
+            comp = <LobbyScreen />;
         } else if (this.state.stage === 2) {
             comp = <Lobby />;
         } else if (this.state.stage === 3) {
-            comp = <PlayerProfile name={this.state.userName} email={this.state.email} />
+            comp = (
+                <PlayerProfile
+                    name={this.state.userName}
+                    email={this.state.email}
+                />
+            );
         } else if (this.state.stage === 4) {
             comp = <Lobby />;
         }
