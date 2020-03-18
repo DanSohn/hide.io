@@ -1,9 +1,13 @@
 import React, { Component } from "react";
 import Lobby from "./Lobby/Lobby";
 import PlayerProfile from "./PlayerProfile.js"
+
+
 class MenuScreen extends Component {
     constructor(props) {
         super(props);
+
+        console.log("In menu screen, received the props: ", this.props.name, this.props.email);
         this.state = {
             stage: 0,
             userName: this.props.name,

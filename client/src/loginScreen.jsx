@@ -1,9 +1,7 @@
 import React, {Component} from "react";
 
 import {socket} from './socket'
-import Game from "./Game";
 import "./App.css";
-import Lobby from "./Lobby/Lobby";
 import UsernameSelection from "./usernameSelection";
 import MenuScreen from "./menuScreen";
 
@@ -13,15 +11,38 @@ class LoginScreen extends Component {
         super(props);
         this.state = {
             SignIn: false,
+            newUser: true,
             userName: "",
             id: "",
             email: ""
-        }
+        };
         this.goToLobby = this.goToLobby.bind(this);
+        this.googleSDK = this.googleSDK.bind(this);
+        this.prepareLoginButton = this.prepareLoginButton.bind(this);
     }
 
     componentDidMount() {
+        console.log("component did mount!");
         this.googleSDK();
+
+        socket.on("user database check", (username) => {
+            console.log("checking if user exists");
+            // if the user "exists" in database, then not a new user and will go straight to main menu
+            // otherwise, go to the username selection
+            if (username !== "") {
+                this.setState({
+                    newUser: false,
+                    userName: username
+                })
+            } else {
+                // this else statement is a little redundant since newUser is initialized to be true
+                // but for better readability, i'll keep it in
+                this.setState({
+                    newUser: true
+                })
+            }
+            this.goToLobby();
+        })
     }
 
     goToLobby() {
@@ -47,7 +68,7 @@ class LoginScreen extends Component {
             //       SignIn: this.auth2.isSignedIn.get(),
             //     });
             //   });
-        //   });
+            //   });
 
         }
 
@@ -69,29 +90,33 @@ class LoginScreen extends Component {
 
         this.auth2.attachClickHandler(this.refs.googleLoginBtn, {},
             (googleUser) => {
-            console.log("BUTTON PRESSED")
-            let profile = googleUser.getBasicProfile();
-            console.log('Token || ' + googleUser.getAuthResponse().id_token);
-            console.log('ID: ' + profile.getId());
-            console.log('Name: ' + profile.getName());
-            console.log('Image URL: ' + profile.getImageUrl());
-            console.log('Email: ' + profile.getEmail());
-            
-            this.setState({
-                userName: profile.getName(),
-                SignIn: true,
-                id: profile.getId(),
-                email: profile.getEmail()
-            })
-         
-            },(error) => {
+                console.log("BUTTON PRESSED");
+                let profile = googleUser.getBasicProfile();
+                console.log('Token || ' + googleUser.getAuthResponse().id_token);
+                console.log('ID: ' + profile.getId());
+                console.log('Name: ' + profile.getName());
+                console.log('Image URL: ' + profile.getImageUrl());
+                console.log('Email: ' + profile.getEmail());
+
+                // send event to server to check whether the user exists in our database
+                console.log("emitting check to server");
+                socket.emit("user exists check", profile.getEmail());
+
+                // i removed the signin = true portion and will do it once i get a check if the user exists
+                this.setState({
+                    userName: profile.getName(),
+                    id: profile.getId(),
+                    email: profile.getEmail()
+                })
+
+            }, (error) => {
 
                 // alert(JSON.stringify(error, undefined, 2));
                 // If you close the popup, it still says that user is signedin
-                console.log(this.auth2.isSignedIn.get())
-                console.log("USERNAME: " + this.state.userName)
+                console.log(this.auth2.isSignedIn.get());
+                console.log("USERNAME: " + this.state.userName);
             })
-    }
+    };
 
     render() {
         let comp;
@@ -104,12 +129,14 @@ class LoginScreen extends Component {
                     <button type="button" className="btn btn-success" onClick={this.goToLobby}>Github</button>
                 </div>
             </div>
-        }
-        else {
+        } else {
             // comp = <MenuScreen name={this.state.userName} id={this.state.id}/>
             // comp = <Lobby/>
-              // this is from peter
-            comp = <UsernameSelection email={this.state.email}/>;
+            if(this.state.newUser){
+                comp = <UsernameSelection email={this.state.email}/>;
+            }else{
+                comp = <MenuScreen name={this.state.userName} email={this.state.email}/>;
+            }
 
         }
         return <div>{comp}</div>;
