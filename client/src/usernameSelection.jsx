@@ -50,7 +50,7 @@ class UsernameSelection extends Component {
                             <form onSubmit={this.submitUsername}>
                                 <input
                                     type="text"
-                                    class="form-control"
+                                    className="form-control"
                                     placeholder="GamerTag"
                                     aria-label="Gamer Tag"
                                     aria-describedby="basic-addon2"
@@ -58,7 +58,7 @@ class UsernameSelection extends Component {
                                     value={this.state.typing}
                                 />
                                 <button
-                                    class="btn btn-outline-secondary"
+                                    className="btn btn-outline-secondary"
                                     type="button"
                                     onClick={this.submitUsername}
                                 >

@@ -55,35 +55,37 @@ class MenuScreen extends Component {
                 <div className="GameWindow">
                     <Header />
                     <Break />
-                    <div className="menuScreen">
-                        <button
-                            type="button"
-                            className="btn btn-success"
-                            onClick={this.goToPlayScreen}
-                        >
-                            Play
-                        </button>
-                        <button
-                            type="button"
-                            className="btn btn-success"
-                            onClick={this.goToInstructions}
-                        >
-                            Instructions
-                        </button>
-                        <button
-                            type="button"
-                            className="btn btn-success"
-                            onClick={this.goToProfile}
-                        >
-                            Profile
-                        </button>
-                        <button
-                            type="button"
-                            className="btn btn-success"
-                            onClick={this.goToLogout}
-                        >
-                            Logout
-                        </button>
+                    <div className="ContentScreen">
+                        <div className="menuScreen">
+                            <button
+                                type="button"
+                                className="btn btn-success"
+                                onClick={this.goToPlayScreen}
+                            >
+                                Play
+                            </button>
+                            <button
+                                type="button"
+                                className="btn btn-success"
+                                onClick={this.goToInstructions}
+                            >
+                                Instructions
+                            </button>
+                            <button
+                                type="button"
+                                className="btn btn-success"
+                                onClick={this.goToProfile}
+                            >
+                                Profile
+                            </button>
+                            <button
+                                type="button"
+                                className="btn btn-success"
+                                onClick={this.goToLogout}
+                            >
+                                Logout
+                            </button>
+                        </div>
                     </div>
                 </div>
             );

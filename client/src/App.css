@@ -79,8 +79,15 @@ div {
     padding: 0px 0px 100px 0px;
 }
 
+.lobbySelection,
+.createLobby {
+    position: relative;
+    height: 75%;
+    margin: 3%;
+}
+
 .GameWindow .lobbySelection {
-    order: 4;
+    order: 1;
     flex: 3;
     border: 5px solid blue;
 }
@@ -89,7 +96,6 @@ div {
     order: 2;
     flex: 1;
     border: 5px solid rosybrown;
-    margin: 5%;
 }
 .menuScreen button,
 .LoginScreen button {

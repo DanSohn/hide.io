@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import Lobby from "./Lobby/Lobby";
 import PlayerProfile from "./PlayerProfile.js";
+import Header from "./header";
+import Break from "./break";
 
 class LobbyScreen extends Component {
     constructor(props) {
@@ -12,8 +14,12 @@ class LobbyScreen extends Component {
         let comp;
         comp = (
             <div className="GameWindow">
-                <div className="lobbySelection"></div>
-                <div className="createLobby"></div>
+                <Header />
+                <Break />
+                <div className="ContentScreen">
+                    <div className="lobbySelection"></div>
+                    <div className="createLobby"></div>
+                </div>
             </div>
         );
         return <div>{comp}</div>;
