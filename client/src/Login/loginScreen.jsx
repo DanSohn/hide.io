@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 
-import { socket } from "./socket";
-import "./App.css";
+import { socket } from "../assets/socket";
+import "../assets/App.css";
 import UsernameSelection from "./usernameSelection";
-import MenuScreen from "./menuScreen";
-import Header from "./header";
-import Break from "./break";
+import MenuScreen from "../menuScreen";
+import Header from "../assets/header";
+import Break from "../assets/break";
 
 class LoginScreen extends Component {
     constructor(props) {

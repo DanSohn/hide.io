@@ -1,11 +1,11 @@
 import React, { Component } from "react";
-import "./App.css";
-import LoginScreen from "./loginScreen";
+import "./assets/App.css";
+import LoginScreen from "./Login/loginScreen";
 import { Redirect } from "react-router-dom";
 import { BrowserRouter as Router } from "react-router-dom";
 import MenuScreen from "./menuScreen";
-import Header from "./header";
-import Break from "./break";
+import Header from "./assets/header";
+import Break from "./assets/break";
 
 class PlayerProfile extends Component {
     constructor(props) {

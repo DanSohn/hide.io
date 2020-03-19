@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import Lobby from "./Lobby/Lobby";
-import "./App.css";
+import "./assets/App.css";
 import PlayerProfile from "./PlayerProfile.js";
-import LobbyScreen from "./lobbyScreen";
-import Header from "./header";
-import Break from "./break";
+import LobbyScreen from "./Lobby/lobbyScreen";
+import Header from "./assets/header";
+import Break from "./assets/break";
 
 class MenuScreen extends Component {
     constructor(props) {
@@ -90,16 +90,11 @@ class MenuScreen extends Component {
                 </div>
             );
         } else if (this.state.stage === 1) {
-            comp = <LobbyScreen />;
+            comp = <LobbyScreen name={this.state.userName} email={this.state.email} />;
         } else if (this.state.stage === 2) {
             comp = <Lobby />;
         } else if (this.state.stage === 3) {
-            comp = (
-                <PlayerProfile
-                    name={this.state.userName}
-                    email={this.state.email}
-                />
-            );
+            comp = <PlayerProfile name={this.state.userName} email={this.state.email} />;
         } else if (this.state.stage === 4) {
             comp = <Lobby />;
         }

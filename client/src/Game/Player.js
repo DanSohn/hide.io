@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import player_img from "./assets/player.png";
+import player_img from "../assets/images/player.png";
 
-import {socket} from './socket'
+import {socket} from '../assets/socket'
 
 class Player extends Component {
 
