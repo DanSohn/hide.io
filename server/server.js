@@ -9,7 +9,7 @@ const port = process.env.PORT || 3001;
 
 const mongoose = require('mongoose');
 //set up the default connection
-let db = 'mongodb+srv://dbUser:dbUserPassword@hideio-wic1l.mongodb.net/Players?retryWrites=true&w=majority';
+let db = 'mongodb+srv://dbUser:dbUserPassword@hideio-wic1l.mongodb.net/Game?retryWrites=true&w=majority';
 // Connect to mongo
 mongoose.connect(db, {useNewUrlParser: true, useUnifiedTopology: true})
     .then(() => console.log("MongoDB Connected"))
@@ -82,54 +82,43 @@ io.on('connection', (socket) => {
     //When player creates a new lobby to play with their friends
     //User creates lobby with a name (no need to be unique), with settings for the game
     // PARAMETERS:
-    //          info: an object containing: username, user email, lobbyname (optional)
-    //          settings: idk yet, from trilok
-    socket.on("create lobby", (info, settings) => {
-        let exists_in_db = true;
-        while(exists_in_db){
-            let roomID = Math.random().toString(36).slice(2, 8);
-            // searches the database to see if there already exists a room with that ID
-            Lobby.findOne({join_code: roomID})
-                .then(lobby => {
-                    // if SOMEHOW it already exists, then that is bad luck yikes
-                    if(lobby){
-                        alert("Your fucking unlucky bro. Thats 1/36^7 and you fucked up");
-                    }else{
-                        exists_in_db = false;
+    //          info: an object containing: username, user email, lobbyname (optional), and the settings
+    socket.on("create lobby", (info) => {
+        console.log("Creating lobby...");
+        let roomID = Math.random().toString(36).slice(2, 8);;
 
-                        console.log("Join code ", roomID);
+        Lobby.findOne({join_code: roomID})
+            .then(lobby => {
+                console.log("hahahaha");
+                if(lobby){
+                    console.log("Thats unlucky! Try again!");
+                }else{
+                    console.log("Join code ", roomID);
+                    console.log("info...", info.email)
+                    const newLobby = new Lobby({
+                        join_code: roomID,
+                        creator_email: info.email,
+                    });
 
-                        const newLobby = new Lobby({
-                            join_code: roomID,
-                            creator_email: info.email,
-                        });
+                    // save the lobby to mongoDB, returning a promise when it succeeds
+                    newLobby.save()
+                        .then(lobby => {
+                            console.log(lobby, " has successfully been added to the database");
+                        })
+                        .catch(err => console.log(err));
+                }
+            });
 
-                        // save the lobby to mongoDB, returning a promise when it succeeds
-                        newLobby.save()
-                            .then(lobby => {
-                                console.log(lobby, " has successfully been added to the database");
-                            })
-                            .catch(err => console.log(err));
-                    }
-                });
-        }
+        console.log("Left");
 
 
-        let duplicate = true;
-        let roomid = "";
-        while(duplicate){
-            roomid = Math.random().toString(36).slice(2, 9);
-            console.log("Join code " + roomid);
-            if(!(roomid in rooms)){
-                duplicate = false;
-            }
-        }
-        rooms[roomid] = {};
+
+        /*rooms[roomid] = {};
         rooms.host = playername;
         rooms.players = {}; //Information about each of the players that will join the lobby including the host
         rooms[roomid].roomname = lobbyname;
         rooms.settings = settings;
-        createdrooms.push(roomid);
+        createdrooms.push(roomid);*/
         // console.log(createdrooms);
         // console.log(rooms);
     });

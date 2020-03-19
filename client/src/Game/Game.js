@@ -8,7 +8,7 @@ import OtherPlayers from "./OtherPlayers";
 import '../assets/App.css';
 
 
-import { socket } from "./socket";
+import { socket } from "../assets/socket";
 
 class Game extends Component {
     constructor(props) {

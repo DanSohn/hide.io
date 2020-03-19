@@ -90,16 +90,11 @@ class MenuScreen extends Component {
                 </div>
             );
         } else if (this.state.stage === 1) {
-            comp = <LobbyScreen />;
+            comp = <LobbyScreen name={this.state.userName} email={this.state.email} />;
         } else if (this.state.stage === 2) {
             comp = <Lobby />;
         } else if (this.state.stage === 3) {
-            comp = (
-                <PlayerProfile
-                    name={this.state.userName}
-                    email={this.state.email}
-                />
-            );
+            comp = <PlayerProfile name={this.state.userName} email={this.state.email} />;
         } else if (this.state.stage === 4) {
             comp = <Lobby />;
         }
