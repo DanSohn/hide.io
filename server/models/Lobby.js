@@ -11,10 +11,12 @@ const LobbySchema = new mongoose.Schema({
     },
     creation_date: {
         type: Date,
+        expireAfterSeconds: 86400,
         default: Date.now()
     }
 });
 
+// 86400 is 24 hours. The entry expires in 24 hours, and will delete itself then!
 const Lobby = mongoose.model('Lobby', LobbySchema);
 
 module.exports = Lobby;
