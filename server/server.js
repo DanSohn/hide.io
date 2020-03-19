@@ -98,6 +98,7 @@ io.on('connection', (socket) => {
                     const newLobby = new Lobby({
                         join_code: roomID,
                         creator_email: info.email,
+                        creation_date: Date.now()
                     });
 
                     // save the lobby to mongoDB, returning a promise when it succeeds

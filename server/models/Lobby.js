@@ -11,7 +11,7 @@ const LobbySchema = new mongoose.Schema({
     },
     creation_date: {
         type: Date,
-        expireAfterSeconds: 86400,
+        expires: '60m',
         default: Date.now()
     }
 });
