@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 // import Lobby from "./Lobby/Lobby";
 // import Background from './Background';
-import LoginScreen from "./loginScreen";
+import LoginScreen from "./Login/loginScreen";
 
 //import {socket} from './socket';
 

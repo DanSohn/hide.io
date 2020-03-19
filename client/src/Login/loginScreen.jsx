@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
-import { socket } from "./socket";
-import "./App.css";
+import { socket } from "../assets/socket";
+import "../assets/App.css";
 import UsernameSelection from "./usernameSelection";
 import MenuScreen from "./menuScreen";
 import Header from "./header";

@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import Lobby from "./Lobby/Lobby";
-import "./App.css";
+import "./assets/App.css";
 import PlayerProfile from "./PlayerProfile.js";
-import LobbyScreen from "./lobbyScreen";
-import Header from "./header";
-import Break from "./break";
+import LobbyScreen from "./Lobby/lobbyScreen";
+import Header from "./assets/header";
+import Break from "./assets/break";
 
 class MenuScreen extends Component {
     constructor(props) {

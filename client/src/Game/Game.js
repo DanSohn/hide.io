@@ -1,11 +1,11 @@
 import React, { Component } from "react";
-import background_img from "./assets/Background.png";
+import background_img from "../assets/images/Background.png";
 import Background from './Background';
 import Player from './Player';
 
 import OtherPlayers from "./OtherPlayers";
 
-import './App.css';
+import '../assets/App.css';
 
 
 import { socket } from "./socket";

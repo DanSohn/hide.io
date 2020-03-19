@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import MenuScreen from "./menuScreen";
-import { socket } from "./socket";
-import Header from "./header";
-import Break from "./break";
+import MenuScreen from "../menuScreen";
+import { socket } from "../assets/socket";
+import Header from "../assets/header";
+import Break from "../assets/break";
 
 class UsernameSelection extends Component {
     constructor(props) {

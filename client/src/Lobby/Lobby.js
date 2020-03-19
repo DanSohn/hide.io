@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 
-import {socket} from '../socket'
-import Game from "../Game";
+import {socket} from '../assets/socket'
+import Game from "../Game/Game";
 
 
 class Lobby extends Component {

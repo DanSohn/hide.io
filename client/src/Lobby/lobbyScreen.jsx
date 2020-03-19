@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import Lobby from "./Lobby/Lobby";
-import PlayerProfile from "./PlayerProfile.js";
-import Header from "./header";
-import Break from "./break";
+import Lobby from "./Lobby";
+import PlayerProfile from "../PlayerProfile.js";
+import Header from "../assets/header";
+import Break from "../assets/break";
 
 class LobbyScreen extends Component {
     constructor(props) {
