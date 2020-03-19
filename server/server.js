@@ -79,7 +79,7 @@ io.on('connection', (socket) => {
 
     //When player creates a new lobby to play with their friends
     //User creates lobby with a name (no need to be unique), with settings for the game
-    socket.on("create lobby", (lobbyname, settings) => {
+    socket.on("create lobby", (playername, lobbyname, settings) => {
         let duplicate = true;
         let roomid = "";
         while(duplicate){
@@ -90,6 +90,8 @@ io.on('connection', (socket) => {
             }
         }
         rooms[roomid] = {};
+        rooms.host = playername;
+        rooms.players = {}; //Information about each of the players that will join the lobby including the host
         rooms[roomid].roomname = lobbyname;
         rooms.settings = settings;
         createdrooms.push(roomid);
