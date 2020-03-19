@@ -28,10 +28,15 @@ let starting_pos = starting_pos_module.starting_positions;
 
 // create players object
 let players = {};
+
+// create a rooms object to keep track of rooms created
+//where the key is the room code to join
+let createdrooms = [];
+let rooms = {};
+
 console.log("Initial players list: ", players);
 io.on('connection', (socket) => {
     // console.log("A User has connected");
-
     // when a player is logging in through oauth, i cross-check the given info with the database to see
     // if the user already exists (email). If he does, I emit a message to go straight to main menu, otherwise to
     // go to user selection first
@@ -65,6 +70,33 @@ io.on('connection', (socket) => {
                 console.log(user, " has successfully been added to the database");
             })
             .catch(err => console.log(err));
+    });
+
+    //Send the rooms that are available when the user clicks play to see the available lobbies
+    socket.on("play", () => {
+        socket.emit("lobbies", rooms);
+    });
+
+    //When player creates a new lobby to play with their friends
+    //User creates lobby with a name (no need to be unique), with settings for the game
+    socket.on("create lobby", (playername, lobbyname, settings) => {
+        let duplicate = true;
+        let roomid = "";
+        while(duplicate){
+            roomid = Math.random().toString(36).slice(2);
+            console.log("Join code " + roomid);
+            if(!(roomid in rooms)){
+                duplicate = false;
+            }
+        }
+        rooms[roomid] = {};
+        rooms.host = playername;
+        rooms.players = {}; //Information about each of the players that will join the lobby including the host
+        rooms[roomid].roomname = lobbyname;
+        rooms.settings = settings;
+        createdrooms.push(roomid);
+        // console.log(createdrooms);
+        // console.log(rooms);
     });
 
     // when a player joins the game, I should provide them with a starting coordinate
@@ -141,6 +173,8 @@ io.on('connection', (socket) => {
         let players_arr = Object.keys(players);
         io.emit("Number of players", players_arr.length);
     });
+
+
 });
 
 // our http server listens to port 4000
