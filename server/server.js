@@ -83,7 +83,7 @@ io.on('connection', (socket) => {
         let duplicate = true;
         let roomid = "";
         while(duplicate){
-            roomid = Math.random().toString(36).slice(2);
+            roomid = Math.random().toString(36).slice(2, 8);
             console.log("Join code " + roomid);
             if(!(roomid in rooms)){
                 duplicate = false;
