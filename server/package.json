@@ -15,7 +15,8 @@
     "socket.io-client": "^2.3.0"
   },
   "scripts": {
-    "start": "nodemon server"
+    "start": "node server",
+    "heroku-postbuild": "cd ../client && npm install && npm run build"
   },
   "browserslist": {
     "production": [
