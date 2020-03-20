@@ -6,6 +6,9 @@ import UsernameSelection from "./usernameSelection";
 import MenuScreen from "../menuScreen";
 import Header from "../assets/header";
 import Break from "../assets/break";
+import FacebookLogin from 'react-facebook-login';
+import GitHubLogin from 'react-github-login';
+
 
 class LoginScreen extends Component {
     constructor(props) {
@@ -20,6 +23,9 @@ class LoginScreen extends Component {
         this.goToLobby = this.goToLobby.bind(this);
         this.googleSDK = this.googleSDK.bind(this);
         this.prepareLoginButton = this.prepareLoginButton.bind(this);
+        this.fbDta = this.fbDta.bind(this);
+        this.ghData = this.ghData.bind(this);
+        this.ghFail = this.ghFail.bind(this);
     }
 
     componentDidMount() {
@@ -123,23 +129,45 @@ class LoginScreen extends Component {
         );
     };
 
+    fbDta(res) {
+        // console.log(res)
+        this.setState({
+            userName: res.name,
+            email: res.email,
+            id: res.id
+        })
+        socket.emit("user exists check", res.email);
+    }
+
+    ghData(res) {
+        console.log(res.code)
+    }
+
+    ghFail(res) {
+        console.log(res)
+    }
+
     render() {
         let comp;
         if (this.state.SignIn === false) {
             comp = (
                 <div className="GameWindow">
-                    <Header />
+                    <div className="header">
+                        <div className="logo">
+                            <h1>Hide.IO</h1>
+                        </div>
+                    </div>
                     <Break />
                     <div className="ContentScreen">
                         <div className="LoginScreen">
-                            <button
-                                type="button"
-                                className="btn btn-primary"
-                                onClick={this.goToLobby}
-                            >
-                                Facebook
-                            </button>
-
+                            <FacebookLogin
+                                appId="687955828614830"
+                                autoLoad={false}
+                                callback={this.fbDta}
+                                fields="name,email,picture"
+                                cssClass="btn btn-primary"
+                                textButton="Facebook"
+                            />
                             <button
                                 type="button"
                                 className="btn btn-danger"
@@ -148,13 +176,13 @@ class LoginScreen extends Component {
                                 Google
                             </button>
 
-                            <button
-                                type="button"
+                            {/* <GitHubLogin clientId="a4f49e854204af56549d"
+                                redirectUri=""
+                                onSuccess={this.ghData}
+                                onFailure={this.ghFail}
                                 className="btn btn-success"
-                                onClick={this.goToLobby}
-                            >
-                                Github
-                            </button>
+                                buttonText="Github"
+                            /> */}
                         </div>
                     </div>
                 </div>
