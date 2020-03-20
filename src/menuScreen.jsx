@@ -18,7 +18,8 @@ class MenuScreen extends Component {
         this.state = {
             stage: 0,
             userName: this.props.name,
-            email: this.props.email
+            email: this.props.email,
+            image: this.props.image
         };
         this.goToPlayScreen = this.goToPlayScreen.bind(this);
         this.goToInstructions = this.goToInstructions.bind(this);
@@ -53,7 +54,7 @@ class MenuScreen extends Component {
         if (this.state.stage === 0) {
             comp = (
                 <div className="GameWindow">
-                    <Header showBack={false} />
+                    <Header showBack={false} image={this.state.image} />
                     <Break />
                     <div className="ContentScreen">
                         <div className="menuScreen">
@@ -94,6 +95,7 @@ class MenuScreen extends Component {
                 <LobbyScreen
                     name={this.state.userName}
                     email={this.state.email}
+                    image={this.state.image}
                 />
             );
         } else if (this.state.stage === 2) {
@@ -103,6 +105,7 @@ class MenuScreen extends Component {
                 <PlayerProfile
                     name={this.state.userName}
                     email={this.state.email}
+                    image={this.state.image}
                 />
             );
         } else if (this.state.stage === 4) {

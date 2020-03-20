@@ -10,7 +10,8 @@ class UsernameSelection extends Component {
         this.state = {
             typing: "",
             username: "",
-            email: this.props.email
+            email: this.props.email,
+            image: this.props.image
         };
         this.submitUsername = this.submitUsername.bind(this);
         this.handleKeyboard = this.handleKeyboard.bind(this);
@@ -74,6 +75,7 @@ class UsernameSelection extends Component {
                 <MenuScreen
                     email={this.state.email}
                     name={this.state.username}
+                    image={this.state.image}
                 />
             );
         }
