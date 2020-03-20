@@ -6,8 +6,8 @@ import Break from "../assets/break";
 
 import "../assets/App.css";
 
-
-import {socket} from '../assets/socket'
+import { socket } from "../assets/socket";
+import MenuScreen from "../menuScreen";
 
 class LobbyScreen extends Component {
     constructor(props) {
@@ -21,36 +21,52 @@ class LobbyScreen extends Component {
 
         this.state = {
             userName: this.props.name,
-            email: this.props.email
+            email: this.props.email,
+            previous: false
         };
 
         this.createLobby = this.createLobby.bind(this);
+        this.goPrevious = this.goPrevious.bind(this);
     }
 
-    createLobby(){
-        socket.emit("create lobby", ({
+    createLobby() {
+        socket.emit("create lobby", {
             username: this.state.userName,
             email: this.state.email,
-            settings: "no settings rn"}))
+            settings: "no settings rn"
+        });
+    }
+    goPrevious() {
+        this.setState({
+            previous: true
+        });
     }
 
     render() {
         //the idea is, for each record in the lobby database, a new div or list will appear.
         let comp;
-        comp = (
-            <div className="GameWindow">
-                <Header />
-                <Break />
-                <div className="ContentScreen">
-                    <div className="lobbySelection">
-                        <p>Shalom</p>
-                    </div>
-                    <div className="createLobby">
-                        <button type="button" className="btn btn-success" onClick={this.createLobby}/>
+        if (this.state.previous) {
+            comp = <MenuScreen />;
+        } else {
+            comp = (
+                <div className="GameWindow">
+                    <Header previous={this.goPrevious} />
+                    <Break />
+                    <div className="ContentScreen">
+                        <div className="lobbySelection">
+                            <p>Shalom</p>
+                        </div>
+                        <div className="createLobby">
+                            <button
+                                type="button"
+                                className="btn btn-success"
+                                onClick={this.createLobby}
+                            />
+                        </div>
                     </div>
                 </div>
-            </div>
-        );
+            );
+        }
         return <div>{comp}</div>;
     }
 }

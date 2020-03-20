@@ -42,7 +42,7 @@ class UsernameSelection extends Component {
         if (this.state.username === "") {
             comp = (
                 <div className="GameWindow">
-                    <Header />
+                    <Header showBack={false} showProfile={false} />
                     <Break />
                     <div className="ContentScreen">
                         <div className="usernameSelection">

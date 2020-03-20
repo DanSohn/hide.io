@@ -37,6 +37,15 @@ div {
     width: 100%;
 }
 
+.gameWindow .Container {
+    position: relative;
+    display: flex;
+    margin: 10px;
+    flex: 1;
+    align-items: center;
+    height: 20%;
+    width: 100%;
+}
 .GameWindow .header {
     position: relative;
     display: flex;

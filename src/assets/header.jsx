@@ -1,21 +1,58 @@
 import React, { Component } from "react";
 import "./App.css";
+import LoginScreen from "../Login/loginScreen";
 
 class Header extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            showBack: this.props.showBack,
+            showProfile: this.props.showProfile,
+            goBack: false,
+            goProfile: false
+        };
+        this.goBack = this.goBack.bind(this);
+        this.goProfile = this.goProfile.bind(this);
+    }
+    goBack() {
+        this.setState({
+            goBack: true
+        });
+    }
+    goProfile() {
+        this.setState({
+            goProfile: true
+        });
+    }
+
     render() {
-        return (
-            <div className="header">
-                <div className="backButton">
-                    <button className="btn btn-light">Go Back</button>
-                </div>
+        let comp;
+        let back;
+        let profile;
+        if (this.state.showBack != false) {
+            back = (
+                <button className="btn btn-light" onClick={this.props.previous}>
+                    Go Back
+                </button>
+            );
+        }
+        if (this.state.showProfile != false) {
+            profile = (
+                <button className="btn btn-dark" onClick={this.goProfile}>
+                    Profile
+                </button>
+            );
+        }
+        comp = (
+            <React.Fragment>
+                <div className="backButton">{back}</div>
                 <div className="logo">
                     <h1>Hide.IO</h1>
                 </div>
-                <div className="profile">
-                    <button className="btn btn-dark">Profile</button>
-                </div>
-            </div>
+                <div className="profile">{profile}</div>
+            </React.Fragment>
         );
+        return <div className="header">{comp}</div>;
     }
 }
 export default Header;

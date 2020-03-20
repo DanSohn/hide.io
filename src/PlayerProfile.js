@@ -14,11 +14,17 @@ class PlayerProfile extends Component {
             userName: this.props.name,
             email: this.props.email,
             signedIn: true,
-            goBack: false
+            goBack: false,
+            previous: false
         };
         this.goBack = this.goBack.bind(this);
+        this.goPrevious = this.goPrevious.bind(this);
     }
-
+    goPrevious() {
+        this.setState({
+            previous: true
+        });
+    }
     goBack() {
         this.setState({
             goBack: true
@@ -27,10 +33,10 @@ class PlayerProfile extends Component {
 
     render() {
         let comp;
-        if (!this.state.goBack) {
+        if (!this.state.previous) {
             comp = (
                 <div className="GameWindow">
-                    <Header />
+                    <Header previous={this.goPrevious} />
                     <Break />
                     <div className="ContentScreen">
                         <div className="menuScreen">
