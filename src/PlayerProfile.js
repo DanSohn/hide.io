@@ -15,7 +15,8 @@ class PlayerProfile extends Component {
             email: this.props.email,
             signedIn: true,
             goBack: false,
-            previous: false
+            previous: false,
+            image: this.props.image
         };
         this.goBack = this.goBack.bind(this);
         this.goPrevious = this.goPrevious.bind(this);
@@ -36,7 +37,10 @@ class PlayerProfile extends Component {
         if (!this.state.previous) {
             comp = (
                 <div className="GameWindow">
-                    <Header previous={this.goPrevious} />
+                    <Header
+                        previous={this.goPrevious}
+                        image={this.state.image}
+                    />
                     <Break />
                     <div className="ContentScreen">
                         <div className="menuScreen">
@@ -58,6 +62,7 @@ class PlayerProfile extends Component {
                 <MenuScreen
                     name={this.state.userName}
                     email={this.state.email}
+                    image={this.state.image}
                 />
             );
         }

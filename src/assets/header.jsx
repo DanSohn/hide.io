@@ -8,6 +8,7 @@ class Header extends Component {
         this.state = {
             showBack: this.props.showBack,
             showProfile: this.props.showProfile,
+            image: this.props.image,
             goBack: false,
             goProfile: false
         };
@@ -38,9 +39,10 @@ class Header extends Component {
         }
         if (this.state.showProfile != false) {
             profile = (
-                <button className="btn btn-dark" onClick={this.goProfile}>
-                    Profile
-                </button>
+                // <button className="btn btn-dark" onClick={this.goProfile}>
+                //     Profile
+                // </button>
+                <img src={this.state.image} alt="picture"></img>
             );
         }
         comp = (

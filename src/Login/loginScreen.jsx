@@ -6,9 +6,8 @@ import UsernameSelection from "./usernameSelection";
 import MenuScreen from "../menuScreen";
 import Header from "../assets/header";
 import Break from "../assets/break";
-import FacebookLogin from 'react-facebook-login';
-import GitHubLogin from 'react-github-login';
-
+import FacebookLogin from "react-facebook-login";
+import GitHubLogin from "react-github-login";
 
 class LoginScreen extends Component {
     constructor(props) {
@@ -18,7 +17,8 @@ class LoginScreen extends Component {
             newUser: true,
             userName: "",
             id: "",
-            email: ""
+            email: "",
+            image: ""
         };
         this.goToLobby = this.goToLobby.bind(this);
         this.googleSDK = this.googleSDK.bind(this);
@@ -117,7 +117,8 @@ class LoginScreen extends Component {
                 this.setState({
                     userName: profile.getName(),
                     id: profile.getId(),
-                    email: profile.getEmail()
+                    email: profile.getEmail(),
+                    image: profile.getImageUrl()
                 });
             },
             error => {
@@ -135,16 +136,16 @@ class LoginScreen extends Component {
             userName: res.name,
             email: res.email,
             id: res.id
-        })
+        });
         socket.emit("user exists check", res.email);
     }
 
     ghData(res) {
-        console.log(res.code)
+        console.log(res.code);
     }
 
     ghFail(res) {
-        console.log(res)
+        console.log(res);
     }
 
     render() {
@@ -191,12 +192,18 @@ class LoginScreen extends Component {
             // comp = <MenuScreen name={this.state.userName} id={this.state.id}/>
             // comp = <Lobby/>
             if (this.state.newUser) {
-                comp = <UsernameSelection email={this.state.email} />;
+                comp = (
+                    <UsernameSelection
+                        email={this.state.email}
+                        image={this.state.image}
+                    />
+                );
             } else {
                 comp = (
                     <MenuScreen
                         name={this.state.userName}
                         email={this.state.email}
+                        image={this.state.image}
                     />
                 );
             }

@@ -22,7 +22,8 @@ class LobbyScreen extends Component {
         this.state = {
             userName: this.props.name,
             email: this.props.email,
-            previous: false
+            previous: false,
+            image: this.props.image
         };
 
         this.createLobby = this.createLobby.bind(this);
@@ -46,15 +47,29 @@ class LobbyScreen extends Component {
         //the idea is, for each record in the lobby database, a new div or list will appear.
         let comp;
         if (this.state.previous) {
-            comp = <MenuScreen />;
+            comp = (
+                <MenuScreen
+                    email={this.state.email}
+                    name={this.state.username}
+                    image={this.state.image}
+                />
+            );
         } else {
             comp = (
                 <div className="GameWindow">
-                    <Header previous={this.goPrevious} />
+                    <Header
+                        previous={this.goPrevious}
+                        image={this.props.image}
+                    />
                     <Break />
                     <div className="ContentScreen">
                         <div className="lobbySelection">
-                            <p>Shalom</p>
+                            <table className="lobbyTable">
+                                <tr>
+                                    <th>Lobby Name</th>
+                                    <th>Action</th>
+                                </tr>
+                            </table>
                         </div>
                         <div className="createLobby">
                             <button
