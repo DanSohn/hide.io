@@ -16,10 +16,18 @@ class CreateLobby extends Component {
             userName: this.props.name,
             email: this.props.email,
             previous: false,
-            image: this.props.image
+            image: this.props.image,
+            lobbyName:"",
+            gameMode:"",
+            gameTime:3,
+            gameMap:""
         };
         this.goPrevious = this.goPrevious.bind(this);
-        this.addNewLobby = this.addNewLobby.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleChangeLobbyName = this.handleChangeLobbyName.bind(this);
+        this.handleChangeGameMode = this.handleChangeGameMode.bind(this);
+        this.handleChangeGameTime = this.handleChangeGameTime.bind(this);
+        this.handleChangeGameMap = this.handleChangeGameMap.bind(this);
     }
 
     goPrevious() {
@@ -28,11 +36,17 @@ class CreateLobby extends Component {
         });
     }
 
-    addNewLobby() {
+    handleSubmit(event) {
         this.setState({
             previous: true
         });
     }
+
+    handleChangeLobbyName(event){}
+    handleChangeGameMode(event){}
+    handleChangeGameTime(event){}
+    handleChangeGameMap(event){}
+
 
     render() {
         let comp;
@@ -63,19 +77,13 @@ class CreateLobby extends Component {
                         <h2>Map</h2>
                     </div>
                     <div className="createLobbyForm">
-                        <form onSubmit={this.addNewLobby}>
+                        <form onSubmit={this.handleSubmit}>
                             <div className="createLobbyContainer0">
                                 <div className="createLobbyContainer">
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        id="usr"
-                                        required
-                                    ></input>
-                                    <select
-                                        className="browser-default custom-select"
-                                        required
-                                    >
+                                    <input value={this.state.lobbyName} onChange={this.handleChangeLobbyName}
+                                           type="text" class="form-control" id="usr" required />
+                                    <select value={this.state.gameMode} onChange={this.handleChangeGameMode}
+                                            className="browser-default custom-select" required >
                                         <option selected></option>
                                         <option value="1">
                                             Lover's Paradise
@@ -87,7 +95,7 @@ class CreateLobby extends Component {
                                             Love is an open door
                                         </option>
                                     </select>
-                                    <select
+                                    <select value={this.state.gameTime} onChange={this.handleChangeGameTime}
                                         className="browser-default custom-select"
                                         required
                                     >
@@ -96,7 +104,7 @@ class CreateLobby extends Component {
                                         <option value="2">4 mins</option>
                                         <option value="3">5 mins</option>
                                     </select>
-                                    <select
+                                    <select value={this.state.gameMap} onChange={this.handleChangeGameMap}
                                         className="browser-default custom-select"
                                         required
                                     >
