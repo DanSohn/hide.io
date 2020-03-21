@@ -36,7 +36,7 @@ class ViewLobbies extends Component {
 
     createLobby() {
         socket.emit("create lobby", {
-            username: this.state.userName,
+            userName: this.state.userName,
             email: this.state.email,
             settings: "no settings rn"
         });
@@ -65,7 +65,7 @@ class ViewLobbies extends Component {
             comp = (
                 <MenuScreen
                     email={this.state.email}
-                    name={this.state.username}
+                    name={this.state.userName}
                     image={this.state.image}
                 />
             );

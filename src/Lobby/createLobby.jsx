@@ -40,7 +40,7 @@ class CreateLobby extends Component {
             comp = (
                 <ViewLobbies
                     email={this.state.email}
-                    name={this.state.username}
+                    name={this.state.userName}
                     image={this.state.image}
                 />
             );
