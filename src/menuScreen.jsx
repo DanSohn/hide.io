@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Lobby from "./Lobby/Lobby";
 import "./assets/App.css";
 import PlayerProfile from "./PlayerProfile.js";
-import LobbyScreen from "./Lobby/lobbyScreen";
+import ViewLobbies from "./Lobby/viewLobbies";
 import Header from "./assets/header";
 import Break from "./assets/break";
 
@@ -92,7 +92,7 @@ class MenuScreen extends Component {
             );
         } else if (this.state.stage === 1) {
             comp = (
-                <LobbyScreen
+                <ViewLobbies
                     name={this.state.userName}
                     email={this.state.email}
                     image={this.state.image}

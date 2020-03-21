@@ -6,7 +6,7 @@ import Break from "../assets/break";
 import "bootstrap/dist/js/bootstrap.bundle";
 
 import "../assets/App.css";
-import LobbyScreen from "./lobbyScreen";
+import ViewLobbies from "./viewLobbies";
 
 class CreateLobby extends Component {
     constructor(props) {
@@ -38,7 +38,7 @@ class CreateLobby extends Component {
         let comp;
         if (this.state.previous) {
             comp = (
-                <LobbyScreen
+                <ViewLobbies
                     email={this.state.email}
                     name={this.state.username}
                     image={this.state.image}

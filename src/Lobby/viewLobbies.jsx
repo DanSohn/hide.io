@@ -10,7 +10,7 @@ import { socket } from "../assets/socket";
 import MenuScreen from "../menuScreen";
 import CreateLobby from "./createLobby";
 
-class LobbyScreen extends Component {
+class ViewLobbies extends Component {
     constructor(props) {
         super(props);
 
@@ -128,4 +128,4 @@ class LobbyScreen extends Component {
         return <div>{comp}</div>;
     }
 }
-export default LobbyScreen;
+export default ViewLobbies;
