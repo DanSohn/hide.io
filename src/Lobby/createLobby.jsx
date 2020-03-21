@@ -3,8 +3,9 @@ import Lobby from "./Lobby";
 import PlayerProfile from "../PlayerProfile.js";
 import Header from "../assets/header";
 import Break from "../assets/break";
-import "bootstrap/dist/js/bootstrap.bundle";
+import { socket } from "../assets/socket";
 
+import "bootstrap/dist/js/bootstrap.bundle";
 import "../assets/App.css";
 import ViewLobbies from "./viewLobbies";
 
@@ -45,9 +46,18 @@ class CreateLobby extends Component {
         console.log("game mode: ", this.state.gameMode);
         console.log("game time: ", this.state.gameTime);
         console.log("game map: ", this.state.gameMap);
+
+        socket.emit("create lobby", {
+            email: this.state.email,
+            lobbyName: this.state.lobbyName,
+            gameMode: this.state.gameMode,
+            gameTime: this.state.gameTime,
+            gameMap: this.state.gameMap
+        });
         this.setState({
             submitted: true
         });
+
     }
 
     handleChangeLobbyName(event){
@@ -56,7 +66,6 @@ class CreateLobby extends Component {
         });
     }
     handleChangeGameMode(event){
-        console.log("handing changing game mode to:", event.target.value);
         this.setState({
             gameMode: event.target.value
         });
