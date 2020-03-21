@@ -36,9 +36,32 @@ class PlayerProfile extends Component {
                     />
                     <Break />
                     <div className="ContentScreen">
-                        <div className="menuScreen">
-                            <h2>Name: {this.state.userName}</h2>
-                            <h2>Email: {this.state.email}</h2>
+                        <div className="profileLabels">
+                            <h2>Name:</h2>
+                            <h2>Email:</h2>
+                            <h2>Win/Loss:</h2>
+                        </div>
+                        <div className="profileResults">
+                            <input
+                                type="text"
+                                className="form-control"
+                                id="userName"
+                                placeholder={this.state.userName}
+                            ></input>
+                            <input
+                                type="text"
+                                id="email"
+                                className="form-control"
+                                placeholder={this.state.email}
+                                readOnly
+                            ></input>
+                            <input
+                                type="text"
+                                id="email"
+                                className="form-control"
+                                placeholder="200/0"
+                                readOnly
+                            ></input>
                         </div>
                     </div>
                 </div>
