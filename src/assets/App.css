@@ -32,6 +32,12 @@ div {
     border-radius: 5%;
     border: 5px solid yellow;
 }
+.GameWindow .title {
+    height: 10%;
+    justify-content: start;
+    order: 1;
+    width: 100%;
+}
 .gameWindow div {
     position: relative;
     width: 100%;
@@ -55,6 +61,15 @@ div {
     height: 20%;
     border-bottom: 3px solid #4f535c;
 }
+table {
+    width: 100%;
+}
+table,
+tr,
+td {
+    border: 1px solid black;
+}
+
 .header button,
 .header img {
     margin: 0px;
@@ -102,10 +117,59 @@ div {
     border: 5px solid blue;
 }
 
-.GameWindow .createLobby {
+.createLobby,
+.createLobbyText {
     order: 2;
     flex: 1;
-    border: 5px solid rosybrown;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.createLobbyText {
+    margin: 0px 0px 0px 50px;
+}
+.createLobbyForm {
+    order: 3;
+    flex: 2;
+}
+.createLobbyContainer0 {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+form {
+    height: 100%;
+}
+.createLobbyContainer {
+    order: 2;
+    flex: 1;
+}
+select,
+.createLobbyForm input {
+    margin: 5px;
+}
+.createLobbyForm {
+    margin: 20px;
+    align-items: center;
+    position: relative;
+    height: 75%;
+}
+.createLobbyText h2 {
+    text-align: left;
+}
+.createLobbyForm button {
+    align-self: center;
+    margin: 20px;
+    height: 30%;
+    width: 50%;
+}
+
+.createLobby button {
+    margin: 20px;
+    height: 40%;
+    width: 70%;
 }
 .menuScreen button,
 .LoginScreen button {

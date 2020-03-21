@@ -8,6 +8,7 @@ import "../assets/App.css";
 
 import { socket } from "../assets/socket";
 import MenuScreen from "../menuScreen";
+import CreateLobby from "./createLobby";
 
 class LobbyScreen extends Component {
     constructor(props) {
@@ -23,11 +24,14 @@ class LobbyScreen extends Component {
             userName: this.props.name,
             email: this.props.email,
             previous: false,
-            image: this.props.image
+            image: this.props.image,
+            stage: 0
         };
 
         this.createLobby = this.createLobby.bind(this);
         this.goPrevious = this.goPrevious.bind(this);
+        this.goToLobby = this.goToLobby.bind(this);
+        //this.goToJoinCode = this.goToJoinCode.bind(this);
     }
 
     createLobby() {
@@ -42,6 +46,17 @@ class LobbyScreen extends Component {
             previous: true
         });
     }
+    goToLobby() {
+        this.setState(state => ({
+            stage: 1
+        }));
+    }
+
+    goToJoinCode() {
+        this.setState(state => ({
+            stage: 2
+        }));
+    }
 
     render() {
         //the idea is, for each record in the lobby database, a new div or list will appear.
@@ -54,7 +69,17 @@ class LobbyScreen extends Component {
                     image={this.state.image}
                 />
             );
-        } else {
+        } else if (this.state.stage == 1) {
+            comp = (
+                <CreateLobby
+                    name={this.state.userName}
+                    email={this.state.email}
+                    image={this.state.image}
+                />
+            );
+        } else if (this.state.stage == 2) {
+            //<JoinCode />;
+        } else if (this.state.stage == 0) {
             comp = (
                 <div className="GameWindow">
                     <Header
@@ -67,16 +92,34 @@ class LobbyScreen extends Component {
                             <table className="lobbyTable">
                                 <tr>
                                     <th>Lobby Name</th>
+                                    <th>Players</th>
                                     <th>Action</th>
+                                </tr>
+                                <tr>
+                                    <td>Noob Master</td>
+                                    <td>0/6</td>
+                                    <td>
+                                        <button>Join</button>
+                                    </td>
                                 </tr>
                             </table>
                         </div>
                         <div className="createLobby">
-                            <button
+                            {/* <button
                                 type="button"
                                 className="btn btn-success"
                                 onClick={this.createLobby}
-                            />
+                            /> */}
+                            <button
+                                type="button"
+                                className="btn btn-danger"
+                                onClick={this.goToLobby}
+                            >
+                                CREATE LOBBY
+                            </button>
+                            <button type="button" className="btn btn-info">
+                                JOIN BY CODE
+                            </button>
                         </div>
                     </div>
                 </div>
