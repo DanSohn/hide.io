@@ -115,6 +115,8 @@ td {
     order: 1;
     flex: 3;
     border: 5px solid blue;
+    height: 80%;
+    overflow: auto;
 }
 
 .createLobby,

@@ -102,6 +102,104 @@ class ViewLobbies extends Component {
                                         <button>Join</button>
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td>Noob Master</td>
+                                    <td>0/6</td>
+                                    <td>
+                                        <button>Join</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Noob Master</td>
+                                    <td>0/6</td>
+                                    <td>
+                                        <button>Join</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Noob Master</td>
+                                    <td>0/6</td>
+                                    <td>
+                                        <button>Join</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Noob Master</td>
+                                    <td>0/6</td>
+                                    <td>
+                                        <button>Join</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Noob Master</td>
+                                    <td>0/6</td>
+                                    <td>
+                                        <button>Join</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Noob Master</td>
+                                    <td>0/6</td>
+                                    <td>
+                                        <button>Join</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Noob Master</td>
+                                    <td>0/6</td>
+                                    <td>
+                                        <button>Join</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Noob Master</td>
+                                    <td>0/6</td>
+                                    <td>
+                                        <button>Join</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Noob Master</td>
+                                    <td>0/6</td>
+                                    <td>
+                                        <button>Join</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Noob Master</td>
+                                    <td>0/6</td>
+                                    <td>
+                                        <button>Join</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Noob Master</td>
+                                    <td>0/6</td>
+                                    <td>
+                                        <button>Join</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Noob Master</td>
+                                    <td>0/6</td>
+                                    <td>
+                                        <button>Join</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Noob Master</td>
+                                    <td>0/6</td>
+                                    <td>
+                                        <button>Join</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Noob Master</td>
+                                    <td>0/6</td>
+                                    <td>
+                                        <button>Join</button>
+                                    </td>
+                                </tr>
                             </table>
                         </div>
                         <div className="createLobby">
