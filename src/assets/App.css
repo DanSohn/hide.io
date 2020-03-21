@@ -179,6 +179,7 @@ select,
 
 .profileResults input {
     width: 50%;
+    margin: 1%;
 }
 .createLobbyForm button {
     align-self: center;

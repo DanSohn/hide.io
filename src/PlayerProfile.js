@@ -37,11 +37,20 @@ class PlayerProfile extends Component {
                     <Break />
                     <div className="ContentScreen">
                         <div className="profileLabels">
+                            <h2>Profile:</h2>
                             <h2>Name:</h2>
                             <h2>Email:</h2>
                             <h2>Win/Loss:</h2>
+                            <h2>Total Games:</h2>
                         </div>
                         <div className="profileResults">
+                            <input
+                                type="text"
+                                id="email"
+                                className="form-control"
+                                placeholder="what goes here?"
+                                readOnly
+                            ></input>
                             <input
                                 type="text"
                                 className="form-control"
@@ -60,6 +69,13 @@ class PlayerProfile extends Component {
                                 id="email"
                                 className="form-control"
                                 placeholder="200/0"
+                                readOnly
+                            ></input>
+                            <input
+                                type="text"
+                                id="email"
+                                className="form-control"
+                                placeholder="I assume wins + loss"
                                 readOnly
                             ></input>
                         </div>
