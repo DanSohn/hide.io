@@ -82,22 +82,23 @@ io.on('connection', (socket) => {
     //When player creates a new lobby to play with their friends
     //User creates lobby with a name (no need to be unique), with settings for the game
     // PARAMETERS:
-    //          info: an object containing: username, user email, lobbyname (optional), and the settings
+    //          info: an object containing: user email, lobbyname , game mode, game time, game map
     socket.on("create lobby", (info) => {
-        console.log("Creating lobby...");
-        let roomID = Math.random().toString(36).slice(2, 8);;
+        console.log("Creating lobby with info ", info);
+        let roomID = Math.random().toString(36).slice(2, 8);
 
         Lobby.findOne({join_code: roomID})
             .then(lobby => {
-                console.log("hahahaha");
                 if(lobby){
                     console.log("Thats unlucky! Try again!");
                 }else{
-                    console.log("Join code ", roomID);
-                    console.log("info...", info.email)
                     const newLobby = new Lobby({
                         join_code: roomID,
                         creator_email: info.email,
+                        lobby_name: info.lobbyName,
+                        game_mode: info.gameMode,
+                        game_time: info.gameTime,
+                        game_map: info.gameMap,
                         creation_date: Date.now()
                     });
 

@@ -3,8 +3,9 @@ import Lobby from "./Lobby";
 import PlayerProfile from "../PlayerProfile.js";
 import Header from "../assets/header";
 import Break from "../assets/break";
-import "bootstrap/dist/js/bootstrap.bundle";
+import { socket } from "../assets/socket";
 
+import "bootstrap/dist/js/bootstrap.bundle";
 import "../assets/App.css";
 import ViewLobbies from "./viewLobbies";
 
@@ -16,10 +17,19 @@ class CreateLobby extends Component {
             userName: this.props.name,
             email: this.props.email,
             previous: false,
-            image: this.props.image
+            submitted: false,
+            image: this.props.image,
+            lobbyName:"",
+            gameMode:"",
+            gameTime:"",
+            gameMap: ""
         };
         this.goPrevious = this.goPrevious.bind(this);
-        this.addNewLobby = this.addNewLobby.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleChangeLobbyName = this.handleChangeLobbyName.bind(this);
+        this.handleChangeGameMode = this.handleChangeGameMode.bind(this);
+        this.handleChangeGameTime = this.handleChangeGameTime.bind(this);
+        this.handleChangeGameMap = this.handleChangeGameMap.bind(this);
     }
 
     goPrevious() {
@@ -28,11 +38,49 @@ class CreateLobby extends Component {
         });
     }
 
-    addNewLobby() {
+    handleSubmit(event) {
+        event.preventDefault();
+        console.log("Submitting!!!!");
+        console.log("i will be providing to the server this information:");
+        console.log("lobby name: ", this.state.lobbyName);
+        console.log("game mode: ", this.state.gameMode);
+        console.log("game time: ", this.state.gameTime);
+        console.log("game map: ", this.state.gameMap);
+
+        socket.emit("create lobby", {
+            email: this.state.email,
+            lobbyName: this.state.lobbyName,
+            gameMode: this.state.gameMode,
+            gameTime: this.state.gameTime,
+            gameMap: this.state.gameMap
+        });
         this.setState({
-            previous: true
+            submitted: true
+        });
+
+    }
+
+    handleChangeLobbyName(event){
+        this.setState({
+            lobbyName: event.target.value
         });
     }
+    handleChangeGameMode(event){
+        this.setState({
+            gameMode: event.target.value
+        });
+    }
+    handleChangeGameTime(event){
+        this.setState({
+            gameTime: event.target.value
+        });
+    }
+    handleChangeGameMap(event){
+        this.setState({
+            gameMap: event.target.value
+        });
+    }
+
 
     render() {
         let comp;
@@ -44,6 +92,11 @@ class CreateLobby extends Component {
                     image={this.state.image}
                 />
             );
+        }else if(this.state.submitted){
+            comp = (
+                <Lobby />
+
+            )
         } else {
             comp = (
                 <React.Fragment>
@@ -63,20 +116,14 @@ class CreateLobby extends Component {
                         <h2>Map</h2>
                     </div>
                     <div className="createLobbyForm">
-                        <form onSubmit={this.addNewLobby}>
+                        <form onSubmit={this.handleSubmit}>
                             <div className="createLobbyContainer0">
                                 <div className="createLobbyContainer">
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        id="usr"
-                                        required
-                                    ></input>
-                                    <select
-                                        className="browser-default custom-select"
-                                        required
-                                    >
-                                        <option selected></option>
+                                    <input value={this.state.lobbyName} onChange={this.handleChangeLobbyName}
+                                           type="text" className="form-control" id="usr" required />
+                                    <select value={this.state.gameMode} onChange={this.handleChangeGameMode}
+                                            className="browser-default custom-select" required >
+                                        <option selected/>
                                         <option value="1">
                                             Lover's Paradise
                                         </option>
@@ -87,20 +134,20 @@ class CreateLobby extends Component {
                                             Love is an open door
                                         </option>
                                     </select>
-                                    <select
+                                    <select value={this.state.gameTime} onChange={this.handleChangeGameTime}
                                         className="browser-default custom-select"
                                         required
                                     >
-                                        <option selected></option>
+                                        <option selected/>
                                         <option value="1">3 mins</option>
                                         <option value="2">4 mins</option>
                                         <option value="3">5 mins</option>
                                     </select>
-                                    <select
+                                    <select value={this.state.gameMap} onChange={this.handleChangeGameMap}
                                         className="browser-default custom-select"
                                         required
                                     >
-                                        <option selected></option>
+                                        <option selected/>
                                         <option value="1">
                                             Never gonna give you up
                                         </option>
@@ -126,8 +173,7 @@ class CreateLobby extends Component {
                                     <button
                                         type="submit"
                                         className="btn btn-info"
-                                    >
-                                        Submit
+                                    >Submit
                                     </button>
                                 </div>
                             </div>

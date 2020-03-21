@@ -9,7 +9,23 @@ const LobbySchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    creation_date: {
+    lobby_name: {
+        type: String,
+        required: true
+    },
+    game_mode: {
+        type: String,
+        required: true
+    },
+    game_time: {
+        type: String,
+        required: true
+    },
+    game_map: {
+        type: String,
+        required: true
+    },
+    createdAt: {
         type: Date,
         expires: '60m',
         default: Date.now()
