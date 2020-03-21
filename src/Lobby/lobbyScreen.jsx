@@ -67,16 +67,30 @@ class LobbyScreen extends Component {
                             <table className="lobbyTable">
                                 <tr>
                                     <th>Lobby Name</th>
+                                    <th>Players</th>
                                     <th>Action</th>
+                                </tr>
+                                <tr>
+                                    <td>Noob Master</td>
+                                    <td>0/6</td>
+                                    <td>
+                                        <button>Join</button>
+                                    </td>
                                 </tr>
                             </table>
                         </div>
                         <div className="createLobby">
-                            <button
+                            {/* <button
                                 type="button"
                                 className="btn btn-success"
                                 onClick={this.createLobby}
-                            />
+                            /> */}
+                            <button type="button" className="btn btn-danger">
+                                CREATE LOBBY
+                            </button>
+                            <button type="button" className="btn btn-info">
+                                JOIN BY CODE
+                            </button>
                         </div>
                     </div>
                 </div>

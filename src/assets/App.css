@@ -55,6 +55,15 @@ div {
     height: 20%;
     border-bottom: 3px solid #4f535c;
 }
+table {
+    width: 100%;
+}
+table,
+tr,
+td {
+    border: 1px solid black;
+}
+
 .header button,
 .header img {
     margin: 0px;
@@ -105,7 +114,16 @@ div {
 .GameWindow .createLobby {
     order: 2;
     flex: 1;
-    border: 5px solid rosybrown;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.createLobby button {
+    margin: 20px;
+    height: 40%;
+    width: 70%;
 }
 .menuScreen button,
 .LoginScreen button {
