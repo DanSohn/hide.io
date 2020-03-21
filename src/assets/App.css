@@ -119,6 +119,10 @@ td {
     overflow: auto;
 }
 
+tr .btn-success {
+    height: 80%;
+    width: 100%;
+}
 .createLobby,
 .createLobbyText {
     order: 2;

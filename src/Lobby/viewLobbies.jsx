@@ -99,105 +99,135 @@ class ViewLobbies extends Component {
                                     <td>Noob Master</td>
                                     <td>0/6</td>
                                     <td>
-                                        <button>Join</button>
+                                        <button className="btn btn-success">
+                                            Join
+                                        </button>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>Noob Master</td>
                                     <td>0/6</td>
                                     <td>
-                                        <button>Join</button>
+                                        <button className="btn btn-success">
+                                            Join
+                                        </button>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>Noob Master</td>
                                     <td>0/6</td>
                                     <td>
-                                        <button>Join</button>
+                                        <button className="btn btn-success">
+                                            Join
+                                        </button>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>Noob Master</td>
                                     <td>0/6</td>
                                     <td>
-                                        <button>Join</button>
+                                        <button className="btn btn-success">
+                                            Join
+                                        </button>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>Noob Master</td>
                                     <td>0/6</td>
                                     <td>
-                                        <button>Join</button>
+                                        <button className="btn btn-success">
+                                            Join
+                                        </button>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>Noob Master</td>
                                     <td>0/6</td>
                                     <td>
-                                        <button>Join</button>
+                                        <button className="btn btn-success">
+                                            Join
+                                        </button>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>Noob Master</td>
                                     <td>0/6</td>
                                     <td>
-                                        <button>Join</button>
+                                        <button className="btn btn-success">
+                                            Join
+                                        </button>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>Noob Master</td>
                                     <td>0/6</td>
                                     <td>
-                                        <button>Join</button>
+                                        <button className="btn btn-success">
+                                            Join
+                                        </button>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>Noob Master</td>
                                     <td>0/6</td>
                                     <td>
-                                        <button>Join</button>
+                                        <button className="btn btn-success">
+                                            Join
+                                        </button>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>Noob Master</td>
                                     <td>0/6</td>
                                     <td>
-                                        <button>Join</button>
+                                        <button className="btn btn-success">
+                                            Join
+                                        </button>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>Noob Master</td>
                                     <td>0/6</td>
                                     <td>
-                                        <button>Join</button>
+                                        <button className="btn btn-success">
+                                            Join
+                                        </button>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>Noob Master</td>
                                     <td>0/6</td>
                                     <td>
-                                        <button>Join</button>
+                                        <button className="btn btn-success">
+                                            Join
+                                        </button>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>Noob Master</td>
                                     <td>0/6</td>
                                     <td>
-                                        <button>Join</button>
+                                        <button className="btn btn-success">
+                                            Join
+                                        </button>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>Noob Master</td>
                                     <td>0/6</td>
                                     <td>
-                                        <button>Join</button>
+                                        <button className="btn btn-success">
+                                            Join
+                                        </button>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>Noob Master</td>
                                     <td>0/6</td>
                                     <td>
-                                        <button>Join</button>
+                                        <button className="btn btn-success">
+                                            Join
+                                        </button>
                                     </td>
                                 </tr>
                             </table>
