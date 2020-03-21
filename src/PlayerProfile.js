@@ -14,21 +14,14 @@ class PlayerProfile extends Component {
             userName: this.props.name,
             email: this.props.email,
             signedIn: true,
-            goBack: false,
             previous: false,
             image: this.props.image
         };
-        this.goBack = this.goBack.bind(this);
         this.goPrevious = this.goPrevious.bind(this);
     }
     goPrevious() {
         this.setState({
             previous: true
-        });
-    }
-    goBack() {
-        this.setState({
-            goBack: true
         });
     }
 
@@ -46,13 +39,6 @@ class PlayerProfile extends Component {
                         <div className="menuScreen">
                             <h2>Name: {this.state.userName}</h2>
                             <h2>Email: {this.state.email}</h2>
-                            <button
-                                type="button"
-                                className="btn btn-success"
-                                onClick={this.goBack}
-                            >
-                                Back
-                            </button>
                         </div>
                     </div>
                 </div>
