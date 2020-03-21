@@ -14,21 +14,14 @@ class PlayerProfile extends Component {
             userName: this.props.name,
             email: this.props.email,
             signedIn: true,
-            goBack: false,
             previous: false,
             image: this.props.image
         };
-        this.goBack = this.goBack.bind(this);
         this.goPrevious = this.goPrevious.bind(this);
     }
     goPrevious() {
         this.setState({
             previous: true
-        });
-    }
-    goBack() {
-        this.setState({
-            goBack: true
         });
     }
 
@@ -43,16 +36,48 @@ class PlayerProfile extends Component {
                     />
                     <Break />
                     <div className="ContentScreen">
-                        <div className="menuScreen">
-                            <h2>Name: {this.state.userName}</h2>
-                            <h2>Email: {this.state.email}</h2>
-                            <button
-                                type="button"
-                                className="btn btn-success"
-                                onClick={this.goBack}
-                            >
-                                Back
-                            </button>
+                        <div className="profileLabels">
+                            <h2>Profile:</h2>
+                            <h2>Name:</h2>
+                            <h2>Email:</h2>
+                            <h2>Win/Loss:</h2>
+                            <h2>Total Games:</h2>
+                        </div>
+                        <div className="profileResults">
+                            <input
+                                type="text"
+                                id="email"
+                                className="form-control"
+                                placeholder="what goes here?"
+                                readOnly
+                            ></input>
+                            <input
+                                type="text"
+                                className="form-control"
+                                id="userName"
+                                placeholder={this.state.userName}
+                            ></input>
+                            <input
+                                type="text"
+                                id="email"
+                                className="form-control"
+                                placeholder={this.state.email}
+                                readOnly
+                            ></input>
+                            <input
+                                type="text"
+                                id="email"
+                                className="form-control"
+                                placeholder="200/0"
+                                readOnly
+                            ></input>
+                            <input
+                                type="text"
+                                id="email"
+                                className="form-control"
+                                placeholder="I assume wins + loss"
+                                readOnly
+                            ></input>
                         </div>
                     </div>
                 </div>

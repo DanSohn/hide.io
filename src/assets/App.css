@@ -119,6 +119,10 @@ td {
     overflow: auto;
 }
 
+tr .btn-success {
+    height: 80%;
+    width: 100%;
+}
 .createLobby,
 .createLobbyText {
     order: 2;
@@ -160,6 +164,22 @@ select,
 }
 .createLobbyText h2 {
     text-align: left;
+}
+.profileLabels {
+    padding: 20px;
+    text-align: right;
+    order: 1;
+    flex: 1;
+}
+
+.profileResults {
+    order: 2;
+    flex: 2;
+}
+
+.profileResults input {
+    width: 50%;
+    margin: 1%;
 }
 .createLobbyForm button {
     align-self: center;
