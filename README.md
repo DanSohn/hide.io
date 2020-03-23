@@ -4,15 +4,15 @@
 SENG 513 Project
 
 To run:
-1. Call ```npm install``` in both the server and client folder
-2. Call ```node server``` in the server folder to start it up
-3. Start up the client. Call ```npm run start``` in client folder
+1. Call ```npm install``` in the root folder
+2. Call ```node server``` in the root folder to start it up
+3. Start up the client. Call ```npm run start``` in root folder, in a different terminal
 4. Enjoy playing with your friends!
 
 Created by:
-* Ali Alkhazaly
-* Favian Silva
 * Jung Hyun Sohn
 * Kyoung Hwan Namkoong
+* Ali Alkhazaly
+* Favian Silva
 * Parsa Honarmand
 * Trilok Patel
