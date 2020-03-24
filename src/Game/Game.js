@@ -27,10 +27,13 @@ class Game extends Component {
             num_of_players: this.props.numPlayers,
             players: this.props.players,
             game_status: "not started",
+
+            //Game window size, it is used in the calculation of what portion of the map is viewed.
             size: {
                 width: 30,
                 height: 30
             },
+            //player x and player y with respect to the canvas.
             player: {
                 x: 15,
                 y: 15
@@ -39,7 +42,7 @@ class Game extends Component {
 
         this.update_player_component = this.update_player_component.bind(this);
     }
-
+    //movement listeners to be added on component load
     movementcheck = () => {
         document.addEventListener('keydown', e =>
             e.keyCode === 37 ? this.setState({ player: { x: this.state.player.x = this.state.player.x - 1, y: this.state.player.y } }) : null
@@ -79,14 +82,14 @@ class Game extends Component {
         );
     }
 
-
+    //map update
     draw = () => {
         const c = this.refs.canvas.getContext('2d');
         // change this colour to change the colour of your
         // "pen" in the canvas
         c.canvas.width = window.innerWidth;
         c.canvas.height = window.innerHeight;
-
+        //map 1 is a blank tile, 2 is a visable wall
         const map = [
             [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
             [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -126,6 +129,12 @@ class Game extends Component {
         ];
 
         c.font = '10px Arial';
+
+  
+  
+        //map view, restricts player view screen to a certain block amount around the player(blue), when the view gets to the edge the map stops rendering. (purpose of the - Math.max/Math.min)
+        //TODO There is issues with the game view not following the player - needs fine tuning.
+ 
         var startx = Math.max(this.state.player.x - this.state.size.width, 0);
         var endx = Math.min(startx + this.state.size.width, map.length);
         var starty = Math.max(this.state.player.y - this.state.size.height, 0);
@@ -136,7 +145,7 @@ class Game extends Component {
 
   
         console.log(startx, endx, starty, endy)
-
+        //fills the game area with information, rectangles
         for (var x = startx; x < endx; x++) {
             for (var y = starty; y < endy; y++) {
                 var drawx = x - startx;
@@ -151,7 +160,7 @@ class Game extends Component {
                 c.fillText(`${x},${y}`, drawx * 50 + 10, drawy * 50 + 25);
             }
         }
-
+        //player rendering. 
         c.beginPath();
         c.rect(this.state.player.x* 50, this.state.player.y* 50, 50, 50);
         c.fillStyle = 'blue';
