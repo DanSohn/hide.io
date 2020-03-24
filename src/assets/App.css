@@ -124,12 +124,45 @@ tr .btn-success {
     width: 100%;
 }
 .createLobby,
-.createLobbyText {
+.createLobbyText,
+.roomActions,
+.chatRoom,
+.online {
     order: 2;
     flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
+}
+.roomActions {
+    height: 100%;
+}
+.chat {
+    height: 95%;
+    border: 5px solid navajowhite;
+    border-radius: 50px;
+}
+.inputBox input {
+    border-radius: 50px;
+    width: 80%;
+}
+.inputBox button {
+    border-radius: 50px;
+    width: 20%;
+}
+
+.chatRoom {
+    height: 100%;
+}
+
+.chatRoom,
+.online {
+    margin: 2%;
+    height: 100%;
+}
+.online {
+    border: 5px solid goldenrod;
+    border-radius: 50px;
 }
 
 .createLobbyText {
@@ -187,7 +220,13 @@ select,
     height: 30%;
     width: 50%;
 }
-
+.roomActions {
+    justify-content: flex-end;
+}
+.roomActions button {
+    width: 100%;
+    height: 20%;
+}
 .createLobby button {
     margin: 20px;
     height: 40%;
