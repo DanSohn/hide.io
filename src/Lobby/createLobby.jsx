@@ -14,14 +14,15 @@ class CreateLobby extends Component {
         super(props);
 
         this.state = {
+            title: "Create a Lobby",
             userName: this.props.name,
             email: this.props.email,
             previous: false,
             submitted: false,
             image: this.props.image,
-            lobbyName:"",
-            gameMode:"",
-            gameTime:"",
+            lobbyName: "",
+            gameMode: "",
+            gameTime: "",
             gameMap: ""
         };
         this.goPrevious = this.goPrevious.bind(this);
@@ -57,30 +58,28 @@ class CreateLobby extends Component {
         this.setState({
             submitted: true
         });
-
     }
 
-    handleChangeLobbyName(event){
+    handleChangeLobbyName(event) {
         this.setState({
             lobbyName: event.target.value
         });
     }
-    handleChangeGameMode(event){
+    handleChangeGameMode(event) {
         this.setState({
             gameMode: event.target.value
         });
     }
-    handleChangeGameTime(event){
+    handleChangeGameTime(event) {
         this.setState({
             gameTime: event.target.value
         });
     }
-    handleChangeGameMap(event){
+    handleChangeGameMap(event) {
         this.setState({
             gameMap: event.target.value
         });
     }
-
 
     render() {
         let comp;
@@ -92,97 +91,107 @@ class CreateLobby extends Component {
                     image={this.state.image}
                 />
             );
-        }else if(this.state.submitted){
-            comp = (
-                <Lobby />
-
-            )
+        } else if (this.state.submitted) {
+            comp = <Lobby />;
         } else {
             comp = (
-                <React.Fragment>
+                <div className="GameWindow">
                     <Header
                         previous={this.goPrevious}
                         image={this.props.image}
+                        title={this.state.title}
                     />
                     <Break />
-                    <div className="title">
-                        <h1>Create Lobby</h1>
-                    </div>
-
-                    <div className="createLobbyText">
-                        <h2>Name</h2>
-                        <h2>Game Mode</h2>
-                        <h2>Time</h2>
-                        <h2>Map</h2>
-                    </div>
-                    <div className="createLobbyForm">
-                        <form onSubmit={this.handleSubmit}>
-                            <div className="createLobbyContainer0">
-                                <div className="createLobbyContainer">
-                                    <input value={this.state.lobbyName} onChange={this.handleChangeLobbyName}
-                                           type="text" className="form-control" id="usr" required />
-                                    <select value={this.state.gameMode} onChange={this.handleChangeGameMode}
-                                            className="browser-default custom-select" required >
-                                        <option selected/>
-                                        <option value="1">
-                                            Lover's Paradise
-                                        </option>
-                                        <option value="2">
-                                            Do you want to build a snowman?
-                                        </option>
-                                        <option value="3">
-                                            Love is an open door
-                                        </option>
-                                    </select>
-                                    <select value={this.state.gameTime} onChange={this.handleChangeGameTime}
-                                        className="browser-default custom-select"
-                                        required
-                                    >
-                                        <option selected/>
-                                        <option value="1">3 mins</option>
-                                        <option value="2">4 mins</option>
-                                        <option value="3">5 mins</option>
-                                    </select>
-                                    <select value={this.state.gameMap} onChange={this.handleChangeGameMap}
-                                        className="browser-default custom-select"
-                                        required
-                                    >
-                                        <option selected/>
-                                        <option value="1">
-                                            Never gonna give you up
-                                        </option>
-                                        <option value="2">
-                                            Never gonna let you down
-                                        </option>
-                                        <option value="3">
-                                            Never gonna run around and desert
-                                            you
-                                        </option>
-                                        <option value="4">
-                                            Never gonna make you cry
-                                        </option>
-                                        <option value="5">
-                                            Never gonna say goodbye
-                                        </option>
-                                        <option value="6">
-                                            Never gonna tell a lie and hurt you
-                                        </option>
-                                    </select>
+                    <div className="ContentScreen">
+                        <div className="createLobbyText">
+                            <h2>Name</h2>
+                            <h2>Game Mode</h2>
+                            <h2>Time</h2>
+                            <h2>Map</h2>
+                        </div>
+                        <div className="createLobbyForm">
+                            <form onSubmit={this.handleSubmit}>
+                                <div className="createLobbyContainer0">
+                                    <div className="createLobbyContainer">
+                                        <input
+                                            value={this.state.lobbyName}
+                                            onChange={
+                                                this.handleChangeLobbyName
+                                            }
+                                            type="text"
+                                            className="form-control"
+                                            id="usr"
+                                            required
+                                        />
+                                        <select
+                                            value={this.state.gameMode}
+                                            onChange={this.handleChangeGameMode}
+                                            className="browser-default custom-select"
+                                            required>
+                                            <option selected />
+                                            <option value="1">
+                                                Lover's Paradise
+                                            </option>
+                                            <option value="2">
+                                                Do you want to build a snowman?
+                                            </option>
+                                            <option value="3">
+                                                Love is an open door
+                                            </option>
+                                        </select>
+                                        <select
+                                            value={this.state.gameTime}
+                                            onChange={this.handleChangeGameTime}
+                                            className="browser-default custom-select"
+                                            required>
+                                            <option selected />
+                                            <option value="1">3 mins</option>
+                                            <option value="2">4 mins</option>
+                                            <option value="3">5 mins</option>
+                                        </select>
+                                        <select
+                                            value={this.state.gameMap}
+                                            onChange={this.handleChangeGameMap}
+                                            className="browser-default custom-select"
+                                            required>
+                                            <option selected />
+                                            <option value="1">
+                                                Never gonna give you up
+                                            </option>
+                                            <option value="2">
+                                                Never gonna let you down
+                                            </option>
+                                            <option value="3">
+                                                Never gonna run around and
+                                                desert you
+                                            </option>
+                                            <option value="4">
+                                                Never gonna make you cry
+                                            </option>
+                                            <option value="5">
+                                                Never gonna say goodbye
+                                            </option>
+                                            <option value="6">
+                                                Never gonna tell a lie and hurt
+                                                you
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div className="createLobbyContainer">
+                                        <button
+                                            type="submit"
+                                            className="btn btn-info">
+                                            Submit
+                                        </button>
+                                    </div>
                                 </div>
-                                <div className="createLobbyContainer">
-                                    <button
-                                        type="submit"
-                                        className="btn btn-info"
-                                    >Submit
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
+                            </form>
+                        </div>
                     </div>
-                </React.Fragment>
+                </div>
             );
         }
-        return <div className="GameWindow">{comp}</div>;
+        return <div>{comp}</div>;
     }
 }
 

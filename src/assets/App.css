@@ -124,12 +124,48 @@ tr .btn-success {
     width: 100%;
 }
 .createLobby,
-.createLobbyText {
+.createLobbyText,
+.roomActions,
+.chatRoom,
+.online {
     order: 2;
     flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
+}
+
+.roomActions,
+.chat {
+    height: 100%;
+}
+.inputBox input {
+    border-radius: 0px;
+    width: 75%;
+}
+.inputBox button {
+    border-radius: 0px;
+    width: 10%;
+}
+
+.input-group mb-3 {
+    margin: 0%;
+}
+.chat {
+    border: 5px solid navajowhite;
+}
+.chatRoom {
+    height: 100%;
+}
+
+.chatRoom,
+.online {
+    margin: 2%;
+    height: 100%;
+}
+.online {
+    border: 5px solid goldenrod;
+    border-radius: 0px;
 }
 
 .createLobbyText {
@@ -187,7 +223,13 @@ select,
     height: 30%;
     width: 50%;
 }
-
+.roomActions {
+    justify-content: flex-end;
+}
+.roomActions button {
+    width: 100%;
+    height: 20%;
+}
 .createLobby button {
     margin: 20px;
     height: 40%;

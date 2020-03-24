@@ -9,6 +9,7 @@ import "../assets/App.css";
 import { socket } from "../assets/socket";
 import MenuScreen from "../menuScreen";
 import CreateLobby from "./createLobby";
+import Room from "./room";
 
 class ViewLobbies extends Component {
     constructor(props) {
@@ -30,7 +31,8 @@ class ViewLobbies extends Component {
 
         this.createLobby = this.createLobby.bind(this);
         this.goPrevious = this.goPrevious.bind(this);
-        this.goToLobby = this.goToLobby.bind(this);
+        this.goToCreateLobby = this.goToCreateLobby.bind(this);
+        this.goToJoinLobby = this.goToJoinLobby.bind(this);
         //this.goToJoinCode = this.goToJoinCode.bind(this);
     }
 
@@ -46,7 +48,7 @@ class ViewLobbies extends Component {
             previous: true
         });
     }
-    goToLobby() {
+    goToCreateLobby() {
         this.setState(state => ({
             stage: 1
         }));
@@ -55,6 +57,11 @@ class ViewLobbies extends Component {
     goToJoinCode() {
         this.setState(state => ({
             stage: 2
+        }));
+    }
+    goToJoinLobby() {
+        this.setState(state => ({
+            stage: 3
         }));
     }
 
@@ -79,6 +86,14 @@ class ViewLobbies extends Component {
             );
         } else if (this.state.stage == 2) {
             //<JoinCode />;
+        } else if (this.state.stage == 3) {
+            comp = (
+                <Room
+                    name={this.state.userName}
+                    email={this.state.email}
+                    image={this.state.image}
+                />
+            );
         } else if (this.state.stage == 0) {
             comp = (
                 <div className="GameWindow">
@@ -99,7 +114,9 @@ class ViewLobbies extends Component {
                                     <td>Noob Master</td>
                                     <td>0/6</td>
                                     <td>
-                                        <button className="btn btn-success">
+                                        <button
+                                            className="btn btn-success"
+                                            onClick={this.goToJoinLobby}>
                                             Join
                                         </button>
                                     </td>
@@ -108,7 +125,9 @@ class ViewLobbies extends Component {
                                     <td>Noob Master</td>
                                     <td>0/6</td>
                                     <td>
-                                        <button className="btn btn-success">
+                                        <button
+                                            className="btn btn-success"
+                                            onClick={this.goToJoinLobby}>
                                             Join
                                         </button>
                                     </td>
@@ -117,7 +136,9 @@ class ViewLobbies extends Component {
                                     <td>Noob Master</td>
                                     <td>0/6</td>
                                     <td>
-                                        <button className="btn btn-success">
+                                        <button
+                                            className="btn btn-success"
+                                            onClick={this.goToJoinLobby}>
                                             Join
                                         </button>
                                     </td>
@@ -126,7 +147,9 @@ class ViewLobbies extends Component {
                                     <td>Noob Master</td>
                                     <td>0/6</td>
                                     <td>
-                                        <button className="btn btn-success">
+                                        <button
+                                            className="btn btn-success"
+                                            onClick={this.goToJoinLobby}>
                                             Join
                                         </button>
                                     </td>
@@ -135,7 +158,9 @@ class ViewLobbies extends Component {
                                     <td>Noob Master</td>
                                     <td>0/6</td>
                                     <td>
-                                        <button className="btn btn-success">
+                                        <button
+                                            className="btn btn-success"
+                                            onClick={this.goToJoinLobby}>
                                             Join
                                         </button>
                                     </td>
@@ -144,7 +169,9 @@ class ViewLobbies extends Component {
                                     <td>Noob Master</td>
                                     <td>0/6</td>
                                     <td>
-                                        <button className="btn btn-success">
+                                        <button
+                                            className="btn btn-success"
+                                            onClick={this.goToJoinLobby}>
                                             Join
                                         </button>
                                     </td>
@@ -153,7 +180,9 @@ class ViewLobbies extends Component {
                                     <td>Noob Master</td>
                                     <td>0/6</td>
                                     <td>
-                                        <button className="btn btn-success">
+                                        <button
+                                            className="btn btn-success"
+                                            onClick={this.goToJoinLobby}>
                                             Join
                                         </button>
                                     </td>
@@ -162,7 +191,9 @@ class ViewLobbies extends Component {
                                     <td>Noob Master</td>
                                     <td>0/6</td>
                                     <td>
-                                        <button className="btn btn-success">
+                                        <button
+                                            className="btn btn-success"
+                                            onClick={this.goToJoinLobby}>
                                             Join
                                         </button>
                                     </td>
@@ -171,7 +202,9 @@ class ViewLobbies extends Component {
                                     <td>Noob Master</td>
                                     <td>0/6</td>
                                     <td>
-                                        <button className="btn btn-success">
+                                        <button
+                                            className="btn btn-success"
+                                            onClick={this.goToJoinLobby}>
                                             Join
                                         </button>
                                     </td>
@@ -180,7 +213,9 @@ class ViewLobbies extends Component {
                                     <td>Noob Master</td>
                                     <td>0/6</td>
                                     <td>
-                                        <button className="btn btn-success">
+                                        <button
+                                            className="btn btn-success"
+                                            onClick={this.goToJoinLobby}>
                                             Join
                                         </button>
                                     </td>
@@ -189,7 +224,9 @@ class ViewLobbies extends Component {
                                     <td>Noob Master</td>
                                     <td>0/6</td>
                                     <td>
-                                        <button className="btn btn-success">
+                                        <button
+                                            className="btn btn-success"
+                                            onClick={this.goToJoinLobby}>
                                             Join
                                         </button>
                                     </td>
@@ -198,7 +235,9 @@ class ViewLobbies extends Component {
                                     <td>Noob Master</td>
                                     <td>0/6</td>
                                     <td>
-                                        <button className="btn btn-success">
+                                        <button
+                                            className="btn btn-success"
+                                            onClick={this.goToJoinLobby}>
                                             Join
                                         </button>
                                     </td>
@@ -207,7 +246,9 @@ class ViewLobbies extends Component {
                                     <td>Noob Master</td>
                                     <td>0/6</td>
                                     <td>
-                                        <button className="btn btn-success">
+                                        <button
+                                            className="btn btn-success"
+                                            onClick={this.goToJoinLobby}>
                                             Join
                                         </button>
                                     </td>
@@ -216,7 +257,9 @@ class ViewLobbies extends Component {
                                     <td>Noob Master</td>
                                     <td>0/6</td>
                                     <td>
-                                        <button className="btn btn-success">
+                                        <button
+                                            className="btn btn-success"
+                                            onClick={this.goToJoinLobby}>
                                             Join
                                         </button>
                                     </td>
@@ -225,7 +268,9 @@ class ViewLobbies extends Component {
                                     <td>Noob Master</td>
                                     <td>0/6</td>
                                     <td>
-                                        <button className="btn btn-success">
+                                        <button
+                                            className="btn btn-success"
+                                            onClick={this.goToJoinLobby}>
                                             Join
                                         </button>
                                     </td>
@@ -241,8 +286,7 @@ class ViewLobbies extends Component {
                             <button
                                 type="button"
                                 className="btn btn-danger"
-                                onClick={this.goToLobby}
-                            >
+                                onClick={this.goToCreateLobby}>
                                 CREATE LOBBY
                             </button>
                             <button type="button" className="btn btn-info">
