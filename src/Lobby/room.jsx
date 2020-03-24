@@ -98,12 +98,23 @@ class Room extends Component {
                     <Break />
                     <div className="ContentScreen">
                         <div className="chatRoom">
-                            <div class="chat">
+                            <div className="chat">
                                 <ul id="messages"></ul>
                             </div>
-                            <div class="inputBox">
-                                <input id="m" autocomplete="off" />
-                                <button>Send</button>
+                            <div className="input-group mb-3">
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    aria-describedby="basic-addon2"
+                                />
+
+                                <div class="input-group-append">
+                                    <button
+                                        class="btn btn-outline-secondary"
+                                        type="button">
+                                        Submit
+                                    </button>
+                                </div>
                             </div>
                         </div>
 

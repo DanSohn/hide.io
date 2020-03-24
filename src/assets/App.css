@@ -134,23 +134,26 @@ tr .btn-success {
     flex-direction: column;
     justify-content: center;
 }
-.roomActions {
+
+.roomActions,
+.chat {
     height: 100%;
 }
-.chat {
-    height: 95%;
-    border: 5px solid navajowhite;
-    border-radius: 50px;
-}
 .inputBox input {
-    border-radius: 50px;
-    width: 80%;
+    border-radius: 0px;
+    width: 75%;
 }
 .inputBox button {
-    border-radius: 50px;
-    width: 20%;
+    border-radius: 0px;
+    width: 10%;
 }
 
+.input-group mb-3 {
+    margin: 0%;
+}
+.chat {
+    border: 5px solid navajowhite;
+}
 .chatRoom {
     height: 100%;
 }
@@ -162,7 +165,7 @@ tr .btn-success {
 }
 .online {
     border: 5px solid goldenrod;
-    border-radius: 50px;
+    border-radius: 0px;
 }
 
 .createLobbyText {
