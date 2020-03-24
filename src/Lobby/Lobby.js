@@ -19,9 +19,11 @@ class Lobby extends Component {
     }
 
     startTimer(){
-        // 3 second timer currently
+        // 3 second timer, let the server know the game wants to start and you want the map
         socket.emit("lobby start timer", 3100);
-    }
+        socket.emit('game starting');
+        socket.on('game starting ack', (gameMap) => {this.state.gameMap = gameMap; this.render()});
+    };
     startGame(){
         this.setState({
            gameStarted: true
@@ -60,12 +62,12 @@ class Lobby extends Component {
 
     render() {
         let comp;
-        if (this.state.gameStarted === false) {
+        if (this.state.gameStarted === false || this.state.gameMap === undefined) {
             comp = <button onClick={this.startTimer}>Click here to start game </button>
         } else {
             // let numPlayers = this.findPlayers;
             console.log("my players: ", this.state.players);
-            comp = <Game numPlayers={this.state.numPlayers} players={this.state.players}/>
+            comp = <Game numPlayers={this.state.numPlayers} players={this.state.players} map={this.state.gameMap}/>;
         }
 
         return (
