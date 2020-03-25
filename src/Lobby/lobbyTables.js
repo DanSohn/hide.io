@@ -8,7 +8,6 @@ class LobbyTables extends Component {
     constructor(props) {
         super(props);
         console.log("Loading lobbyTables");
-        socket.emit("please give lobbies");
         // lobbies state is the lobby object, received from the database from server
         this.state = {
             lobbies: {}
@@ -39,6 +38,10 @@ class LobbyTables extends Component {
     }
 
     componentDidMount() {
+        console.log("componentdidmount");
+
+        socket.emit("please give lobbies");
+
         socket.on("receive lobby list", (lobbies) => {
             console.log("Recieved list of lobbies");
             this.setState({
