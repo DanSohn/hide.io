@@ -3,13 +3,15 @@ import Lobby from "./Lobby";
 import PlayerProfile from "../PlayerProfile.js";
 import Header from "../assets/header";
 import Break from "../assets/break";
-
-import "../assets/App.css";
-
-import { socket } from "../assets/socket";
 import MenuScreen from "../menuScreen";
 import CreateLobby from "./createLobby";
 import Room from "./room";
+import LobbyTables from "./lobbyTables";
+
+import "../assets/App.css";
+import { socket } from "../assets/socket";
+
+
 
 class ViewLobbies extends Component {
     constructor(props) {
@@ -49,20 +51,20 @@ class ViewLobbies extends Component {
         });
     }
     goToCreateLobby() {
-        this.setState(state => ({
+        this.setState({
             stage: 1
-        }));
+        });
     }
 
     goToJoinCode() {
-        this.setState(state => ({
+        this.setState({
             stage: 2
-        }));
+        });
     }
     goToJoinLobby() {
-        this.setState(state => ({
+        this.setState({
             stage: 3
-        }));
+        });
     }
 
     render() {
@@ -76,7 +78,7 @@ class ViewLobbies extends Component {
                     image={this.state.image}
                 />
             );
-        } else if (this.state.stage == 1) {
+        } else if (this.state.stage === 1) {
             comp = (
                 <CreateLobby
                     name={this.state.userName}
@@ -84,9 +86,9 @@ class ViewLobbies extends Component {
                     image={this.state.image}
                 />
             );
-        } else if (this.state.stage == 2) {
+        } else if (this.state.stage === 2) {
             //<JoinCode />;
-        } else if (this.state.stage == 3) {
+        } else if (this.state.stage === 3) {
             comp = (
                 <Room
                     name={this.state.userName}
@@ -94,7 +96,7 @@ class ViewLobbies extends Component {
                     image={this.state.image}
                 />
             );
-        } else if (this.state.stage == 0) {
+        } else if (this.state.stage === 0) {
             comp = (
                 <div className="GameWindow">
                     <Header
@@ -103,180 +105,7 @@ class ViewLobbies extends Component {
                     />
                     <Break />
                     <div className="ContentScreen">
-                        <div className="lobbySelection">
-                            <table className="lobbyTable">
-                                <tr>
-                                    <th>Lobby Name</th>
-                                    <th>Players</th>
-                                    <th>Action</th>
-                                </tr>
-                                <tr>
-                                    <td>Noob Master</td>
-                                    <td>0/6</td>
-                                    <td>
-                                        <button
-                                            className="btn btn-success"
-                                            onClick={this.goToJoinLobby}>
-                                            Join
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Noob Master</td>
-                                    <td>0/6</td>
-                                    <td>
-                                        <button
-                                            className="btn btn-success"
-                                            onClick={this.goToJoinLobby}>
-                                            Join
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Noob Master</td>
-                                    <td>0/6</td>
-                                    <td>
-                                        <button
-                                            className="btn btn-success"
-                                            onClick={this.goToJoinLobby}>
-                                            Join
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Noob Master</td>
-                                    <td>0/6</td>
-                                    <td>
-                                        <button
-                                            className="btn btn-success"
-                                            onClick={this.goToJoinLobby}>
-                                            Join
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Noob Master</td>
-                                    <td>0/6</td>
-                                    <td>
-                                        <button
-                                            className="btn btn-success"
-                                            onClick={this.goToJoinLobby}>
-                                            Join
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Noob Master</td>
-                                    <td>0/6</td>
-                                    <td>
-                                        <button
-                                            className="btn btn-success"
-                                            onClick={this.goToJoinLobby}>
-                                            Join
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Noob Master</td>
-                                    <td>0/6</td>
-                                    <td>
-                                        <button
-                                            className="btn btn-success"
-                                            onClick={this.goToJoinLobby}>
-                                            Join
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Noob Master</td>
-                                    <td>0/6</td>
-                                    <td>
-                                        <button
-                                            className="btn btn-success"
-                                            onClick={this.goToJoinLobby}>
-                                            Join
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Noob Master</td>
-                                    <td>0/6</td>
-                                    <td>
-                                        <button
-                                            className="btn btn-success"
-                                            onClick={this.goToJoinLobby}>
-                                            Join
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Noob Master</td>
-                                    <td>0/6</td>
-                                    <td>
-                                        <button
-                                            className="btn btn-success"
-                                            onClick={this.goToJoinLobby}>
-                                            Join
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Noob Master</td>
-                                    <td>0/6</td>
-                                    <td>
-                                        <button
-                                            className="btn btn-success"
-                                            onClick={this.goToJoinLobby}>
-                                            Join
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Noob Master</td>
-                                    <td>0/6</td>
-                                    <td>
-                                        <button
-                                            className="btn btn-success"
-                                            onClick={this.goToJoinLobby}>
-                                            Join
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Noob Master</td>
-                                    <td>0/6</td>
-                                    <td>
-                                        <button
-                                            className="btn btn-success"
-                                            onClick={this.goToJoinLobby}>
-                                            Join
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Noob Master</td>
-                                    <td>0/6</td>
-                                    <td>
-                                        <button
-                                            className="btn btn-success"
-                                            onClick={this.goToJoinLobby}>
-                                            Join
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Noob Master</td>
-                                    <td>0/6</td>
-                                    <td>
-                                        <button
-                                            className="btn btn-success"
-                                            onClick={this.goToJoinLobby}>
-                                            Join
-                                        </button>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
+                        <LobbyTables />
                         <div className="createLobby">
                             {/* <button
                                 type="button"
