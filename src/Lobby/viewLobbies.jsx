@@ -49,20 +49,20 @@ class ViewLobbies extends Component {
         });
     }
     goToCreateLobby() {
-        this.setState(state => ({
+        this.setState({
             stage: 1
-        }));
+        });
     }
 
     goToJoinCode() {
-        this.setState(state => ({
+        this.setState({
             stage: 2
-        }));
+        });
     }
     goToJoinLobby() {
-        this.setState(state => ({
+        this.setState({
             stage: 3
-        }));
+        });
     }
 
     render() {
@@ -76,7 +76,7 @@ class ViewLobbies extends Component {
                     image={this.state.image}
                 />
             );
-        } else if (this.state.stage == 1) {
+        } else if (this.state.stage === 1) {
             comp = (
                 <CreateLobby
                     name={this.state.userName}
@@ -84,9 +84,9 @@ class ViewLobbies extends Component {
                     image={this.state.image}
                 />
             );
-        } else if (this.state.stage == 2) {
+        } else if (this.state.stage === 2) {
             //<JoinCode />;
-        } else if (this.state.stage == 3) {
+        } else if (this.state.stage === 3) {
             comp = (
                 <Room
                     name={this.state.userName}
@@ -94,7 +94,7 @@ class ViewLobbies extends Component {
                     image={this.state.image}
                 />
             );
-        } else if (this.state.stage == 0) {
+        } else if (this.state.stage === 0) {
             comp = (
                 <div className="GameWindow">
                     <Header
