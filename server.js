@@ -65,7 +65,6 @@ io.on('connection', (socket) => {
             username: info.username,
             email: info.email
         });
-
         // save the user to mongoDB, returning a promise when it succeeds
         newUser.save()
             .then(user => {
@@ -78,9 +77,12 @@ io.on('connection', (socket) => {
     // it will find all the lobbies in database, and once its done, it will send the collection to the socket
     socket.on("please give lobbies", () => {
         console.log("Searching for the lobbies in the database");
+        Lobby.find()
+            .then((lobbies) => {
+                console.log("Lobbies found: ", lobbies);
+                socket.emit("receive lobby list", lobbies);
+            });
 
-        let lobbies = allLobbies();
-        socket.emit("receive lobby list", lobbies);
 
     });
 
@@ -117,8 +119,10 @@ io.on('connection', (socket) => {
                     // this here is for those who are viewing the lobbies
                     // this new lobby should automatically load for them, so for all the sockets, if they're
                     // in the lobby screen, they'll receieve this event and update the lobbies
-                    let lobbies = allLobbies();
-                    io.emit("receive lobby list", lobbies);
+                    Lobby.find()
+                        .then((lobbies) => {
+                            io.emit("receive lobby list", lobbies);
+                        });
                 }
             });
 
@@ -214,14 +218,6 @@ io.on('connection', (socket) => {
 
 });
 
-// function that returns all the lobbies from the database
-function allLobbies(){
-    Lobby.find()
-        .then((lobbies) => {
-            console.log("Lobbies found: ", lobbies);
-            return lobbies;
-        })
-}
 
 // our http server listens to port 4000
 server.listen(port, (err) => {
