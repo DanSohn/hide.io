@@ -1,5 +1,5 @@
 body {
-    background-color: #282c34;
+    background-color: #181a1f;
     position: fixed;
     height: 100%;
     width: 100%;
@@ -22,6 +22,7 @@ div {
 }
 
 .GameWindow {
+    background-color: #282c34;
     position: relative;
     display: flex;
     flex-wrap: wrap;
@@ -30,7 +31,7 @@ div {
     width: 1000px;
     padding: 0px;
     border-radius: 5%;
-    border: 5px solid yellow;
+    border: 5px solid #52565c;
 }
 .GameWindow .title {
     height: 10%;
@@ -59,7 +60,7 @@ div {
     flex: 1;
     align-items: center;
     height: 20%;
-    border-bottom: 3px solid #4f535c;
+    border-bottom: 3px solid #e5c100;
 }
 table {
     width: 100%;
@@ -211,6 +212,13 @@ select,
 .profileResults {
     order: 2;
     flex: 2;
+}
+
+.profileResults input:read-only {
+    background-color: #babbbe;
+}
+.profileResults input:read-only::-webkit-input-placeholder {
+    color: #5e5f61;
 }
 
 .profileResults input {
