@@ -75,8 +75,14 @@ io.on('connection', (socket) => {
     });
 
     //Send the rooms that are available when the user clicks play to see the available lobbies
-    socket.on("play", () => {
-        socket.emit("lobbies", rooms);
+    // it will find all the lobbies in database, and once its done, it will send the collection to the socket
+    socket.on("please give lobbies", () => {
+        console.log("Searching for the lobbies in the database");
+        Lobby.find()
+            .then((lobbies) => {
+                console.log("Lobbies found: ", lobbies);
+                socket.emit("receive lobby list", lobbies);
+            })
     });
 
     //When player creates a new lobby to play with their friends

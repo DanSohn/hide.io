@@ -3,13 +3,15 @@ import Lobby from "./Lobby";
 import PlayerProfile from "../PlayerProfile.js";
 import Header from "../assets/header";
 import Break from "../assets/break";
-
-import "../assets/App.css";
-
-import { socket } from "../assets/socket";
 import MenuScreen from "../menuScreen";
 import CreateLobby from "./createLobby";
 import Room from "./room";
+import lobbyTables from "./lobbyTables";
+
+import "../assets/App.css";
+import { socket } from "../assets/socket";
+
+
 
 class ViewLobbies extends Component {
     constructor(props) {
@@ -103,26 +105,7 @@ class ViewLobbies extends Component {
                     />
                     <Break />
                     <div className="ContentScreen">
-                        {/*<div className="lobbySelection">
-                            <table className="lobbyTable">
-                                <tr>
-                                    <th>Lobby Name</th>
-                                    <th>Players</th>
-                                    <th>Action</th>
-                                </tr>
-                                <tr>
-                                    <td>Noob Master</td>
-                                    <td>0/6</td>
-                                    <td>
-                                        <button
-                                            className="btn btn-success"
-                                            onClick={this.goToJoinLobby}>
-                                            Join
-                                        </button>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>*/}
+                        <lobbyTables />
                         <div className="createLobby">
                             {/* <button
                                 type="button"

@@ -17,7 +17,7 @@ class lobbyTables extends Component {
     renderTableData() {
 
 
-        <tr>
+        /*<tr>
             <td>Noob Master</td>
             <td>0/6</td>
             <td>
@@ -27,7 +27,7 @@ class lobbyTables extends Component {
                     Join
                 </button>
             </td>
-        </tr>
+        </tr>*/
     }
 
     renderTableHeader() {
@@ -39,9 +39,11 @@ class lobbyTables extends Component {
 
     componentDidMount() {
         socket.on("receive lobby list", (lobbies) => {
+            console.log("Recieved list of lobbies");
             this.setState({
                 lobbies: lobbies
-            })
+            });
+            console.log(this.state.lobbies);
         })
     }
 
