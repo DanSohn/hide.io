@@ -78,11 +78,10 @@ io.on('connection', (socket) => {
     // it will find all the lobbies in database, and once its done, it will send the collection to the socket
     socket.on("please give lobbies", () => {
         console.log("Searching for the lobbies in the database");
-        Lobby.find()
-            .then((lobbies) => {
-                console.log("Lobbies found: ", lobbies);
-                socket.emit("receive lobby list", lobbies);
-            })
+
+        let lobbies = allLobbies();
+        socket.emit("receive lobby list", lobbies);
+
     });
 
     //When player creates a new lobby to play with their friends
@@ -114,6 +113,12 @@ io.on('connection', (socket) => {
                             console.log(lobby, " has successfully been added to the database");
                         })
                         .catch(err => console.log(err));
+
+                    // this here is for those who are viewing the lobbies
+                    // this new lobby should automatically load for them, so for all the sockets, if they're
+                    // in the lobby screen, they'll receieve this event and update the lobbies
+                    let lobbies = allLobbies();
+                    io.emit("receive lobby list", lobbies);
                 }
             });
 
@@ -208,6 +213,15 @@ io.on('connection', (socket) => {
 
 
 });
+
+// function that returns all the lobbies from the database
+function allLobbies(){
+    Lobby.find()
+        .then((lobbies) => {
+            console.log("Lobbies found: ", lobbies);
+            return lobbies;
+        })
+}
 
 // our http server listens to port 4000
 server.listen(port, (err) => {
