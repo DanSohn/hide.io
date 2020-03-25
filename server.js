@@ -113,16 +113,17 @@ io.on('connection', (socket) => {
                     newLobby.save()
                         .then(lobby => {
                             console.log(lobby, " has successfully been added to the database");
+
+                            // this here is for those who are viewing the lobbies
+                            // this new lobby should automatically load for them, so for all the sockets, if they're
+                            // in the lobby screen, they'll receieve this event and update the lobbies
+                            Lobby.find()
+                                .then((lobbies) => {
+                                    console.log("emitting ALL LOBBIES ", lobbies);
+                                    io.emit("receive lobby list", lobbies);
+                                });
                         })
                         .catch(err => console.log(err));
-
-                    // this here is for those who are viewing the lobbies
-                    // this new lobby should automatically load for them, so for all the sockets, if they're
-                    // in the lobby screen, they'll receieve this event and update the lobbies
-                    Lobby.find()
-                        .then((lobbies) => {
-                            io.emit("receive lobby list", lobbies);
-                        });
                 }
             });
 

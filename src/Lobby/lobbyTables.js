@@ -15,10 +15,10 @@ class LobbyTables extends Component {
     }
 
     renderTableData() {
+        console.log("re render table data");
         if(this.state.lobbies === null){
             return;
         }
-
         return this.state.lobbies.map((lobby) => {
             // CURRENTLY JUST UTILIZING ALL THE INFORMATION, HOWEVER IN THE END IF I DON'T NEED
             // THEN REMOVE THE CONSTANTS THAT IS NOT USED
@@ -49,7 +49,7 @@ class LobbyTables extends Component {
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         socket.on("receive lobby list", (lobbies) => {
-            console.log("Recieved list of lobbies", lobbies);
+            console.log("Recieved list of lobbies update", lobbies);
             this.setState({
                 lobbies: lobbies
             });
@@ -72,6 +72,7 @@ class LobbyTables extends Component {
     }
 
     render() {
+        console.log("render table");
         return (
             <div className="lobbySelection">
                 <table className="lobbyTable">
