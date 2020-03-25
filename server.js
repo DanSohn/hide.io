@@ -45,15 +45,11 @@ io.on('connection', (socket) => {
     socket.on("user exists check", (email) => {
         User.findOne({email: email})
             .then(user => {
-                // if the user exists already in the database
                 if(user){
-                    console.log("User already exists, -----> main menu");
-                    // console.log(user);
-                    // emitting the email of the user
+                    // emitting the email of the user, user does exist
                     socket.emit("user database check", user.username);
                 }else{
-                    console.log("User does not exist, -----> username selection");
-                    // emitting an empty string representing false
+                    // emitting an empty string representing false, user does not exist
                     socket.emit("user database check", "");
                 }
             })
@@ -114,9 +110,11 @@ io.on('connection', (socket) => {
                         .then(lobby => {
                             console.log(lobby, " has successfully been added to the database");
 
-                            // this here is for those who are viewing the lobbies
-                            // this new lobby should automatically load for them, so for all the sockets, if they're
-                            // in the lobby screen, they'll receieve this event and update the lobbies
+                            /*this here is for those who are viewing the lobbies
+                            this new lobby should automatically load for them, so for all the sockets, if they're
+                            in the lobby screen, they'll receieve this event and update the lobbies
+                            its down inside this promise of adding to database, because i need to find
+                            AFTER THE DATABASE IS UPDATED*/
                             Lobby.find()
                                 .then((lobbies) => {
                                     console.log("emitting ALL LOBBIES ", lobbies);
@@ -126,10 +124,6 @@ io.on('connection', (socket) => {
                         .catch(err => console.log(err));
                 }
             });
-
-        console.log("Left");
-
-
 
         /*rooms[roomid] = {};
         rooms.host = playername;
@@ -215,7 +209,6 @@ io.on('connection', (socket) => {
         let players_arr = Object.keys(players);
         io.emit("Number of players", players_arr.length);
     });
-
 
 });
 
