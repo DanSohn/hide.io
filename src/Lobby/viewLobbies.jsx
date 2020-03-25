@@ -6,7 +6,7 @@ import Break from "../assets/break";
 import MenuScreen from "../menuScreen";
 import CreateLobby from "./createLobby";
 import Room from "./room";
-import lobbyTables from "./lobbyTables";
+import LobbyTables from "./lobbyTables";
 
 import "../assets/App.css";
 import { socket } from "../assets/socket";
@@ -105,7 +105,7 @@ class ViewLobbies extends Component {
                     />
                     <Break />
                     <div className="ContentScreen">
-                        <lobbyTables />
+                        <LobbyTables />
                         <div className="createLobby">
                             {/* <button
                                 type="button"

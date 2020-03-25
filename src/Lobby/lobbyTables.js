@@ -1,9 +1,10 @@
 import React, {Component} from "react";
 import {socket} from "../assets/socket";
 import "../assets/App.css";
+import ViewLobbies from "./viewLobbies";
 
 
-class lobbyTables extends Component {
+class LobbyTables extends Component {
     constructor(props) {
         super(props);
         console.log("Loading lobbyTables");
@@ -60,3 +61,5 @@ class lobbyTables extends Component {
         )
     }
 }
+
+export default LobbyTables;
