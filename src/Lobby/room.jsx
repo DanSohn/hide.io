@@ -46,6 +46,13 @@ class Room extends Component {
         // TODO: Combine the two socket.on events here, as num of players could be found in the players list
         console.log("finished rendering");
         socket.emit("player joined");
+
+        // everytime this event is called, its passed a set of the users in the lobby
+        // parameter: lobby_users - a SET containing all the users username
+        socket.on("update lobby list", (lobby_users) => {
+            console.log("Received current lobby users ", lobby_users);
+        });
+
         socket.on("Number of players", num_players => {
             console.log("number of players ", num_players);
             this.setState({
@@ -109,7 +116,7 @@ class Room extends Component {
                                     aria-describedby="basic-addon2"
                                 />
 
-                                <div class="input-group-append">
+                                <div className="input-group-append">
                                     <button
                                         className="btn btn-outline-secondary"
                                         type="button">

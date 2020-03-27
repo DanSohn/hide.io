@@ -8,6 +8,7 @@ import { socket } from "../assets/socket";
 import "bootstrap/dist/js/bootstrap.bundle";
 import "../assets/App.css";
 import ViewLobbies from "./viewLobbies";
+import Room from "./room";
 
 class CreateLobby extends Component {
     constructor(props) {
@@ -50,6 +51,7 @@ class CreateLobby extends Component {
 
         socket.emit("create lobby", {
             email: this.state.email,
+            name: this.state.userName,
             lobbyName: this.state.lobbyName,
             gameMode: this.state.gameMode,
             gameTime: this.state.gameTime,
@@ -92,7 +94,11 @@ class CreateLobby extends Component {
                 />
             );
         } else if (this.state.submitted) {
-            comp = <Lobby />;
+            comp = <Room
+                name={this.state.userName}
+                email={this.state.email}
+                image={this.state.image}
+            />
         } else {
             comp = (
                 <div className="GameWindow">

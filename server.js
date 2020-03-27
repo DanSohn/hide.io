@@ -71,10 +71,10 @@ io.on('connection', (socket) => {
     //Send the rooms that are available when the user clicks play to see the available lobbies
     // it will find all the lobbies in database, and once its done, it will send the collection to the socket
     socket.on("please give lobbies", () => {
-        console.log("Searching for the lobbies in the database");
+        // console.log("Searching for the lobbies in the database");
         Lobby.find()
             .then((lobbies) => {
-                console.log("Lobbies found: ", lobbies);
+                // console.log("Lobbies found: ", lobbies);
                 socket.emit("receive lobby list", lobbies);
             });
 
@@ -86,7 +86,7 @@ io.on('connection', (socket) => {
     // PARAMETERS:
     //          info: an object containing: user email, lobbyname , game mode, game time, game map
     socket.on("create lobby", (info) => {
-        console.log("Creating lobby with info ", info);
+        // console.log("Creating lobby with info ", info);
         let roomID = Math.random().toString(36).slice(2, 8);
 
         Lobby.findOne({join_code: roomID})
@@ -116,9 +116,13 @@ io.on('connection', (socket) => {
                             AFTER THE DATABASE IS UPDATED*/
                             Lobby.find()
                                 .then((lobbies) => {
-                                    console.log("emitting ALL LOBBIES ", lobbies);
+                                    // console.log("emitting ALL LOBBIES ", lobbies);
                                     io.emit("receive lobby list", lobbies);
                                 });
+
+                            // creating the lobby player list
+                            rooms_playerlist[roomID] = new Set([info.name]);
+                            console.log("added to playerlist", roomID, rooms_playerlist);
                         })
                         .catch(err => console.log(err));
                 }
@@ -167,6 +171,19 @@ io.on('connection', (socket) => {
      use to update its state, that will contain all the players inside.
 
      */
+
+    // this is the event when i'm joining a lobby and moving to the room component
+    // info: code : the join code. email : user's email. username: user's name
+    socket.on("join certain lobby", (info) => {
+        console.log("all lobbies:", rooms_playerlist);
+        console.log("lobby trying to join ... ", rooms_playerlist[info.code]);
+
+        rooms_playerlist[info.code].add(info.username);
+        console.log("update lobby list", rooms_playerlist[info.code]);
+        io.emit("update lobby list", rooms_playerlist[info.code]);
+
+    });
+
     // emit the number of current sockets connected
     let players_arr = Object.keys(players);
     socket.on("player joined", () =>{
