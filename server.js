@@ -31,10 +31,9 @@ let starting_pos = starting_pos_module.starting_positions;
 // create players object
 let players = {};
 
-// create a rooms object to keep track of rooms created
-//where the key is the room code to join
-let createdrooms = [];
-let rooms = {};
+// create a rooms object to keep track of rooms and the players inside each room
+// key equals room_id (join code)
+let rooms_playerlist = {};
 
 console.log("Initial players list: ", players);
 io.on('connection', (socket) => {
@@ -158,8 +157,7 @@ io.on('connection', (socket) => {
     };
 
 
-
-
+    // TODO: Convert the player object into info received from the socket
     // emit the number of current sockets connected
     let players_arr = Object.keys(players);
     socket.on("player joined", () =>{

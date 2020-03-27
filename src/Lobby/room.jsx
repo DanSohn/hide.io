@@ -43,6 +43,7 @@ class Room extends Component {
     }
 
     componentDidMount() {
+        // TODO: Combine the two socket.on events here, as num of players could be found in the players list
         console.log("finished rendering");
         socket.emit("player joined");
         socket.on("Number of players", num_players => {
