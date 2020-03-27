@@ -157,7 +157,16 @@ io.on('connection', (socket) => {
     };
 
 
-    // TODO: Convert the player object into info received from the socket
+    /* TODO: Convert the player object into info received from the socket
+     Player should press the join button / or create a lobby button in the client
+     Doing so will then take you to the room component. In addition, the user will call a socket event
+     that will add him to the room_playerlist object, with the lobby roomid as the key, and his name as one of the
+     values. It should be a SET that contains the players in the list
+
+     In the room component, whenever someone joins, it will receive an updated players list, which it will then
+     use to update its state, that will contain all the players inside.
+
+     */
     // emit the number of current sockets connected
     let players_arr = Object.keys(players);
     socket.on("player joined", () =>{
