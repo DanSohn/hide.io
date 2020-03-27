@@ -9,6 +9,7 @@ class Header extends Component {
             showBack: this.props.showBack,
             showProfile: this.props.showProfile,
             image: this.props.image,
+            title: this.props.title,
             goBack: false,
             goProfile: false
         };
@@ -50,6 +51,7 @@ class Header extends Component {
                 <div className="backButton">{back}</div>
                 <div className="logo">
                     <h1>Hide.IO</h1>
+                    <h2>{this.state.title}</h2>
                 </div>
                 <div className="profile">{profile}</div>
             </React.Fragment>

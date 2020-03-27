@@ -46,15 +46,11 @@ io.on('connection', (socket) => {
     socket.on("user exists check", (email) => {
         User.findOne({email: email})
             .then(user => {
-                // if the user exists already in the database
                 if(user){
-                    console.log("User already exists, -----> main menu");
-                    // console.log(user);
-                    // emitting the email of the user
+                    // emitting the email of the user, user does exist
                     socket.emit("user database check", user.username);
                 }else{
-                    console.log("User does not exist, -----> username selection");
-                    // emitting an empty string representing false
+                    // emitting an empty string representing false, user does not exist
                     socket.emit("user database check", "");
                 }
             })
@@ -66,7 +62,6 @@ io.on('connection', (socket) => {
             username: info.username,
             email: info.email
         });
-
         // save the user to mongoDB, returning a promise when it succeeds
         newUser.save()
             .then(user => {
@@ -76,8 +71,16 @@ io.on('connection', (socket) => {
     });
 
     //Send the rooms that are available when the user clicks play to see the available lobbies
-    socket.on("play", () => {
-        socket.emit("lobbies", rooms);
+    // it will find all the lobbies in database, and once its done, it will send the collection to the socket
+    socket.on("please give lobbies", () => {
+        console.log("Searching for the lobbies in the database");
+        Lobby.find()
+            .then((lobbies) => {
+                console.log("Lobbies found: ", lobbies);
+                socket.emit("receive lobby list", lobbies);
+            });
+
+
     });
 
     //When player creates a new lobby to play with their friends
@@ -107,14 +110,21 @@ io.on('connection', (socket) => {
                     newLobby.save()
                         .then(lobby => {
                             console.log(lobby, " has successfully been added to the database");
+
+                            /*this here is for those who are viewing the lobbies
+                            this new lobby should automatically load for them, so for all the sockets, if they're
+                            in the lobby screen, they'll receieve this event and update the lobbies
+                            its down inside this promise of adding to database, because i need to find
+                            AFTER THE DATABASE IS UPDATED*/
+                            Lobby.find()
+                                .then((lobbies) => {
+                                    console.log("emitting ALL LOBBIES ", lobbies);
+                                    io.emit("receive lobby list", lobbies);
+                                });
                         })
                         .catch(err => console.log(err));
                 }
             });
-
-        console.log("Left");
-
-
 
         /*rooms[roomid] = {};
         rooms.host = playername;
@@ -207,8 +217,8 @@ io.on('connection', (socket) => {
         io.emit("Number of players", players_arr.length);
     });
 
-
 });
+
 
 // our http server listens to port 4000
 server.listen(port, (err) => {

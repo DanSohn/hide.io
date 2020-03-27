@@ -1,5 +1,5 @@
 body {
-    background-color: #282c34;
+    background-color: #181a1f;
     position: fixed;
     height: 100%;
     width: 100%;
@@ -22,6 +22,7 @@ div {
 }
 
 .GameWindow {
+    background-color: #282c34;
     position: relative;
     display: flex;
     flex-wrap: wrap;
@@ -30,7 +31,7 @@ div {
     width: 1000px;
     padding: 0px;
     border-radius: 5%;
-    border: 5px solid yellow;
+    border: 5px solid #52565c;
 }
 .GameWindow .title {
     height: 10%;
@@ -59,7 +60,7 @@ div {
     flex: 1;
     align-items: center;
     height: 20%;
-    border-bottom: 3px solid #4f535c;
+    border-bottom: 3px solid #e5c100;
 }
 table {
     width: 100%;
@@ -124,12 +125,48 @@ tr .btn-success {
     width: 100%;
 }
 .createLobby,
-.createLobbyText {
+.createLobbyText,
+.roomActions,
+.chatRoom,
+.online {
     order: 2;
     flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
+}
+
+.roomActions,
+.chat {
+    height: 100%;
+}
+.inputBox input {
+    border-radius: 0px;
+    width: 75%;
+}
+.inputBox button {
+    border-radius: 0px;
+    width: 10%;
+}
+
+.input-group mb-3 {
+    margin: 0%;
+}
+.chat {
+    border: 5px solid navajowhite;
+}
+.chatRoom {
+    height: 100%;
+}
+
+.chatRoom,
+.online {
+    margin: 2%;
+    height: 100%;
+}
+.online {
+    border: 5px solid goldenrod;
+    border-radius: 0px;
 }
 
 .createLobbyText {
@@ -177,6 +214,13 @@ select,
     flex: 2;
 }
 
+.profileResults input:read-only {
+    background-color: #babbbe;
+}
+.profileResults input:read-only::-webkit-input-placeholder {
+    color: #5e5f61;
+}
+
 .profileResults input {
     width: 50%;
     margin: 1%;
@@ -187,7 +231,13 @@ select,
     height: 30%;
     width: 50%;
 }
-
+.roomActions {
+    justify-content: flex-end;
+}
+.roomActions button {
+    width: 100%;
+    height: 20%;
+}
 .createLobby button {
     margin: 20px;
     height: 40%;
