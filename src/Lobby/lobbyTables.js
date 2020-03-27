@@ -12,7 +12,15 @@ class LobbyTables extends Component {
         this.state = {
             lobbies: []
         }
+
+        this.sendLobbyCode = this.sendLobbyCode.bind(this);
     }
+
+    sendLobbyCode(join_code){
+        console.log("Sending back information to viewLobbies", join_code);
+        this.props.lobbyCallback(join_code);
+    }
+
 
     renderTableData() {
         console.log("re render table data");
@@ -30,6 +38,7 @@ class LobbyTables extends Component {
                     <td>
                         <button
                             className="btn btn-success"
+                            onClick={() => this.sendLobbyCode(join_code)}
                             >
                             Join
                         </button>

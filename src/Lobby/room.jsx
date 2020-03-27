@@ -111,7 +111,7 @@ class Room extends Component {
 
                                 <div class="input-group-append">
                                     <button
-                                        class="btn btn-outline-secondary"
+                                        className="btn btn-outline-secondary"
                                         type="button">
                                         Submit
                                     </button>
