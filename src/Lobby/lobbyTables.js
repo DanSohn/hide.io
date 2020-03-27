@@ -1,7 +1,6 @@
 import React, {Component} from "react";
 import {socket} from "../assets/socket";
 import "../assets/App.css";
-import ViewLobbies from "./viewLobbies";
 
 
 class LobbyTables extends Component {

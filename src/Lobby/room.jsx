@@ -1,6 +1,4 @@
 import React, {Component} from "react";
-import Lobby from "./Lobby";
-import PlayerProfile from "../PlayerProfile.js";
 import Header from "../assets/header";
 import Break from "../assets/break";
 import {socket} from "../assets/socket";
