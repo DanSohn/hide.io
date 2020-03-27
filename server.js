@@ -14,7 +14,7 @@ server = app.listen(port, (err) => {
     if (err) throw err;
     console.log('listening on *:' + port);
 });
-const io = socket(server)
+io = socket(server)
 
 const mongoose = require('mongoose');
 //set up the default connection
