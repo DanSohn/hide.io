@@ -185,12 +185,13 @@ io.on('connection', (socket) => {
     });
 
     // emit the number of current sockets connected
-    let players_arr = Object.keys(players);
+
+    /*let players_arr = Object.keys(players);
     socket.on("player joined", () =>{
         io.emit("Number of players", players_arr.length);
         console.log("Passing in players", players);
         io.emit("players list", players);
-    });
+    });*/
 
 
     // upon a player movement event, i will update the players array object with their new positions, and
