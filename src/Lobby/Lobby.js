@@ -15,14 +15,16 @@ class Lobby extends Component {
 
         this.startGame = this.startGame.bind(this);
         this.startTimer = this.startTimer.bind(this);
-
+        this.soundButton = new Audio("https://www.pacdv.com/sounds/domestic_sound_effects/light-switch-1.wav")
     }
 
     startTimer(){
         // 3 second timer currently
+        this.soundButton.play(1.5)
         socket.emit("lobby start timer", 3100);
     }
     startGame(){
+        this.soundButton.play(1.5)
         this.setState({
            gameStarted: true
         });
