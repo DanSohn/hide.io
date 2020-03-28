@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const path = require('path');
+const dbUtil = require('./dbUtils');
 // const server = require('http').createServer(app);
 //const socket_io = require('socket.io');
 //const io = socket_io.listen(server);
