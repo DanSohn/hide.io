@@ -17,17 +17,6 @@ server = app.listen(port, (err) => {
 });
 io = socket(server)
 
-const mongoose = require('mongoose');
-//set up the default connection
-let db = 'mongodb+srv://dbUser:dbUserPassword@hideio-wic1l.mongodb.net/Game?retryWrites=true&w=majority';
-// Connect to mongo
-mongoose.connect(db, {useNewUrlParser: true, useUnifiedTopology: true})
-    .then(() => console.log("MongoDB Connected"))
-    .catch(err => console.log(err));
-// Database models (schema)
-const User = require('./models/User');
-const Lobby = require('./models/Lobby');
-
 
 app.use(cors());
 app.get('/', (req, res) => {
@@ -61,30 +50,15 @@ io.on('connection', (socket) => {
                     socket.emit("user database check", null);
                 }
             });
-        /*User.findOne({email: email})
-            .then(user => {
-                if(user){
-                    // emitting the email of the user, user does exist
-                    socket.emit("user database check", user.username);
-                }else{
-                    // emitting an empty string representing false, user does not exist
-                    socket.emit("user database check", "");
-                }
-            })*/
     });
 
     socket.on("create user", (info) => {
-        // create a new user based on the schema
-        const newUser = new User({
-            username: info.username,
-            email: info.email
-        });
-        // save the user to mongoDB, returning a promise when it succeeds
-        newUser.save()
-            .then(user => {
-                console.log(user, " has successfully been added to the database");
-            })
-            .catch(err => console.log(err));
+        dbUtil.createUser(info)
+            .then((res)=>{
+                if(!res){
+                    console.log("Did not provide all information. Try again");
+                }
+            });
     });
 
     //Send the rooms that are available when the user clicks play to see the available lobbies

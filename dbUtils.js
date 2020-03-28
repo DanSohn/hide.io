@@ -81,6 +81,27 @@ async function createLobby(roomID, info){
         .catch(err => console.log(err));
 }
 
+// creates a new user given info
+async function createUser(info){
+    console.log("--------- CREATEUSER IN DBUTILS ----------");
+    if(!info.username || !info.email){
+        console.log("Please provide username and email");
+        return null;
+    }
+    // create a new user based on the schema
+    const newUser = new User({
+        username: info.username,
+        email: info.email
+    });
+    // save the user to mongoDB, returning a promise when it succeeds
+    newUser.save()
+        .then(user => {
+            console.log(user, " has successfully been added to the database");
+        })
+        .catch(err => console.log(err));
+
+    return 1;
+}
 
 
 module.exports = {
@@ -88,5 +109,6 @@ module.exports = {
     getUsers,
     getUser,
     getLobby,
-    createLobby
+    createLobby,
+    createUser
 };
