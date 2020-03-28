@@ -1,6 +1,4 @@
 import React, { Component } from "react";
-import Lobby from "./Lobby";
-import PlayerProfile from "../PlayerProfile.js";
 import Header from "../assets/header";
 import Break from "../assets/break";
 import MenuScreen from "../menuScreen";
@@ -22,13 +20,14 @@ class ViewLobbies extends Component {
             this.props.name,
             this.props.email
         );
-
+        // note: enter lobby is what the lobbytable child fills, when the user clicks a lobby to join. ROOMID
         this.state = {
             userName: this.props.name,
             email: this.props.email,
             previous: false,
             image: this.props.image,
-            stage: 0
+            stage: 0,
+            enter_lobby:""
         };
 
         this.createLobby = this.createLobby.bind(this);
@@ -50,6 +49,8 @@ class ViewLobbies extends Component {
             previous: true
         });
     }
+
+
     goToCreateLobby() {
         this.setState({
             stage: 1
@@ -61,9 +62,16 @@ class ViewLobbies extends Component {
             stage: 2
         });
     }
-    goToJoinLobby() {
+
+    // callback function from the lobby table that will return the lobby_code that we can join.
+    goToJoinLobby(join_code) {
+        console.log("received join_code from table", join_code);
+
+        socket.emit("join certain lobby", {code: join_code, email: this.state.email, username: this.state.userName});
+
         this.setState({
-            stage: 3
+            stage: 3,
+            enter_lobby: join_code
         });
     }
 
@@ -105,7 +113,7 @@ class ViewLobbies extends Component {
                     />
                     <Break />
                     <div className="ContentScreen">
-                        <LobbyTables />
+                        <LobbyTables lobbyCallback = {this.goToJoinLobby}/>
                         <div className="createLobby">
                             {/* <button
                                 type="button"

@@ -1,9 +1,7 @@
-import React, { Component } from "react";
-import Lobby from "./Lobby";
-import PlayerProfile from "../PlayerProfile.js";
+import React, {Component} from "react";
 import Header from "../assets/header";
 import Break from "../assets/break";
-import { socket } from "../assets/socket";
+import {socket} from "../assets/socket";
 
 import "bootstrap/dist/js/bootstrap.bundle";
 import "../assets/App.css";
@@ -32,10 +30,12 @@ class Room extends Component {
             previous: true
         });
     }
+
     startTimer() {
         // 3 second timer currently
         socket.emit("lobby start timer", 3100);
     }
+
     start() {
         this.setState({
             start: true
@@ -43,9 +43,19 @@ class Room extends Component {
     }
 
     componentDidMount() {
+        // TODO: Currently, if the server is active when the lobby was created adn you join its fine as its stored
+        // in hte server. However, once it disconnects it goes haywire. Try and fix this issue by having it initialized
+        // by grabbing the lobby list initially from the database
         console.log("finished rendering");
         socket.emit("player joined");
-        socket.on("Number of players", num_players => {
+
+        // everytime this event is called, its passed a set of the users in the lobby
+        // parameter: lobby_users - a SET containing all the users username
+        socket.on("update lobby list", (lobby_users) => {
+            console.log("Received current lobby users ", lobby_users);
+        });
+
+        /*socket.on("Number of players", num_players => {
             console.log("number of players ", num_players);
             this.setState({
                 numPlayers: num_players
@@ -58,7 +68,7 @@ class Room extends Component {
             this.setState({
                 players: players
             });
-        });
+        });*/
 
         socket.on("lobby current timer", countdown => {
             console.log(countdown);
@@ -95,7 +105,7 @@ class Room extends Component {
                         image={this.state.image}
                         title={this.state.title}
                     />
-                    <Break />
+                    <Break/>
                     <div className="ContentScreen">
                         <div className="chatRoom">
                             <div className="chat">
@@ -108,9 +118,9 @@ class Room extends Component {
                                     aria-describedby="basic-addon2"
                                 />
 
-                                <div class="input-group-append">
+                                <div className="input-group-append">
                                     <button
-                                        class="btn btn-outline-secondary"
+                                        className="btn btn-outline-secondary"
                                         type="button">
                                         Submit
                                     </button>
@@ -131,7 +141,7 @@ class Room extends Component {
                             <h3>Map:</h3>
                             <h6>love</h6>
                         </div>
-                        <div className="online"> </div>
+                        <div className="online"></div>
                     </div>
                 </div>
             );
@@ -139,4 +149,5 @@ class Room extends Component {
         return <React.Fragment>{comp}</React.Fragment>;
     }
 }
+
 export default Room;
