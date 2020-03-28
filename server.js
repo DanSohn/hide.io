@@ -105,47 +105,33 @@ io.on('connection', (socket) => {
     // PARAMETERS:
     //          info: an object containing: user email, lobbyname , game mode, game time, game map
     socket.on("create lobby", (info) => {
-        // console.log("Creating lobby with info ", info);
+        console.log("Creating lobby with info ", info);
         let roomID = Math.random().toString(36).slice(2, 8);
 
-        Lobby.findOne({join_code: roomID})
-            .then(lobby => {
-                if(lobby){
-                    console.log("Thats unlucky! Try again!");
-                }else{
-                    const newLobby = new Lobby({
-                        join_code: roomID,
-                        creator_email: info.email,
-                        lobby_name: info.lobbyName,
-                        game_mode: info.gameMode,
-                        game_time: info.gameTime,
-                        game_map: info.gameMap,
-                        creation_date: Date.now()
-                    });
-
-                    // save the lobby to mongoDB, returning a promise when it succeeds
-                    newLobby.save()
-                        .then(lobby => {
-                            console.log(lobby, " has successfully been added to the database");
-
-                            /*this here is for those who are viewing the lobbies
+        dbUtil.getLobby(roomID)
+            .then(lobby =>{
+               if(!lobby){
+                   dbUtil.createLobby(roomID, info)
+                       .then(()=>{
+                           /*this here is for those who are viewing the lobbies
                             this new lobby should automatically load for them, so for all the sockets, if they're
                             in the lobby screen, they'll receieve this event and update the lobbies
                             its down inside this promise of adding to database, because i need to find
                             AFTER THE DATABASE IS UPDATED*/
-                            dbUtil.getLobbies()
-                                .then((lobbies) => {
-                                    // console.log("emitting ALL LOBBIES ", lobbies);
-                                    io.emit("receive lobby list", lobbies);
-                                });
+                           dbUtil.getLobbies()
+                               .then((lobbies) => {
+                                   console.log("emitting ALL LOBBIES ", lobbies);
+                                   io.emit("receive lobby list", lobbies);
+                               });
 
-                            // creating the lobby player list
-                            rooms_playerlist[roomID] = new Set([info.name]);
-                            console.log("added to playerlist", roomID, rooms_playerlist);
-                        })
-                        .catch(err => console.log(err));
-                }
+                           // creating the lobby player list
+                           rooms_playerlist[roomID] = new Set([info.name]);
+                           console.log("added to playerlist", roomID, rooms_playerlist);
+                       })
+               }
             });
+
+
 
         /*rooms[roomid] = {};
         rooms.host = playername;
