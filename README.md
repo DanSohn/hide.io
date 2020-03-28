@@ -1,7 +1,6 @@
 # HIDE.IO
-## Utilizing a MERN Stack
 
-SENG 513 Project
+SENG 513 Project to end them all
 
 To run:
 1. Call ```npm install``` in the root folder
