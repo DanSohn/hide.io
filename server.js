@@ -91,13 +91,13 @@ io.on('connection', (socket) => {
     // it will find all the lobbies in database, and once its done, it will send the collection to the socket
     socket.on("please give lobbies", () => {
         // console.log("Searching for the lobbies in the database");
-        Lobby.find()
+        dbUtil.getLobbies()
             .then((lobbies) => {
                 // console.log("Lobbies found: ", lobbies);
+
                 socket.emit("receive lobby list", lobbies);
+
             });
-
-
     });
 
     //When player creates a new lobby to play with their friends
@@ -133,7 +133,7 @@ io.on('connection', (socket) => {
                             in the lobby screen, they'll receieve this event and update the lobbies
                             its down inside this promise of adding to database, because i need to find
                             AFTER THE DATABASE IS UPDATED*/
-                            Lobby.find()
+                            dbUtil.getLobbies()
                                 .then((lobbies) => {
                                     // console.log("emitting ALL LOBBIES ", lobbies);
                                     io.emit("receive lobby list", lobbies);
