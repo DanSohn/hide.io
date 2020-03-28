@@ -22,16 +22,19 @@ async function getUsers(){
 
 // returns the specified user if he exists. Otherwise, returns null
 async function getUser(email){
+    let res;
     await User.findOne({email: email})
         .then(user => {
             if(user){
                 // user exists
-                return user;
+                res = user;
             }else{
                 // user does not exist
-                return null;
+                res = null;
             }
-        })
+        });
+
+    return res;
 }
 
 module.exports = {

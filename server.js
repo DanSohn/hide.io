@@ -52,7 +52,15 @@ io.on('connection', (socket) => {
     // if the user already exists (email). If he does, I emit a message to go straight to main menu, otherwise to
     // go to user selection first
     socket.on("user exists check", (email) => {
-        User.findOne({email: email})
+        dbUtil.getUser(email)
+            .then((user) => {
+                if(user !== null){
+                    socket.emit("user database check", user.username);
+                }else{
+                    socket.emit("user database check", null);
+                }
+            });
+        /*User.findOne({email: email})
             .then(user => {
                 if(user){
                     // emitting the email of the user, user does exist
@@ -61,7 +69,7 @@ io.on('connection', (socket) => {
                     // emitting an empty string representing false, user does not exist
                     socket.emit("user database check", "");
                 }
-            })
+            })*/
     });
 
     socket.on("create user", (info) => {
