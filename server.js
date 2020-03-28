@@ -54,6 +54,7 @@ io.on('connection', (socket) => {
     socket.on("user exists check", (email) => {
         dbUtil.getUser(email)
             .then((user) => {
+                console.log("recieved from dbutils ", user);
                 if(user !== null){
                     socket.emit("user database check", user.username);
                 }else{
