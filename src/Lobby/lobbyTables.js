@@ -10,7 +10,7 @@ class LobbyTables extends Component {
         // lobbies state is an array of lobby objects, received from the database from server
         this.state = {
             lobbies: []
-        }
+        };
 
         this.sendLobbyCode = this.sendLobbyCode.bind(this);
     }
@@ -55,7 +55,7 @@ class LobbyTables extends Component {
         });
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
+    /*componentDidUpdate(prevProps, prevState, snapshot) {
         socket.on("receive lobby list", (lobbies) => {
             console.log("Recieved list of lobbies update", lobbies);
             this.setState({
@@ -63,9 +63,10 @@ class LobbyTables extends Component {
             });
             console.log(this.state.lobbies);
         })
-    }
+    }*/
 
     componentDidMount() {
+        this._ismounted = true;
         console.log("componentdidmount");
 
         socket.emit("please give lobbies");
@@ -77,6 +78,10 @@ class LobbyTables extends Component {
             });
             console.log(this.state.lobbies);
         })
+    }
+
+    componentWillUnmount() {
+        this._ismounted = false;
     }
 
     render() {

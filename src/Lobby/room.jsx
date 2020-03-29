@@ -68,6 +68,7 @@ class Room extends Component {
                     game_map: returnGameMap(lobby.game_map)
 
                 })
+                console.log("title is now.....", this.state.title);
             }
         });
         // everytime this event is called, its passed a set of the users in the lobby
