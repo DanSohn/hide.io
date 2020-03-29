@@ -68,7 +68,6 @@ io.on('connection', (socket) => {
         dbUtil.getLobbies()
             .then((lobbies) => {
                 // console.log("Lobbies found: ", lobbies);
-
                 socket.emit("receive lobby list", lobbies);
 
             });
@@ -79,7 +78,7 @@ io.on('connection', (socket) => {
     // PARAMETERS:
     //          info: an object containing: user email, lobbyname , game mode, game time, game map
     socket.on("create lobby", (info) => {
-        console.log("Creating lobby with info ", info);
+        // console.log("Creating lobby with info ", info);
         let roomID = Math.random().toString(36).slice(2, 8);
 
         dbUtil.getLobby(roomID)
