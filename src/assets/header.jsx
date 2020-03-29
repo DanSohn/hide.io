@@ -4,7 +4,6 @@ import "./App.css";
 class Header extends Component {
     constructor(props) {
         super(props);
-        console.log("Received title: ", this.props.title);
         this.state = {
             showBack: this.props.showBack,
             showProfile: this.props.showProfile,
@@ -36,7 +35,6 @@ class Header extends Component {
     }
 
     render() {
-        console.log("RENDERING THE HEADER AHHHHHHHHHHHHH");
         let comp;
         let back;
         let profile;

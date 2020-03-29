@@ -29,7 +29,6 @@ class Room extends Component {
         this.startTimer = this.startTimer.bind(this);
         this.start = this.start.bind(this);
 
-        console.log("Received roomID of ", this.state.roomID);
         socket.emit("ask for lobby info", this.state.roomID);
 
     }
@@ -57,7 +56,6 @@ class Room extends Component {
         // by grabbing the lobby list initially from the database
         // socket.emit("player joined");
         socket.on('giving lobby info', (lobby) => {
-            console.log("on socket event giving lobby info, received", lobby);
             if(!lobby){
                 console.log("Received not a lobby! Check room.js line 54, and server.js line 119");
             }else{
@@ -68,7 +66,6 @@ class Room extends Component {
                     game_map: returnGameMap(lobby.game_map)
 
                 });
-                console.log("title is now.....", this.state.title);
             }
         });
         // everytime this event is called, its passed a set of the users in the lobby
@@ -121,7 +118,6 @@ class Room extends Component {
                 />
             );
         } else {
-            console.log("rerendering the main window, but with title", this.state.title);
             comp = (
                 <div className="GameWindow">
                     <Header
