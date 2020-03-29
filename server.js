@@ -29,12 +29,19 @@ let starting_pos = starting_pos_module.starting_positions;
 
 // create players object
 let players = {};
+// console.log("Initial players list: ", players);
+
+let rooms_playerlist = roomPlayerList();
 
 // create a rooms object to keep track of rooms and the players inside each room
 // key equals room_id (join code)
-let rooms_playerlist = {};
-
-console.log("Initial players list: ", players);
+async function roomPlayerList(){
+    await dbUtil.getLobbyCodes()
+        .then(lobbies => {
+            rooms_playerlist = lobbies;
+            console.log("rooms player list", rooms_playerlist);
+        });
+}
 io.on('connection', (socket) => {
     // console.log("A User has connected");
     // when a player is logging in through oauth, i cross-check the given info with the database to see

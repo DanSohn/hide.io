@@ -37,6 +37,19 @@ async function getLobby(roomID){
     return res;
 }
 
+// returns all lobbies, and places the joincodes into an object
+async function getLobbyCodes(){
+    console.log("------- GETLOBBYCODES IN DBUTILS -------");
+    let lobbies = await Lobby.find();
+    let lobbiesObj = {};
+    lobbies.forEach(obj =>{
+        // console.log(obj["join_code"]);
+        lobbiesObj[obj["join_code"]] = {}
+    });
+    // console.log(lobbiesObj);
+    return lobbiesObj
+}
+
 // returns the specified user if he exists. Otherwise, returns null
 async function getUser(email){
     let res;
@@ -108,6 +121,7 @@ module.exports = {
     getLobbies,
     getUsers,
     getUser,
+    getLobbyCodes,
     getLobby,
     createLobby,
     createUser
