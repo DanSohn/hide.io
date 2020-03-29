@@ -41,7 +41,7 @@ class LoginScreen extends Component {
             console.log("checking if user exists");
             // if the user "exists" in database, then not a new user and will go straight to main menu
             // otherwise, go to the username selection
-            if (username !== "") {
+            if (username !== null) {
                 this.setState({
                     newUser: false,
                     userName: username

@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const path = require('path');
+const dbUtil = require('./dbUtils');
 // const server = require('http').createServer(app);
 //const socket_io = require('socket.io');
 //const io = socket_io.listen(server);
@@ -15,17 +16,6 @@ server = app.listen(port, (err) => {
     console.log('listening on *:' + port);
 });
 io = socket(server)
-
-const mongoose = require('mongoose');
-//set up the default connection
-let db = 'mongodb+srv://dbUser:dbUserPassword@hideio-wic1l.mongodb.net/Game?retryWrites=true&w=majority';
-// Connect to mongo
-mongoose.connect(db, {useNewUrlParser: true, useUnifiedTopology: true})
-    .then(() => console.log("MongoDB Connected"))
-    .catch(err => console.log(err));
-// Database models (schema)
-const User = require('./models/User');
-const Lobby = require('./models/Lobby');
 
 
 app.use(cors());
@@ -51,43 +41,36 @@ io.on('connection', (socket) => {
     // if the user already exists (email). If he does, I emit a message to go straight to main menu, otherwise to
     // go to user selection first
     socket.on("user exists check", (email) => {
-        User.findOne({email: email})
-            .then(user => {
-                if(user){
-                    // emitting the email of the user, user does exist
+        dbUtil.getUser(email)
+            .then((user) => {
+                console.log("recieved from dbutils ", user);
+                if(user !== null){
                     socket.emit("user database check", user.username);
                 }else{
-                    // emitting an empty string representing false, user does not exist
-                    socket.emit("user database check", "");
+                    socket.emit("user database check", null);
                 }
-            })
+            });
     });
 
     socket.on("create user", (info) => {
-        // create a new user based on the schema
-        const newUser = new User({
-            username: info.username,
-            email: info.email
-        });
-        // save the user to mongoDB, returning a promise when it succeeds
-        newUser.save()
-            .then(user => {
-                console.log(user, " has successfully been added to the database");
-            })
-            .catch(err => console.log(err));
+        dbUtil.createUser(info)
+            .then((res)=>{
+                if(!res){
+                    console.log("Did not provide all information. Try again");
+                }
+            });
     });
 
     //Send the rooms that are available when the user clicks play to see the available lobbies
     // it will find all the lobbies in database, and once its done, it will send the collection to the socket
     socket.on("please give lobbies", () => {
         // console.log("Searching for the lobbies in the database");
-        Lobby.find()
+        dbUtil.getLobbies()
             .then((lobbies) => {
                 // console.log("Lobbies found: ", lobbies);
                 socket.emit("receive lobby list", lobbies);
+
             });
-
-
     });
 
     //When player creates a new lobby to play with their friends
@@ -98,44 +81,30 @@ io.on('connection', (socket) => {
         // console.log("Creating lobby with info ", info);
         let roomID = Math.random().toString(36).slice(2, 8);
 
-        Lobby.findOne({join_code: roomID})
-            .then(lobby => {
-                if(lobby){
-                    console.log("Thats unlucky! Try again!");
-                }else{
-                    const newLobby = new Lobby({
-                        join_code: roomID,
-                        creator_email: info.email,
-                        lobby_name: info.lobbyName,
-                        game_mode: info.gameMode,
-                        game_time: info.gameTime,
-                        game_map: info.gameMap,
-                        creation_date: Date.now()
-                    });
-
-                    // save the lobby to mongoDB, returning a promise when it succeeds
-                    newLobby.save()
-                        .then(lobby => {
-                            console.log(lobby, " has successfully been added to the database");
-
-                            /*this here is for those who are viewing the lobbies
+        dbUtil.getLobby(roomID)
+            .then(lobby =>{
+               if(!lobby){
+                   dbUtil.createLobby(roomID, info)
+                       .then(()=>{
+                           /*this here is for those who are viewing the lobbies
                             this new lobby should automatically load for them, so for all the sockets, if they're
                             in the lobby screen, they'll receieve this event and update the lobbies
                             its down inside this promise of adding to database, because i need to find
                             AFTER THE DATABASE IS UPDATED*/
-                            Lobby.find()
-                                .then((lobbies) => {
-                                    // console.log("emitting ALL LOBBIES ", lobbies);
-                                    io.emit("receive lobby list", lobbies);
-                                });
+                           dbUtil.getLobbies()
+                               .then((lobbies) => {
+                                   console.log("emitting ALL LOBBIES ", lobbies);
+                                   io.emit("receive lobby list", lobbies);
+                               });
 
-                            // creating the lobby player list
-                            rooms_playerlist[roomID] = new Set([info.name]);
-                            console.log("added to playerlist", roomID, rooms_playerlist);
-                        })
-                        .catch(err => console.log(err));
-                }
+                           // creating the lobby player list
+                           rooms_playerlist[roomID] = new Set([info.name]);
+                           console.log("added to playerlist", roomID, rooms_playerlist);
+                       })
+               }
             });
+
+
 
         /*rooms[roomid] = {};
         rooms.host = playername;
