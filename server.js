@@ -9,7 +9,8 @@ const cors = require('cors');
 const port = process.env.PORT || 3001;
 
 let socket = require('socket.io')
-
+const starting_pos_module = require(__dirname + "/starting_positions");
+let starting_pos = starting_pos_module.starting_positions;
 // our http server listens to port 4000
 server = app.listen(port, (err) => {
     if (err) throw err;
@@ -23,16 +24,11 @@ app.get('/', (req, res) => {
     res.send("API working properly!");
 });
 
-const starting_pos_module = require(__dirname + "/starting_positions");
-let starting_pos = starting_pos_module.starting_positions;
-
-
 // create players object
 let players = {};
 // console.log("Initial players list: ", players);
 
 let rooms_playerlist = roomPlayerList();
-
 // create a rooms object to keep track of rooms and the players inside each room
 // key equals room_id (join code)
 async function roomPlayerList(){
@@ -42,6 +38,8 @@ async function roomPlayerList(){
             console.log("rooms player list", rooms_playerlist);
         });
 }
+
+
 io.on('connection', (socket) => {
     // console.log("A User has connected");
     // when a player is logging in through oauth, i cross-check the given info with the database to see
@@ -83,7 +81,7 @@ io.on('connection', (socket) => {
     //When player creates a new lobby to play with their friends
     //User creates lobby with a name (no need to be unique), with settings for the game
     // PARAMETERS:
-    //          info: an object containing: user email, lobbyname , game mode, game time, game map
+    //          info: an object containing: email, name, lobbyName, gameMode, gameTime, gameMap
     socket.on("create lobby", (info) => {
         // console.log("Creating lobby with info ", info);
         let roomID = Math.random().toString(36).slice(2, 8);
@@ -107,7 +105,10 @@ io.on('connection', (socket) => {
                                });
 
                            // creating the lobby player list
-                           rooms_playerlist[roomID] = new Set([info.name]);
+                           rooms_playerlist[roomID] = {}
+                           console.log(rooms_playerlist[roomID]);
+                           // rooms_playerlist[roomID] = { info[email]: info.name};
+                           rooms_playerlist[roomID][info.email] = info.name;
                            console.log("added to playerlist", roomID, rooms_playerlist);
                        })
                }
@@ -124,6 +125,7 @@ io.on('connection', (socket) => {
     });
     // once the room is created, it will ask for the rest of the lobby information with the roomid
     socket.on('ask for lobby info', (roomID) => {
+        console.log("ROOM asked for lobby info given roomID", roomID);
         let res = null;
         dbUtil.getLobby(roomID)
             .then(lobby => {
@@ -165,24 +167,18 @@ io.on('connection', (socket) => {
     };
 
 
-    /* TODO: Convert the player object into info received from the socket
-     Player should press the join button / or create a lobby button in the client
-     Doing so will then take you to the room component. In addition, the user will call a socket event
-     that will add him to the room_playerlist object, with the lobby roomid as the key, and his name as one of the
-     values. It should be a SET that contains the players in the list
-
+    /*
      In the room component, whenever someone joins, it will receive an updated players list, which it will then
      use to update its state, that will contain all the players inside.
-
      */
 
     // this is the event when i'm joining a lobby and moving to the room component
     // info: code : the join code. email : user's email. username: user's name
     socket.on("join certain lobby", (info) => {
         console.log("all lobbies:", rooms_playerlist);
-        console.log("lobby trying to join ... ", rooms_playerlist[info.code]);
+        console.log("lobby trying to join ... ", info.code, rooms_playerlist[info.code]);
 
-        rooms_playerlist[info.code].add(info.username);
+        rooms_playerlist[info.code][info.email] = info.username;
         console.log("update lobby list", rooms_playerlist[info.code]);
         io.emit("update lobby list", rooms_playerlist[info.code]);
 

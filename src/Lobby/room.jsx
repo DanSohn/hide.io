@@ -28,7 +28,7 @@ class Room extends Component {
         this.goPrevious = this.goPrevious.bind(this);
         this.startTimer = this.startTimer.bind(this);
         this.start = this.start.bind(this);
-
+        console.log("in room, asking for lobby info given room id", this.state.roomID);
         socket.emit("ask for lobby info", this.state.roomID);
 
     }
