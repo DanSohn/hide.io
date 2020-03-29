@@ -74,7 +74,7 @@ async function createLobby(roomID, info){
         creation_date: Date.now()
     });
 
-    newLobby.save()
+    await newLobby.save()
         .then(lobby => {
             console.log(lobby, " has successfully been added to the database");
         })
@@ -94,7 +94,7 @@ async function createUser(info){
         email: info.email
     });
     // save the user to mongoDB, returning a promise when it succeeds
-    newUser.save()
+    await newUser.save()
         .then(user => {
             console.log(user, " has successfully been added to the database");
         })
