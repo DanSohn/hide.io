@@ -66,7 +66,6 @@ class LobbyTables extends Component {
     }*/
 
     componentDidMount() {
-        this._ismounted = true;
         console.log("componentdidmount");
 
         socket.emit("please give lobbies");
@@ -81,7 +80,7 @@ class LobbyTables extends Component {
     }
 
     componentWillUnmount() {
-        this._ismounted = false;
+        socket.off("receive lobby list");
     }
 
     render() {
