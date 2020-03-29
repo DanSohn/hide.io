@@ -37,6 +37,19 @@ async function getLobby(roomID){
     return res;
 }
 
+// returns all lobbies, and places the joincodes into an object
+async function getLobbyCodes(){
+    console.log("------- GETLOBBYCODES IN DBUTILS -------");
+    let lobbies = await Lobby.find();
+    let lobbiesObj = {};
+    lobbies.forEach(obj =>{
+        // console.log(obj["join_code"]);
+        lobbiesObj[obj["join_code"]] = {}
+    });
+    // console.log(lobbiesObj);
+    return lobbiesObj
+}
+
 // returns the specified user if he exists. Otherwise, returns null
 async function getUser(email){
     let res;
@@ -74,7 +87,7 @@ async function createLobby(roomID, info){
         creation_date: Date.now()
     });
 
-    newLobby.save()
+    await newLobby.save()
         .then(lobby => {
             console.log(lobby, " has successfully been added to the database");
         })
@@ -94,7 +107,7 @@ async function createUser(info){
         email: info.email
     });
     // save the user to mongoDB, returning a promise when it succeeds
-    newUser.save()
+    await newUser.save()
         .then(user => {
             console.log(user, " has successfully been added to the database");
         })
@@ -108,6 +121,7 @@ module.exports = {
     getLobbies,
     getUsers,
     getUser,
+    getLobbyCodes,
     getLobby,
     createLobby,
     createUser

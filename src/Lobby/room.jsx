@@ -5,6 +5,7 @@ import {socket} from "../assets/socket";
 
 import "bootstrap/dist/js/bootstrap.bundle";
 import "../assets/App.css";
+import {returnGameMode, returnGameMap, returnGameTime } from  "../assets/utils";
 import ViewLobbies from "./viewLobbies";
 import Game from "../Game/Game";
 
@@ -15,7 +16,11 @@ class Room extends Component {
             userName: this.props.name,
             email: this.props.email,
             image: this.props.image,
-            title: "Room Name should be from database?",
+            roomID: this.props.join_code,
+            title: "",
+            game_mode: "",
+            game_time: "",
+            game_map: "",
             start: false,
             numPlayers: 0,
             players: {}
@@ -23,6 +28,9 @@ class Room extends Component {
         this.goPrevious = this.goPrevious.bind(this);
         this.startTimer = this.startTimer.bind(this);
         this.start = this.start.bind(this);
+        console.log("in room, asking for lobby info given room id", this.state.roomID);
+        socket.emit("ask for lobby info", this.state.roomID);
+
     }
 
     goPrevious() {
@@ -46,9 +54,20 @@ class Room extends Component {
         // TODO: Currently, if the server is active when the lobby was created adn you join its fine as its stored
         // in hte server. However, once it disconnects it goes haywire. Try and fix this issue by having it initialized
         // by grabbing the lobby list initially from the database
-        console.log("finished rendering");
-        socket.emit("player joined");
+        // socket.emit("player joined");
+        socket.on('giving lobby info', (lobby) => {
+            if(!lobby){
+                console.log("Received not a lobby! Check room.js line 54, and server.js line 119");
+            }else{
+                this.setState({
+                    title: lobby.lobby_name,
+                    game_mode: returnGameMode(lobby.game_mode),
+                    game_time: returnGameTime(lobby.game_time),
+                    game_map: returnGameMap(lobby.game_map)
 
+                });
+            }
+        });
         // everytime this event is called, its passed a set of the users in the lobby
         // parameter: lobby_users - a SET containing all the users username
         socket.on("update lobby list", (lobby_users) => {
@@ -80,7 +99,14 @@ class Room extends Component {
         });
     }
 
+    componentWillUnmount() {
+        socket.off("giving lobby info");
+        socket.off("update lobby list");
+        socket.off("lobby current timer");
+    }
+
     render() {
+        console.log("rendering in ROOM");
         let comp;
         if (this.state.previous) {
             comp = (
@@ -135,11 +161,11 @@ class Room extends Component {
                                 Start Game
                             </button>
                             <h3>Game Mode:</h3>
-                            <h6>love</h6>
+                            <h6>{this.state.game_mode}</h6>
                             <h3>Time Limit:</h3>
-                            <h6>love</h6>
+                            <h6>{this.state.game_time}</h6>
                             <h3>Map:</h3>
-                            <h6>love</h6>
+                            <h6>{this.state.game_map}</h6>
                         </div>
                         <div className="online"></div>
                     </div>

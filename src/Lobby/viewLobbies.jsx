@@ -102,6 +102,7 @@ class ViewLobbies extends Component {
                     name={this.state.userName}
                     email={this.state.email}
                     image={this.state.image}
+                    join_code={this.state.enter_lobby}
                 />
             );
         } else if (this.state.stage === 0) {

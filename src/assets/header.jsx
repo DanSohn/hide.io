@@ -26,6 +26,14 @@ class Header extends Component {
         });
     }
 
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if(this.props.title !== prevProps.title){
+            this.setState({
+                title: this.props.title
+            })
+        }
+    }
+
     render() {
         let comp;
         let back;

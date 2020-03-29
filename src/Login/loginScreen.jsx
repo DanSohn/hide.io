@@ -58,6 +58,10 @@ class LoginScreen extends Component {
         
     }
 
+    componentWillUnmount() {
+        socket.off("user database check");
+    }
+
     goToLobby() {
         this.setState(state => ({
             SignIn: true
