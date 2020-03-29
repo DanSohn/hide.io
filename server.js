@@ -86,6 +86,8 @@ io.on('connection', (socket) => {
                if(!lobby){
                    dbUtil.createLobby(roomID, info)
                        .then(()=>{
+                           // after lobby is created, I return the join code of it
+                           socket.emit("created lobby return code", roomID);
                            /*this here is for those who are viewing the lobbies
                             this new lobby should automatically load for them, so for all the sockets, if they're
                             in the lobby screen, they'll receieve this event and update the lobbies
@@ -93,7 +95,7 @@ io.on('connection', (socket) => {
                             AFTER THE DATABASE IS UPDATED*/
                            dbUtil.getLobbies()
                                .then((lobbies) => {
-                                   console.log("emitting ALL LOBBIES ", lobbies);
+                                   // console.log("emitting ALL LOBBIES ", lobbies);
                                    io.emit("receive lobby list", lobbies);
                                });
 
@@ -104,8 +106,6 @@ io.on('connection', (socket) => {
                }
             });
 
-
-
         /*rooms[roomid] = {};
         rooms.host = playername;
         rooms.players = {}; //Information about each of the players that will join the lobby including the host
@@ -114,6 +114,25 @@ io.on('connection', (socket) => {
         createdrooms.push(roomid);*/
         // console.log(createdrooms);
         // console.log(rooms);
+    });
+    // once the room is created, it will ask for the rest of the lobby information with the roomid
+    socket.on('ask for lobby info', (roomID) => {
+        let res = null;
+        dbUtil.getLobby(roomID)
+            .then(lobby => {
+                console.log("Got lobby", lobby);
+                // if the lobby somehow doesn't exist, print an error statement
+                if(!lobby){
+                    console.log("Error with the roomID");
+                }else{
+                    console.log("setting the lobby");
+                    res = lobby;
+                }
+
+                console.log("giving lobby info", res);
+                socket.emit('giving lobby info', res);
+            });
+
     });
 
     // when a player joins the game, I should provide them with a starting coordinate

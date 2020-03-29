@@ -22,7 +22,8 @@ class CreateLobby extends Component {
             lobbyName: "",
             gameMode: "",
             gameTime: "",
-            gameMap: ""
+            gameMap: "",
+            join_code: ""
         };
         this.goPrevious = this.goPrevious.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -58,8 +59,12 @@ class CreateLobby extends Component {
             gameTime: this.state.gameTime,
             gameMap: this.state.gameMap
         });
-        this.setState({
-            submitted: true
+
+        socket.on("created lobby return code", (join_code) => {
+            this.setState({
+                join_code: join_code,
+                submitted: true
+            });
         });
     }
 
@@ -102,6 +107,7 @@ class CreateLobby extends Component {
                 name={this.state.userName}
                 email={this.state.email}
                 image={this.state.image}
+                join_code={this.state.join_code}
             />
         } else {
             comp = (
