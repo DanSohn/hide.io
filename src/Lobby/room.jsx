@@ -99,6 +99,12 @@ class Room extends Component {
         });
     }
 
+    componentWillUnmount() {
+        socket.off("giving lobby info");
+        socket.off("update lobby list");
+        socket.off("lobby current timer");
+    }
+
     render() {
         console.log("rendering in ROOM");
         let comp;
