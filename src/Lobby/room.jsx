@@ -67,7 +67,7 @@ class Room extends Component {
                     game_time: returnGameTime(lobby.game_time),
                     game_map: returnGameMap(lobby.game_map)
 
-                })
+                });
                 console.log("title is now.....", this.state.title);
             }
         });
@@ -103,6 +103,7 @@ class Room extends Component {
     }
 
     render() {
+        console.log("rendering in ROOM");
         let comp;
         if (this.state.previous) {
             comp = (
@@ -120,6 +121,7 @@ class Room extends Component {
                 />
             );
         } else {
+            console.log("rerendering the main window, but with title", this.state.title);
             comp = (
                 <div className="GameWindow">
                     <Header
