@@ -11,7 +11,8 @@ const server = express()
 const cors = require('cors');
 //const io = require('socket.io').listen(server);
 const socket = require('socket.io')
-const io = socket(server);
+// const io = socket(server);
+const io = require('socket.io')(server, { origins: '*:*'});
 // our http server listens to port 4000
 // server = app.listen(port, (err) => {
 //     if (err) throw err;
