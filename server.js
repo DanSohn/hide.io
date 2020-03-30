@@ -9,9 +9,9 @@ const cors = require('cors');
 //const io = require('socket.io').listen(server);
 const socket = require('socket.io')
 // const io = socket(server);
-var server = app.listen(process.env.PORT || 3000);
-var io = require('socket.io').listen(server);
-
+const server = app.listen(process.env.PORT || 3000);
+const io = require('socket.io').listen(server);
+io.set( "origins", "*:*" );
 
 
 app.use(cors());
