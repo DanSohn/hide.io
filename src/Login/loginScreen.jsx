@@ -8,6 +8,8 @@ import Header from "../assets/header";
 import Break from "../assets/break";
 import FacebookLogin from "react-facebook-login";
 import GitHubLogin from "react-github-login";
+import Sound from "react-sound"
+import { wait } from "@testing-library/dom";
 
 class LoginScreen extends Component {
     constructor(props) {
@@ -18,7 +20,8 @@ class LoginScreen extends Component {
             userName: "",
             id: "",
             email: "",
-            image: ""
+            image: "",
+            clickStatus: "PAUSED"
         };
         this.goToLobby = this.goToLobby.bind(this);
         this.googleSDK = this.googleSDK.bind(this);
@@ -26,6 +29,8 @@ class LoginScreen extends Component {
         this.fbDta = this.fbDta.bind(this);
         this.ghData = this.ghData.bind(this);
         this.ghFail = this.ghFail.bind(this);
+        this.playSound = this.playSound.bind(this);
+        this.soundButton = new Audio("https://www.pacdv.com/sounds/domestic_sound_effects/light-switch-1.wav")
     }
 
     componentDidMount() {
@@ -36,7 +41,7 @@ class LoginScreen extends Component {
             console.log("checking if user exists");
             // if the user "exists" in database, then not a new user and will go straight to main menu
             // otherwise, go to the username selection
-            if (username !== "") {
+            if (username !== null) {
                 this.setState({
                     newUser: false,
                     userName: username
@@ -50,6 +55,11 @@ class LoginScreen extends Component {
             }
             this.goToLobby();
         });
+        
+    }
+
+    componentWillUnmount() {
+        socket.off("user database check");
     }
 
     goToLobby() {
@@ -148,6 +158,18 @@ class LoginScreen extends Component {
         console.log(res);
     }
 
+    playSound() {
+        // console.log("PLAY SOUND")
+        // this.setState({
+        //     clickStatus: "PLAYING"
+        // })
+        // wait(0.5)
+        // this.setState({
+        //     clickStatus: "PAUSED"
+        // })
+        this.soundButton.play(1.5)
+    }
+
     render() {
         let comp;
         if (this.state.SignIn === false) {
@@ -168,11 +190,13 @@ class LoginScreen extends Component {
                                 fields="name,email,picture"
                                 cssClass="btn btn-primary"
                                 textButton="Facebook"
+                                onClick={this.playSound}
                             />
                             <button
                                 type="button"
                                 className="btn btn-danger"
                                 ref="googleLoginBtn"
+                                onClick={this.playSound}
                             >
                                 Google
                             </button>
@@ -208,7 +232,13 @@ class LoginScreen extends Component {
                 );
             }
         }
-        return <div>{comp}</div>;
+        return (
+            <div>
+                <Sound volume="60" url="https://vgmdownloads.com/soundtracks/call-of-duty-modern-warfare-2-spec-ops/zxxoexszah/08%20Bravo%20-%20Body%20Count.mp3" autoload="true" playStatus={Sound.status.PLAYING} muted="muted" loop="true" />
+                {/* <Sound volume="100" url="https://www.pacdv.com/sounds/domestic_sound_effects/light-switch-1.wav" autoload="true" playFromPosition="1" playStatus={this.state.clickStatus} muted="muted" loop="true" /> */}
+                {comp}
+            </div>
+        )
     }
 }
 

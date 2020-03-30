@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import "./App.css";
-import LoginScreen from "../Login/loginScreen";
 
 class Header extends Component {
     constructor(props) {
@@ -27,23 +26,31 @@ class Header extends Component {
         });
     }
 
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if(this.props.title !== prevProps.title){
+            this.setState({
+                title: this.props.title
+            })
+        }
+    }
+
     render() {
         let comp;
         let back;
         let profile;
-        if (this.state.showBack != false) {
+        if (this.state.showBack !== false) {
             back = (
                 <button className="btn btn-light" onClick={this.props.previous}>
                     Go Back
                 </button>
             );
         }
-        if (this.state.showProfile != false) {
+        if (this.state.showProfile !== false) {
             profile = (
                 // <button className="btn btn-dark" onClick={this.goProfile}>
                 //     Profile
                 // </button>
-                <img src={this.state.image} alt="picture"></img>
+                <img src={this.state.image} alt="Google or facebook's profile"/>
             );
         }
         comp = (

@@ -18,8 +18,10 @@ class PlayerProfile extends Component {
             image: this.props.image
         };
         this.goPrevious = this.goPrevious.bind(this);
+        this.soundButton = new Audio("https://www.pacdv.com/sounds/domestic_sound_effects/light-switch-1.wav")
     }
     goPrevious() {
+        this.soundButton.play()
         this.setState({
             previous: true
         });
