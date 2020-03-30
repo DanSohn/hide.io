@@ -4,21 +4,14 @@ const path = require('path');
 const dbUtil = require('./dbUtils');
 //const server = require('http').createServer(app);
 const PORT = process.env.PORT || 3001;
-const server = express()
-  .use((req, res) => res.sendFile('/index.html', { root: __dirname }))
-  .listen(PORT, () => console.log(`Listening on ${PORT}`));
 
 const cors = require('cors');
 //const io = require('socket.io').listen(server);
 const socket = require('socket.io')
 // const io = socket(server);
-const io = require('socket.io')(server, { origins: '*:*'});
-// our http server listens to port 4000
-// server = app.listen(port, (err) => {
-//     if (err) throw err;
-//     console.log('listening on *:' + port);
-// });
-// io = socket(server)
+var server = app.listen(process.env.PORT || 3000);
+var io = require('socket.io').listen(server);
+
 
 
 app.use(cors());
