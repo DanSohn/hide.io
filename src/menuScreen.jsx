@@ -5,6 +5,7 @@ import PlayerProfile from "./PlayerProfile.js";
 import ViewLobbies from "./Lobby/viewLobbies";
 import Header from "./assets/header";
 import Break from "./assets/break";
+import ClickSound from "./sounds/click"
 
 class MenuScreen extends Component {
     constructor(props) {
@@ -25,28 +26,27 @@ class MenuScreen extends Component {
         this.goToInstructions = this.goToInstructions.bind(this);
         this.goToLogout = this.goToLogout.bind(this);
         this.goToProfile = this.goToProfile.bind(this);
-        this.soundButton = new Audio("https://www.pacdv.com/sounds/domestic_sound_effects/light-switch-1.wav")
     }
     goToPlayScreen() {
-        this.soundButton.play(1.5)
+        ClickSound()
         this.setState(state => ({
             stage: 1
         }));
     }
     goToInstructions() {
-        this.soundButton.play(1.5)
+        ClickSound()
         this.setState(state => ({
             stage: 2
         }));
     }
     goToProfile() {
-        this.soundButton.play(1.5)
+        ClickSound()
         this.setState(state => ({
             stage: 3
         }));
     }
     goToLogout() {
-        this.soundButton.play(1.5)
+        ClickSound()
         // this.setState(state => ({
         //     stage: 4
         // }));

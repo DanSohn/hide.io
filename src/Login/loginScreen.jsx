@@ -10,6 +10,8 @@ import FacebookLogin from "react-facebook-login";
 import GitHubLogin from "react-github-login";
 import Sound from "react-sound"
 import { wait } from "@testing-library/dom";
+import ClickSound from "../sounds/click.js"
+import { throwStatement } from "babel-types";
 
 class LoginScreen extends Component {
     constructor(props) {
@@ -30,7 +32,7 @@ class LoginScreen extends Component {
         this.ghData = this.ghData.bind(this);
         this.ghFail = this.ghFail.bind(this);
         this.playSound = this.playSound.bind(this);
-        this.soundButton = new Audio("https://www.pacdv.com/sounds/domestic_sound_effects/light-switch-1.wav")
+        this.songSelection = Math.floor(Math.random() * 5);
     }
 
     componentDidMount() {
@@ -159,15 +161,7 @@ class LoginScreen extends Component {
     }
 
     playSound() {
-        // console.log("PLAY SOUND")
-        // this.setState({
-        //     clickStatus: "PLAYING"
-        // })
-        // wait(0.5)
-        // this.setState({
-        //     clickStatus: "PAUSED"
-        // })
-        this.soundButton.play(1.5)
+        ClickSound()
     }
 
     render() {
@@ -232,10 +226,27 @@ class LoginScreen extends Component {
                 );
             }
         }
+        let songURL = ""
+        switch (this.songSelection) {
+            case 0:
+                songURL = "https://vgmdownloads.com/soundtracks/mega-man-bass-gba/pxegwbro/04%20Robot%20Museum.mp3"
+                break;
+            case 1:
+                songURL = "https://vgmdownloads.com/soundtracks/half-life-2-episode-two-rip-ost/itjbtwqb/03.%20Eon%20Trap.mp3"
+                break;
+            case 2:
+                songURL = "https://vgmdownloads.com/soundtracks/uncharted-the-nathan-drake-collection/jpqzmvae/1-01.%20Nate%27s%20Theme.mp3"
+                break;
+            case 3:
+                songURL = "https://vgmdownloads.com/soundtracks/super-smash-bros.-for-nintendo-3ds-and-wii-u-vol-02.-donkey-kong/lsdyorvy/19.%20Swinger%20Flinger.mp3"
+                break;
+            case 4:
+                songURL = "https://vgmdownloads.com/soundtracks/uncharted-the-nathan-drake-collection/jpqzmvae/1-01.%20Nate%27s%20Theme.mp3"
+                break;
+        }
         return (
             <div>
-                <Sound volume="60" url="https://vgmdownloads.com/soundtracks/call-of-duty-modern-warfare-2-spec-ops/zxxoexszah/08%20Bravo%20-%20Body%20Count.mp3" autoload="true" playStatus={Sound.status.PLAYING} muted="muted" loop="true" />
-                {/* <Sound volume="100" url="https://www.pacdv.com/sounds/domestic_sound_effects/light-switch-1.wav" autoload="true" playFromPosition="1" playStatus={this.state.clickStatus} muted="muted" loop="true" /> */}
+                <Sound volume="60" url={songURL} autoload="true" playStatus={Sound.status.PLAYING} muted="muted" loop="true" />
                 {comp}
             </div>
         )
