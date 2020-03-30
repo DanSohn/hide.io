@@ -6,6 +6,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 import MenuScreen from "./menuScreen";
 import Header from "./assets/header";
 import Break from "./assets/break";
+import ClickSound from "./sounds/click";
 
 class PlayerProfile extends Component {
     constructor(props) {
@@ -18,10 +19,9 @@ class PlayerProfile extends Component {
             image: this.props.image
         };
         this.goPrevious = this.goPrevious.bind(this);
-        this.soundButton = new Audio("https://www.pacdv.com/sounds/domestic_sound_effects/light-switch-1.wav")
     }
     goPrevious() {
-        this.soundButton.play()
+        ClickSound()
         this.setState({
             previous: true
         });

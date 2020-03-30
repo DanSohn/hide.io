@@ -7,6 +7,7 @@ import "bootstrap/dist/js/bootstrap.bundle";
 import "../assets/App.css";
 import ViewLobbies from "./viewLobbies";
 import Room from "./room";
+import ClickSound from "../sounds/click"
 
 class CreateLobby extends Component {
     constructor(props) {
@@ -31,11 +32,10 @@ class CreateLobby extends Component {
         this.handleChangeGameMode = this.handleChangeGameMode.bind(this);
         this.handleChangeGameTime = this.handleChangeGameTime.bind(this);
         this.handleChangeGameMap = this.handleChangeGameMap.bind(this);
-        this.soundButton = new Audio("https://www.pacdv.com/sounds/domestic_sound_effects/light-switch-1.wav")
     }
 
     goPrevious() {
-        this.soundButton.play(2)
+        ClickSound()
         this.setState({
             previous: true
         });
@@ -43,7 +43,7 @@ class CreateLobby extends Component {
 
     handleSubmit(event) {
         event.preventDefault();
-        this.soundButton.play(2)
+        ClickSound()
         console.log("Submitting!!!!");
         console.log("i will be providing to the server this information:");
         console.log("lobby name: ", this.state.lobbyName);
@@ -74,19 +74,19 @@ class CreateLobby extends Component {
         });
     }
     handleChangeGameMode(event) {
-        this.soundButton.play(2)
+        ClickSound()
         this.setState({
             gameMode: event.target.value
         });
     }
     handleChangeGameTime(event) {
-        this.soundButton.play(2)
+        ClickSound()
         this.setState({
             gameTime: event.target.value
         });
     }
     handleChangeGameMap(event) {
-        this.soundButton.play(2)
+        ClickSound()
         this.setState({
             gameMap: event.target.value
         });

@@ -8,6 +8,7 @@ import "../assets/App.css";
 import {returnGameMode, returnGameMap, returnGameTime } from  "../assets/utils";
 import ViewLobbies from "./viewLobbies";
 import Game from "../Game/Game";
+import ClickSound from "../sounds/click"
 
 class Room extends Component {
     constructor(props) {
@@ -34,6 +35,7 @@ class Room extends Component {
     }
 
     goPrevious() {
+        ClickSound()
         this.setState({
             previous: true
         });
@@ -41,10 +43,12 @@ class Room extends Component {
 
     startTimer() {
         // 3 second timer currently
+        ClickSound()
         socket.emit("lobby start timer", 3100);
     }
 
     start() {
+        ClickSound()
         this.setState({
             start: true
         });

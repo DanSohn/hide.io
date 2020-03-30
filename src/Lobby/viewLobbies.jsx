@@ -8,7 +8,7 @@ import LobbyTables from "./lobbyTables";
 
 import "../assets/App.css";
 import { socket } from "../assets/socket";
-
+import ClickSound from "../sounds/click"
 
 
 class ViewLobbies extends Component {
@@ -38,6 +38,7 @@ class ViewLobbies extends Component {
     }
 
     createLobby() {
+        ClickSound()
         socket.emit("create lobby", {
             userName: this.state.userName,
             email: this.state.email,
@@ -45,6 +46,7 @@ class ViewLobbies extends Component {
         });
     }
     goPrevious() {
+        ClickSound()
         this.setState({
             previous: true
         });
@@ -52,12 +54,14 @@ class ViewLobbies extends Component {
 
 
     goToCreateLobby() {
+        ClickSound()
         this.setState({
             stage: 1
         });
     }
 
     goToJoinCode() {
+        ClickSound()
         this.setState({
             stage: 2
         });
@@ -65,6 +69,7 @@ class ViewLobbies extends Component {
 
     // callback function from the lobby table that will return the lobby_code that we can join.
     goToJoinLobby(join_code) {
+        ClickSound()
         console.log("received join_code from table", join_code);
 
         socket.emit("join certain lobby", {code: join_code, email: this.state.email, username: this.state.userName});

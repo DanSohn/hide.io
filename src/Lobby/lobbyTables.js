@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {socket} from "../assets/socket";
 import "../assets/App.css";
-
+import ClickSound from "../sounds/click"
 
 class LobbyTables extends Component {
     constructor(props) {
@@ -16,6 +16,7 @@ class LobbyTables extends Component {
     }
 
     sendLobbyCode(join_code){
+        ClickSound()
         console.log("Sending back information to viewLobbies", join_code);
         this.props.lobbyCallback(join_code);
     }
