@@ -2,19 +2,19 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const dbUtil = require('./dbUtils');
-// const server = require('http').createServer(app);
-//const socket_io = require('socket.io');
-//const io = socket_io.listen(server);
+const server = require('http').createServer(app);
+const socket_io = require('socket.io');
+const io = socket_io.listen(server);
 const cors = require('cors');
 const port = process.env.PORT || 3001;
 
-let socket = require('socket.io')
+// let socket = require('socket.io')
 // our http server listens to port 4000
-server = app.listen(port, (err) => {
-    if (err) throw err;
-    console.log('listening on *:' + port);
-});
-io = socket(server)
+// server = app.listen(port, (err) => {
+//     if (err) throw err;
+//     console.log('listening on *:' + port);
+// });
+// io = socket(server)
 
 
 app.use(cors());
