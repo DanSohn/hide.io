@@ -1,4 +1,4 @@
-import  Loader  from './Loader.js'
+
 
 export default class PlayerTest {
     constructor(map, x, y) {
@@ -8,15 +8,14 @@ export default class PlayerTest {
         this.width = map.tsize;
         this.height = map.tsize;
     
-        this.image = Loader.getImage('hero');
         this.SPEED = 256;
     }
     
     
     move(delta, dirx, diry) {
         // move hero
-        this.x += dirx;
-        this.y += diry ;
+        this.x += dirx * 1.8;
+        this.y += diry * 1.8;
     
         // check if we walked into a non-walkable tile
         this._collide(dirx, diry);
@@ -28,7 +27,7 @@ export default class PlayerTest {
         this.y = Math.max(0, Math.min(this.y, maxY));
     };
     
-    collide(dirx, diry) {
+    _collide(dirx, diry) {
         var row, col;
         // -1 in right and bottom is because image ranges from 0..63
         // and not up to 64

@@ -8,9 +8,9 @@ import '../assets/App.css';
 
 
 // import { Loader } from './Loader';
-// import Camera  from './Camera';
+import Camera  from './Camera';
 // import  Keyboard from './Keyboard';
-// import Player  from './PlayerTest';
+import Player  from './PlayerTest';
 import { socket } from "../assets/socket";
 
 
@@ -57,116 +57,116 @@ Keyboard.isDown = function (keyCode) {
 };
 
 
-function Camera(map, width, height) {
-    this.x = 0;
-    this.y = 0;
-    this.width = width;
-    this.height = height;
-    this.maxX = map.cols * map.tsize - width;
-    this.maxY = map.rows * map.tsize - height;
-}
+// function Camera(map, width, height) {
+//     this.x = 0;
+//     this.y = 0;
+//     this.width = width;
+//     this.height = height;
+//     this.maxX = map.cols * map.tsize - width;
+//     this.maxY = map.rows * map.tsize - height;
+// }
 
-Camera.prototype.follow = function (sprite) {
-    this.following = sprite;
-    sprite.screenX = 0;
-    sprite.screenY = 0;
-};
+// Camera.prototype.follow = function (sprite) {
+//     this.following = sprite;
+//     sprite.screenX = 0;
+//     sprite.screenY = 0;
+// };
 
-Camera.prototype.update = function () {
-    console.log('camera update')
-    // assume followed sprite should be placed at the center of the screen
-    // whenever possible
-    this.following.screenX = this.width / 2;
-    this.following.screenY = this.height / 2;
+// Camera.prototype.update = function () {
+//     console.log('camera update')
+//     // assume followed sprite should be placed at the center of the screen
+//     // whenever possible
+//     this.following.screenX = this.width / 2;
+//     this.following.screenY = this.height / 2;
 
-    // make the camera follow the sprite
-    this.x = this.following.x - this.width / 2;
-    this.y = this.following.y - this.height / 2;
-    // clamp values
-    this.x = Math.max(0, Math.min(this.x, this.maxX));
-    this.y = Math.max(0, Math.min(this.y, this.maxY));
+//     // make the camera follow the sprite
+//     this.x = this.following.x - this.width / 2;
+//     this.y = this.following.y - this.height / 2;
+//     // clamp values
+//     this.x = Math.max(0, Math.min(this.x, this.maxX));
+//     this.y = Math.max(0, Math.min(this.y, this.maxY));
 
-    // in map corners, the sprite cannot be placed in the center of the screen
-    // and we have to change its screen coordinates
+//     // in map corners, the sprite cannot be placed in the center of the screen
+//     // and we have to change its screen coordinates
 
-    // left and right sides
-    if (this.following.x < this.width / 2 ||
-        this.following.x > this.maxX + this.width / 2) {
-        this.following.screenX = this.following.x - this.x;
-    }
-    // top and bottom sides
-    if (this.following.y < this.height / 2 ||
-        this.following.y > this.maxY + this.height / 2) {
-        this.following.screenY = this.following.y - this.y;
-    }
-};
+//     // left and right sides
+//     if (this.following.x < this.width / 2 ||
+//         this.following.x > this.maxX + this.width / 2) {
+//         this.following.screenX = this.following.x - this.x;
+//     }
+//     // top and bottom sides
+//     if (this.following.y < this.height / 2 ||
+//         this.following.y > this.maxY + this.height / 2) {
+//         this.following.screenY = this.following.y - this.y;
+//     }
+// };
 
-function Player(map, x, y) {
-    this.map = map;
-    this.x = x;
-    this.y = y;
-    this.width = map.tsize;
-    this.height = map.tsize;
+// function Player(map, x, y) {
+//     this.map = map;
+//     this.x = x;
+//     this.y = y;
+//     this.width = map.tsize;
+//     this.height = map.tsize;
 
-    // this.image = Loader.getImage('Player');
-}
+//     // this.image = Loader.getImage('Player');
+// }
 
-Player.SPEED = 256; // pixels per second
+// Player.SPEED = 256; // pixels per second
 
-Player.prototype.move = function (delta, dirx, diry) {
-    // move 
-    // if(dirx === 1){
-    //     this.x = this.x + 64;
-    // }else if(dirx === -1){
-    //     this.x = this.x - 64;
-    // }
-    this.x += dirx ;
-    this.y += diry ;
-    console.log(dirx +' '+diry)
-    // check if we walked into a non-walkable tile
-    this._collide(dirx, diry);
+// Player.prototype.move = function (delta, dirx, diry) {
+//     // move 
+//     // if(dirx === 1){
+//     //     this.x = this.x + 64;
+//     // }else if(dirx === -1){
+//     //     this.x = this.x - 64;
+//     // }
+//     this.x += dirx ;
+//     this.y += diry ;
+//     console.log(dirx +' '+diry)
+//     // check if we walked into a non-walkable tile
+//     this._collide(dirx, diry);
 
-    // clamp values
-    var maxX = this.map.cols * this.map.tsize;
-    var maxY = this.map.rows * this.map.tsize;
-    this.x = Math.max(0, Math.min(this.x, maxX));
-    this.y = Math.max(0, Math.min(this.y, maxY));
-};
+//     // clamp values
+//     var maxX = this.map.cols * this.map.tsize;
+//     var maxY = this.map.rows * this.map.tsize;
+//     this.x = Math.max(0, Math.min(this.x, maxX));
+//     this.y = Math.max(0, Math.min(this.y, maxY));
+// };
 
-Player.prototype._collide = function (dirx, diry) {
-    var row, col;
-    // -1 in right and bottom is because image ranges from 0..63
-    // and not up to 64
-    var left = this.x - this.width / 2;
-    var right = this.x + this.width / 2 - 1;
-    var top = this.y - this.height / 2;
-    var bottom = this.y + this.height / 2 - 1;
+// Player.prototype._collide = function (dirx, diry) {
+//     var row, col;
+//     // -1 in right and bottom is because image ranges from 0..63
+//     // and not up to 64
+//     var left = this.x - this.width / 2;
+//     var right = this.x + this.width / 2 - 1;
+//     var top = this.y - this.height / 2;
+//     var bottom = this.y + this.height / 2 - 1;
 
-    // check for collisions on sprite sides
-    var collision =
-        this.map.isSolidTileAtXY(left, top) ||
-        this.map.isSolidTileAtXY(right, top) ||
-        this.map.isSolidTileAtXY(right, bottom) ||
-        this.map.isSolidTileAtXY(left, bottom);
-    if (!collision) { return; }
+//     // check for collisions on sprite sides
+//     var collision =
+//         this.map.isSolidTileAtXY(left, top) ||
+//         this.map.isSolidTileAtXY(right, top) ||
+//         this.map.isSolidTileAtXY(right, bottom) ||
+//         this.map.isSolidTileAtXY(left, bottom);
+//     if (!collision) { return; }
 
-    if (diry > 0) {
-        row = this.map.getRow(bottom);
-        this.y = -this.height / 2 + this.map.getY(row);
-    }
-    else if (diry < 0) {
-        row = this.map.getRow(top);
-        this.y = this.height / 2 + this.map.getY(row + 1);
-    }
-    else if (dirx > 0) {
-        col = this.map.getCol(right);
-        this.x = -this.width / 2 + this.map.getX(col);
-    }
-    else if (dirx < 0) {
-        col = this.map.getCol(left);
-        this.x = this.width / 2 + this.map.getX(col + 1);
-    }
-};
+//     if (diry > 0) {
+//         row = this.map.getRow(bottom);
+//         this.y = -this.height / 2 + this.map.getY(row);
+//     }
+//     else if (diry < 0) {
+//         row = this.map.getRow(top);
+//         this.y = this.height / 2 + this.map.getY(row + 1);
+//     }
+//     else if (dirx > 0) {
+//         col = this.map.getCol(right);
+//         this.x = -this.width / 2 + this.map.getX(col);
+//     }
+//     else if (dirx < 0) {
+//         col = this.map.getCol(left);
+//         this.x = this.width / 2 + this.map.getX(col + 1);
+//     }
+// };
 
 class Game extends Component {
 
@@ -211,8 +211,6 @@ class Game extends Component {
                     }else{
                         return false;
                     }
-                    // var isSolid = tile === 2 || tile === 3;
-                    // return res || isSolid;
                 
                 },
                 getCol: function (x) {
@@ -239,8 +237,6 @@ class Game extends Component {
         this.ctx = context;
         this._previousElapsed = 0;
         // var p = [];
-        // p.push(this.load('tiles', '../assets/tiles.png'));
-        // p.push(this.load('Player', '../assets/character.png'));
 
         // var p = this.load();
         // Promise.all(p).then(function (loaded) {
@@ -258,7 +254,7 @@ class Game extends Component {
 
         setInterval(() => {
             // this.update();
-            this.ctx.clearRect(0, 0, 512, 512);
+            this.ctx.clearRect(0, 0, 1024, 640);
             var delta = .1;
             // compute delta time in seconds -- also cap it
             // var delta = (elapsed - this._previousElapsed) / 1000.0;
@@ -279,9 +275,8 @@ class Game extends Component {
             [Keyboard.LEFT, Keyboard.RIGHT, Keyboard.UP, Keyboard.DOWN]);
         // this.tileAtlas = Loader.getImage('tiles');
         this.Player = new Player(this.state.map, 160, 160);
-        this.camera = new Camera(this.state.map, 512, 512);
+        this.camera = new Camera(this.state.map, 1024, 640);
         this.camera.follow(this.Player)
-        console.log('init Done')
 
     };
 
@@ -316,12 +311,12 @@ class Game extends Component {
                     this.ctx.beginPath();
                     this.ctx.rect(Math.round(x),  Math.round(y), 64, 64);
                     if(tile === 1) {
-                        this.ctx.fillStyle = 'white';
+                        this.ctx.fillStyle = '#F7F3F0';
                     }else if(tile === 2){
-                        this.ctx.fillStyle = 'green';
+                        this.ctx.fillStyle = '#D9C9BD';
 
                     }else{
-                        this.ctx.fillStyle = 'brown';
+                        this.ctx.fillStyle = '#918C87';
                     }
                     this.ctx.stroke();
                     this.ctx.fill();
@@ -337,22 +332,11 @@ class Game extends Component {
         // draw main character
         this.ctx.beginPath();
         this.ctx.rect(this.Player.screenX - this.Player.width / 2, this.Player.screenY - this.Player.height / 2, 64, 64);
-        this.ctx.fillStyle = 'blue';
+        this.ctx.fillStyle = '#007E8F';
         this.ctx.fill();
-        // this.ctx.drawImage(
-        //     this.Player.image,
-        //     this.Player.screenX - this.Player.width / 2,
-        //     this.Player.screenY - this.Player.height / 2);
 
-        // draw map top layer
-        // this._drawLayer();
-
-        // this._drawGrid();
     };
 
-    //movement listeners to be added on component load, only allow movement if there is no barricades
-
-    //map update
 
     componentDidMount() {
         this.setState({ game_status: "in progress" });
@@ -401,7 +385,7 @@ class Game extends Component {
     render() {
         return (
             <div>
-                <canvas ref="canvas" width={512} height={512} />
+                <canvas ref="canvas" width={1024} height={620} />
             </div>
         );
     }
