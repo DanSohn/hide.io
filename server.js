@@ -1,5 +1,4 @@
 const express = require('express');
-const app = express();
 const path = require('path');
 const dbUtil = require('./dbUtils');
 //const server = require('http').createServer(app);
@@ -9,10 +8,15 @@ const cors = require('cors');
 //const io = require('socket.io').listen(server);
 const socket = require('socket.io')
 // const io = socket(server);
-const server = app.listen(process.env.PORT || 3000);
-const io = require('socket.io').listen(server);
-io.set( "origins", "*:*" );
+// const server = app.listen(process.env.PORT || 3000);
+// const io = require('socket.io').listen(server);
+// io.set( "origins", "*:*" );
 
+let app = require('express')();
+let server = require('http').Server(app);
+let io = require('socket.io')(server);
+
+server.listen(PORT);
 
 app.use(cors());
 app.get('/', (req, res) => {
