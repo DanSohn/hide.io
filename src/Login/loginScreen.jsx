@@ -11,7 +11,6 @@ import GitHubLogin from "react-github-login";
 import Sound from "react-sound"
 import { wait } from "@testing-library/dom";
 import ClickSound from "../sounds/click.js"
-import { throwStatement } from "babel-types";
 
 class LoginScreen extends Component {
     constructor(props) {
