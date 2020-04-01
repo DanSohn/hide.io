@@ -35,7 +35,8 @@ class Room extends Component {
     }
 
     goPrevious() {
-        ClickSound()
+        socket.emit("leave lobby", {room: this.state.roomID, player: this.state.email});
+        ClickSound();
         this.setState({
             previous: true
         });
@@ -43,21 +44,19 @@ class Room extends Component {
 
     startTimer() {
         // 3 second timer currently
-        ClickSound()
+        ClickSound();
         socket.emit("lobby start timer", 3100);
     }
 
     start() {
-        ClickSound()
+        ClickSound();
         this.setState({
             start: true
         });
     }
 
     componentDidMount() {
-        // TODO: Currently, if the server is active when the lobby was created adn you join its fine as its stored
-        // in hte server. However, once it disconnects it goes haywire. Try and fix this issue by having it initialized
-        // by grabbing the lobby list initially from the database
+
         // socket.emit("player joined");
         socket.on('giving lobby info', (lobby) => {
             if(!lobby){

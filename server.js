@@ -187,6 +187,17 @@ io.on('connection', (socket) => {
 
     });
 
+    // method for a player to leave a lobby
+    socket.on("leave lobby", info => {
+        console.log(info.room, info.player);
+        console.log("Player list for lobby before deletion", rooms_playerlist[info.room]);
+
+        console.log(rooms_playerlist[info.room][info.player]);
+        console.log("in server, leaving the lobby ", info.room);
+        delete rooms_playerlist[info.room][info.player];
+        console.log("Player list for lobby after deletion", rooms_playerlist[info.room]);
+
+    });
     // emit the number of current sockets connected
 
     /*let players_arr = Object.keys(players);
