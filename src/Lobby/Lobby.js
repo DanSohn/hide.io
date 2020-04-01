@@ -1,3 +1,14 @@
+/**
+ *
+ *
+ *  DEPRECATED. replaced by the regular play interface.
+ *  Kept for testing purposes
+ *
+ *
+ */
+
+
+
 import React, {Component} from 'react';
 
 import {socket} from '../assets/socket'
