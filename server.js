@@ -72,10 +72,21 @@ io.on('connection', (socket) => {
     //Send the rooms that are available when the user clicks play to see the available lobbies
     // it will find all the lobbies in database, and once its done, it will send the collection to the socket
     socket.on("please give lobbies", () => {
-        // console.log("Searching for the lobbies in the database");
+        console.log("Searching for the lobbies in the database");
+
+        // from the rooms playerlist object get the number of keys
+        // let num_players = Object.keys(rooms_playerlist[roomID]).length;
+        // res["num_players"] = num_players;
+
         dbUtil.getLobbies()
             .then((lobbies) => {
-                // console.log("Lobbies found: ", lobbies);
+                console.log("Lobbies found: ", lobbies);
+                // iterate through every object lobby, and add the property of number of players
+                for(let i = 0, len = lobbies.length; i < len; i ++){
+                    lobbies[i].num_players = Object.keys(rooms_playerlist[lobbies[i]["join_code"]]).length;
+                }
+
+                console.log("New lobbies:", lobbies);
                 socket.emit("receive lobby list", lobbies);
 
             });
@@ -147,6 +158,33 @@ io.on('connection', (socket) => {
 
     });
 
+    /*
+     In the room component, whenever someone joins, it will receive an updated players list, which it will then
+     use to update its state, that will contain all the players inside.
+     this is the event when i'm joining a lobby and moving to the room component
+    info: code : the join code. email : user's email. username: user's name
+     */
+    socket.on("join certain lobby", (info) => {
+        console.log("all lobbies:", rooms_playerlist);
+        console.log("lobby trying to join ... ", info.code, rooms_playerlist[info.code]);
+
+        rooms_playerlist[info.code][info.email] = info.username;
+        console.log("update lobby list", rooms_playerlist[info.code]);
+        io.emit("update lobby list", rooms_playerlist[info.code]);
+
+    });
+
+    // method for a player to leave a lobby
+    socket.on("leave lobby", info => {
+        // console.log(info.room, info.player);
+        // console.log("Player list for lobby before deletion", rooms_playerlist[info.room]);
+        // console.log(rooms_playerlist[info.room][info.player]);
+        // console.log("in server, leaving the lobby ", info.room);
+        delete rooms_playerlist[info.room][info.player];
+        // console.log("Player list for lobby after deletion", rooms_playerlist[info.room]);
+
+    });
+
     // when a player joins the game, I should provide them with a starting coordinate
     // this is the only place a new player is populated
 
@@ -169,35 +207,6 @@ io.on('connection', (socket) => {
         y: y
     };
 
-
-    /*
-     In the room component, whenever someone joins, it will receive an updated players list, which it will then
-     use to update its state, that will contain all the players inside.
-     */
-
-    // this is the event when i'm joining a lobby and moving to the room component
-    // info: code : the join code. email : user's email. username: user's name
-    socket.on("join certain lobby", (info) => {
-        console.log("all lobbies:", rooms_playerlist);
-        console.log("lobby trying to join ... ", info.code, rooms_playerlist[info.code]);
-
-        rooms_playerlist[info.code][info.email] = info.username;
-        console.log("update lobby list", rooms_playerlist[info.code]);
-        io.emit("update lobby list", rooms_playerlist[info.code]);
-
-    });
-
-    // method for a player to leave a lobby
-    socket.on("leave lobby", info => {
-        console.log(info.room, info.player);
-        console.log("Player list for lobby before deletion", rooms_playerlist[info.room]);
-
-        console.log(rooms_playerlist[info.room][info.player]);
-        console.log("in server, leaving the lobby ", info.room);
-        delete rooms_playerlist[info.room][info.player];
-        console.log("Player list for lobby after deletion", rooms_playerlist[info.room]);
-
-    });
     // emit the number of current sockets connected
 
     /*let players_arr = Object.keys(players);

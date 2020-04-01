@@ -56,7 +56,6 @@ class Room extends Component {
     }
 
     componentDidMount() {
-
         // socket.emit("player joined");
         socket.on('giving lobby info', (lobby) => {
             if(!lobby){
@@ -66,8 +65,8 @@ class Room extends Component {
                     title: lobby.lobby_name,
                     game_mode: returnGameMode(lobby.game_mode),
                     game_time: returnGameTime(lobby.game_time),
-                    game_map: returnGameMap(lobby.game_map)
-
+                    game_map: returnGameMap(lobby.game_map),
+                    numPlayers: lobby.num_players
                 });
             }
         });
