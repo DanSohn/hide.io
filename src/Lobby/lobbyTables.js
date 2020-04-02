@@ -67,8 +67,6 @@ class LobbyTables extends Component {
     }*/
 
     componentDidMount() {
-        console.log("componentdidmount");
-
         socket.emit("please give lobbies");
 
         socket.on("receive lobby list", (lobbies) => {

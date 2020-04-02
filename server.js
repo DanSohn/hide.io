@@ -72,7 +72,7 @@ io.on('connection', (socket) => {
     //Send the rooms that are available when the user clicks play to see the available lobbies
     // it will find all the lobbies in database, and once its done, it will send the collection to the socket
     socket.on("please give lobbies", () => {
-        console.log("Searching for the lobbies in the database");
+        console.log("Searching for the lobbies in the database ---> socket event please give lobbies");
 
         // from the rooms playerlist object get the number of keys
         // let num_players = Object.keys(rooms_playerlist[roomID]).length;
@@ -80,13 +80,13 @@ io.on('connection', (socket) => {
 
         dbUtil.getLobbies()
             .then((lobbies) => {
-                console.log("Current rooms playerlist", rooms_playerlist);
+                // console.log("Current rooms playerlist", rooms_playerlist);
                 // iterate through every object lobby, and add the property of number of players
                 for(let i = 0, len = lobbies.length; i < len; i ++){
                     lobbies[i].num_players = Object.keys(rooms_playerlist[lobbies[i]["join_code"]]).length;
                 }
 
-                console.log("New lobbies:", lobbies);
+                // console.log("New lobbies:", lobbies);
                 io.emit("receive lobby list", lobbies);
 
             });
