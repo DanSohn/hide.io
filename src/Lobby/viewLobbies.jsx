@@ -71,6 +71,9 @@ class ViewLobbies extends Component {
     goToJoinLobby(join_code) {
         ClickSound()
         console.log("received join_code from table", join_code);
+        // after i join, i send an event to update everyone in the viewlobbies screen. They will see the new amt of players
+        // per room
+        socket.emit("please give lobbies");
 
         socket.emit("join certain lobby", {code: join_code, email: this.state.email, username: this.state.userName});
 
