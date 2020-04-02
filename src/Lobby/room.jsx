@@ -45,6 +45,9 @@ class Room extends Component {
     startTimer() {
         // 3 second timer currently
         ClickSound();
+
+        socket.emit("game starting");
+        socket.on("game starting ack", (gameMap) => {this.state.game_map = gameMap});
         socket.emit("lobby start timer", 3100);
     }
 
@@ -123,6 +126,7 @@ class Room extends Component {
                 <Game
                     numPlayers={this.state.numPlayers}
                     players={this.state.players}
+                    map = {this.state.game_map}
                 />
             );
         } else {
