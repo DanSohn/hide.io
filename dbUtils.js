@@ -12,7 +12,7 @@ const Lobby = require('./models/Lobby');
 
 // returns all users
 async function getLobbies(){
-    return await Lobby.find();
+    return await Lobby.find().lean();
 }
 
 // returns all lobbies

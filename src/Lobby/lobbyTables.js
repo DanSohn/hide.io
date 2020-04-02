@@ -30,11 +30,11 @@ class LobbyTables extends Component {
         return this.state.lobbies.map((lobby) => {
             // CURRENTLY JUST UTILIZING ALL THE INFORMATION, HOWEVER IN THE END IF I DON'T NEED
             // THEN REMOVE THE CONSTANTS THAT IS NOT USED
-            const {join_code, creator_email, lobby_name, game_mode, game_time, game_map} = lobby;
+            const {join_code, creator_email, lobby_name, game_mode, game_time, game_map, num_players} = lobby;
             return (
                 <tr key={join_code}>
                     <td>{lobby_name}</td>
-                    <td>Capacity</td>
+                    <td>{num_players}</td>
                     <td>
                         <button
                             className="btn btn-success"
@@ -67,8 +67,6 @@ class LobbyTables extends Component {
     }*/
 
     componentDidMount() {
-        console.log("componentdidmount");
-
         socket.emit("please give lobbies");
 
         socket.on("receive lobby list", (lobbies) => {
