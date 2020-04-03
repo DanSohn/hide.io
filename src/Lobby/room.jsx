@@ -9,6 +9,7 @@ import {returnGameMode, returnGameMap, returnGameTime } from  "../assets/utils";
 import ViewLobbies from "./viewLobbies";
 import Game from "../Game/Game";
 import ClickSound from "../sounds/click"
+import TimerSound from "../sounds/timer"
 
 class Room extends Component {
     constructor(props) {
@@ -24,11 +25,13 @@ class Room extends Component {
             game_map: "",
             start: false,
             numPlayers: 0,
-            players: {}
+            players: {},
+            time: 3
         };
         this.goPrevious = this.goPrevious.bind(this);
         this.startTimer = this.startTimer.bind(this);
         this.start = this.start.bind(this);
+        this.decreaseTimer = this.decreaseTimer.bind(this);
         console.log("in room, asking for lobby info given room id", this.state.roomID);
         socket.emit("ask for lobby info", this.state.roomID);
 
@@ -43,8 +46,13 @@ class Room extends Component {
     }
 
     startTimer() {
+        // if (this.state.numPlayers <= 1) {
+        //     alert("Go make some friends first ya loner...")
+        //     return
+        // }
+
         // 3 second timer currently
-        ClickSound();
+        TimerSound();
 
         socket.emit("game starting");
         socket.on("game starting ack", (gameMap) => {this.state.game_map = gameMap});
@@ -52,10 +60,15 @@ class Room extends Component {
     }
 
     start() {
-        ClickSound();
         this.setState({
             start: true
         });
+    }
+
+    decreaseTimer() {
+        this.setState({
+            time: this.state.time - 1
+        })
     }
 
     componentDidMount() {
@@ -95,7 +108,9 @@ class Room extends Component {
         });*/
 
         socket.on("lobby current timer", countdown => {
+            // this.decreaseTimer()
             console.log(countdown);
+            TimerSound();
             // after i reach 0, call startGame
             if (countdown <= 0) {
                 console.log("starting game");
@@ -161,6 +176,7 @@ class Room extends Component {
                         </div>
 
                         <div className="roomActions">
+                            <h3>Game Starting in {this.state.time}</h3>
                             <button
                                 className="btn btn-success"
                                 onClick={this.startTimer}>
