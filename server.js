@@ -192,8 +192,8 @@ io.on('connection', (socket) => {
         setTimeout(() =>{
             clearInterval(timerID)
         }, timer);
-
     });
+
     socket.on("disconnect", () => {
         delete players[socket.id];
         let players_arr = Object.keys(players);

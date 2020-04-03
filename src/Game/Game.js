@@ -6,7 +6,7 @@ import Player from './Player';
 import OtherPlayers from "./OtherPlayers";
 
 import '../assets/App.css';
-
+import Timer from './Timer.js';
 
 import { socket } from "../assets/socket";
 
@@ -46,9 +46,9 @@ class Game extends Component {
                 this.setState({players: players});
             }
             //console.log("new players ", this.state.players);
-
-
         });
+
+
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -104,7 +104,7 @@ class Game extends Component {
 
     }
 
-    render() {
+    render(){
         //console.log("in game rendering");
         // temporary component
         console.log("when render is called, players is: ", this.state.players);
@@ -113,6 +113,7 @@ class Game extends Component {
         //console.log("re-rendering");
         return (
             <div onKeyDown={this.onKeyDown} tabIndex="0">
+                <Timer />
                  {/*<Background
                     backgroundImage={background_img}
                     windowWidth={this.state.windowWidth}
