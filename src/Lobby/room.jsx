@@ -9,6 +9,7 @@ import {returnGameMode, returnGameMap, returnGameTime } from  "../assets/utils";
 import ViewLobbies from "./viewLobbies";
 import Game from "../Game/Game";
 import ClickSound from "../sounds/click"
+import Timer from "../Game/Timer";
 
 class Room extends Component {
     constructor(props) {
@@ -123,11 +124,14 @@ class Room extends Component {
             );
         } else if (this.state.start) {
             comp = (
-                <Game
-                    numPlayers={this.state.numPlayers}
-                    players={this.state.players}
-                    map = {this.state.game_map}
-                />
+                <div>
+                    <Timer />
+                    <Game
+                        numPlayers={this.state.numPlayers}
+                        players={this.state.players}
+                        map = {this.state.game_map}
+                    />
+                </div>
             );
         } else {
             comp = (

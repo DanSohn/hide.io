@@ -385,7 +385,7 @@ class Game extends Component {
     render() {
         return (
             <div>
-                <Timer />
+                {/*<Timer />*/}
                 <canvas ref="canvas" width={1024} height={620} />
             </div>
         );
