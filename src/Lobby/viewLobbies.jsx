@@ -1,15 +1,15 @@
 import React, { Component } from "react";
-import Lobby from "./Lobby";
-import PlayerProfile from "../PlayerProfile.js";
 import Header from "../assets/header";
 import Break from "../assets/break";
-
-import "../assets/App.css";
-
-import { socket } from "../assets/socket";
 import MenuScreen from "../menuScreen";
 import CreateLobby from "./createLobby";
 import Room from "./room";
+import LobbyTables from "./lobbyTables";
+
+import "../assets/App.css";
+import { socket } from "../assets/socket";
+import ClickSound from "../sounds/click"
+
 
 class ViewLobbies extends Component {
     constructor(props) {
@@ -20,13 +20,14 @@ class ViewLobbies extends Component {
             this.props.name,
             this.props.email
         );
-
+        // note: enter lobby is what the lobbytable child fills, when the user clicks a lobby to join. ROOMID
         this.state = {
             userName: this.props.name,
             email: this.props.email,
             previous: false,
             image: this.props.image,
-            stage: 0
+            stage: 0,
+            enter_lobby:""
         };
 
         this.createLobby = this.createLobby.bind(this);
@@ -37,6 +38,7 @@ class ViewLobbies extends Component {
     }
 
     createLobby() {
+        ClickSound()
         socket.emit("create lobby", {
             userName: this.state.userName,
             email: this.state.email,
@@ -44,25 +46,41 @@ class ViewLobbies extends Component {
         });
     }
     goPrevious() {
+        ClickSound()
         this.setState({
             previous: true
         });
     }
+
+
     goToCreateLobby() {
-        this.setState(state => ({
+        ClickSound()
+        this.setState({
             stage: 1
-        }));
+        });
     }
 
     goToJoinCode() {
-        this.setState(state => ({
+        ClickSound()
+        this.setState({
             stage: 2
-        }));
+        });
     }
-    goToJoinLobby() {
-        this.setState(state => ({
-            stage: 3
-        }));
+
+    // callback function from the lobby table that will return the lobby_code that we can join.
+    goToJoinLobby(join_code) {
+        ClickSound()
+        console.log("received join_code from table", join_code);
+        // after i join, i send an event to update everyone in the viewlobbies screen. They will see the new amt of players
+        // per room
+        socket.emit("please give lobbies");
+
+        socket.emit("join certain lobby", {code: join_code, email: this.state.email, username: this.state.userName});
+
+        this.setState({
+            stage: 3,
+            enter_lobby: join_code
+        });
     }
 
     render() {
@@ -76,7 +94,7 @@ class ViewLobbies extends Component {
                     image={this.state.image}
                 />
             );
-        } else if (this.state.stage == 1) {
+        } else if (this.state.stage === 1) {
             comp = (
                 <CreateLobby
                     name={this.state.userName}
@@ -84,17 +102,18 @@ class ViewLobbies extends Component {
                     image={this.state.image}
                 />
             );
-        } else if (this.state.stage == 2) {
+        } else if (this.state.stage === 2) {
             //<JoinCode />;
-        } else if (this.state.stage == 3) {
+        } else if (this.state.stage === 3) {
             comp = (
                 <Room
                     name={this.state.userName}
                     email={this.state.email}
                     image={this.state.image}
+                    join_code={this.state.enter_lobby}
                 />
             );
-        } else if (this.state.stage == 0) {
+        } else if (this.state.stage === 0) {
             comp = (
                 <div className="GameWindow">
                     <Header
@@ -103,180 +122,7 @@ class ViewLobbies extends Component {
                     />
                     <Break />
                     <div className="ContentScreen">
-                        <div className="lobbySelection">
-                            <table className="lobbyTable">
-                                <tr>
-                                    <th>Lobby Name</th>
-                                    <th>Players</th>
-                                    <th>Action</th>
-                                </tr>
-                                <tr>
-                                    <td>Noob Master</td>
-                                    <td>0/6</td>
-                                    <td>
-                                        <button
-                                            className="btn btn-success"
-                                            onClick={this.goToJoinLobby}>
-                                            Join
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Noob Master</td>
-                                    <td>0/6</td>
-                                    <td>
-                                        <button
-                                            className="btn btn-success"
-                                            onClick={this.goToJoinLobby}>
-                                            Join
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Noob Master</td>
-                                    <td>0/6</td>
-                                    <td>
-                                        <button
-                                            className="btn btn-success"
-                                            onClick={this.goToJoinLobby}>
-                                            Join
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Noob Master</td>
-                                    <td>0/6</td>
-                                    <td>
-                                        <button
-                                            className="btn btn-success"
-                                            onClick={this.goToJoinLobby}>
-                                            Join
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Noob Master</td>
-                                    <td>0/6</td>
-                                    <td>
-                                        <button
-                                            className="btn btn-success"
-                                            onClick={this.goToJoinLobby}>
-                                            Join
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Noob Master</td>
-                                    <td>0/6</td>
-                                    <td>
-                                        <button
-                                            className="btn btn-success"
-                                            onClick={this.goToJoinLobby}>
-                                            Join
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Noob Master</td>
-                                    <td>0/6</td>
-                                    <td>
-                                        <button
-                                            className="btn btn-success"
-                                            onClick={this.goToJoinLobby}>
-                                            Join
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Noob Master</td>
-                                    <td>0/6</td>
-                                    <td>
-                                        <button
-                                            className="btn btn-success"
-                                            onClick={this.goToJoinLobby}>
-                                            Join
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Noob Master</td>
-                                    <td>0/6</td>
-                                    <td>
-                                        <button
-                                            className="btn btn-success"
-                                            onClick={this.goToJoinLobby}>
-                                            Join
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Noob Master</td>
-                                    <td>0/6</td>
-                                    <td>
-                                        <button
-                                            className="btn btn-success"
-                                            onClick={this.goToJoinLobby}>
-                                            Join
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Noob Master</td>
-                                    <td>0/6</td>
-                                    <td>
-                                        <button
-                                            className="btn btn-success"
-                                            onClick={this.goToJoinLobby}>
-                                            Join
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Noob Master</td>
-                                    <td>0/6</td>
-                                    <td>
-                                        <button
-                                            className="btn btn-success"
-                                            onClick={this.goToJoinLobby}>
-                                            Join
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Noob Master</td>
-                                    <td>0/6</td>
-                                    <td>
-                                        <button
-                                            className="btn btn-success"
-                                            onClick={this.goToJoinLobby}>
-                                            Join
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Noob Master</td>
-                                    <td>0/6</td>
-                                    <td>
-                                        <button
-                                            className="btn btn-success"
-                                            onClick={this.goToJoinLobby}>
-                                            Join
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Noob Master</td>
-                                    <td>0/6</td>
-                                    <td>
-                                        <button
-                                            className="btn btn-success"
-                                            onClick={this.goToJoinLobby}>
-                                            Join
-                                        </button>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
+                        <LobbyTables lobbyCallback = {this.goToJoinLobby}/>
                         <div className="createLobby">
                             {/* <button
                                 type="button"

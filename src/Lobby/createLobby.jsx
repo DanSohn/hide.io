@@ -1,6 +1,4 @@
 import React, { Component } from "react";
-import Lobby from "./Lobby";
-import PlayerProfile from "../PlayerProfile.js";
 import Header from "../assets/header";
 import Break from "../assets/break";
 import { socket } from "../assets/socket";
@@ -8,6 +6,8 @@ import { socket } from "../assets/socket";
 import "bootstrap/dist/js/bootstrap.bundle";
 import "../assets/App.css";
 import ViewLobbies from "./viewLobbies";
+import Room from "./room";
+import ClickSound from "../sounds/click"
 
 class CreateLobby extends Component {
     constructor(props) {
@@ -23,7 +23,8 @@ class CreateLobby extends Component {
             lobbyName: "",
             gameMode: "",
             gameTime: "",
-            gameMap: ""
+            gameMap: "",
+            join_code: ""
         };
         this.goPrevious = this.goPrevious.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -34,6 +35,7 @@ class CreateLobby extends Component {
     }
 
     goPrevious() {
+        ClickSound()
         this.setState({
             previous: true
         });
@@ -41,6 +43,7 @@ class CreateLobby extends Component {
 
     handleSubmit(event) {
         event.preventDefault();
+        ClickSound()
         console.log("Submitting!!!!");
         console.log("i will be providing to the server this information:");
         console.log("lobby name: ", this.state.lobbyName);
@@ -50,13 +53,18 @@ class CreateLobby extends Component {
 
         socket.emit("create lobby", {
             email: this.state.email,
+            name: this.state.userName,
             lobbyName: this.state.lobbyName,
             gameMode: this.state.gameMode,
             gameTime: this.state.gameTime,
             gameMap: this.state.gameMap
         });
-        this.setState({
-            submitted: true
+
+        socket.on("created lobby return code", (join_code) => {
+            this.setState({
+                join_code: join_code,
+                submitted: true
+            });
         });
     }
 
@@ -66,16 +74,19 @@ class CreateLobby extends Component {
         });
     }
     handleChangeGameMode(event) {
+        ClickSound()
         this.setState({
             gameMode: event.target.value
         });
     }
     handleChangeGameTime(event) {
+        ClickSound()
         this.setState({
             gameTime: event.target.value
         });
     }
     handleChangeGameMap(event) {
+        ClickSound()
         this.setState({
             gameMap: event.target.value
         });
@@ -92,7 +103,12 @@ class CreateLobby extends Component {
                 />
             );
         } else if (this.state.submitted) {
-            comp = <Lobby />;
+            comp = <Room
+                name={this.state.userName}
+                email={this.state.email}
+                image={this.state.image}
+                join_code={this.state.join_code}
+            />
         } else {
             comp = (
                 <div className="GameWindow">

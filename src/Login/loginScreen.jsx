@@ -8,6 +8,9 @@ import Header from "../assets/header";
 import Break from "../assets/break";
 import FacebookLogin from "react-facebook-login";
 import GitHubLogin from "react-github-login";
+import Sound from "react-sound"
+import { wait } from "@testing-library/dom";
+import ClickSound from "../sounds/click.js"
 
 class LoginScreen extends Component {
     constructor(props) {
@@ -18,7 +21,8 @@ class LoginScreen extends Component {
             userName: "",
             id: "",
             email: "",
-            image: ""
+            image: "",
+            clickStatus: "PAUSED"
         };
         this.goToLobby = this.goToLobby.bind(this);
         this.googleSDK = this.googleSDK.bind(this);
@@ -26,6 +30,8 @@ class LoginScreen extends Component {
         this.fbDta = this.fbDta.bind(this);
         this.ghData = this.ghData.bind(this);
         this.ghFail = this.ghFail.bind(this);
+        this.playSound = this.playSound.bind(this);
+        this.songSelection = Math.floor(Math.random() * 5);
     }
 
     componentDidMount() {
@@ -36,7 +42,7 @@ class LoginScreen extends Component {
             console.log("checking if user exists");
             // if the user "exists" in database, then not a new user and will go straight to main menu
             // otherwise, go to the username selection
-            if (username !== "") {
+            if (username !== null) {
                 this.setState({
                     newUser: false,
                     userName: username
@@ -50,6 +56,11 @@ class LoginScreen extends Component {
             }
             this.goToLobby();
         });
+        
+    }
+
+    componentWillUnmount() {
+        socket.off("user database check");
     }
 
     goToLobby() {
@@ -148,6 +159,10 @@ class LoginScreen extends Component {
         console.log(res);
     }
 
+    playSound() {
+        ClickSound()
+    }
+
     render() {
         let comp;
         if (this.state.SignIn === false) {
@@ -168,11 +183,13 @@ class LoginScreen extends Component {
                                 fields="name,email,picture"
                                 cssClass="btn btn-primary"
                                 textButton="Facebook"
+                                onClick={this.playSound}
                             />
                             <button
                                 type="button"
                                 className="btn btn-danger"
                                 ref="googleLoginBtn"
+                                onClick={this.playSound}
                             >
                                 Google
                             </button>
@@ -208,7 +225,30 @@ class LoginScreen extends Component {
                 );
             }
         }
-        return <div>{comp}</div>;
+        let songURL = ""
+        switch (this.songSelection) {
+            case 0:
+                songURL = "https://vgmdownloads.com/soundtracks/mega-man-bass-gba/pxegwbro/04%20Robot%20Museum.mp3"
+                break;
+            case 1:
+                songURL = "https://vgmdownloads.com/soundtracks/half-life-2-episode-two-rip-ost/itjbtwqb/03.%20Eon%20Trap.mp3"
+                break;
+            case 2:
+                songURL = "https://vgmdownloads.com/soundtracks/uncharted-the-nathan-drake-collection/jpqzmvae/1-01.%20Nate%27s%20Theme.mp3"
+                break;
+            case 3:
+                songURL = "https://vgmdownloads.com/soundtracks/super-smash-bros.-for-nintendo-3ds-and-wii-u-vol-02.-donkey-kong/lsdyorvy/19.%20Swinger%20Flinger.mp3"
+                break;
+            case 4:
+                songURL = "https://vgmdownloads.com/soundtracks/uncharted-the-nathan-drake-collection/jpqzmvae/1-01.%20Nate%27s%20Theme.mp3"
+                break;
+        }
+        return (
+            <div>
+                <Sound volume="60" url={songURL} autoload="true" playStatus={Sound.status.PLAYING} muted="muted" loop="true" />
+                {comp}
+            </div>
+        )
     }
 }
 

@@ -1,8 +1,19 @@
+/**
+ *
+ *
+ *  DEPRECATED. replaced by the regular play interface.
+ *  Kept for testing purposes
+ *
+ *
+ */
+
+
+
 import React, {Component} from 'react';
 
 import {socket} from '../assets/socket'
 import Game from "../Game/Game";
-
+import ClickSound from "../sounds/click"
 
 class Lobby extends Component {
     constructor(props) {
@@ -15,14 +26,17 @@ class Lobby extends Component {
 
         this.startGame = this.startGame.bind(this);
         this.startTimer = this.startTimer.bind(this);
-
     }
 
     startTimer(){
-        // 3 second timer currently
+        // 3 second timer, let the server know the game wants to start and you want the map
+        ClickSound()
         socket.emit("lobby start timer", 3100);
-    }
+        socket.emit('game starting');
+        socket.on('game starting ack', (gameMap) => {this.state.gameMap = gameMap});
+    };
     startGame(){
+        ClickSound()
         this.setState({
            gameStarted: true
         });
@@ -65,7 +79,7 @@ class Lobby extends Component {
         } else {
             // let numPlayers = this.findPlayers;
             console.log("my players: ", this.state.players);
-            comp = <Game numPlayers={this.state.numPlayers} players={this.state.players}/>
+            comp = <Game numPlayers={this.state.numPlayers} players={this.state.players} map={this.state.gameMap}/>;
         }
 
         return (

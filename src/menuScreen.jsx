@@ -5,6 +5,7 @@ import PlayerProfile from "./PlayerProfile.js";
 import ViewLobbies from "./Lobby/viewLobbies";
 import Header from "./assets/header";
 import Break from "./assets/break";
+import ClickSound from "./sounds/click"
 
 class MenuScreen extends Component {
     constructor(props) {
@@ -27,21 +28,25 @@ class MenuScreen extends Component {
         this.goToProfile = this.goToProfile.bind(this);
     }
     goToPlayScreen() {
+        ClickSound()
         this.setState(state => ({
             stage: 1
         }));
     }
     goToInstructions() {
+        ClickSound()
         this.setState(state => ({
             stage: 2
         }));
     }
     goToProfile() {
+        ClickSound()
         this.setState(state => ({
             stage: 3
         }));
     }
     goToLogout() {
+        ClickSound()
         // this.setState(state => ({
         //     stage: 4
         // }));
