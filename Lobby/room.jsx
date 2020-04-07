@@ -9,7 +9,6 @@ import {returnGameMode, returnGameMap, returnGameTime } from  "../assets/utils";
 import ViewLobbies from "./viewLobbies";
 import Game from "../Game/Game";
 import ClickSound from "../sounds/click"
-import Timer from "../Game/Timer";
 import TimerSound from "../sounds/timer"
 
 class Room extends Component {
@@ -25,6 +24,7 @@ class Room extends Component {
             game_time: "",
             game_map: "",
             start: false,
+            numPlayers: 0,
             players: {},
             time: 3
         };
@@ -32,7 +32,9 @@ class Room extends Component {
         this.startTimer = this.startTimer.bind(this);
         this.start = this.start.bind(this);
         this.decreaseTimer = this.decreaseTimer.bind(this);
+        console.log("in room, asking for lobby info given room id", this.state.roomID);
         socket.emit("ask for lobby info", this.state.roomID);
+
     }
 
     goPrevious() {
@@ -53,6 +55,8 @@ class Room extends Component {
         TimerSound();
 
         socket.emit("game starting");
+        socket.on("game starting ack", (gameMap) => {this.state.game_map = gameMap});
+        socket.emit("lobby start timer", 3100);
     }
 
     start() {
@@ -78,6 +82,7 @@ class Room extends Component {
                     game_mode: returnGameMode(lobby.game_mode),
                     game_time: returnGameTime(lobby.game_time),
                     game_map: returnGameMap(lobby.game_map),
+                    numPlayers: lobby.num_players
                 });
             }
         });
@@ -87,7 +92,12 @@ class Room extends Component {
             console.log("Received current lobby users ", lobby_users);
         });
 
-        /*
+        /*socket.on("Number of players", num_players => {
+            console.log("number of players ", num_players);
+            this.setState({
+                numPlayers: num_players
+            });
+        });
 
         socket.on("players list", players => {
             console.log("Recieved list of players");
@@ -96,13 +106,6 @@ class Room extends Component {
                 players: players
             });
         });*/
-
-        // this event occurs on function startTimer()
-        socket.on("game starting ack", (gameMap) => {
-            this.state.game_map = gameMap;
-            socket.emit("lobby start timer", ({time: 3100, room: this.state.roomID}));
-        });
-
 
         socket.on("lobby current timer", countdown => {
             // this.decreaseTimer()
@@ -119,7 +122,6 @@ class Room extends Component {
     componentWillUnmount() {
         socket.off("giving lobby info");
         socket.off("update lobby list");
-        socket.off("game starting ack");
         socket.off("lobby current timer");
     }
 
@@ -137,11 +139,9 @@ class Room extends Component {
         } else if (this.state.start) {
             comp = (
                 <Game
-                    gameID={this.state.roomID}
+                    numPlayers={this.state.numPlayers}
                     players={this.state.players}
                     map = {this.state.game_map}
-                    timeLimit = {this.state.game_time}
-                    mode = {this.state.game_mode}
                 />
             );
         } else {
