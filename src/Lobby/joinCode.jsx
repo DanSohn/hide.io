@@ -50,20 +50,19 @@ class JoinCode extends Component {
 
     goToJoinLobby(join_code) {
         ClickSound();
-        console.log('received join_code from table', join_code);
-        // after i join, i send an event to update everyone in the viewlobbies screen. They will see the new amt of players
-        // per room
-        socket.emit('please give lobbies');
+        // console.log('received join_code from table', join_code);
+        // // after i join, i send an event to update everyone in the viewlobbies screen. They will see the new amt of players
+        // // per room
+        // socket.emit('please give lobbies');
 
-        socket.emit('join certain lobby', {
-            code: join_code,
-            email: this.state.email,
-            username: this.state.userName,
-        });
+        // socket.emit('join certain lobby', {
+        //     code: join_code,
+        //     email: this.state.email,
+        //     username: this.state.userName,
+        // });
 
         this.setState({
             stage: 3,
-            enter_lobby: 'ii8q41',
         });
     }
 
@@ -83,7 +82,7 @@ class JoinCode extends Component {
                     name={this.state.userName}
                     email={this.state.email}
                     image={this.state.image}
-                    join_code={this.state.enter_lobby}
+                    //join_code={this.state.enter_lobby}
                 />
             );
         } else {
