@@ -103,7 +103,7 @@ class Room extends Component {
         });
 
 
-        socket.on("lobby current timer", countdown => {
+        socket.on("lobby current timer", (countdown) => {
             // this.decreaseTimer()
             console.log(countdown);
             TimerSound();
