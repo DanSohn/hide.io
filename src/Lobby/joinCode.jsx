@@ -5,12 +5,8 @@ import { socket } from '../assets/socket';
 
 import 'bootstrap/dist/js/bootstrap.bundle';
 import '../assets/App.css';
-import { returnGameMode, returnGameMap, returnGameTime } from '../assets/utils';
 import ViewLobbies from './viewLobbies';
-import Game from '../Game/Game';
 import ClickSound from '../sounds/click';
-import TimerSound from '../sounds/timer';
-import LobbyTables from './lobbyTables';
 import Room from './room';
 
 class JoinCode extends Component {
