@@ -1,0 +1,256 @@
+body {
+    background-color: #181a1f;
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    padding: 40px;
+    font-family: "Montserrat", sans-serif;
+    text-align: center;
+}
+
+h1 {
+    font-size: 50px;
+    margin: 10px 0px 0px 0px;
+}
+
+div {
+    margin: 0px;
+}
+
+.GameWindow {
+    background-color: #282c34;
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    height: 750px;
+    width: 1000px;
+    padding: 0px;
+    border-radius: 5%;
+    border: 5px solid #52565c;
+}
+.GameWindow .title {
+    height: 10%;
+    justify-content: start;
+    order: 1;
+    width: 100%;
+}
+.gameWindow div {
+    position: relative;
+    width: 100%;
+}
+
+.gameWindow .Container {
+    position: relative;
+    display: flex;
+    margin: 10px;
+    flex: 1;
+    align-items: center;
+    height: 20%;
+    width: 100%;
+}
+.GameWindow .header {
+    position: relative;
+    display: flex;
+    margin: 10px;
+    flex: 1;
+    align-items: center;
+    height: 20%;
+    border-bottom: 3px solid #e5c100;
+}
+table {
+    width: 100%;
+}
+table,
+tr,
+td {
+    border: 1px solid black;
+}
+
+.header button,
+.header img {
+    margin: 0px;
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+}
+.backButton {
+    order: 1;
+    flex: 1;
+}
+.logo {
+    order: 2;
+    flex: 2;
+}
+.profile {
+    order: 3;
+    flex: 1;
+}
+.GameWindow .break {
+    flex-basis: 100%;
+    height: 0;
+}
+
+.GameWindow .ContentScreen {
+    position: relative;
+    width: 100%;
+    height: 80%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0px 0px 100px 0px;
+}
+
+.lobbySelection,
+.createLobby {
+    position: relative;
+    height: 75%;
+    margin: 3%;
+}
+
+.GameWindow .lobbySelection {
+    order: 1;
+    flex: 3;
+    border: 5px solid blue;
+    height: 80%;
+    overflow: auto;
+}
+
+tr .btn-success {
+    height: 80%;
+    width: 100%;
+}
+.createLobby,
+.createLobbyText,
+.roomActions,
+.chatRoom,
+.online {
+    order: 2;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.roomActions,
+.chat {
+    height: 100%;
+}
+.inputBox input {
+    border-radius: 0px;
+    width: 75%;
+}
+.inputBox button {
+    border-radius: 0px;
+    width: 10%;
+}
+
+.input-group mb-3 {
+    margin: 0%;
+}
+.chat {
+    border: 5px solid navajowhite;
+}
+.chatRoom {
+    height: 100%;
+}
+
+.chatRoom,
+.online {
+    margin: 2%;
+    height: 100%;
+}
+.online {
+    border: 5px solid goldenrod;
+    border-radius: 0px;
+}
+
+.createLobbyText {
+    margin: 0px 0px 0px 50px;
+}
+.createLobbyForm {
+    order: 3;
+    flex: 2;
+}
+.createLobbyContainer0 {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+form {
+    height: 100%;
+}
+.createLobbyContainer {
+    order: 2;
+    flex: 1;
+}
+select,
+.createLobbyForm input {
+    margin: 5px;
+}
+.createLobbyForm {
+    margin: 20px;
+    align-items: center;
+    position: relative;
+    height: 75%;
+}
+.createLobbyText h2 {
+    text-align: left;
+}
+.profileLabels {
+    padding: 20px;
+    text-align: right;
+    order: 1;
+    flex: 1;
+}
+
+.profileResults {
+    order: 2;
+    flex: 2;
+}
+
+.profileResults input:read-only {
+    background-color: #babbbe;
+}
+.profileResults input:read-only::-webkit-input-placeholder {
+    color: #5e5f61;
+}
+
+.profileResults input {
+    width: 50%;
+    margin: 1%;
+}
+.createLobbyForm button {
+    align-self: center;
+    margin: 20px;
+    height: 30%;
+    width: 50%;
+}
+.roomActions {
+    justify-content: flex-end;
+}
+.roomActions button {
+    width: 100%;
+    height: 20%;
+}
+.createLobby button {
+    margin: 20px;
+    height: 40%;
+    width: 70%;
+}
+.menuScreen button,
+.LoginScreen button {
+    margin: 20px;
+    width: 125px;
+    height: 125px;
+    border-radius: 50%;
+}
+
+input {
+    text-align: center;
+}
