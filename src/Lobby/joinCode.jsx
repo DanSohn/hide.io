@@ -45,7 +45,7 @@ class JoinCode extends Component {
 
     goToJoinLobby() {
         ClickSound();
-        socket.emit("validate join code req", this.state.roomID);
+        socket.emit("validate join code req", {room: this.state.roomID, email: this.state.email, username: this.state.userName});
 
         socket.on("validate join code res", properRoom => {
             if(properRoom){

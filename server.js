@@ -165,13 +165,16 @@ io.on('connection', (socket) => {
     });
 
     // in the joinCode.js component, checks if the roomID is a valid roomID to join
-    socket.on("validate join code req", (roomID) => {
-        dbUtil.getLobby(roomID)
+    socket.on("validate join code req", (info) => {
+        dbUtil.getLobby(info.room)
             .then(lobby => {
                 let lobbyFound = false;
                 if(lobby){
                     lobbyFound = true;
                 }
+                socket.join(info.room);
+                rooms_playerlist[info.room].push({email: info.email, username: info.username});
+                console.log("Current rooms playerlist", rooms_playerlist);
                 socket.emit("validate join code res", lobbyFound);
             })
     });
@@ -290,6 +293,7 @@ function deletePlayerFromRoom(info){
 
     let index = -1;
     // iterate through all the players
+
     for(let i = 0; i < rooms_playerlist[info.room].length; i++){
         if(rooms_playerlist[info.room][i].email === info.email){
             index = i;
