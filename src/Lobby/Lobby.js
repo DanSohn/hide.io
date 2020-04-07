@@ -31,7 +31,7 @@ class Lobby extends Component {
     startTimer(){
         // 3 second timer, let the server know the game wants to start and you want the map
         ClickSound()
-        socket.emit("lobby start timer", 3100);
+        socket.emit("lobby start timer", {timer:3100, room:'asd123'});
         socket.emit('game starting');
         socket.on('game starting ack', (gameMap) => {this.state.gameMap = gameMap});
     };
