@@ -21,22 +21,27 @@ class Lobby extends Component {
         this.state = {
             gameStarted: false,
             numPlayers: 0,
-            players: {}
+            players: {},
+            roomID: 'testRoom123'
         };
 
         this.startGame = this.startGame.bind(this);
         this.startTimer = this.startTimer.bind(this);
+
+        // this lets the socket join the socket room on the server
+        socket.emit("ask for lobby info", this.state.roomID);
+
     }
 
     startTimer(){
         // 3 second timer, let the server know the game wants to start and you want the map
-        ClickSound()
-        socket.emit("lobby start timer", {timer:3100, room:'asd123'});
+        ClickSound();
+        socket.emit("lobby start timer", {timer:3100, room: this.state.roomID});
         socket.emit('game starting');
-        socket.on('game starting ack', (gameMap) => {this.state.gameMap = gameMap});
+        socket.on('game starting ack', (gameMap) => {this.state.gameMap = gameMap;});
     };
     startGame(){
-        ClickSound()
+        ClickSound();
         this.setState({
            gameStarted: true
         });
