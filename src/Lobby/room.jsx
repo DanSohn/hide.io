@@ -136,13 +136,16 @@ class Room extends Component {
             );
         } else if (this.state.start) {
             comp = (
-                <Game
-                    gameID={this.state.roomID}
-                    players={this.state.players}
-                    map = {this.state.game_map}
-                    timeLimit = {this.state.game_time}
-                    mode = {this.state.game_mode}
-                />
+                <div>
+                    <Timer />
+                    <Game
+                        gameID={this.state.roomID}
+                        players={this.state.players}
+                        map = {this.state.game_map}
+                        timeLimit = {this.state.game_time}
+                        mode = {this.state.game_mode}
+                    />
+                </div>
             );
         } else {
             comp = (
