@@ -172,10 +172,12 @@ io.on('connection', (socket) => {
                 let lobbyFound = false;
                 if(lobby){
                     lobbyFound = true;
+
+                    socket.join(info.room);
+                    rooms_playerlist[info.room].push({email: info.email, username: info.username});
+                    console.log("Current rooms playerlist", rooms_playerlist);
                 }
-                socket.join(info.room);
-                rooms_playerlist[info.room].push({email: info.email, username: info.username});
-                console.log("Current rooms playerlist", rooms_playerlist);
+
                 socket.emit("validate join code res", lobbyFound);
             })
     });

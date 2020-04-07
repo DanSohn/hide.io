@@ -25,7 +25,7 @@ class JoinCode extends Component {
 
         this.goPrevious = this.goPrevious.bind(this);
         this.handleKeyboard = this.handleKeyboard.bind(this);
-        this.goToJoinLobby = this.goToJoinLobby.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     goPrevious() {
@@ -43,7 +43,8 @@ class JoinCode extends Component {
         });
     }
 
-    goToJoinLobby() {
+    handleSubmit(event) {
+        event.preventDefault();
         ClickSound();
         socket.emit("validate join code req", {room: this.state.roomID, email: this.state.email, username: this.state.userName});
 
@@ -92,19 +93,19 @@ class JoinCode extends Component {
                         <div className="usernameSelection">
                             <p className="errorMsg">{this.state.errorMsg}</p>
                             <h2>Enter a Join Code:</h2>
-                            <form onSubmit={this.submitUsername}>
+                            <form onSubmit={this.handleSubmit}>
                                 <input
                                     type="text"
                                     className="form-control"
                                     aria-describedby="basic-addon2"
                                     onChange={this.handleKeyboard}
                                     value={this.state.roomID}
+                                    required
                                 />
                                 <br />
                                 <button
                                     className="btn btn-outline-secondary"
-                                    type="button"
-                                    onClick={this.goToJoinLobby}>
+                                    type="submit">
                                     Submit
                                 </button>
                             </form>
