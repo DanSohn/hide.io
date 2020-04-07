@@ -251,6 +251,7 @@ io.on('connection', (socket) => {
 
     socket.on("lobby start timer", (info) => {
         let {timer, room} = info;
+        console.log("TIMER, ROOM: ", timer, room);
         let countdown = Math.floor(timer/1000);
         // send to all sockets an event every second
         let timerID = setInterval(() => {
