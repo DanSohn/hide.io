@@ -27,7 +27,6 @@ class LoginScreen extends Component {
         this.goToLobby = this.goToLobby.bind(this);
         this.googleSDK = this.googleSDK.bind(this);
         this.prepareLoginButton = this.prepareLoginButton.bind(this);
-        this.fbDta = this.fbDta.bind(this);
         this.playSound = this.playSound.bind(this);
         this.songSelection = Math.floor(Math.random() * 5);
     }
@@ -134,16 +133,6 @@ class LoginScreen extends Component {
             }
         );
     };
-
-    fbDta(res) {
-        // console.log(res)
-        this.setState({
-            userName: res.name,
-            email: res.email,
-            id: res.id,
-        });
-        socket.emit('user exists check', res.email);
-    }
 
     playSound() {
         ClickSound();
