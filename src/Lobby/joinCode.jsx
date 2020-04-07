@@ -91,7 +91,6 @@ class JoinCode extends Component {
                 <div className="GameWindow">
                     <Header previous={this.goPrevious} image={this.state.image} />
                     <Break />
-                    <div className="ContentScreen"></div>
                     <div className="ContentScreen">
                         <div className="usernameSelection">
                             <h2>Enter a Join Code:</h2>
