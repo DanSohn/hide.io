@@ -139,17 +139,9 @@ io.on('connection', (socket) => {
                        })
                }
             });
-
-        /*rooms[roomid] = {};
-        rooms.host = playername;
-        rooms.players = {}; //Information about each of the players that will join the lobby including the host
-        rooms[roomid].roomname = lobbyname;
-        rooms.settings = settings;
-        createdrooms.push(roomid);*/
-        // console.log(createdrooms);
-        // console.log(rooms);
     });
-    // once the room is created, it will ask for the rest of the lobby information with the roomid
+
+    // once the room is created, it will ask for the rest of the lobby information with the roomid (room.js)
     socket.on('ask for lobby info', (roomID) => {
         console.log("ROOM asked for lobby info given roomID", roomID);
         let res = null;
@@ -172,7 +164,7 @@ io.on('connection', (socket) => {
 
     });
 
-    // in the joinCode component, checks if the roomID is a valid roomID to join
+    // in the joinCode.js component, checks if the roomID is a valid roomID to join
     socket.on("validate join code req", (roomID) => {
         dbUtil.getLobby(roomID)
             .then(lobby => {
@@ -194,7 +186,7 @@ io.on('connection', (socket) => {
         console.log("all lobbies:", rooms_playerlist);
         console.log("lobby trying to join ... ", info.code, rooms_playerlist[info.code]);
 
-        rooms_playerlist[info.code][info.email] = info.username;
+        rooms_playerlist[info.code].push({email: info.email, username: info.username});
         console.log("update lobby list", rooms_playerlist[info.code]);
         io.emit("update lobby list", rooms_playerlist[info.code]);
 
@@ -202,11 +194,13 @@ io.on('connection', (socket) => {
 
     // method for a player to leave a lobby
     socket.on("leave lobby", info => {
-        // console.log(info.room, info.player);
-        // console.log("Player list for lobby before deletion", rooms_playerlist[info.room]);
-        // console.log(rooms_playerlist[info.room][info.player]);
-        // console.log("in server, leaving the lobby ", info.room);
-        delete rooms_playerlist[info.room][info.player];
+        console.log(info);
+        console.log("Player list for lobby before deletion", rooms_playerlist[info.room]);
+        // delete rooms_playerlist[info.room][info.email];
+        let index = rooms_playerlist[info.room].indexOf({email: info.email, username: info.username});
+        if(index !== -1){
+            rooms_playerlist[info.room].splice(index, 1);
+        }
         socket.leave(info.room);
         // console.log("Player list for lobby after deletion", rooms_playerlist[info.room]);
 
