@@ -119,11 +119,14 @@ io.on('connection', (socket) => {
                                });
 
                            // creating the lobby player list
-                           rooms_playerlist[roomID] = {}
-                           console.log(rooms_playerlist[roomID]);
-                           // rooms_playerlist[roomID] = { info[email]: info.name};
+                           rooms_playerlist[roomID] = {};
                            rooms_playerlist[roomID][info.email] = info.name;
-                           console.log("added to playerlist", roomID, rooms_playerlist);
+
+
+                           // create a socket room, in which from now on, all your communications
+                           // socketwise will stay within the room
+                           socket.join(roomID);
+
                        })
                }
             });
@@ -152,7 +155,9 @@ io.on('connection', (socket) => {
                     res = lobby;
                 }
 
-                console.log("giving lobby info", res);
+                // once I know that the lobby is good, I set my socket to join that room
+                // and return to the lobby the lobby info
+                socket.join(roomID);
                 socket.emit('giving lobby info', res);
             });
 
@@ -237,13 +242,20 @@ io.on('connection', (socket) => {
         io.emit("Redraw positions", players);
     });
 
-    socket.on("lobby start timer", (timer) => {
+    // In the lobby, when finalized that the game is starting, send the map to client
+    socket.on('game starting', () => {
+        socket.emit('game starting ack', gameMap );
+    });
+
+
+    socket.on("lobby start timer", (info) => {
+        let {timer, room} = info;
         let countdown = Math.floor(timer/1000);
         // send to all sockets an event every second
         let timerID = setInterval(() => {
             console.log(countdown);
             countdown--;
-            io.emit("lobby current timer", countdown);
+            io.to(room).emit("lobby current timer", countdown);
         }, 1000);
 
         // after the timer amount of seconds (default 5), stop emitting
@@ -253,10 +265,7 @@ io.on('connection', (socket) => {
 
     });
 
-    // In the lobby, when finalized that the game is starting, send the map to client
-    socket.on('game starting', () => {
-       socket.emit('game starting ack', gameMap );
-    });
+
 
     socket.on("disconnect", () => {
         delete players[socket.id];
