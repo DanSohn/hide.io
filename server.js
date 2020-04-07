@@ -47,7 +47,8 @@ async function roomPlayerList(){
         .then(lobbies => {
             rooms_playerlist = lobbies;
             console.log("rooms player list", rooms_playerlist);
-        });
+        })
+        .catch(err => console.log(err));
 }
 
 
