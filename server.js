@@ -31,6 +31,14 @@ const gameMap = starting_pos_module.map;
 let players = {};
 // console.log("Initial players list: ", players);
 
+/* the structure of rooms_playerlist is :
+rooms_playerlist = {
+a1a1a1a: players = [{email: str, username: str}, {email: str, username: str} ... ]
+b1b1b1b1: players = as above
+c1...
+d1d1....
+}
+ */
 let rooms_playerlist = roomPlayerList();
 // create a rooms object to keep track of rooms and the players inside each room
 // key equals room_id (join code)
@@ -71,29 +79,29 @@ io.on('connection', (socket) => {
 
     //Send the rooms that are available when the user clicks play to see the available lobbies
     // it will find all the lobbies in database, and once its done, it will send the collection to the socket
+    // from lobbyTables.js
     socket.on("please give lobbies", () => {
-        console.log("Searching for the lobbies in the database ---> socket event please give lobbies");
-
-        // from the rooms playerlist object get the number of keys
-        // let num_players = Object.keys(rooms_playerlist[roomID]).length;
-        // res["num_players"] = num_players;
+        console.log("socket event please give lobbies");
 
         dbUtil.getLobbies()
             .then((lobbies) => {
                 console.log("Got lobbies ", lobbies);
-                // console.log("Current rooms playerlist", rooms_playerlist);
+                console.log("Current rooms playerlist", rooms_playerlist);
                 // iterate through every object lobby, and add the property of number of players
+
                 for(let i = 0, len = lobbies.length; i < len; i ++){
-                    lobbies[i].num_players = Object.keys(rooms_playerlist[lobbies[i]["join_code"]]).length;
+                    // lobbies[i].num_players = Object.keys(rooms_playerlist[lobbies[i]["join_code"]]).length;
+                    lobbies[i].num_players = rooms_playerlist[lobbies[i]["join_code"]].length
+
                 }
 
-                // console.log("New lobbies:", lobbies);
+                console.log("New lobbies:", lobbies);
                 io.emit("receive lobby list", lobbies);
 
             });
     });
 
-    //When player creates a new lobby to play with their friends
+    //When player creates a new lobby to play with their friends (createLobby.js)
     //User creates lobby with a name (no need to be unique), with settings for the game
     // PARAMETERS:
     //          info: an object containing: email, name, lobbyName, gameMode, gameTime, gameMap
@@ -120,8 +128,8 @@ io.on('connection', (socket) => {
                                });
 
                            // creating the lobby player list
-                           rooms_playerlist[roomID] = {};
-                           rooms_playerlist[roomID][info.email] = info.name;
+                           rooms_playerlist[roomID] = [];
+                           rooms_playerlist[roomID].push({email: info.email, username: info.name});
 
 
                            // create a socket room, in which from now on, all your communications
