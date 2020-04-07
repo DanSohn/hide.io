@@ -38,7 +38,7 @@ class Lobby extends Component {
         ClickSound();
         socket.emit("lobby start timer", {timer:3100, room: this.state.roomID});
         socket.emit('game starting');
-        socket.on('game starting ack', (gameMap) => {this.state.gameMap = gameMap;});
+        socket.on('game starting ack', (gameMap) => {this.state.gameMap = gameMap});
     };
     startGame(){
         ClickSound();
