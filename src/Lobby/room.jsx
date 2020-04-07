@@ -32,7 +32,6 @@ class Room extends Component {
         this.start = this.start.bind(this);
         this.decreaseTimer = this.decreaseTimer.bind(this);
         socket.emit("ask for lobby info", this.state.roomID);
-
     }
 
     goPrevious() {
@@ -53,8 +52,6 @@ class Room extends Component {
         TimerSound();
 
         socket.emit("game starting");
-        socket.on("game starting ack", (gameMap) => {this.state.game_map = gameMap});
-        socket.emit("lobby start timer", 3100);
     }
 
     start() {
@@ -99,6 +96,13 @@ class Room extends Component {
             });
         });*/
 
+        // this event occurs on function startTimer()
+        socket.on("game starting ack", (gameMap) => {
+            this.state.game_map = gameMap;
+            socket.emit("lobby start timer", ({time: 3100, room: this.state.roomID}));
+        });
+
+
         socket.on("lobby current timer", countdown => {
             // this.decreaseTimer()
             console.log(countdown);
@@ -114,6 +118,7 @@ class Room extends Component {
     componentWillUnmount() {
         socket.off("giving lobby info");
         socket.off("update lobby list");
+        socket.off("game starting ack");
         socket.off("lobby current timer");
     }
 
@@ -136,7 +141,6 @@ class Room extends Component {
                     map = {this.state.game_map}
                     timeLimit = {this.state.game_time}
                     mode = {this.state.game_mode}
-
                 />
             );
         } else {
