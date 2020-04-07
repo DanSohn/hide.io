@@ -53,10 +53,10 @@ class JoinCode extends Component {
                     enter_room: true,
                 });
             }else{
+                // error message saying not a valid room
                 this.setState({
                     errorMsg: "Incorrect join code. Please try again."
                 })
-                // error message saying not a valid room
             }
 
         })
@@ -80,7 +80,7 @@ class JoinCode extends Component {
                     name={this.state.userName}
                     email={this.state.email}
                     image={this.state.image}
-                    //join_code={this.state.enter_lobby}
+                    join_code={this.state.roomID}
                 />
             );
         } else {

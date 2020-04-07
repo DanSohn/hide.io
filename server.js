@@ -80,6 +80,7 @@ io.on('connection', (socket) => {
 
         dbUtil.getLobbies()
             .then((lobbies) => {
+                console.log("Got lobbies ", lobbies);
                 // console.log("Current rooms playerlist", rooms_playerlist);
                 // iterate through every object lobby, and add the property of number of players
                 for(let i = 0, len = lobbies.length; i < len; i ++){
