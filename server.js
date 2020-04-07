@@ -95,7 +95,7 @@ io.on('connection', (socket) => {
 
                 }
 
-                console.log("New lobbies:", lobbies);
+                // console.log("New lobbies:", lobbies);
                 io.emit("receive lobby list", lobbies);
 
             });
@@ -147,12 +147,12 @@ io.on('connection', (socket) => {
         let res = null;
         dbUtil.getLobby(roomID)
             .then(lobby => {
-                console.log("Got lobby", lobby);
+                // console.log("Got lobby", lobby);
                 // if the lobby somehow doesn't exist, print an error statement
                 if(!lobby){
                     console.log("Error with the roomID");
                 }else{
-                    console.log("setting the lobby");
+                    console.log("setting the lobby successfully");
                     res = lobby;
                 }
 
@@ -183,11 +183,11 @@ io.on('connection', (socket) => {
     info: code : the join code. email : user's email. username: user's name
      */
     socket.on("join certain lobby", (info) => {
-        console.log("all lobbies:", rooms_playerlist);
+        // console.log("all lobbies:", rooms_playerlist);
         console.log("lobby trying to join ... ", info.code, rooms_playerlist[info.code]);
 
         rooms_playerlist[info.code].push({email: info.email, username: info.username});
-        console.log("update lobby list", rooms_playerlist[info.code]);
+        console.log("Current rooms playerlist", rooms_playerlist);
         io.emit("update lobby list", rooms_playerlist[info.code]);
 
     });
@@ -197,12 +197,9 @@ io.on('connection', (socket) => {
         console.log(info);
         console.log("Player list for lobby before deletion", rooms_playerlist[info.room]);
         // delete rooms_playerlist[info.room][info.email];
-        let index = rooms_playerlist[info.room].indexOf({email: info.email, username: info.username});
-        if(index !== -1){
-            rooms_playerlist[info.room].splice(index, 1);
-        }
+        deletePlayerFromRoom(info);
         socket.leave(info.room);
-        // console.log("Player list for lobby after deletion", rooms_playerlist[info.room]);
+        console.log("Player list for lobby after deletion", rooms_playerlist[info.room]);
 
     });
 
@@ -291,4 +288,22 @@ io.on('connection', (socket) => {
 
 });
 
+// function that give info room, email and username, will find the place of the user
+// in rooms_playerlist[room] and delete him
+function deletePlayerFromRoom(info){
+    let index = -1;
+    // iterate through all the players
+    for(let i = 0; i < rooms_playerlist[info.room].length; i++){
+        if(rooms_playerlist[info.room][i].email === info.email){
+            index = i;
+            break;
+        }
+    }
+
+    if(index !== -1){
+        rooms_playerlist[info.room].splice(index, 1);
+    }else{
+        console.log("Could not find user to delete");
+    }
+}
 
