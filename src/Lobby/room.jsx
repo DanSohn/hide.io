@@ -10,7 +10,6 @@ import ViewLobbies from "./viewLobbies";
 import Game from "../Game/Game";
 import ClickSound from "../sounds/click"
 import Timer from "../Game/Timer";
-import TimerSound from "../sounds/timer"
 
 class Room extends Component {
     constructor(props) {
@@ -25,14 +24,15 @@ class Room extends Component {
             game_time: "",
             game_map: "",
             start: false,
-            players: {},
-            time: 3
+            numPlayers: 0,
+            players: {}
         };
         this.goPrevious = this.goPrevious.bind(this);
         this.startTimer = this.startTimer.bind(this);
         this.start = this.start.bind(this);
-        this.decreaseTimer = this.decreaseTimer.bind(this);
+        console.log("in room, asking for lobby info given room id", this.state.roomID);
         socket.emit("ask for lobby info", this.state.roomID);
+
     }
 
     goPrevious() {
@@ -44,27 +44,19 @@ class Room extends Component {
     }
 
     startTimer() {
-        // if (this.state.numPlayers <= 1) {
-        //     alert("Go make some friends first ya loner...")
-        //     return
-        // }
-
         // 3 second timer currently
-        TimerSound();
+        ClickSound();
 
         socket.emit("game starting");
+        socket.on("game starting ack", (gameMap) => {this.state.game_map = gameMap});
+        socket.emit("lobby start timer", 3100);
     }
 
     start() {
+        ClickSound();
         this.setState({
             start: true
         });
-    }
-
-    decreaseTimer() {
-        this.setState({
-            time: this.state.time - 1
-        })
     }
 
     componentDidMount() {
@@ -78,6 +70,7 @@ class Room extends Component {
                     game_mode: returnGameMode(lobby.game_mode),
                     game_time: returnGameTime(lobby.game_time),
                     game_map: returnGameMap(lobby.game_map),
+                    numPlayers: lobby.num_players
                 });
             }
         });
@@ -87,7 +80,12 @@ class Room extends Component {
             console.log("Received current lobby users ", lobby_users);
         });
 
-        /*
+        /*socket.on("Number of players", num_players => {
+            console.log("number of players ", num_players);
+            this.setState({
+                numPlayers: num_players
+            });
+        });
 
         socket.on("players list", players => {
             console.log("Recieved list of players");
@@ -97,17 +95,8 @@ class Room extends Component {
             });
         });*/
 
-        // this event occurs on function startTimer()
-        socket.on("game starting ack", (gameMap) => {
-            this.state.game_map = gameMap;
-            socket.emit("lobby start timer", ({time: 3100, room: this.state.roomID}));
-        });
-
-
         socket.on("lobby current timer", countdown => {
-            // this.decreaseTimer()
             console.log(countdown);
-            TimerSound();
             // after i reach 0, call startGame
             if (countdown <= 0) {
                 console.log("starting game");
@@ -119,7 +108,6 @@ class Room extends Component {
     componentWillUnmount() {
         socket.off("giving lobby info");
         socket.off("update lobby list");
-        socket.off("game starting ack");
         socket.off("lobby current timer");
     }
 
@@ -136,13 +124,14 @@ class Room extends Component {
             );
         } else if (this.state.start) {
             comp = (
-                <Game
-                    gameID={this.state.roomID}
-                    players={this.state.players}
-                    map = {this.state.game_map}
-                    timeLimit = {this.state.game_time}
-                    mode = {this.state.game_mode}
-                />
+                <div>
+                    <Timer />
+                    <Game
+                        numPlayers={this.state.numPlayers}
+                        players={this.state.players}
+                        map = {this.state.game_map}
+                    />
+                </div>
             );
         } else {
             comp = (
@@ -176,7 +165,6 @@ class Room extends Component {
                         </div>
 
                         <div className="roomActions">
-                            <h3>Game Starting in {this.state.time}</h3>
                             <button
                                 className="btn btn-success"
                                 onClick={this.startTimer}>
