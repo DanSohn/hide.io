@@ -186,6 +186,7 @@ io.on('connection', (socket) => {
         // console.log(rooms_playerlist[info.room][info.player]);
         // console.log("in server, leaving the lobby ", info.room);
         delete rooms_playerlist[info.room][info.player];
+        socket.leave(info.room);
         // console.log("Player list for lobby after deletion", rooms_playerlist[info.room]);
 
     });
