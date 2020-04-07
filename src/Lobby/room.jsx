@@ -35,7 +35,7 @@ class Room extends Component {
     }
 
     goPrevious() {
-        socket.emit("leave lobby", {room: this.state.roomID, email: this.state.email, username: this.state.userName});
+        socket.emit("leave lobby", {room: this.state.roomID, email: this.state.email});
         ClickSound();
         this.setState({
             previous: true

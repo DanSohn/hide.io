@@ -192,15 +192,10 @@ io.on('connection', (socket) => {
 
     });
 
-    // method for a player to leave a lobby
+    // method for a player to leave a lobby (room.js)
     socket.on("leave lobby", info => {
-        console.log(info);
-        console.log("Player list for lobby before deletion", rooms_playerlist[info.room]);
-        // delete rooms_playerlist[info.room][info.email];
         deletePlayerFromRoom(info);
         socket.leave(info.room);
-        console.log("Player list for lobby after deletion", rooms_playerlist[info.room]);
-
     });
 
     // when a player joins the game, I should provide them with a starting coordinate
@@ -291,6 +286,8 @@ io.on('connection', (socket) => {
 // function that give info room, email and username, will find the place of the user
 // in rooms_playerlist[room] and delete him
 function deletePlayerFromRoom(info){
+    console.log("Player list for lobby before deletion", rooms_playerlist[info.room]);
+
     let index = -1;
     // iterate through all the players
     for(let i = 0; i < rooms_playerlist[info.room].length; i++){
@@ -305,5 +302,7 @@ function deletePlayerFromRoom(info){
     }else{
         console.log("Could not find user to delete");
     }
+
+    console.log("Player list for lobby after deletion", rooms_playerlist[info.room]);
 }
 
