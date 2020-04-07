@@ -32,6 +32,8 @@ class Room extends Component {
         this.startTimer = this.startTimer.bind(this);
         this.start = this.start.bind(this);
         this.decreaseTimer = this.decreaseTimer.bind(this);
+
+        // this lets the socket join the specific room
         socket.emit("ask for lobby info", this.state.roomID);
     }
 
@@ -51,7 +53,6 @@ class Room extends Component {
 
         // 3 second timer currently
         TimerSound();
-
         socket.emit("game starting");
     }
 
@@ -96,15 +97,14 @@ class Room extends Component {
                 players: players
             });
         });*/
-
         // this event occurs on function startTimer()
         socket.on("game starting ack", (gameMap) => {
             this.state.game_map = gameMap;
-            socket.emit("lobby start timer", ({time: 3100, room: this.state.roomID}));
+
+            socket.emit("lobby start timer", {timer: 3100, room: this.state.roomID});
         });
 
-
-        socket.on("lobby current timer", countdown => {
+        socket.on("lobby current timer", (countdown) => {
             // this.decreaseTimer()
             console.log(countdown);
             TimerSound();
