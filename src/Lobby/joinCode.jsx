@@ -93,8 +93,6 @@ class JoinCode extends Component {
                                 <input
                                     type="text"
                                     className="form-control"
-                                    placeholder="GamerTag"
-                                    aria-label="Gamer Tag"
                                     aria-describedby="basic-addon2"
                                     onChange={this.handleKeyboard}
                                     value={this.state.typing}
