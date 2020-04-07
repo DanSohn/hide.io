@@ -1,17 +1,17 @@
-import React, { Component } from "react";
-import MenuScreen from "../menuScreen";
-import { socket } from "../assets/socket";
-import Header from "../assets/header";
-import Break from "../assets/break";
+import React, { Component } from 'react';
+import MenuScreen from '../menuScreen';
+import { socket } from '../assets/socket';
+import Header from '../assets/header';
+import Break from '../assets/break';
 
 class UsernameSelection extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            typing: "",
-            username: "",
+            typing: '',
+            username: '',
             email: this.props.email,
-            image: this.props.image
+            image: this.props.image,
         };
         this.submitUsername = this.submitUsername.bind(this);
         this.handleKeyboard = this.handleKeyboard.bind(this);
@@ -20,27 +20,27 @@ class UsernameSelection extends Component {
     handleKeyboard(e) {
         console.log(e.target.value);
         this.setState({
-            typing: e.target.value
+            typing: e.target.value,
         });
     }
 
     submitUsername() {
-        console.log("full name: ", this.state.typing);
+        console.log('full name: ', this.state.typing);
         // i do the socket events before i set the state as I'm not sure if setting it will automatically go to rendering
         // before i continue this function
-        socket.emit("create user", {
+        socket.emit('create user', {
             username: this.state.typing,
-            email: this.state.email
+            email: this.state.email,
         });
 
-        this.setState(state => ({
-            username: this.state.typing
+        this.setState((state) => ({
+            username: this.state.typing,
         }));
     }
 
     render() {
         let comp;
-        if (this.state.username === "") {
+        if (this.state.username === '') {
             comp = (
                 <div className="GameWindow">
                     <Header showBack={false} showProfile={false} />
@@ -58,11 +58,11 @@ class UsernameSelection extends Component {
                                     onChange={this.handleKeyboard}
                                     value={this.state.typing}
                                 />
+                                <br />
                                 <button
                                     className="btn btn-outline-secondary"
                                     type="button"
-                                    onClick={this.submitUsername}
-                                >
+                                    onClick={this.submitUsername}>
                                     Submit
                                 </button>
                             </form>
