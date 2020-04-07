@@ -155,7 +155,7 @@ class Game extends Component {
 
     tick2() {
         this.ctx.clearRect(0, 0, 1024, 640);
-        let delta = .1;
+        let delta = .25;
         delta = Math.min(delta, 0.25); // maximum delta of 250 ms
 
         this.update(delta);
@@ -190,7 +190,7 @@ class Game extends Component {
     }
 
     drawLayer() {
-        // this.walls = [];
+        this.state.walls = [];
 
         let startCol = Math.floor(this.camera.x / this.state.map.tsize);
         let endCol = startCol + (this.camera.width / this.state.map.tsize);
@@ -240,9 +240,10 @@ class Game extends Component {
     updateLightTrace() {
         let playerX = (this.Player.screenX - this.Player.width / 2) + 32;
         let playerY = (this.Player.screenY - this.Player.height / 2) + 32;
-        // this.setState({hitpoints: []});
-        this.state.hitpoints = [];
+        this.setState({hitpoints: []});
+        // this.state.hitpoints = [];
         // For every wall...
+        console.log(this.state.walls.length);
         for (var i = 0; i < this.state.walls.length; i++) {
             var wall = this.state.walls[i];
             // Cast a ray to every point of the current wall
@@ -282,7 +283,7 @@ class Game extends Component {
         this.ctx.fill();
     };
     drawLight() {
-        this.ctx.fillStyle = "#0000FF";
+        // this.ctx.fillStyle = "#0000FF";
         let playerX = (this.Player.screenX - this.Player.width / 2) + 32;
         let playerY = (this.Player.screenY - this.Player.height / 2) + 32;
         this.ctx.strokeStyle = "#FF0000";

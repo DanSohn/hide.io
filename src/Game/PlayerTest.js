@@ -14,8 +14,8 @@ export default class PlayerTest {
     
     move(delta, dirx, diry) {
         // move hero
-        this.x += dirx * 1.8;
-        this.y += diry * 1.8;
+        this.x += dirx * 5.0;
+        this.y += diry * 5.0;
     
         // check if we walked into a non-walkable tile
         this._collide(dirx, diry);
