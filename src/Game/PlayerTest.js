@@ -21,23 +21,23 @@ export default class PlayerTest {
         this._collide(dirx, diry);
     
         // clamp values
-        var maxX = this.map.cols * this.map.tsize;
-        var maxY = this.map.rows * this.map.tsize;
+        let maxX = this.map.cols * this.map.tsize;
+        let maxY = this.map.rows * this.map.tsize;
         this.x = Math.max(0, Math.min(this.x, maxX));
         this.y = Math.max(0, Math.min(this.y, maxY));
     };
     
     _collide(dirx, diry) {
-        var row, col;
+        let row, col;
         // -1 in right and bottom is because image ranges from 0..63
         // and not up to 64
-        var left = this.x - this.width / 2;
-        var right = this.x + this.width / 2 - 1;
-        var top = this.y - this.height / 2;
-        var bottom = this.y + this.height / 2 - 1;
+        let left = this.x - this.width / 2;
+        let right = this.x + this.width / 2 - 1;
+        let top = this.y - this.height / 2;
+        let bottom = this.y + this.height / 2 - 1;
     
         // check for collisions on sprite sides
-        var collision =
+        let collision =
             this.map.isSolidTileAtXY(left, top) ||
             this.map.isSolidTileAtXY(right, top) ||
             this.map.isSolidTileAtXY(right, bottom) ||
