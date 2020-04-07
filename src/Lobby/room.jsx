@@ -99,11 +99,11 @@ class Room extends Component {
         // this event occurs on function startTimer()
         socket.on("game starting ack", (gameMap) => {
             this.state.game_map = gameMap;
-            socket.emit("lobby start timer", ({time: 3100, room: this.state.roomID}));
+            socket.emit("lobby start timer", {timer: 3100, room: this.state.roomID});
         });
 
 
-        socket.on("lobby current timer", countdown => {
+        socket.on("lobby current timer", (countdown) => {
             // this.decreaseTimer()
             console.log(countdown);
             TimerSound();

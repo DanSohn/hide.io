@@ -80,6 +80,7 @@ io.on('connection', (socket) => {
 
         dbUtil.getLobbies()
             .then((lobbies) => {
+                console.log("Got lobbies ", lobbies);
                 // console.log("Current rooms playerlist", rooms_playerlist);
                 // iterate through every object lobby, and add the property of number of players
                 for(let i = 0, len = lobbies.length; i < len; i ++){
@@ -161,6 +162,18 @@ io.on('connection', (socket) => {
                 socket.emit('giving lobby info', res);
             });
 
+    });
+
+    // in the joinCode component, checks if the roomID is a valid roomID to join
+    socket.on("validate join code req", (roomID) => {
+        dbUtil.getLobby(roomID)
+            .then(lobby => {
+                let lobbyFound = false;
+                if(lobby){
+                    lobbyFound = true;
+                }
+                socket.emit("validate join code res", lobbyFound);
+            })
     });
 
     /*
