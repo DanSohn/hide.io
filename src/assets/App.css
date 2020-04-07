@@ -254,3 +254,9 @@ select,
 input {
     text-align: center;
 }
+
+
+.errorMsg {
+    font-size: 15px;
+    color: #ff0000;
+}

@@ -158,6 +158,18 @@ io.on('connection', (socket) => {
 
     });
 
+    // in the joinCode component, checks if the roomID is a valid roomID to join
+    socket.on("validate join code req", (roomID) => {
+        dbUtil.getLobby(roomID)
+            .then(lobby => {
+                let lobbyFound = false;
+                if(lobby){
+                    lobbyFound = true;
+                }
+                socket.emit("validate join code res", lobbyFound);
+            })
+    });
+
     /*
      In the room component, whenever someone joins, it will receive an updated players list, which it will then
      use to update its state, that will contain all the players inside.

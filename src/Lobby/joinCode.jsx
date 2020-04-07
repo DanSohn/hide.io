@@ -18,14 +18,13 @@ class JoinCode extends Component {
             email: this.props.email,
             previous: false,
             image: this.props.image,
-            typing: '',
-            stage: 0,
-            enter_lobby: '',
+            roomID: '',
+            enter_room: false,
+            errorMsg: ""
         };
 
         this.goPrevious = this.goPrevious.bind(this);
         this.handleKeyboard = this.handleKeyboard.bind(this);
-        //this.GoToJoinCode = this.GoToJoinCode.bind(this);
         this.goToJoinLobby = this.goToJoinLobby.bind(this);
     }
 
@@ -40,27 +39,30 @@ class JoinCode extends Component {
     handleKeyboard(e) {
         console.log(e.target.value);
         this.setState({
-            typing: e.target.value,
+            roomID: e.target.value,
         });
     }
 
-    goToJoinLobby(join_code) {
+    goToJoinLobby() {
         ClickSound();
-        // console.log('received join_code from table', join_code);
-        // // after i join, i send an event to update everyone in the viewlobbies screen. They will see the new amt of players
-        // // per room
-        // socket.emit('please give lobbies');
+        socket.emit("validate join code req", this.state.roomID);
 
-        // socket.emit('join certain lobby', {
-        //     code: join_code,
-        //     email: this.state.email,
-        //     username: this.state.userName,
-        // });
+        socket.on("validate join code res", properRoom => {
+            if(properRoom){
+                this.setState({
+                    enter_room: true,
+                });
+            }else{
+                this.setState({
+                    errorMsg: "Incorrect join code. Please try again."
+                })
+                // error message saying not a valid room
+            }
 
-        this.setState({
-            stage: 3,
-        });
+        })
+
     }
+
 
     render() {
         let comp;
@@ -72,7 +74,7 @@ class JoinCode extends Component {
                     image={this.state.image}
                 />
             );
-        } else if (this.state.stage === 3) {
+        } else if (this.state.enter_room === true) {
             comp = (
                 <Room
                     name={this.state.userName}
@@ -88,6 +90,7 @@ class JoinCode extends Component {
                     <Break />
                     <div className="ContentScreen">
                         <div className="usernameSelection">
+                            <p className="errorMsg">{this.state.errorMsg}</p>
                             <h2>Enter a Join Code:</h2>
                             <form onSubmit={this.submitUsername}>
                                 <input
@@ -95,7 +98,7 @@ class JoinCode extends Component {
                                     className="form-control"
                                     aria-describedby="basic-addon2"
                                     onChange={this.handleKeyboard}
-                                    value={this.state.typing}
+                                    value={this.state.roomID}
                                 />
                                 <br />
                                 <button
