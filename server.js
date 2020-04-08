@@ -25,7 +25,6 @@ app.get('/', (req, res) => {
 
 const starting_pos_module = require(__dirname + "/starting_positions");
 let starting_pos = starting_pos_module.starting_positions;
-const gameMap = starting_pos_module.map;
 
 // create players object
 let players = {};
@@ -217,7 +216,7 @@ io.on('connection', (socket) => {
 
     // In the lobby, when finalized that the game is starting, send the map to client
     socket.on('game starting', () => {
-        socket.emit('game starting ack', gameMap );
+        socket.emit('game starting ack');
     });
 
 
