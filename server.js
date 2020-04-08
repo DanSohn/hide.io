@@ -41,7 +41,7 @@ d1d1....
 let rooms_playerlist = roomPlayerList();
 // create a rooms object to keep track of rooms and the players inside each room
 // key equals room_id (join code)
-async function roomPlayerList(){
+async function roomPlayerList() {
     await dbUtil.getLobbyCodes()
         .then(lobbies => {
             rooms_playerlist = lobbies;
@@ -67,10 +67,10 @@ io.on('connection', (socket) => {
             .then((user) => {
                 console.log("recieved from dbutils ", user);
                 socket_info["email"] = email;
-                if(user !== null){
+                if (user !== null) {
                     socket.emit("user database check", user.username);
                     socket_info["name"] = user.username;
-                }else{
+                } else {
                     socket.emit("user database check", null);
                 }
             });
@@ -78,10 +78,10 @@ io.on('connection', (socket) => {
 
     socket.on("create user", (info) => {
         dbUtil.createUser(info)
-            .then((res)=>{
-                if(!res){
+            .then((res) => {
+                if (!res) {
                     console.log("Did not provide all information. Try again");
-                }else{
+                } else {
                     socket_info["name"] = info.username;
                 }
             });
@@ -93,25 +93,13 @@ io.on('connection', (socket) => {
     socket.on("please give lobbies", () => {
         console.log("socket event please give lobbies");
 
-        dbUtil.getLobbies()
-            .then((lobbies) => {
-                console.log("Got lobbies ", lobbies);
-                console.log("Current rooms playerlist", rooms_playerlist);
-                // iterate through every object lobby, and add/update the property of number of players
-
-                for(let i = 0, len = lobbies.length; i < len; i ++){
-                    console.log("Current rooms playerlist", rooms_playerlist);
-                    console.log("looking for the unhandledpromise warning");
-                    console.log("looking at lobby", lobbies[i]);
-                    console.log("looking at playerlist", rooms_playerlist[lobbies[i].join_code]);
-                    lobbies[i].num_players = rooms_playerlist[lobbies[i]["join_code"]].length;
-
-                }
-
-                // console.log("New lobbies:", lobbies);
+        returnChangedLobbies()
+            .then(lobbies => {
+                console.log("New lobbies:", lobbies);
                 io.emit("receive lobby list", lobbies);
+            })
 
-            });
+
     });
 
     //When player creates a new lobby to play with their friends (createLobby.js)
@@ -124,34 +112,33 @@ io.on('connection', (socket) => {
         let roomID = Math.random().toString(36).slice(2, 8);
 
         dbUtil.getLobby(roomID)
-            .then(lobby =>{
-               if(!lobby){
-                   dbUtil.createLobby(roomID, info)
-                       .then(()=>{
-                           // after lobby is created, I return the join code of it (createLobby.js)
-                           socket.emit("created lobby return code", roomID);
+            .then(lobby => {
+                if (!lobby) {
+                    dbUtil.createLobby(roomID, info)
+                        .then(() => {
+                            // after lobby is created, I return the join code of it (createLobby.js)
+                            socket.emit("created lobby return code", roomID);
 
-                           // creating the lobby player list
-                           rooms_playerlist[roomID] = [];
-                           rooms_playerlist[roomID].push({email: info.email, username: info.name});
-                           console.log("Added to rooms playerlist", rooms_playerlist[roomID]);
-
-
-                           // create a socket room, in which from now on, all your communications
-                           // socketwise will stay within the room
-                           socket.join(roomID);
+                            // creating the lobby player list
+                            rooms_playerlist[roomID] = [];
+                            rooms_playerlist[roomID].push({email: info.email, username: info.name});
+                            console.log("Added to rooms playerlist", rooms_playerlist[roomID]);
 
 
-                           // Update lobby list for those in viewLobbies
-                           dbUtil.getLobbies()
-                               .then((lobbies) => {
-                                   // console.log("emitting ALL LOBBIES ", lobbies);
-                                   io.emit("receive lobby list", lobbies);
-                               });
+                            // create a socket room, in which from now on, all your communications
+                            // socketwise will stay within the room
+                            socket.join(roomID);
 
 
-                       })
-               }
+                            // Update lobby list for those in viewLobbies
+                            returnChangedLobbies()
+                                .then(lobbies => {
+                                    console.log("New lobbies:", lobbies);
+                                    io.emit("receive lobby list", lobbies);
+                                })
+
+                        })
+                }
             });
     });
 
@@ -163,9 +150,9 @@ io.on('connection', (socket) => {
             .then(lobby => {
                 // console.log("Got lobby", lobby);
                 // if the lobby somehow doesn't exist, print an error statement
-                if(!lobby){
+                if (!lobby) {
                     console.log("Error with the roomID");
-                }else{
+                } else {
                     console.log("setting the lobby successfully");
                     res = lobby;
                 }
@@ -186,7 +173,7 @@ io.on('connection', (socket) => {
         dbUtil.getLobby(info.room)
             .then(lobby => {
                 let lobbyFound = false;
-                if(lobby){
+                if (lobby) {
                     lobbyFound = true;
 
                     socket.join(info.room);
@@ -262,7 +249,7 @@ io.on('connection', (socket) => {
         console.log("SOCKET EVENT LOBBY START TIMER");
         let {timer, room} = info;
         console.log("TIMER, ROOM: ", timer, room);
-        let countdown = Math.floor(timer/1000);
+        let countdown = Math.floor(timer / 1000);
         // send to all sockets an event every second
         let timerID = setInterval(() => {
             console.log(countdown);
@@ -271,17 +258,19 @@ io.on('connection', (socket) => {
         }, 1000);
 
         // after the timer amount of seconds (default 5), stop emitting
-        setTimeout(() =>{
+        setTimeout(() => {
             clearInterval(timerID)
         }, timer);
 
     });
 
 
-
     socket.on("disconnect", () => {
         console.log("SOCKET EVENT DISCONNECT");
-        socket_info.email && socket_info.lobby ? deletePlayerFromRoom({room: socket_info.lobby, email: socket_info.email}) : true;
+        socket_info.email && socket_info.lobby ? deletePlayerFromRoom({
+            room: socket_info.lobby,
+            email: socket_info.email
+        }) : true;
         console.log("Updated rooms player list", rooms_playerlist);
         // i do a check if he's in a game or in a room
         // if he's in a room, then he's part of a room_playerlist where he must be removed
@@ -289,24 +278,50 @@ io.on('connection', (socket) => {
 
 });
 
+// function that gets the lobbies from the db, and adds in a property, num of players to it
+async function returnChangedLobbies() {
+    let lobbies;
+    await dbUtil.getLobbies()
+        .then((lobbies) => {
+            console.log("Got lobbies ", lobbies);
+            console.log("Current rooms playerlist", rooms_playerlist);
+            // iterate through every object lobby, and add/update the property of number of players
+            console.log("looking for the unhandledpromise warning");
+
+            for (let i = 0, len = lobbies.length; i < len; i++) {
+                console.log("Current rooms playerlist", rooms_playerlist);
+                console.log("looking at lobby", lobbies[i]);
+                console.log("looking at playerlist", rooms_playerlist[lobbies[i].join_code]);
+                lobbies[i].num_players = rooms_playerlist[lobbies[i]["join_code"]].length;
+
+            }
+
+            // console.log("New lobbies:", lobbies);
+
+        });
+
+    return lobbies;
+
+}
+
 // function that given info room, email and username, will find the place of the user
 // in rooms_playerlist[room] and delete him
-function deletePlayerFromRoom(info){
+function deletePlayerFromRoom(info) {
     console.log("Player list for lobby before deletion", rooms_playerlist[info.room]);
 
     let index = -1;
     // iterate through all the players
 
-    for(let i = 0; i < rooms_playerlist[info.room].length; i++){
-        if(rooms_playerlist[info.room][i].email === info.email){
+    for (let i = 0; i < rooms_playerlist[info.room].length; i++) {
+        if (rooms_playerlist[info.room][i].email === info.email) {
             index = i;
             break;
         }
     }
 
-    if(index !== -1){
+    if (index !== -1) {
         rooms_playerlist[info.room].splice(index, 1);
-    }else{
+    } else {
         console.log("Could not find user to delete");
     }
 
