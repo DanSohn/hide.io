@@ -232,7 +232,7 @@ select,
     width: 50%;
 }
 .roomActions {
-    justify-content: flex-end;
+    justify-content: space-between;
 }
 .roomActions button {
     width: 100%;

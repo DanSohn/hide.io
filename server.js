@@ -31,6 +31,14 @@ const gameMap = starting_pos_module.map;
 let players = {};
 // console.log("Initial players list: ", players);
 
+/* the structure of rooms_playerlist is :
+rooms_playerlist = {
+a1a1a1a: players = [{email: str, username: str}, {email: str, username: str} ... ]
+b1b1b1b1: players = as above
+c1...
+d1d1....
+}
+ */
 let rooms_playerlist = roomPlayerList();
 // create a rooms object to keep track of rooms and the players inside each room
 // key equals room_id (join code)
@@ -39,7 +47,8 @@ async function roomPlayerList(){
         .then(lobbies => {
             rooms_playerlist = lobbies;
             console.log("rooms player list", rooms_playerlist);
-        });
+        })
+        .catch(err => console.log(err));
 }
 
 
@@ -71,20 +80,20 @@ io.on('connection', (socket) => {
 
     //Send the rooms that are available when the user clicks play to see the available lobbies
     // it will find all the lobbies in database, and once its done, it will send the collection to the socket
+    // from lobbyTables.js
     socket.on("please give lobbies", () => {
-        console.log("Searching for the lobbies in the database ---> socket event please give lobbies");
-
-        // from the rooms playerlist object get the number of keys
-        // let num_players = Object.keys(rooms_playerlist[roomID]).length;
-        // res["num_players"] = num_players;
+        console.log("socket event please give lobbies");
 
         dbUtil.getLobbies()
             .then((lobbies) => {
                 console.log("Got lobbies ", lobbies);
-                // console.log("Current rooms playerlist", rooms_playerlist);
+                console.log("Current rooms playerlist", rooms_playerlist);
                 // iterate through every object lobby, and add the property of number of players
+
                 for(let i = 0, len = lobbies.length; i < len; i ++){
-                    lobbies[i].num_players = Object.keys(rooms_playerlist[lobbies[i]["join_code"]]).length;
+                    // lobbies[i].num_players = Object.keys(rooms_playerlist[lobbies[i]["join_code"]]).length;
+                    lobbies[i].num_players = rooms_playerlist[lobbies[i]["join_code"]].length
+
                 }
 
                 // console.log("New lobbies:", lobbies);
@@ -93,7 +102,7 @@ io.on('connection', (socket) => {
             });
     });
 
-    //When player creates a new lobby to play with their friends
+    //When player creates a new lobby to play with their friends (createLobby.js)
     //User creates lobby with a name (no need to be unique), with settings for the game
     // PARAMETERS:
     //          info: an object containing: email, name, lobbyName, gameMode, gameTime, gameMap
@@ -120,8 +129,8 @@ io.on('connection', (socket) => {
                                });
 
                            // creating the lobby player list
-                           rooms_playerlist[roomID] = {};
-                           rooms_playerlist[roomID][info.email] = info.name;
+                           rooms_playerlist[roomID] = [];
+                           rooms_playerlist[roomID].push({email: info.email, username: info.name});
 
 
                            // create a socket room, in which from now on, all your communications
@@ -131,28 +140,20 @@ io.on('connection', (socket) => {
                        })
                }
             });
-
-        /*rooms[roomid] = {};
-        rooms.host = playername;
-        rooms.players = {}; //Information about each of the players that will join the lobby including the host
-        rooms[roomid].roomname = lobbyname;
-        rooms.settings = settings;
-        createdrooms.push(roomid);*/
-        // console.log(createdrooms);
-        // console.log(rooms);
     });
-    // once the room is created, it will ask for the rest of the lobby information with the roomid
+
+    // once the room is created, it will ask for the rest of the lobby information with the roomid (room.js)
     socket.on('ask for lobby info', (roomID) => {
         console.log("ROOM asked for lobby info given roomID", roomID);
         let res = null;
         dbUtil.getLobby(roomID)
             .then(lobby => {
-                console.log("Got lobby", lobby);
+                // console.log("Got lobby", lobby);
                 // if the lobby somehow doesn't exist, print an error statement
                 if(!lobby){
                     console.log("Error with the roomID");
                 }else{
-                    console.log("setting the lobby");
+                    console.log("setting the lobby successfully");
                     res = lobby;
                 }
 
@@ -164,14 +165,19 @@ io.on('connection', (socket) => {
 
     });
 
-    // in the joinCode component, checks if the roomID is a valid roomID to join
-    socket.on("validate join code req", (roomID) => {
-        dbUtil.getLobby(roomID)
+    // in the joinCode.js component, checks if the roomID is a valid roomID to join
+    socket.on("validate join code req", (info) => {
+        dbUtil.getLobby(info.room)
             .then(lobby => {
                 let lobbyFound = false;
                 if(lobby){
                     lobbyFound = true;
+
+                    socket.join(info.room);
+                    rooms_playerlist[info.room].push({email: info.email, username: info.username});
+                    console.log("Current rooms playerlist", rooms_playerlist);
                 }
+
                 socket.emit("validate join code res", lobbyFound);
             })
     });
@@ -183,25 +189,19 @@ io.on('connection', (socket) => {
     info: code : the join code. email : user's email. username: user's name
      */
     socket.on("join certain lobby", (info) => {
-        console.log("all lobbies:", rooms_playerlist);
+        // console.log("all lobbies:", rooms_playerlist);
         console.log("lobby trying to join ... ", info.code, rooms_playerlist[info.code]);
 
-        rooms_playerlist[info.code][info.email] = info.username;
-        console.log("update lobby list", rooms_playerlist[info.code]);
+        rooms_playerlist[info.code].push({email: info.email, username: info.username});
+        console.log("Current rooms playerlist", rooms_playerlist);
         io.emit("update lobby list", rooms_playerlist[info.code]);
 
     });
 
-    // method for a player to leave a lobby
+    // method for a player to leave a lobby (room.js)
     socket.on("leave lobby", info => {
-        // console.log(info.room, info.player);
-        // console.log("Player list for lobby before deletion", rooms_playerlist[info.room]);
-        // console.log(rooms_playerlist[info.room][info.player]);
-        // console.log("in server, leaving the lobby ", info.room);
-        delete rooms_playerlist[info.room][info.player];
+        deletePlayerFromRoom(info);
         socket.leave(info.room);
-        // console.log("Player list for lobby after deletion", rooms_playerlist[info.room]);
-
     });
 
     // when a player joins the game, I should provide them with a starting coordinate
@@ -289,4 +289,27 @@ io.on('connection', (socket) => {
 
 });
 
+// function that give info room, email and username, will find the place of the user
+// in rooms_playerlist[room] and delete him
+function deletePlayerFromRoom(info){
+    console.log("Player list for lobby before deletion", rooms_playerlist[info.room]);
+
+    let index = -1;
+    // iterate through all the players
+
+    for(let i = 0; i < rooms_playerlist[info.room].length; i++){
+        if(rooms_playerlist[info.room][i].email === info.email){
+            index = i;
+            break;
+        }
+    }
+
+    if(index !== -1){
+        rooms_playerlist[info.room].splice(index, 1);
+    }else{
+        console.log("Could not find user to delete");
+    }
+
+    console.log("Player list for lobby after deletion", rooms_playerlist[info.room]);
+}
 
