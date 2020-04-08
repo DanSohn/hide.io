@@ -13,6 +13,9 @@ class LobbyTables extends Component {
         };
 
         this.sendLobbyCode = this.sendLobbyCode.bind(this);
+
+        socket.emit("please give lobbies");
+
     }
 
     sendLobbyCode(join_code){
@@ -57,8 +60,6 @@ class LobbyTables extends Component {
     }
 
     componentDidMount() {
-        socket.emit("please give lobbies");
-
         socket.on("receive lobby list", (lobbies) => {
             console.log("Recieved list of lobbies", lobbies);
             this.setState({

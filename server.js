@@ -95,7 +95,7 @@ io.on('connection', (socket) => {
 
         returnChangedLobbies()
             .then(lobbies => {
-                console.log("New lobbies:", lobbies);
+                // console.log("New lobbies:", lobbies);
                 io.emit("receive lobby list", lobbies);
             })
 
@@ -116,24 +116,23 @@ io.on('connection', (socket) => {
                 if (!lobby) {
                     dbUtil.createLobby(roomID, info)
                         .then(() => {
-                            // after lobby is created, I return the join code of it (createLobby.js)
-                            socket.emit("created lobby return code", roomID);
-
                             // creating the lobby player list
                             rooms_playerlist[roomID] = [];
                             rooms_playerlist[roomID].push({email: info.email, username: info.name});
                             console.log("Added to rooms playerlist", rooms_playerlist[roomID]);
-
+                            console.log("Current rooms_playerlist", rooms_playerlist);
 
                             // create a socket room, in which from now on, all your communications
                             // socketwise will stay within the room
                             socket.join(roomID);
 
+                            // after lobby is created, I return the join code of it (createLobby.js)
+                            socket.emit("created lobby return code", roomID);
 
                             // Update lobby list for those in viewLobbies
                             returnChangedLobbies()
                                 .then(lobbies => {
-                                    console.log("New lobbies:", lobbies);
+                                    // console.log("New lobbies:", lobbies);
                                     io.emit("receive lobby list", lobbies);
                                 })
 
@@ -200,8 +199,8 @@ io.on('connection', (socket) => {
 
         rooms_playerlist[info.code].push({email: info.email, username: info.username});
         console.log("Current rooms playerlist", rooms_playerlist);
-        // update the lobby list in lobbyTables
-        io.emit("update lobby list", rooms_playerlist[info.code]);
+        // update the lobby list in room.js
+        io.to(info.code).emit("update lobby list", rooms_playerlist[info.code]);
 
     });
 
@@ -280,27 +279,28 @@ io.on('connection', (socket) => {
 
 // function that gets the lobbies from the db, and adds in a property, num of players to it
 async function returnChangedLobbies() {
-    let lobbies;
+    let res;
     await dbUtil.getLobbies()
         .then((lobbies) => {
-            console.log("Got lobbies ", lobbies);
-            console.log("Current rooms playerlist", rooms_playerlist);
+            // console.log("Got lobbies ", lobbies);
+            // console.log("Current rooms playerlist", rooms_playerlist);
             // iterate through every object lobby, and add/update the property of number of players
-            console.log("looking for the unhandledpromise warning");
+            // console.log("looking for the unhandledpromise warning");
 
             for (let i = 0, len = lobbies.length; i < len; i++) {
-                console.log("Current rooms playerlist", rooms_playerlist);
-                console.log("looking at lobby", lobbies[i]);
-                console.log("looking at playerlist", rooms_playerlist[lobbies[i].join_code]);
+                // console.log("Current rooms playerlist", rooms_playerlist);
+                // console.log("looking at lobby", lobbies[i]);
+                // console.log("looking at playerlist", rooms_playerlist[lobbies[i].join_code]);
                 lobbies[i].num_players = rooms_playerlist[lobbies[i]["join_code"]].length;
 
             }
 
             // console.log("New lobbies:", lobbies);
+            res = lobbies;
 
         });
 
-    return lobbies;
+    return res;
 
 }
 
