@@ -44,7 +44,7 @@ async function getLobbyCodes(){
     let lobbiesObj = {};
     lobbies.forEach(obj =>{
         // console.log(obj["join_code"]);
-        lobbiesObj[obj["join_code"]] = {}
+        lobbiesObj[obj["join_code"]] = []
     });
     // console.log(lobbiesObj);
     return lobbiesObj
