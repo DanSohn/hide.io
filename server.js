@@ -101,11 +101,10 @@ io.on('connection', (socket) => {
                 // iterate through every object lobby, and add/update the property of number of players
 
                 for(let i = 0, len = lobbies.length; i < len; i ++){
-                    // lobbies[i].num_players = Object.keys(rooms_playerlist[lobbies[i]["join_code"]]).length;
-                    /*console.log("looking for the unhandledpromise warning");
-                    console.log("how many lobbies do i have?", len);
+                    console.log("Current rooms playerlist", rooms_playerlist);
+                    console.log("looking for the unhandledpromise warning");
                     console.log("looking at lobby", lobbies[i]);
-                    console.log("looking at playerlist", rooms_playerlist[lobbies[i].join_code]);*/
+                    console.log("looking at playerlist", rooms_playerlist[lobbies[i].join_code]);
                     lobbies[i].num_players = rooms_playerlist[lobbies[i]["join_code"]].length;
 
                 }
@@ -136,6 +135,7 @@ io.on('connection', (socket) => {
                            // creating the lobby player list
                            rooms_playerlist[roomID] = [];
                            rooms_playerlist[roomID].push({email: info.email, username: info.name});
+                           console.log("Added to rooms playerlist", rooms_playerlist[roomID]);
 
 
                            // create a socket room, in which from now on, all your communications
