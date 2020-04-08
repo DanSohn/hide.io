@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 
-// import Player from './Player';
 
 import OtherPlayers from './OtherPlayers';
 
@@ -8,11 +7,10 @@ import '../assets/App.css';
 
 import Wall from './Wall';
 import Camera from './Camera';
-// import  Keyboard from './Keyboard';
 import Player from './PlayerTest';
 import { socket } from "../assets/socket";
 import Point from './Point';
-
+// import Keyboard from './Keyboard'
 let Keyboard = {};
 
 
@@ -190,8 +188,8 @@ class Game extends Component {
 
             //Game window size, it is used in the calculation of what portion of the map is viewed.
 
-            // map: this.props.map,
 
+            //This will be handling current game functions, and constants
             map: {
                 cols: this.props.map.cols,
                 rows: this.props.map.rows,
@@ -233,55 +231,9 @@ class Game extends Component {
         this.update_player_component = this.update_player_component.bind(this);
     }
 
-    initWalls() {
-
-        this.state.walls.push(new Wall(new Point(0, 0), new Point(0, this.canvas.height)));
-        this.state.walls.push(new Wall(new Point(0, this.canvas.height), new Point(this.canvas.width, this.canvas.height)));
-        this.state.walls.push(new Wall(new Point(this.canvas.width, this.canvas.height), new Point(this.canvas.width, 0)));
-        this.state.walls.push(new Wall(new Point(this.canvas.width, 0), new Point(0, 0)))
-    }
-
-    run(context) {
-        this.ctx = context;
-        this._previousElapsed = 0;
-
-        this.init();
-        this.tick2();
-    }
-    // tick() {
-    //     // window.requestAnimationFrame(this.tick);
-
-    //     // clear previous frame
 
 
-    //     setInterval(() => {
-    //         // this.update();
-    //         this.ctx.clearRect(0, 0, 1024, 640);
-    //         let delta = .1;
-    //         // let delta = (elapsed - this._previousElapsed) / 1000.0;
-    //         delta = Math.min(delta, 0.25); // maximum delta of 250 ms
-    //         // this._previousElapsed = elapsed;
-
-    //         this.update(delta);
-    //         this.gameRender();
-    //     }, 1000 / 120);
-
-
-    // };//.bind(Game);
-
-    tick2() {
-        this.ctx.clearRect(0, 0, 1024, 640);
-        let delta = .25;
-        delta = Math.min(delta, 0.25); // maximum delta of 250 ms
-
-        this.update(delta);
-        this.gameRender();
-
-        window.requestAnimationFrame(this.tick2.bind(this));
-
-    }
-
-
+    //init game state seppereate from did load. could be used for start restrictions.
     init() {
         Keyboard.listenForEvents([Keyboard.LEFT, Keyboard.RIGHT, Keyboard.UP, Keyboard.DOWN]);
         // this.tileAtlas = Loader.getImage('tiles');
@@ -290,37 +242,11 @@ class Game extends Component {
         this.camera.follow(this.Player);
     }
 
-    update(delta) {
-        // handle Player movement with arrow keys
-        let dirx = 0;
-        let diry = 0;
-        if (Keyboard.isDown(Keyboard.LEFT)) {
-            dirx = -1;
-        } else if (Keyboard.isDown(Keyboard.RIGHT)) {
-            dirx = 1;
-        } else if (Keyboard.isDown(Keyboard.UP)) {
-            diry = -1;
-        } else if (Keyboard.isDown(Keyboard.DOWN)) {
-            diry = 1;
-        }
-
-        this.Player.move(delta, dirx, diry);
-
-        let info = {
-            gameID: this.state.gameID,
-            X: this.Player.X,
-            Y: this.Player.Y
-        };
-
-        // socket.emit("player movement", info);
-        this.camera.update();
-    }
-
     drawLayer() {
-        // this.state.walls = [];
-        this.setState({walls: []});
+        this.setState({ walls: [] });
 
 
+        //calculate camera view space and attains apropriate start and end of the render space.
         let startCol = Math.floor(this.camera.x / this.state.map.tsize);
         let endCol = startCol + (this.camera.width / this.state.map.tsize);
         let startRow = Math.floor(this.camera.y / this.state.map.tsize);
@@ -337,11 +263,17 @@ class Game extends Component {
 
                     this.ctx.beginPath();
                     this.ctx.rect(Math.round(x), Math.round(y), 64, 64);
+
+                    //Floor tile --- traversable.
                     if (tile === 1) {
                         this.ctx.fillStyle = '#0c0c0c';
+
+                        //Barracade tile -- non traversable
                     } else if (tile === 2) {
                         this.ctx.fillStyle = '#0c0c0c';
                         this.updateWalls(x, y);
+
+                        //Map edge tile -- non traversable
                     } else {
                         this.ctx.fillStyle = '#0c0c0c';
                         this.updateWalls(x, y);
@@ -352,7 +284,7 @@ class Game extends Component {
             }
         }
     }
-
+    //Add walls each frame to calculate the rays
     updateWalls(x, y) {
         //Top side of a square
         this.state.walls.push(new Wall(new Point(Math.round(x), Math.round(y)), new Point(Math.round(x + 64), Math.round(y))));
@@ -363,49 +295,14 @@ class Game extends Component {
         //Left side of a square
         this.state.walls.push(new Wall(new Point(Math.round(x), Math.round(y + 64)), new Point(Math.round(x), Math.round(y))));
 
+
+        //uses camera view border to emulate a wall so that the light is used for the current view position
         this.state.walls.push(new Wall(new Point(0, 0), new Point(1024, 0)));
         this.state.walls.push(new Wall(new Point(0, 0), new Point(0, 620)));
         this.state.walls.push(new Wall(new Point(0, 620), new Point(1024, 620)));
         this.state.walls.push(new Wall(new Point(1024, 620), new Point(1024, 0)));
     };
 
-    // updateLightTrace() {
-    //     let playerX = (this.Player.screenX - this.Player.width / 2) + 32;
-    //     let playerY = (this.Player.screenY - this.Player.height / 2) + 32;
-    //     this.setState({hitpoints: []});
-    //     // this.state.hitpoints = [];
-    //     // For every wall...
-    //     console.log(this.state.walls.length);
-    //     for (let i = 0; i < this.state.walls.length; i++) {
-    //         let wall = this.state.walls[i];
-    //         // Cast a ray to every point of the current wall
-    //         for (let j = 0; j < wall.points.length; j++) {
-    //             let closestPoint = null;
-    //             if (j === 0) closestPoint = wall.p1;
-    //             if (j === 1) closestPoint = wall.p2;
-    //             let ray = new Wall(new Point(playerX, playerY), new Point(closestPoint.x, closestPoint.y));
-    //             let minDistance = ray.length();
-    //             // Check every wall for intersection
-    //             for (let k = 0; k < this.state.walls.length; k++) {
-    //                 let checkWall = this.state.walls[k];
-    //                 if (wall !== checkWall) {
-    //                     if (checkWall.intersectsWith(ray)) {
-    //                         // If checkWall intersects with our ray we have to check it's intersection point's distance
-    //                         // If the distance is smaller than the current minimum set intersectionPoint as the closest
-    //                         // point and save the distance.
-    //                         let intersectionPoint = checkWall.intersectionPoint(ray);
-    //                         let tempRay = new Wall(new Point(playerX, playerY), new Point(intersectionPoint.x, intersectionPoint.y));
-    //                         if (tempRay.length() < minDistance) {
-    //                             closestPoint = intersectionPoint;
-    //                             minDistance = tempRay.length();
-    //                         }
-    //                     }
-    //                 }
-    //             }
-    //             this.state.hitpoints.push(closestPoint);
-    //         }
-    //     }
-    // };
 
     getIntersection(ray, segment) {
 
@@ -430,10 +327,7 @@ class Game extends Component {
         }
 
         // SOLVE FOR T1 & T2
-        // r_px+r_dx*T1 = s_px+s_dx*T2 && r_py+r_dy*T1 = s_py+s_dy*T2
-        // ==> T1 = (s_px+s_dx*T2-r_px)/r_dx = (s_py+s_dy*T2-r_py)/r_dy
-        // ==> s_px*r_dy + s_dx*T2*r_dy - r_px*r_dy = s_py*r_dx + s_dy*T2*r_dx - r_py*r_dx
-        // ==> T2 = (r_dx*(s_py-r_py) + r_dy*(r_px-s_px))/(s_dx*r_dy - s_dy*r_dx)
+
         let T2 = (r_dx * (s_py - r_py) + r_dy * (r_px - s_px)) / (s_dx * r_dy - s_dy * r_dx);
         let T1 = (s_px + s_dx * T2 - r_px) / r_dx;
 
@@ -456,6 +350,8 @@ class Game extends Component {
         let playerX = (this.Player.screenX - this.Player.width / 2) + 32;
         let playerY = (this.Player.screenY - this.Player.height / 2) + 32;
 
+
+        //get all points from the walls p1 and p2
         let points = [];
         for (let a = 0; a < this.state.walls.length; a++) {
             let wall = this.state.walls[a];
@@ -463,6 +359,8 @@ class Game extends Component {
                 points.push(wall.points[b]);
             }
         }
+
+        //remove duplicated points --save that cpu
         let uniquePoints = (function (points) {
             let set = {};
             return points.filter(function (p) {
@@ -486,8 +384,7 @@ class Game extends Component {
         }
 
         // RAYS IN ALL DIRECTIONS
-        let intersects = [];
-        this.setState({hitpoints: []});
+        this.setState({ hitpoints: [] });
         for (let j = 0; j < uniqueAngles.length; j++) {
             let angle = uniqueAngles[j];
 
@@ -519,20 +416,9 @@ class Game extends Component {
             // Add to list of intersects
             this.state.hitpoints.push(closestIntersect);
 
-
-
-            // let playerX = (this.Player.screenX - this.Player.width / 2) + 32;
-            // let playerY = (this.Player.screenY - this.Player.height / 2) + 32;
-            // this.setState({ uniqueAngles: [] });
-            // for (let j = 0; points.length; j++) {
-            //     let uniquePoint = points[j];
-            //     let angle = Math.atan2(uniquePoint.y - playerY, uniquePoint.x - playerX);
-            //     uniquePoint.angle = angle;
-            //     this.state.uniqueAngles.push(angle - 0.00001, angle + 0.00001);
-            // }
         };
     };
-
+    //sort angles so the polygon can be drawn from  0th hitpoint to 360 degrees.
     sortAngles() {
         let sortedAngles = this.state.hitpoints.sort(function (a, b) {
             return a.angle - b.angle;
@@ -540,58 +426,12 @@ class Game extends Component {
         this.setState({ hitpoints: sortedAngles });
     }
 
-
-    drawPlayer() {
-        // draw main character
-        this.ctx.beginPath();
-        this.ctx.rect(this.Player.screenX - this.Player.width / 2, this.Player.screenY - this.Player.height / 2, 64, 64);
-        this.ctx.fillStyle = '#D5C7BC';
-        this.ctx.fill();
-    };
-
-    drawLight(){
-        let playerX = (this.Player.screenX - this.Player.width / 2) + 32;
-        let playerY = (this.Player.screenY - this.Player.height / 2) + 32;
-
-        this.ctx.save();
-        let fill = this.ctx.createRadialGradient(playerX,playerY,1, playerX, playerY, 300);
-        fill.addColorStop(0, "rgba(255, 255, 255, 0.6)");
-        fill.addColorStop(0.9,"rgba(255, 255, 255, 0.01)");
-        fill.addColorStop(1,"rgba(255, 255, 255, 0.009)");
-
-        
-
-
-        this.ctx.fillStyle = fill;
-
-        this.ctx.beginPath();
-        this.ctx.moveTo(this.state.hitpoints[0].x, this.state.hitpoints[0].y);
-        for(let i = 1; i< this.state.hitpoints.length ; i++){
-            let intersect = this.state.hitpoints[i];
-            this.ctx.lineTo(intersect.x, intersect.y)
-        }
-
-        
-        this.ctx.fill();
-        
-        this.ctx.restore();
+    drawEnamy(){
 
     }
-    drawShadow(){
-        this.ctx.save();
-        this.ctx.fillStyle = "ccc";
-        this.ctx.beginPath();
-        this.ctx.moveTo(this.state.hitpoints[0].x, this.state.hitpoints[0].y);
-        for(let i = 1; i< this.state.hitpoints.length ; i++){
-            let intersect = this.state.hitpoints[i];
-            this.ctx.lineTo(intersect.x, intersect.y)
-        }
-        this.ctx.rect(1024, 0, -1024, 620);
-        
-        this.ctx.fill();
-        this.ctx.restore();
 
-    }
+
+    //Draws the rays from each point from this.state.hitpoints -- DISABLED -- used to Debug
     drawLightLines() {
         this.ctx.save();
         let playerX = (this.Player.screenX - this.Player.width / 2) + 32;
@@ -608,25 +448,149 @@ class Game extends Component {
         this.ctx.restore();
     };
 
+
+    // Goes through each hitpoint to create a visibile light polygon - then a circular light emits from players x y position- first circle is more intense than second circle
+    drawLight() {
+        let playerX = (this.Player.screenX - this.Player.width / 2) + 32;
+        let playerY = (this.Player.screenY - this.Player.height / 2) + 32;
+
+        this.ctx.save();
+        let fill = this.ctx.createRadialGradient(playerX, playerY, 1, playerX, playerY, 300);
+        fill.addColorStop(0, "rgba(255, 255, 255, 0.65)");
+        fill.addColorStop(0.9, "rgba(255, 255, 255, 0.01)");
+        fill.addColorStop(1, "rgba(255, 255, 255, 0.009)");
+
+
+
+
+        this.ctx.fillStyle = fill;
+
+        this.ctx.beginPath();
+        this.ctx.moveTo(this.state.hitpoints[0].x, this.state.hitpoints[0].y);
+        for (let i = 1; i < this.state.hitpoints.length; i++) {
+            let intersect = this.state.hitpoints[i];
+            this.ctx.lineTo(intersect.x, intersect.y)
+        }
+
+
+        this.ctx.fill();
+
+        this.ctx.restore();
+
+    };
+
+    //Draws an inverse polygon layer that covers the shadows to remove the floor lines.
+    drawShadow() {
+        this.ctx.save();
+        this.ctx.fillStyle = "#0b0b0b";
+        this.ctx.beginPath();
+        this.ctx.moveTo(this.state.hitpoints[0].x, this.state.hitpoints[0].y);
+        for (let i = 1; i < this.state.hitpoints.length; i++) {
+            let intersect = this.state.hitpoints[i];
+            this.ctx.lineTo(intersect.x, intersect.y)
+        }
+        this.ctx.rect(1024, 0, -1024, 620);
+
+        this.ctx.fill();
+        this.ctx.restore();
+
+    }
+    drawHiders(){
+        this.ctx.beginPath();
+        this.ctx.rect(299 - 64 / 2, 65 - 64 / 2, 64, 64);
+        this.ctx.fillStyle = '#D5C7BC';
+        this.ctx.fill();
+    }
+
+    drawPillarLight() {
+        let playerX = (this.Player.screenX - this.Player.width / 2) + 32;
+        let playerY = (this.Player.screenY - this.Player.height / 2) + 32;
+
+        this.ctx.save();
+        let fill = this.ctx.createRadialGradient(playerX, playerY, 1, playerX, playerY, 64);
+        fill.addColorStop(0, "rgba(255, 255, 255, 0.55)");
+        fill.addColorStop(1, "rgba(255, 255, 255, 0.01)");
+
+        this.ctx.fillStyle = fill;
+        this.ctx.beginPath();
+        this.ctx.moveTo(this.state.hitpoints[0].x, this.state.hitpoints[0].y);
+        for (let i = 1; i < this.state.hitpoints.length; i++) {
+            let intersect = this.state.hitpoints[i];
+            this.ctx.lineTo(intersect.x, intersect.y)
+        }
+        this.ctx.rect(1024, 0, -1024, 620);
+
+        this.ctx.fill();
+        this.ctx.restore();
+
+    }
+
+
+
+    //Draws a player in the center of the screen. The camera will follow the player unless they are close to the edge of the map. -- Map in starting_positions.js
+    drawPlayer() {
+        // draw main character
+        this.ctx.beginPath();
+        this.ctx.rect(this.Player.screenX - this.Player.width / 2, this.Player.screenY - this.Player.height / 2, 64, 64);
+        this.ctx.fillStyle = '#D5C7BC';
+        this.ctx.fill();
+    };
+
+    update(delta) {
+        // handle Player movement with arrow keys
+        let dirx = 0;
+        let diry = 0;
+        if (Keyboard.isDown(Keyboard.LEFT)) { dirx = -1; }
+        else if (Keyboard.isDown(Keyboard.RIGHT)) { dirx = 1; }
+        else if (Keyboard.isDown(Keyboard.UP)) { diry = -1; }
+        else if (Keyboard.isDown(Keyboard.DOWN)) { diry = 1; }
+
+        this.Player.move(delta, dirx, diry);
+        this.camera.update();
+    }
+
+
+    run(context) {
+        this.ctx = context;
+        this._previousElapsed = 0;
+        this.init();
+        this.tick();
+    }
+
+    //each game frame
+    tick() {
+        this.ctx.clearRect(0, 0, 1024, 640);
+        let delta = .25;
+        delta = Math.min(delta, 0.25); // maximum delta of 250 ms
+
+        this.update(delta);
+        this.gameRender();
+
+        window.requestAnimationFrame(this.tick.bind(this));
+
+    }
+
     gameRender() {
         this.drawLayer();
+        // this.drawHiders();
         this.updateLightTrace();
         this.sortAngles();
         // this.drawLightLines();
         this.drawLight();
         this.drawShadow();
+        // this.drawPillarLight();
         this.drawPlayer();
 
     };
 
 
     componentDidMount() {
-        this.setState({ game_status: 'in progress' });
         // this will only happen the first time, and will set the ball rolling to handle any updates!
         // this.state.context = this.refs.canvas.getContext('2d');
         let context = this.refs.canvas.getContext('2d');
 
-        this.setState({ context: this.refs.canvas.getContext('2d') });
+        this.setState({ context: this.refs.canvas.getContext('2d'),
+                        game_status: "in progress", });
 
         this.run(context);
 
