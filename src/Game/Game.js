@@ -318,7 +318,9 @@ class Game extends Component {
         this.setState({ hitpoints: sortedAngles });
     }
 
+    drawEnamy(){
 
+    }
 
 
     //Draws the rays from each point from this.state.hitpoints -- DISABLED -- used to Debug
@@ -346,7 +348,7 @@ class Game extends Component {
 
         this.ctx.save();
         let fill = this.ctx.createRadialGradient(playerX, playerY, 1, playerX, playerY, 300);
-        fill.addColorStop(0, "rgba(255, 255, 255, 0.6)");
+        fill.addColorStop(0, "rgba(255, 255, 255, 0.65)");
         fill.addColorStop(0.9, "rgba(255, 255, 255, 0.01)");
         fill.addColorStop(1, "rgba(255, 255, 255, 0.009)");
 
@@ -372,7 +374,7 @@ class Game extends Component {
     //Draws an inverse polygon layer that covers the shadows to remove the floor lines.
     drawShadow() {
         this.ctx.save();
-        this.ctx.fillStyle = "ccc";
+        this.ctx.fillStyle = "#000000";
         this.ctx.beginPath();
         this.ctx.moveTo(this.state.hitpoints[0].x, this.state.hitpoints[0].y);
         for (let i = 1; i < this.state.hitpoints.length; i++) {
@@ -385,6 +387,36 @@ class Game extends Component {
         this.ctx.restore();
 
     }
+    drawHiders(){
+        this.ctx.beginPath();
+        this.ctx.rect(299 - 64 / 2, 65 - 64 / 2, 64, 64);
+        this.ctx.fillStyle = '#D5C7BC';
+        this.ctx.fill();
+    }
+
+    drawPillarLight() {
+        let playerX = (this.Player.screenX - this.Player.width / 2) + 32;
+        let playerY = (this.Player.screenY - this.Player.height / 2) + 32;
+
+        this.ctx.save();
+        let fill = this.ctx.createRadialGradient(playerX, playerY, 1, playerX, playerY, 64);
+        fill.addColorStop(0, "rgba(255, 255, 255, 0.55)");
+        fill.addColorStop(1, "rgba(255, 255, 255, 0.01)");
+
+        this.ctx.fillStyle = fill;
+        this.ctx.beginPath();
+        this.ctx.moveTo(this.state.hitpoints[0].x, this.state.hitpoints[0].y);
+        for (let i = 1; i < this.state.hitpoints.length; i++) {
+            let intersect = this.state.hitpoints[i];
+            this.ctx.lineTo(intersect.x, intersect.y)
+        }
+        this.ctx.rect(1024, 0, -1024, 620);
+
+        this.ctx.fill();
+        this.ctx.restore();
+
+    }
+
 
 
     //Draws a player in the center of the screen. The camera will follow the player unless they are close to the edge of the map. -- Map in starting_positions.js
@@ -432,23 +464,25 @@ class Game extends Component {
 
     gameRender() {
         this.drawLayer();
+        this.drawHiders();
         this.updateLightTrace();
         this.sortAngles();
         // this.drawLightLines();
         this.drawLight();
         this.drawShadow();
+        // this.drawPillarLight();
         this.drawPlayer();
 
     };
 
 
     componentDidMount() {
-        this.setState({ game_status: "in progress" });
         // this will only happen the first time, and will set the ball rolling to handle any updates!
         // this.state.context = this.refs.canvas.getContext('2d');
         let context = this.refs.canvas.getContext('2d');
 
-        this.setState({ context: this.refs.canvas.getContext('2d') });
+        this.setState({ context: this.refs.canvas.getContext('2d'),
+                        game_status: "in progress", });
 
         this.run(context);
 
