@@ -23,8 +23,8 @@ class Room extends Component {
             game_mode: "",
             game_time: "",
             game_map: "",
+            map: {},
             start: false,
-            numPlayers: 0,
             players: {},
             time: 3
         };
@@ -32,13 +32,13 @@ class Room extends Component {
         this.startTimer = this.startTimer.bind(this);
         this.start = this.start.bind(this);
         this.decreaseTimer = this.decreaseTimer.bind(this);
-        console.log("in room, asking for lobby info given room id", this.state.roomID);
-        socket.emit("ask for lobby info", this.state.roomID);
 
+        // this lets the socket join the specific room
+        socket.emit("ask for lobby info", this.state.roomID);
     }
 
     goPrevious() {
-        socket.emit("leave lobby", {room: this.state.roomID, player: this.state.email});
+        socket.emit("leave lobby", {room: this.state.roomID, email: this.state.email});
         ClickSound();
         this.setState({
             previous: true
@@ -53,10 +53,7 @@ class Room extends Component {
 
         // 3 second timer currently
         TimerSound();
-
         socket.emit("game starting");
-        socket.on("game starting ack", (gameMap) => {this.state.game_map = gameMap});
-        socket.emit("lobby start timer", 3100);
     }
 
     start() {
@@ -82,7 +79,6 @@ class Room extends Component {
                     game_mode: returnGameMode(lobby.game_mode),
                     game_time: returnGameTime(lobby.game_time),
                     game_map: returnGameMap(lobby.game_map),
-                    numPlayers: lobby.num_players
                 });
             }
         });
@@ -92,22 +88,12 @@ class Room extends Component {
             console.log("Received current lobby users ", lobby_users);
         });
 
-        /*socket.on("Number of players", num_players => {
-            console.log("number of players ", num_players);
-            this.setState({
-                numPlayers: num_players
-            });
+        // this event occurs on function startTimer()
+        socket.on("game starting ack", () => {
+            socket.emit("lobby start timer", {timer: 3100, room: this.state.roomID});
         });
-
-        socket.on("players list", players => {
-            console.log("Recieved list of players");
-            console.log(players);
-            this.setState({
-                players: players
-            });
-        });*/
-
-        socket.on("lobby current timer", countdown => {
+        
+        socket.on("lobby current timer", (countdown) => {
             // this.decreaseTimer()
             console.log(countdown);
             TimerSound();
@@ -122,6 +108,7 @@ class Room extends Component {
     componentWillUnmount() {
         socket.off("giving lobby info");
         socket.off("update lobby list");
+        socket.off("game starting ack");
         socket.off("lobby current timer");
     }
 
@@ -139,9 +126,11 @@ class Room extends Component {
         } else if (this.state.start) {
             comp = (
                 <Game
-                    numPlayers={this.state.numPlayers}
+                    gameID={this.state.roomID}
                     players={this.state.players}
                     map = {this.state.game_map}
+                    timeLimit = {this.state.game_time}
+                    mode = {this.state.game_mode}
                 />
             );
         } else {
@@ -176,18 +165,21 @@ class Room extends Component {
                         </div>
 
                         <div className="roomActions">
+                            <h5>Join Code: {this.state.roomID}</h5>
                             <h3>Game Starting in {this.state.time}</h3>
                             <button
                                 className="btn btn-success"
                                 onClick={this.startTimer}>
                                 Start Game
                             </button>
-                            <h3>Game Mode:</h3>
-                            <h6>{this.state.game_mode}</h6>
-                            <h3>Time Limit:</h3>
-                            <h6>{this.state.game_time}</h6>
-                            <h3>Map:</h3>
-                            <h6>{this.state.game_map}</h6>
+                            <div className="roomSettings">
+                                <h4>Game Mode:</h4>
+                                <h6>{this.state.game_mode}</h6>
+                                <h4>Time Limit:</h4>
+                                <h6>{this.state.game_time}</h6>
+                                <h4>Map:</h4>
+                                <h6>{this.state.game_map.name}</h6>
+                            </div>
                         </div>
                         <div className="online"></div>
                     </div>
