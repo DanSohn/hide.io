@@ -247,8 +247,11 @@ io.on('connection', (socket) => {
     // upon a player movement event, i will update the players array object with their new positions, and
     // emit a event to redraw the new positions
     socket.on('player movement', (info) => {
-        let position = {x: info.x, y: info.y};
-        io.to(info.roomID).emit('player moved', position)
+
+        console.log("This is what I got from player: ",info);
+        console.log("This is what im sending the player: ", {x:info.x, y: info.y});
+
+        io.to(info.roomID).emit('player moved', {x: info.x, y: info.y})
     });
 
     socket.on("lobby start timer", (info) => {

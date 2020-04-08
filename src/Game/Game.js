@@ -223,6 +223,15 @@ class Game extends Component {
             },
         };
 
+        // TODO: do stuff when getting the location information
+        socket.on('player moved', (position) => {
+            let {x,y} = position;
+            console.log(position);
+            console.log("PlayerX: ", this.Player.x, " New position X: ", x);
+            console.log("Received positions from socket",
+                (x === this.Player.x && y === this.Player.y) ? "myself! Or collision?": "This is where favians function fires!");
+        });
+
         this.update_player_component = this.update_player_component.bind(this);
     }
 
@@ -558,6 +567,12 @@ class Game extends Component {
         let delta = .25;
         delta = Math.min(delta, 0.25); // maximum delta of 250 ms
 
+        let pastInfo = {
+            roomID: this.state.gameID,
+            x: this.Player.x,
+            y: this.Player.y
+        };
+
         this.update(delta);
         this.gameRender();
 
@@ -565,10 +580,14 @@ class Game extends Component {
 
         let info = {
             roomID: this.state.gameID,
-            X: this.Player.x,
-            Y: this.Player.y
+            x: this.Player.x,
+            y: this.Player.y
         };
-        socket.emit("player movement", info);
+        // Only send across socket if there's an update in position
+        if (JSON.stringify(info) !== JSON.stringify(pastInfo)) {
+            console.log("I emitted:", info.x, info.y);
+            socket.emit("player movement", info);
+        }
 
     }
 
@@ -603,12 +622,6 @@ class Game extends Component {
             if (this.state.players !== players) {
                 this.setState({ players: players });
             }
-        });
-
-        // TODO: do stuff when getting the location information
-        socket.on('player moved', (position) => {
-            console.log("Received Position Information! "+
-                !(position.x === this.Player.x && position.y === this.Player.y) ? "myself! Or collision?": "This is where favians function fires!");
         });
     }
 
