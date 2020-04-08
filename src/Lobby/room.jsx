@@ -24,6 +24,7 @@ class Room extends Component {
             game_mode: "",
             game_time: "",
             game_map: "",
+            map: {},
             start: false,
             players: {},
             time: 3
@@ -88,21 +89,11 @@ class Room extends Component {
             console.log("Received current lobby users ", lobby_users);
         });
 
-        /*
-
-        socket.on("players list", players => {
-            console.log("Recieved list of players");
-            console.log(players);
-            this.setState({
-                players: players
-            });
-        });*/
         // this event occurs on function startTimer()
-        socket.on("game starting ack", (gameMap) => {
-            this.state.game_map = gameMap;
+        socket.on("game starting ack", () => {
             socket.emit("lobby start timer", {timer: 3100, room: this.state.roomID});
         });
-
+        
         socket.on("lobby current timer", (countdown) => {
             // this.decreaseTimer()
             console.log(countdown);
@@ -191,9 +182,8 @@ class Room extends Component {
                                 <h4>Time Limit:</h4>
                                 <h6>{this.state.game_time}</h6>
                                 <h4>Map:</h4>
-                                <h6>{this.state.game_map}</h6>
+                                <h6>{this.state.game_map.name}</h6>
                             </div>
-
                         </div>
                         <div className="online"></div>
                     </div>

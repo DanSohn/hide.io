@@ -25,7 +25,6 @@ app.get('/', (req, res) => {
 
 const starting_pos_module = require(__dirname + "/starting_positions");
 let starting_pos = starting_pos_module.starting_positions;
-const gameMap = starting_pos_module.map;
 
 // create players object
 let players = {};
@@ -54,6 +53,12 @@ async function roomPlayerList(){
 
 io.on('connection', (socket) => {
     // console.log("A User has connected");
+
+    /*
+    Socket info will maintain for each socket all their individual information for ease of access for the needs of
+    individual client. I keep track of email, username, and latest lobby they're in
+     */
+    let socket_info = {};
     // when a player is logging in through oauth, i cross-check the given info with the database to see
     // if the user already exists (email). If he does, I emit a message to go straight to main menu, otherwise to
     // go to user selection first
@@ -61,8 +66,10 @@ io.on('connection', (socket) => {
         dbUtil.getUser(email)
             .then((user) => {
                 console.log("recieved from dbutils ", user);
+                socket_info["email"] = email;
                 if(user !== null){
                     socket.emit("user database check", user.username);
+                    socket_info["name"] = user.username;
                 }else{
                     socket.emit("user database check", null);
                 }
@@ -74,6 +81,8 @@ io.on('connection', (socket) => {
             .then((res)=>{
                 if(!res){
                     console.log("Did not provide all information. Try again");
+                }else{
+                    socket_info["name"] = info.username;
                 }
             });
     });
@@ -88,11 +97,15 @@ io.on('connection', (socket) => {
             .then((lobbies) => {
                 console.log("Got lobbies ", lobbies);
                 console.log("Current rooms playerlist", rooms_playerlist);
-                // iterate through every object lobby, and add the property of number of players
+                // iterate through every object lobby, and add/update the property of number of players
 
                 for(let i = 0, len = lobbies.length; i < len; i ++){
                     // lobbies[i].num_players = Object.keys(rooms_playerlist[lobbies[i]["join_code"]]).length;
-                    lobbies[i].num_players = rooms_playerlist[lobbies[i]["join_code"]].length
+                    /*console.log("looking for the unhandledpromise warning");
+                    console.log("how many lobbies do i have?", len);
+                    console.log("looking at lobby", lobbies[i]);
+                    console.log("looking at playerlist", rooms_playerlist[lobbies[i].join_code]);*/
+                    lobbies[i].num_players = rooms_playerlist[lobbies[i]["join_code"]].length;
 
                 }
 
@@ -107,6 +120,7 @@ io.on('connection', (socket) => {
     // PARAMETERS:
     //          info: an object containing: email, name, lobbyName, gameMode, gameTime, gameMap
     socket.on("create lobby", (info) => {
+        console.log("SOCKET EVENT CREATE LOBBY", info);
         // console.log("Creating lobby with info ", info);
         let roomID = Math.random().toString(36).slice(2, 8);
 
@@ -115,18 +129,8 @@ io.on('connection', (socket) => {
                if(!lobby){
                    dbUtil.createLobby(roomID, info)
                        .then(()=>{
-                           // after lobby is created, I return the join code of it
+                           // after lobby is created, I return the join code of it (createLobby.js)
                            socket.emit("created lobby return code", roomID);
-                           /*this here is for those who are viewing the lobbies
-                            this new lobby should automatically load for them, so for all the sockets, if they're
-                            in the lobby screen, they'll receieve this event and update the lobbies
-                            its down inside this promise of adding to database, because i need to find
-                            AFTER THE DATABASE IS UPDATED*/
-                           dbUtil.getLobbies()
-                               .then((lobbies) => {
-                                   // console.log("emitting ALL LOBBIES ", lobbies);
-                                   io.emit("receive lobby list", lobbies);
-                               });
 
                            // creating the lobby player list
                            rooms_playerlist[roomID] = [];
@@ -137,6 +141,15 @@ io.on('connection', (socket) => {
                            // socketwise will stay within the room
                            socket.join(roomID);
 
+
+                           // Update lobby list for those in viewLobbies
+                           dbUtil.getLobbies()
+                               .then((lobbies) => {
+                                   // console.log("emitting ALL LOBBIES ", lobbies);
+                                   io.emit("receive lobby list", lobbies);
+                               });
+
+
                        })
                }
             });
@@ -144,7 +157,7 @@ io.on('connection', (socket) => {
 
     // once the room is created, it will ask for the rest of the lobby information with the roomid (room.js)
     socket.on('ask for lobby info', (roomID) => {
-        console.log("ROOM asked for lobby info given roomID", roomID);
+        console.log("SOCKET EVENT ASK FOR LOBBY INFO", roomID);
         let res = null;
         dbUtil.getLobby(roomID)
             .then(lobby => {
@@ -157,6 +170,7 @@ io.on('connection', (socket) => {
                     res = lobby;
                 }
 
+                socket_info["lobby"] = roomID;
                 // once I know that the lobby is good, I set my socket to join that room
                 // and return to the lobby the lobby info
                 socket.join(roomID);
@@ -167,6 +181,8 @@ io.on('connection', (socket) => {
 
     // in the joinCode.js component, checks if the roomID is a valid roomID to join
     socket.on("validate join code req", (info) => {
+        console.log("SOCKET EVENT VALIDATE JOIN CODE REQ");
+
         dbUtil.getLobby(info.room)
             .then(lobby => {
                 let lobbyFound = false;
@@ -183,23 +199,30 @@ io.on('connection', (socket) => {
     });
 
     /*
+    viewLobbies.js
      In the room component, whenever someone joins, it will receive an updated players list, which it will then
      use to update its state, that will contain all the players inside.
      this is the event when i'm joining a lobby and moving to the room component
     info: code : the join code. email : user's email. username: user's name
      */
     socket.on("join certain lobby", (info) => {
+        console.log("SOCKET EVENT JOIN CERTAIN LOBBY");
+
         // console.log("all lobbies:", rooms_playerlist);
         console.log("lobby trying to join ... ", info.code, rooms_playerlist[info.code]);
 
         rooms_playerlist[info.code].push({email: info.email, username: info.username});
         console.log("Current rooms playerlist", rooms_playerlist);
+        // update the lobby list in lobbyTables
         io.emit("update lobby list", rooms_playerlist[info.code]);
 
     });
 
     // method for a player to leave a lobby (room.js)
     socket.on("leave lobby", info => {
+        console.log("SOCKET EVENT LEAVE LOBBY");
+
+        socket_info["lobby"] = "";
         deletePlayerFromRoom(info);
         socket.leave(info.room);
     });
@@ -221,48 +244,22 @@ io.on('connection', (socket) => {
         }
     }
 
-    players[socket.id] = {
-        x: x,
-        y: y
-    };
-
-    // emit the number of current sockets connected
-
-    /*let players_arr = Object.keys(players);
-    socket.on("player joined", () =>{
-        io.emit("Number of players", players_arr.length);
-        console.log("Passing in players", players);
-        io.emit("players list", players);
-    });*/
-
-
     // upon a player movement event, i will update the players array object with their new positions, and
     // emit a event to redraw the new positions
-    socket.on("Player movement", (position) => {
-        console.log("Logging movement, recieved: ", position);
-        // console.log("Receiving player movement event from client");
+    socket.on("player movement", (info) => {
 
-        console.log("original position", players[socket.id].x, players[socket.id].y);
-
-        players[socket.id] = {
-            x: position[0],
-            y: position[1]
-        };
-
-        console.log("next position", players[socket.id].x, players[socket.id].y);
-
-        // sends a broadcast to ALL sockets with the players and their positions
-        // console.log("Sending to clients to redraw positions");
-        io.emit("Redraw positions", players);
+        // console.log("received player movement across socket: ",info);
+        io.to(info.room).emit('player moved', {X: info.X, Y: info.Y})
     });
 
     // In the lobby, when finalized that the game is starting, send the map to client
     socket.on('game starting', () => {
-        socket.emit('game starting ack', gameMap );
+        socket.emit('game starting ack');
     });
 
 
     socket.on("lobby start timer", (info) => {
+        console.log("SOCKET EVENT LOBBY START TIMER");
         let {timer, room} = info;
         console.log("TIMER, ROOM: ", timer, room);
         let countdown = Math.floor(timer/1000);
@@ -282,14 +279,16 @@ io.on('connection', (socket) => {
 
 
     socket.on("disconnect", () => {
-        delete players[socket.id];
-        let players_arr = Object.keys(players);
-        io.emit("Number of players", players_arr.length);
+        console.log("SOCKET EVENT DISCONNECT");
+        socket_info.email && socket_info.lobby ? deletePlayerFromRoom({room: socket_info.lobby, email: socket_info.email}) : true;
+        console.log("Updated rooms player list", rooms_playerlist);
+        // i do a check if he's in a game or in a room
+        // if he's in a room, then he's part of a room_playerlist where he must be removed
     });
 
 });
 
-// function that give info room, email and username, will find the place of the user
+// function that given info room, email and username, will find the place of the user
 // in rooms_playerlist[room] and delete him
 function deletePlayerFromRoom(info){
     console.log("Player list for lobby before deletion", rooms_playerlist[info.room]);
