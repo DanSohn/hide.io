@@ -110,13 +110,14 @@ class Game extends Component {
                 getY: function (row) {
                     return row * this.tsize;
                 }
-
             },
 
         };
 
-        socket.on('player moved', (position) => console.log(
-            !(position.X === this.player.x && position.Y === this.player.y) ? "myself! Or collision?": "This is where favians function fires!"));
+        socket.on('player moved', (position) => {
+            console.log(
+            !(position.X === this.player.x && position.Y === this.player.y) ? "myself! Or collision?": "This is where favians function fires!")
+        });
 
         this.update_player_component = this.update_player_component.bind(this);
     };
@@ -190,7 +191,14 @@ class Game extends Component {
         else if (Keyboard.isDown(Keyboard.DOWN)) { diry = 1; }
 
         this.Player.move(delta, dirx, diry);
-        socket.emit("player movement", this.state.gameID, {X: this.Player.x, Y: this.Player.y});
+
+        let info = {
+            gameID: this.state.gameID,
+            X: this.Player.X,
+            Y: this.Player.Y
+        };
+
+        socket.emit("player movement", info);
         this.camera.update();
     }
 
