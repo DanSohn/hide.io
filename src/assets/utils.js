@@ -65,9 +65,13 @@ function returnGameMap(num){
             3, 3, 3, 1, 1, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3
         ]}
     }else if(num === "2"){
-        res = "Never gonna let you down";
+        res = {
+            name: "medium"
+        };
     }else if(num === "3"){
-        res = "Never gonna run around and desert you";
+        res = {
+            name: "large"
+        };
     }
 
     return res;
