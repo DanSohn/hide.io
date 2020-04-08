@@ -225,10 +225,10 @@ class Game extends Component {
             },
         };
 
-        socket.on('player moved', (position) => {
-            console.log(
-            !(position.X === this.player.x && position.Y === this.player.y) ? "myself! Or collision?": "This is where favians function fires!")
-        });
+        // socket.on('player moved', (position) => {
+        //     console.log(
+        //     !(position.X === this.player.x && position.Y === this.player.y) ? "myself! Or collision?": "This is where favians function fires!")
+        // });
 
         this.update_player_component = this.update_player_component.bind(this);
     }
@@ -312,7 +312,7 @@ class Game extends Component {
             Y: this.Player.Y
         };
 
-        socket.emit("player movement", info);
+        // socket.emit("player movement", info);
         this.camera.update();
     }
 

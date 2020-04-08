@@ -248,7 +248,7 @@ io.on('connection', (socket) => {
     // emit a event to redraw the new positions
     socket.on("player movement", (info) => {
 
-        console.log("received player movement across socket: ",info);
+        // console.log("received player movement across socket: ",info);
         io.to(info.room).emit('player moved', {X: info.X, Y: info.Y})
     });
 
