@@ -25,7 +25,7 @@ class Room extends Component {
             game_map: "",
             start: false,
             players: {},
-            playersList: [{}],
+            playersList: [{'email': "", 'username': ""}],
             time: 3
         };
         this.goPrevious = this.goPrevious.bind(this);
@@ -85,11 +85,15 @@ class Room extends Component {
         // parameter: lobby_users - a SET containing all the users username
         socket.on("update lobby list", (lobby_users) => {
             console.log("Received current lobby users ", lobby_users);
-            lobby_users.map((value, key) => {
-                console.log("Received: " + value.username)
-                this.setState ({
-                    playersList: [...this.state.playersList, {'username': value.username, 'email': value.email}]
-                })
+            // lobby_users.map((value, key) => {
+            //     console.log("Received: " + value.username)
+            //     const obj = {'username': value.username, 'email': value.email}
+            //     this.setState ({
+            //         playersList: [...this.state.player
+            //     })
+            // })
+            this.setState({
+                playersList: lobby_users
             })
 
             // for (let i =0; i<this.state.playersList.length; i++) {
@@ -205,7 +209,7 @@ class Room extends Component {
                         </div>
                         <div className="online">
                             {this.state.playersList.map((player, index) => {
-                                return <li key={player.email}>{player.username}</li>
+                                return <li key={index}>{player.username}</li>
                             })}
                         </div>
                     </div>
