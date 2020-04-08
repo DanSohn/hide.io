@@ -56,16 +56,6 @@ class LobbyTables extends Component {
         });
     }
 
-    /*componentDidUpdate(prevProps, prevState, snapshot) {
-        socket.on("receive lobby list", (lobbies) => {
-            console.log("Recieved list of lobbies update", lobbies);
-            this.setState({
-                lobbies: lobbies
-            });
-            console.log(this.state.lobbies);
-        })
-    }*/
-
     componentDidMount() {
         socket.emit("please give lobbies");
 

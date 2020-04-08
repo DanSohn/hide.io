@@ -23,6 +23,7 @@ class Room extends Component {
             game_mode: "",
             game_time: "",
             game_map: "",
+            map: {},
             start: false,
             players: {},
             time: 3
@@ -98,7 +99,7 @@ class Room extends Component {
 
         // this event occurs on function startTimer()
         socket.on("game starting ack", (gameMap) => {
-            this.state.game_map = gameMap;
+            this.state.map = gameMap;
             socket.emit("lobby start timer", {timer: 3100, room: this.state.roomID});
         });
 
