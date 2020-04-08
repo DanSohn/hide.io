@@ -102,10 +102,10 @@ io.on('connection', (socket) => {
 
                 for(let i = 0, len = lobbies.length; i < len; i ++){
                     // lobbies[i].num_players = Object.keys(rooms_playerlist[lobbies[i]["join_code"]]).length;
-                    console.log("looking for the unhandledpromise warning");
+                    /*console.log("looking for the unhandledpromise warning");
                     console.log("how many lobbies do i have?", len);
                     console.log("looking at lobby", lobbies[i]);
-                    console.log("looking at playerlist", rooms_playerlist[lobbies[i].join_code]);
+                    console.log("looking at playerlist", rooms_playerlist[lobbies[i].join_code]);*/
                     lobbies[i].num_players = rooms_playerlist[lobbies[i]["join_code"]].length;
 
                 }
