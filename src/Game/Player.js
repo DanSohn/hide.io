@@ -54,7 +54,7 @@ class Player extends Component {
 
     playerMove(x, y) {
         console.log("Sending player movement event to server");
-        socket.emit("Player movement", [x,y]);
+        // socket.emit("Player movement", [x,y]);
     }
 
     render() {

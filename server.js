@@ -25,7 +25,6 @@ app.get('/', (req, res) => {
 
 const starting_pos_module = require(__dirname + "/starting_positions");
 let starting_pos = starting_pos_module.starting_positions;
-const gameMap = starting_pos_module.map;
 
 // create players object
 let players = {};
@@ -245,51 +244,24 @@ io.on('connection', (socket) => {
         }
     }
 
-    players[socket.id] = {
-        x: x,
-        y: y
-    };
-
-    // emit the number of current sockets connected
-
-    /*let players_arr = Object.keys(players);
-    socket.on("player joined", () =>{
-        io.emit("Number of players", players_arr.length);
-        console.log("Passing in players", players);
-        io.emit("players list", players);
-    });*/
-
-
     // upon a player movement event, i will update the players array object with their new positions, and
     // emit a event to redraw the new positions
-    socket.on("Player movement", (position) => {
-        console.log("Logging movement, recieved: ", position);
-        // console.log("Receiving player movement event from client");
+    socket.on("player movement", (info) => {
 
-        console.log("original position", players[socket.id].x, players[socket.id].y);
-
-        players[socket.id] = {
-            x: position[0],
-            y: position[1]
-        };
-
-        console.log("next position", players[socket.id].x, players[socket.id].y);
-
-        // sends a broadcast to ALL sockets with the players and their positions
-        // console.log("Sending to clients to redraw positions");
-        io.emit("Redraw positions", players);
+        // console.log("received player movement across socket: ",info);
+        io.to(info.room).emit('player moved', {X: info.X, Y: info.Y})
     });
 
     // In the lobby, when finalized that the game is starting, send the map to client
     socket.on('game starting', () => {
-        console.log("SOCKET EVENT GAME STARTING");
-        socket.emit('game starting ack', gameMap );
+        socket.emit('game starting ack');
     });
 
 
     socket.on("lobby start timer", (info) => {
         console.log("SOCKET EVENT LOBBY START TIMER");
         let {timer, room} = info;
+        console.log("TIMER, ROOM: ", timer, room);
         let countdown = Math.floor(timer/1000);
         // send to all sockets an event every second
         let timerID = setInterval(() => {
