@@ -371,7 +371,7 @@ class Game extends Component {
     //Draws an inverse polygon layer that covers the shadows to remove the floor lines.
     drawShadow() {
         this.ctx.save();
-        this.ctx.fillStyle = "#000000";
+        this.ctx.fillStyle = "#0b0b0b";
         this.ctx.beginPath();
         this.ctx.moveTo(this.state.hitpoints[0].x, this.state.hitpoints[0].y);
         for (let i = 1; i < this.state.hitpoints.length; i++) {
@@ -461,7 +461,7 @@ class Game extends Component {
 
     gameRender() {
         this.drawLayer();
-        this.drawHiders();
+        // this.drawHiders();
         this.updateLightTrace();
         this.sortAngles();
         // this.drawLightLines();
