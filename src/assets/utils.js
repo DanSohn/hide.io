@@ -32,7 +32,7 @@ function returnGameMap(num){
 
     if(num === "1"){
         res = {
-            name: 'small',
+            name: 'Small',
             cols: 24,
             rows: 27,
             tsize: 64,
@@ -66,11 +66,11 @@ function returnGameMap(num){
         ]}
     }else if(num === "2"){
         res = {
-            name: "medium"
+            name: "Medium"
         };
     }else if(num === "3"){
         res = {
-            name: "large"
+            name: "Large"
         };
     }
 
