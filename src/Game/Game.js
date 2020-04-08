@@ -181,6 +181,7 @@ class Game extends Component {
             msg: "",
             num_of_players: this.props.numPlayers,
             players: this.props.players,
+            gameID: this.props.gameID,
             game_status: "not started",
             images:{},
             //Game window size, it is used in the calculation of what portion of the map is viewed.
@@ -229,6 +230,9 @@ class Game extends Component {
             },
 
         };
+
+        socket.on('player moved', (position) => console.log(
+            !(position.X === this.player.x && position.Y === this.player.y) ? "myself! Or collision?": "This is where favians function fires!"));
 
         this.update_player_component = this.update_player_component.bind(this);
     };
@@ -290,6 +294,7 @@ class Game extends Component {
         else if (Keyboard.isDown(Keyboard.DOWN)) { diry = 1; }
 
         this.Player.move(delta, dirx, diry);
+        socket.emit("player movement", this.state.gameID, {X: this.Player.x, Y: this.Player.y});
         this.camera.update();
     }
 
