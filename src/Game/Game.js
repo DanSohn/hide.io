@@ -190,7 +190,9 @@ class Game extends Component {
     }
 
     drawLayer() {
-        this.state.walls = [];
+        // this.state.walls = [];
+        this.setState({walls: []});
+
 
         let startCol = Math.floor(this.camera.x / this.state.map.tsize);
         let endCol = startCol + (this.camera.width / this.state.map.tsize);
@@ -209,13 +211,13 @@ class Game extends Component {
                     this.ctx.beginPath();
                     this.ctx.rect(Math.round(x), Math.round(y), 64, 64);
                     if (tile === 1) {
-                        this.ctx.fillStyle = '#F7F3F0';
+                        this.ctx.fillStyle = '#0c0c0c';
                     } else if (tile === 2) {
-                        this.ctx.fillStyle = '#D9C9BD';
+                        this.ctx.fillStyle = '#0c0c0c';
                         this.updateWalls(x, y);
                     } else {
-                        this.ctx.fillStyle = '#918C87';
-                        // this.updateWalls(x, y);
+                        this.ctx.fillStyle = '#0c0c0c';
+                        this.updateWalls(x, y);
                     }
                     this.ctx.stroke();
                     this.ctx.fill();
@@ -235,74 +237,260 @@ class Game extends Component {
         //Left side of a square
         this.state.walls.push(new Wall(new Point(Math.round(x), Math.round(y + 64)), new Point(Math.round(x), Math.round(y))));
 
+        this.state.walls.push(new Wall(new Point(0, 0), new Point(1024, 0)));
+        this.state.walls.push(new Wall(new Point(0, 0), new Point(0, 620)));
+        this.state.walls.push(new Wall(new Point(0, 620), new Point(1024, 620)));
+        this.state.walls.push(new Wall(new Point(1024, 620), new Point(1024, 0)));
     };
 
+    // updateLightTrace() {
+    //     let playerX = (this.Player.screenX - this.Player.width / 2) + 32;
+    //     let playerY = (this.Player.screenY - this.Player.height / 2) + 32;
+    //     this.setState({hitpoints: []});
+    //     // this.state.hitpoints = [];
+    //     // For every wall...
+    //     console.log(this.state.walls.length);
+    //     for (let i = 0; i < this.state.walls.length; i++) {
+    //         let wall = this.state.walls[i];
+    //         // Cast a ray to every point of the current wall
+    //         for (let j = 0; j < wall.points.length; j++) {
+    //             let closestPoint = null;
+    //             if (j === 0) closestPoint = wall.p1;
+    //             if (j === 1) closestPoint = wall.p2;
+    //             let ray = new Wall(new Point(playerX, playerY), new Point(closestPoint.x, closestPoint.y));
+    //             let minDistance = ray.length();
+    //             // Check every wall for intersection
+    //             for (let k = 0; k < this.state.walls.length; k++) {
+    //                 let checkWall = this.state.walls[k];
+    //                 if (wall !== checkWall) {
+    //                     if (checkWall.intersectsWith(ray)) {
+    //                         // If checkWall intersects with our ray we have to check it's intersection point's distance
+    //                         // If the distance is smaller than the current minimum set intersectionPoint as the closest
+    //                         // point and save the distance.
+    //                         let intersectionPoint = checkWall.intersectionPoint(ray);
+    //                         let tempRay = new Wall(new Point(playerX, playerY), new Point(intersectionPoint.x, intersectionPoint.y));
+    //                         if (tempRay.length() < minDistance) {
+    //                             closestPoint = intersectionPoint;
+    //                             minDistance = tempRay.length();
+    //                         }
+    //                     }
+    //                 }
+    //             }
+    //             this.state.hitpoints.push(closestPoint);
+    //         }
+    //     }
+    // };
+
+    getIntersection(ray, segment) {
+
+        // RAY in parametric: Point + Delta*T1
+        let r_px = ray.a.x;
+        let r_py = ray.a.y;
+        let r_dx = ray.b.x - ray.a.x;
+        let r_dy = ray.b.y - ray.a.y;
+
+        // SEGMENT in parametric: Point + Delta*T2
+        let s_px = segment.p1.x;
+        let s_py = segment.p1.y;
+        let s_dx = segment.p2.x - segment.p1.x;
+        let s_dy = segment.p2.y - segment.p1.y;
+
+        // Are they parallel? If so, no intersect
+        let r_mag = Math.sqrt(r_dx * r_dx + r_dy * r_dy);
+        let s_mag = Math.sqrt(s_dx * s_dx + s_dy * s_dy);
+        if (r_dx / r_mag === s_dx / s_mag && r_dy / r_mag === s_dy / s_mag) {
+            // Unit vectors are the same.
+            return null;
+        }
+
+        // SOLVE FOR T1 & T2
+        // r_px+r_dx*T1 = s_px+s_dx*T2 && r_py+r_dy*T1 = s_py+s_dy*T2
+        // ==> T1 = (s_px+s_dx*T2-r_px)/r_dx = (s_py+s_dy*T2-r_py)/r_dy
+        // ==> s_px*r_dy + s_dx*T2*r_dy - r_px*r_dy = s_py*r_dx + s_dy*T2*r_dx - r_py*r_dx
+        // ==> T2 = (r_dx*(s_py-r_py) + r_dy*(r_px-s_px))/(s_dx*r_dy - s_dy*r_dx)
+        let T2 = (r_dx * (s_py - r_py) + r_dy * (r_px - s_px)) / (s_dx * r_dy - s_dy * r_dx);
+        let T1 = (s_px + s_dx * T2 - r_px) / r_dx;
+
+        // Must be within parametic whatevers for RAY/SEGMENT
+        if (T1 < 0) return null;
+        if (T2 < 0 || T2 > 1) return null;
+
+        // Return the POINT OF INTERSECTION
+        return {
+            x: r_px + r_dx * T1,
+            y: r_py + r_dy * T1,
+            param: T1
+        };
+
+    }
+
+
     updateLightTrace() {
+
         let playerX = (this.Player.screenX - this.Player.width / 2) + 32;
         let playerY = (this.Player.screenY - this.Player.height / 2) + 32;
-        this.setState({hitpoints: []});
-        // this.state.hitpoints = [];
-        // For every wall...
-        console.log(this.state.walls.length);
-        for (var i = 0; i < this.state.walls.length; i++) {
-            var wall = this.state.walls[i];
-            // Cast a ray to every point of the current wall
-            for (var j = 0; j < wall.points.length; j++) {
-                var closestPoint = null;
-                if (j === 0) closestPoint = wall.p1;
-                if (j === 1) closestPoint = wall.p2;
-                var ray = new Wall(new Point(playerX, playerY), new Point(closestPoint.x, closestPoint.y));
-                var minDistance = ray.length();
-                // Check every wall for intersection
-                for (var k = 0; k < this.state.walls.length; k++) {
-                    var checkWall = this.state.walls[k];
-                    if (wall !== checkWall) {
-                        if (checkWall.intersectsWith(ray)) {
-                            // If checkWall intersects with our ray we have to check it's intersection point's distance
-                            // If the distance is smaller than the current minimum set intersectionPoint as the closest
-                            // point and save the distance.
-                            var intersectionPoint = checkWall.intersectionPoint(ray);
-                            var tempRay = new Wall(new Point(playerX, playerY), new Point(intersectionPoint.x, intersectionPoint.y));
-                            if (tempRay.length() < minDistance) {
-                                closestPoint = intersectionPoint;
-                                minDistance = tempRay.length();
-                            }
-                        }
-                    }
-                }
-                this.state.hitpoints.push(closestPoint);
+
+        let points = [];
+        for (let a = 0; a < this.state.walls.length; a++) {
+            let wall = this.state.walls[a];
+            for (let b = 0; b < wall.points.length; b++) {
+                points.push(wall.points[b]);
             }
         }
+        let uniquePoints = (function (points) {
+            let set = {};
+            return points.filter(function (p) {
+                let key = p.x + "," + p.y;
+                if (key in set) {
+                    return false;
+                } else {
+                    set[key] = true;
+                    return true;
+                }
+            });
+        })(points);
+
+        // Get all angles
+        let uniqueAngles = [];
+        for (let j = 0; j < uniquePoints.length; j++) {
+            let uniquePoint = uniquePoints[j];
+            let angle = Math.atan2(uniquePoint.y - playerY, uniquePoint.x - playerX);
+            uniquePoint.angle = angle;
+            uniqueAngles.push(angle - 0.00001, angle, angle + 0.00001);
+        }
+
+        // RAYS IN ALL DIRECTIONS
+        let intersects = [];
+        this.setState({hitpoints: []});
+        for (let j = 0; j < uniqueAngles.length; j++) {
+            let angle = uniqueAngles[j];
+
+            // Calculate dx & dy from angle
+            let dx = Math.cos(angle);
+            let dy = Math.sin(angle);
+
+            // Ray from center of screen to mouse
+            let ray = {
+                a: { x: playerX, y: playerY },
+                b: { x: playerX + dx, y: playerY + dy }
+            };
+
+            // Find CLOSEST intersection
+            let closestIntersect = null;
+            for (let i = 0; i < this.state.walls.length; i++) {
+                let wall = this.state.walls[i];
+                let intersect = this.getIntersection(ray, wall);
+                if (!intersect) continue;
+                if (!closestIntersect || intersect.param < closestIntersect.param) {
+                    closestIntersect = intersect;
+                }
+            }
+
+            // Intersect angle
+            if (!closestIntersect) continue;
+            closestIntersect.angle = angle;
+
+            // Add to list of intersects
+            this.state.hitpoints.push(closestIntersect);
+
+
+
+            // let playerX = (this.Player.screenX - this.Player.width / 2) + 32;
+            // let playerY = (this.Player.screenY - this.Player.height / 2) + 32;
+            // this.setState({ uniqueAngles: [] });
+            // for (let j = 0; points.length; j++) {
+            //     let uniquePoint = points[j];
+            //     let angle = Math.atan2(uniquePoint.y - playerY, uniquePoint.x - playerX);
+            //     uniquePoint.angle = angle;
+            //     this.state.uniqueAngles.push(angle - 0.00001, angle + 0.00001);
+            // }
+        };
     };
+
+    sortAngles() {
+        let sortedAngles = this.state.hitpoints.sort(function (a, b) {
+            return a.angle - b.angle;
+        });
+        this.setState({ hitpoints: sortedAngles });
+    }
+
 
     drawPlayer() {
         // draw main character
         this.ctx.beginPath();
         this.ctx.rect(this.Player.screenX - this.Player.width / 2, this.Player.screenY - this.Player.height / 2, 64, 64);
-        this.ctx.fillStyle = '#007E8F';
+        this.ctx.fillStyle = '#D5C7BC';
         this.ctx.fill();
     };
-    drawLight() {
-        // this.ctx.fillStyle = "#0000FF";
+
+    drawLight(){
         let playerX = (this.Player.screenX - this.Player.width / 2) + 32;
         let playerY = (this.Player.screenY - this.Player.height / 2) + 32;
-        this.ctx.strokeStyle = "#FF0000";
+
+        this.ctx.save();
+        let fill = this.ctx.createRadialGradient(playerX,playerY,1, playerX, playerY, 300);
+        fill.addColorStop(0, "rgba(255, 255, 255, 0.6)");
+        fill.addColorStop(0.9,"rgba(255, 255, 255, 0.01)");
+        fill.addColorStop(1,"rgba(255, 255, 255, 0.009)");
+
+        
+
+
+        this.ctx.fillStyle = fill;
+
+        this.ctx.beginPath();
+        this.ctx.moveTo(this.state.hitpoints[0].x, this.state.hitpoints[0].y);
+        for(let i = 1; i< this.state.hitpoints.length ; i++){
+            let intersect = this.state.hitpoints[i];
+            this.ctx.lineTo(intersect.x, intersect.y)
+        }
+
+        
+        this.ctx.fill();
+        
+        this.ctx.restore();
+
+    }
+    drawShadow(){
+        this.ctx.save();
+        this.ctx.fillStyle = "ccc";
+        this.ctx.beginPath();
+        this.ctx.moveTo(this.state.hitpoints[0].x, this.state.hitpoints[0].y);
+        for(let i = 1; i< this.state.hitpoints.length ; i++){
+            let intersect = this.state.hitpoints[i];
+            this.ctx.lineTo(intersect.x, intersect.y)
+        }
+        this.ctx.rect(1024, 0, -1024, 620);
+        
+        this.ctx.fill();
+        this.ctx.restore();
+
+    }
+    drawLightLines() {
+        this.ctx.save();
+        let playerX = (this.Player.screenX - this.Player.width / 2) + 32;
+        let playerY = (this.Player.screenY - this.Player.height / 2) + 32;
+        this.ctx.strokeStyle = "#FFFFFF";
         this.ctx.beginPath();
         for (let i = 0; i < this.state.hitpoints.length; i++) {
             let hitpoint = this.state.hitpoints[i];
             this.ctx.moveTo(playerX, playerY);
             this.ctx.lineTo(hitpoint.x, hitpoint.y);
-            this.ctx.fillRect(hitpoint.x - 5, hitpoint.y - 5, 10, 10);
+            // this.ctx.fillRect(hitpoint.x - 5, hitpoint.y - 5, 10, 10);
         }
         this.ctx.stroke();
-        // this.ctx.restore();
+        this.ctx.restore();
     };
 
     gameRender() {
         this.drawLayer();
-        this.drawPlayer();
         this.updateLightTrace();
+        this.sortAngles();
+        // this.drawLightLines();
         this.drawLight();
+        this.drawShadow();
+        this.drawPlayer();
+
     };
 
 
