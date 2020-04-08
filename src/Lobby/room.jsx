@@ -53,7 +53,7 @@ class Room extends Component {
 
         // 3 second timer currently
         TimerSound();
-        socket.emit("game starting");
+        socket.emit("lobby start timer", {timer: 3100, room: this.state.roomID});
     }
 
     start() {
@@ -87,11 +87,6 @@ class Room extends Component {
         socket.on("update lobby list", (lobby_users) => {
             console.log("Received current lobby users ", lobby_users);
         });
-
-        // this event occurs on function startTimer()
-        socket.on("game starting ack", () => {
-            socket.emit("lobby start timer", {timer: 3100, room: this.state.roomID});
-        });
         
         socket.on("lobby current timer", (countdown) => {
             // this.decreaseTimer()
@@ -108,8 +103,9 @@ class Room extends Component {
     componentWillUnmount() {
         socket.off("giving lobby info");
         socket.off("update lobby list");
-        socket.off("game starting ack");
         socket.off("lobby current timer");
+        socket.off("lobby start timer");
+
     }
 
     render() {
