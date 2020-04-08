@@ -144,7 +144,7 @@ class CreateLobby extends Component {
                                             onChange={this.handleChangeGameMode}
                                             className="browser-default custom-select"
                                             required>
-                                            <option selected />
+                                            <option defaultValue />
                                             <option value="1">Lover's Paradise</option>
                                             <option value="2">
                                                 Do you want to build a snowman?
@@ -156,7 +156,7 @@ class CreateLobby extends Component {
                                             onChange={this.handleChangeGameTime}
                                             className="browser-default custom-select"
                                             required>
-                                            <option selected />
+                                            <option defaultValue />
                                             <option value="1">3 mins</option>
                                             <option value="2">4 mins</option>
                                             <option value="3">5 mins</option>
@@ -166,7 +166,7 @@ class CreateLobby extends Component {
                                             onChange={this.handleChangeGameMap}
                                             className="browser-default custom-select"
                                             required>
-                                            <option selected />
+                                            <option defaultValue />
                                             <option value="1">Never gonna give you up</option>
                                             <option value="2">Never gonna let you down</option>
                                             <option value="3">
