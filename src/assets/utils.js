@@ -41,15 +41,13 @@ function returnGameMap(num){
     return res;
 }
 
+
 // function that takes in a string and checks if it is a valid username
 // valid means it consists only of numbers, letters and spaces
 function validUsername(name){
     if(!name || name.trim().length === 0){
         return false;
     }
-
-
-
 
 
 }
