@@ -246,10 +246,11 @@ io.on('connection', (socket) => {
 
     // upon a player movement event, i will update the players array object with their new positions, and
     // emit a event to redraw the new positions
-    socket.on("player movement", (info) => {
+    socket.on('player movement', (info) => {
 
-        // console.log("received player movement across socket: ",info);
-        io.to(info.room).emit('player moved', {X: info.X, Y: info.Y})
+        console.log("received player movement across socket: ",info);
+        let position = {x: info.x, y: info.y};
+        io.to(info.roomID).emit('player moved', position)
     });
 
     // In the lobby, when finalized that the game is starting, send the map to client

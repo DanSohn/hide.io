@@ -223,11 +223,6 @@ class Game extends Component {
             },
         };
 
-        // socket.on('player moved', (position) => {
-        //     console.log(
-        //     !(position.X === this.player.x && position.Y === this.player.y) ? "myself! Or collision?": "This is where favians function fires!")
-        // });
-
         this.update_player_component = this.update_player_component.bind(this);
     }
 
@@ -568,6 +563,13 @@ class Game extends Component {
 
         window.requestAnimationFrame(this.tick.bind(this));
 
+        let info = {
+            roomID: this.state.gameID,
+            X: this.Player.x,
+            Y: this.Player.y
+        };
+        socket.emit("player movement", info);
+
     }
 
     gameRender() {
@@ -602,7 +604,12 @@ class Game extends Component {
                 this.setState({ players: players });
             }
         });
-        // console.log(this.state);
+
+        // TODO: do stuff when getting the location information
+        socket.on('player moved', (position) => {
+            console.log("Received Position Information! "+
+                !(position.x === this.Player.x && position.y === this.Player.y) ? "myself! Or collision?": "This is where favians function fires!");
+        });
     }
 
     // this function creates multiple player components
