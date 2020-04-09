@@ -22,7 +22,7 @@ class Room extends Component {
             title: "",
             game_mode: "",
             game_time: "",
-            map: {},
+            game_map: {},
             map_name: "",
             start: false,
             players: {},
