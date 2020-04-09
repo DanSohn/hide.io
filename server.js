@@ -92,7 +92,7 @@ io.on('connection', (socket) => {
     // from lobbyTables.js
     socket.on("please give lobbies", () => {
         console.log("socket event please give lobbies");
-
+        console.log("Current rooms list", rooms_playerlist);
         returnChangedLobbies()
             .then(lobbies => {
                 // console.log("New lobbies:", lobbies);
@@ -108,6 +108,7 @@ io.on('connection', (socket) => {
     //          info: an object containing: email, name, lobbyName, gameMode, gameTime, gameMap
     socket.on("create lobby", (info) => {
         console.log("SOCKET EVENT CREATE LOBBY", info);
+        console.log("current rooms list", rooms_playerlist);
         // console.log("Creating lobby with info ", info);
         let roomID = Math.random().toString(36).slice(2, 8);
 
@@ -282,15 +283,16 @@ async function returnChangedLobbies() {
     let res;
     await dbUtil.getLobbies()
         .then((lobbies) => {
+            console.log("Inside async function returnChangedLobbies");
             // console.log("Got lobbies ", lobbies);
-            // console.log("Current rooms playerlist", rooms_playerlist);
+            console.log("Current rooms playerlist", rooms_playerlist);
             // iterate through every object lobby, and add/update the property of number of players
             // console.log("looking for the unhandledpromise warning");
 
             for (let i = 0, len = lobbies.length; i < len; i++) {
                 // console.log("Current rooms playerlist", rooms_playerlist);
                 // console.log("looking at lobby", lobbies[i]);
-                // console.log("looking at playerlist", rooms_playerlist[lobbies[i].join_code]);
+                console.log("Looping on:", lobbies[i].join_code);
                 lobbies[i].num_players = rooms_playerlist[lobbies[i]["join_code"]].length;
 
             }

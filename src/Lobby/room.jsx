@@ -101,6 +101,7 @@ class Room extends Component {
     }
 
     componentWillUnmount() {
+        console.log("Component unmounting!!!===================");
         socket.off("giving lobby info");
         socket.off("update lobby list");
         socket.off("game starting ack");

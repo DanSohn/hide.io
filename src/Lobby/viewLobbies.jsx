@@ -152,7 +152,7 @@ class ViewLobbies extends Component {
                 </div>
             );
         }
-        return <div>{comp}</div>;
+        return <React.Fragment>{comp}</React.Fragment>;
     }
 }
 export default ViewLobbies;
