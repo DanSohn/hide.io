@@ -38,10 +38,15 @@ class Room extends Component {
 
     goPrevious() {
         socket.emit("leave lobby", {room: this.state.roomID, email: this.state.email});
-        ClickSound();
-        this.setState({
-            previous: true
-        });
+        // i ensure everything is first handled properly in the server, and is up to date
+        // before i leave
+        socket.on("may successfully leave lobby", ()=>{
+            ClickSound();
+            this.setState({
+                previous: true
+            });
+        })
+
     }
 
     startTimer() {

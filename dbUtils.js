@@ -206,6 +206,8 @@ async function removeUserFromLobby(info){
         console.log("User could not be found for deletion");
     }
 
+    console.log("Did players splice?", players);
+
     // update the document
     const update = {players: players};
     await doc.updateOne(update);

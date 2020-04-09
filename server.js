@@ -202,10 +202,11 @@ io.on('connection', (socket) => {
         dbUtil.addUserToLobby({roomID: info.room, email: info.email, username: info.username})
             .then(() => {
                 socket.join(info.room);
-
+                socket.emit("joining certain lobby success");
                 // get list of users in the lobby
                 dbUtil.getLobbyPlayers(info.room)
                     .then((players) => {
+
                         // send to all sockets part of the room, inside room.js
                         io.to(info.room).emit("update lobby list", players);
                     })
@@ -222,6 +223,7 @@ io.on('connection', (socket) => {
         socket_info["lobby"] = "";
         dbUtil.removeUserFromLobby(info)
             .then(()=>{
+                socket.emit("may successfully leave lobby");
                 socket.leave(info.room);
             })
             .catch(err=>console.log(err));

@@ -79,11 +79,14 @@ class ViewLobbies extends Component {
             email: this.state.email,
             username: this.state.userName,
         });
-
-        this.setState({
-            stage: 3,
-            enter_lobby: join_code,
+        // once i emit join certain lobby and everything went alright in server, i receive event to go to room
+        socket.on("joining certain lobby success", ()=>{
+            this.setState({
+                stage: 3,
+                enter_lobby: join_code,
+            });
         });
+
     }
 
     render() {
