@@ -209,6 +209,7 @@ async function removeUserFromLobby(info){
 // iterates through ALL LOBBIES in db and ensures that they all have players property of an EMPTY array
 async function serverStartLobbies(){
     let res = await Lobby.updateMany({}, { $set: {players: []}});
+    // console.log(res, res.n, res.nModified);
     if(res.n !== res.nModified){
         console.log("Not all documents were modified");
     }
