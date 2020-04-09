@@ -202,6 +202,16 @@ io.on("connection", (socket) => {
         io.emit("update lobby list", rooms_playerlist[info.code]);
     });
 
+
+
+    socket.on("send message", (info) => {
+        console.log("SOCKET EVENT SEND MESSAGE")
+        console.log("sent message to lobby..."+  info.room + info.username + info.message )
+        io.emit("message from server", {username: info.username, message: info.message})
+    })
+
+
+
     // method for a player to leave a lobby (room.js)
     socket.on("leave lobby", (info) => {
         console.log("SOCKET EVENT LEAVE LOBBY");

@@ -27,12 +27,17 @@ class Room extends Component {
             start: false,
             players: {},
             playersList: [{'email': "", 'username': ""}],
+            onKeyboard: "",
+            message: "",
+            messages: [],
             time: 3
         };
         this.goPrevious = this.goPrevious.bind(this);
         this.startTimer = this.startTimer.bind(this);
         this.start = this.start.bind(this);
         this.decreaseTimer = this.decreaseTimer.bind(this);
+        this.sendMessage = this.sendMessage.bind(this);
+        this.handleKeyboard = this.handleKeyboard.bind(this);
 
         // this lets the socket join the specific room
         socket.emit("ask for lobby info", this.state.roomID);
@@ -45,6 +50,24 @@ class Room extends Component {
             previous: true
         });
     }
+
+    sendMessage() {
+        console.log("send this message: " + this.state.onKeyboard)
+        socket.emit("send message", {room: this.state.roomID, username: this.state.userName, message: this.state.onKeyboard});
+
+        let obj = {'username': this.state.username, 'message': this.state.onKeyboard}
+        this.setState({
+            message: this.state.onKeyboard,
+            onKeyboard: ""
+        })
+    }
+    
+    handleKeyboard(e) {
+        this.setState ({
+            onKeyboard: e.currentTarget.value 
+        })
+    }
+
 
     startTimer() {
         // if (this.state.numPlayers <= 1) {
@@ -118,6 +141,15 @@ class Room extends Component {
                 this.start();
             }
         });
+
+        socket.on("message from server", (info) => {
+            let obj = {'username': info.username, 'message': info.message}
+
+                this.setState({
+                    messages: [...this.state.messages, obj]
+                })
+
+        })
     }
 
     componentWillUnmount() {
@@ -160,22 +192,30 @@ class Room extends Component {
                     <div className="ContentScreen">
                         <div className="chatRoom">
                             <div className="chat">
-                                <ul id="messages"></ul>
+                                <ul id="messages" style={{color: 'white'}}>
+                                    {this.state.messages.map(function(d, idx){
+                                      return (<li style={{listStyleType: 'none'}} key={idx}>{d.username}: {d.message}</li>)
+                                    })}
+                                </ul>
                             </div>
                             <div className="input-group mb-3">
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    aria-describedby="basic-addon2"
-                                />
-
-                                <div className="input-group-append">
-                                    <button
-                                        className="btn btn-outline-secondary"
-                                        type="button">
-                                        Submit
-                                    </button>
-                                </div>
+                                <form onSubmit={this.sendMessage}>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        aria-describedby="basic-addon2"
+                                        onChange={this.handleKeyboard}
+                                        value={this.state.onKeyboard}
+                                    />
+                                    <div className="input-group-append">
+                                        <button
+                                            onClick={this.sendMessage}
+                                            className="btn btn-outline-secondary"
+                                            type="button">
+                                            Submit
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
 
