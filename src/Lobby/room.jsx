@@ -1,15 +1,15 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 import Header from "../assets/header";
 import Break from "../assets/break";
-import {socket} from "../assets/socket";
+import { socket } from "../assets/socket";
 
 import "bootstrap/dist/js/bootstrap.bundle";
 import "../assets/App.css";
-import {returnGameMode, returnGameMap, returnGameTime } from  "../assets/utils";
+import { returnGameMode, returnGameMap, returnGameTime } from "../assets/utils";
 import ViewLobbies from "./viewLobbies";
 import Game from "../Game/Game";
-import ClickSound from "../sounds/click"
-import TimerSound from "../sounds/timer"
+import ClickSound from "../sounds/click";
+import TimerSound from "../sounds/timer";
 
 class Room extends Component {
     constructor(props) {
@@ -22,15 +22,15 @@ class Room extends Component {
             title: "",
             game_mode: "",
             game_time: "",
-            game_map: "",
             map: {},
+            map_name: "",
             start: false,
             players: {},
-            playersList: [{'email': "", 'username': ""}],
+            playersList: [{ email: "", username: "" }],
             onKeyboard: "",
             message: "",
             messages: [],
-            time: 3
+            time: 3,
         };
         this.goPrevious = this.goPrevious.bind(this);
         this.startTimer = this.startTimer.bind(this);
@@ -44,30 +44,33 @@ class Room extends Component {
     }
 
     goPrevious() {
-        socket.emit("leave lobby", {room: this.state.roomID, email: this.state.email});
+        socket.emit("leave lobby", { room: this.state.roomID, email: this.state.email });
         ClickSound();
         this.setState({
-            previous: true
+            previous: true,
         });
     }
 
     sendMessage() {
-        console.log("send this message: " + this.state.onKeyboard)
-        socket.emit("send message", {room: this.state.roomID, username: this.state.userName, message: this.state.onKeyboard});
+        console.log("send this message: " + this.state.onKeyboard);
+        socket.emit("send message", {
+            room: this.state.roomID,
+            username: this.state.userName,
+            message: this.state.onKeyboard,
+        });
 
-        let obj = {'username': this.state.username, 'message': this.state.onKeyboard}
+        let obj = { username: this.state.username, message: this.state.onKeyboard };
         this.setState({
             message: this.state.onKeyboard,
-            onKeyboard: ""
-        })
-    }
-    
-    handleKeyboard(e) {
-        this.setState ({
-            onKeyboard: e.currentTarget.value 
-        })
+            onKeyboard: "",
+        });
     }
 
+    handleKeyboard(e) {
+        this.setState({
+            onKeyboard: e.currentTarget.value,
+        });
+    }
 
     startTimer() {
         // if (this.state.numPlayers <= 1) {
@@ -82,28 +85,30 @@ class Room extends Component {
 
     start() {
         this.setState({
-            start: true
+            start: true,
         });
     }
 
     decreaseTimer() {
         this.setState({
-            time: this.state.time - 1
-        })
+            time: this.state.time - 1,
+        });
     }
 
     componentDidMount() {
         // socket.emit("player joined");
-        socket.on('giving lobby info', (lobby) => {
-            if(!lobby){
+        socket.on("giving lobby info", (lobby) => {
+            if (!lobby) {
                 console.log("Received not a lobby! Check room.js line 54, and server.js line 119");
-            }else{
+            } else {
+                console.log("TRUEEEEEE");
                 this.setState({
                     title: lobby.lobby_name,
                     game_mode: returnGameMode(lobby.game_mode),
                     game_time: returnGameTime(lobby.game_time),
                     game_map: returnGameMap(lobby.game_map),
                 });
+                console.log(this.state.game_map);
             }
         });
         // everytime this event is called, its passed a set of the users in the lobby
@@ -118,8 +123,8 @@ class Room extends Component {
             //     })
             // })
             this.setState({
-                playersList: lobby_users
-            })
+                playersList: lobby_users,
+            });
 
             // for (let i =0; i<this.state.playersList.length; i++) {
             //     console.log("Player: " + this.state.playersList[i].username)
@@ -128,11 +133,11 @@ class Room extends Component {
 
         // this event occurs on function startTimer()
         socket.on("game starting ack", () => {
-            socket.emit("lobby start timer", {timer: 3100, room: this.state.roomID});
+            socket.emit("lobby start timer", { timer: 3100, room: this.state.roomID });
         });
-        
+
         socket.on("lobby current timer", (countdown) => {
-            // this.decreaseTimer()
+            this.decreaseTimer();
             console.log(countdown);
             TimerSound();
             // after i reach 0, call startGame
@@ -143,13 +148,12 @@ class Room extends Component {
         });
 
         socket.on("message from server", (info) => {
-            let obj = {'username': info.username, 'message': info.message}
+            let obj = { username: info.username, message: info.message };
 
-                this.setState({
-                    messages: [...this.state.messages, obj]
-                })
-
-        })
+            this.setState({
+                messages: [...this.state.messages, obj],
+            });
+        });
     }
 
     componentWillUnmount() {
@@ -175,9 +179,9 @@ class Room extends Component {
                 <Game
                     gameID={this.state.roomID}
                     players={this.state.players}
-                    map = {this.state.game_map}
-                    timeLimit = {this.state.game_time}
-                    mode = {this.state.game_mode}
+                    map={this.state.game_map}
+                    timeLimit={this.state.game_time}
+                    mode={this.state.game_mode}
                 />
             );
         } else {
@@ -188,13 +192,17 @@ class Room extends Component {
                         image={this.state.image}
                         title={this.state.title}
                     />
-                    <Break/>
+                    <Break />
                     <div className="ContentScreen">
                         <div className="chatRoom">
                             <div className="chat">
-                                <ul id="messages" style={{color: 'white'}}>
-                                    {this.state.messages.map(function(d, idx){
-                                      return (<li style={{listStyleType: 'none'}} key={idx}>{d.username}: {d.message}</li>)
+                                <ul id="messages" style={{ color: "white" }}>
+                                    {this.state.messages.map(function (d, idx) {
+                                        return (
+                                            <li style={{ listStyleType: "none" }} key={idx}>
+                                                {d.username}: {d.message}
+                                            </li>
+                                        );
                                     })}
                                 </ul>
                             </div>
@@ -221,10 +229,9 @@ class Room extends Component {
 
                         <div className="roomActions">
                             <h5>Join Code: {this.state.roomID}</h5>
-                            <h3>Game Starting in {this.state.time}</h3>
-                            <button
-                                className="btn btn-success"
-                                onClick={this.startTimer}>
+                            <h4>Game Starting in </h4>
+                            <h2>{this.state.time}</h2>
+                            <button className="btn btn-success" onClick={this.startTimer}>
                                 Start Game
                             </button>
                             <div className="roomSettings">
@@ -238,7 +245,7 @@ class Room extends Component {
                         </div>
                         <div className="online">
                             {this.state.playersList.map((player, index) => {
-                                return <li key={index}>{player.username}</li>
+                                return <li key={index}>{player.username}</li>;
                             })}
                         </div>
                     </div>
