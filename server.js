@@ -210,7 +210,7 @@ io.on('connection', (socket) => {
         console.log("SOCKET EVENT LEAVE LOBBY");
 
         socket_info["lobby"] = "";
-        deletePlayerFromRoom(info);
+        dbUtil.deletePlayerFromRoom(info);
         socket.leave(info.room);
     });
 
@@ -267,7 +267,7 @@ io.on('connection', (socket) => {
 
     socket.on("disconnect", () => {
         console.log("SOCKET EVENT DISCONNECT");
-        socket_info.email && socket_info.lobby ? deletePlayerFromRoom({
+        socket_info.email && socket_info.lobby ? dbUtil.deletePlayerFromRoom({
             room: socket_info.lobby,
             email: socket_info.email
         }) : true;
@@ -306,27 +306,4 @@ async function returnChangedLobbies() {
 
 }
 
-// function that given info room, email and username, will find the place of the user
-// in rooms_playerlist[room] and delete him
-function deletePlayerFromRoom(info) {
-    console.log("Player list for lobby before deletion", rooms_playerlist[info.room]);
-
-    let index = -1;
-    // iterate through all the players
-
-    for (let i = 0; i < rooms_playerlist[info.room].length; i++) {
-        if (rooms_playerlist[info.room][i].email === info.email) {
-            index = i;
-            break;
-        }
-    }
-
-    if (index !== -1) {
-        rooms_playerlist[info.room].splice(index, 1);
-    } else {
-        console.log("Could not find user to delete");
-    }
-
-    console.log("Player list for lobby after deletion", rooms_playerlist[info.room]);
-}
 
