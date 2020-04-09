@@ -10,6 +10,7 @@ import Camera from './Camera';
 import Player from './PlayerTest';
 import { socket } from "../assets/socket";
 import Point from './Point';
+import Timer from "../Game/Timer";
 // import Keyboard from './Keyboard'
 let Keyboard = {};
 
@@ -187,7 +188,7 @@ class Game extends Component {
             hitpoints: [],
 
             //Game window size, it is used in the calculation of what portion of the map is viewed.
-
+            timeLimit: this.props.timeLimit,
 
             //This will be handling current game functions, and constants
             map: {
@@ -233,7 +234,7 @@ class Game extends Component {
 
 
 
-    //init game state seppereate from did load. could be used for start restrictions.
+    //init game state separate from did load. could be used for start restrictions.
     init() {
         Keyboard.listenForEvents([Keyboard.LEFT, Keyboard.RIGHT, Keyboard.UP, Keyboard.DOWN]);
         // this.tileAtlas = Loader.getImage('tiles');
@@ -587,6 +588,8 @@ class Game extends Component {
     componentDidMount() {
         // this will only happen the first time, and will set the ball rolling to handle any updates!
         // this.state.context = this.refs.canvas.getContext('2d');
+        socket.emit('start game timer', this.state.gameID, this.state.timeLimit);
+        console.log(this.state.timeLimit);
         let context = this.refs.canvas.getContext('2d');
 
         this.setState({ context: this.refs.canvas.getContext('2d'),
@@ -645,7 +648,9 @@ class Game extends Component {
 
     render() {
         return (
+
             <div className="gameAction">
+                <Timer />
                 <div className="alivePlayers">
                     <ul className="aliveList">
                         <li>

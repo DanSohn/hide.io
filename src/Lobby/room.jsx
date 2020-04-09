@@ -9,7 +9,6 @@ import {returnGameMode, returnGameMap, returnGameTime } from  "../assets/utils";
 import ViewLobbies from "./viewLobbies";
 import Game from "../Game/Game";
 import ClickSound from "../sounds/click"
-import Timer from "../Game/Timer";
 import TimerSound from "../sounds/timer"
 
 class Room extends Component {
@@ -89,16 +88,19 @@ class Room extends Component {
             console.log("Received current lobby users ", lobby_users);
         });
 
-        // this event occurs on function startTimer()
+        // this event occurs on function startTimer(), it will count down from 3 to start the game
         socket.on("game starting ack", () => {
-            socket.emit("lobby start timer", {timer: 3100, room: this.state.roomID});
+            socket.emit("lobby start timer", {countdowntime: (this.state.time*1000)+100, room: this.state.roomID});
         });
-        
+
+        // This event will be used to count down the start of the game and then send an event to the server to start
+        // the timer for the game while players are playing
         socket.on("lobby current timer", (countdown) => {
             // this.decreaseTimer()
             console.log(countdown);
             TimerSound();
             // after i reach 0, call startGame
+            this.decreaseTimer();
             if (countdown <= 0) {
                 console.log("starting game");
                 this.start();
@@ -126,16 +128,13 @@ class Room extends Component {
             );
         } else if (this.state.start) {
             comp = (
-                <div>
-                    <Timer />
-                    <Game
-                        gameID={this.state.roomID}
-                        players={this.state.players}
-                        map = {this.state.game_map}
-                        timeLimit = {this.state.game_time}
-                        mode = {this.state.game_mode}
-                    />
-                </div>
+                <Game
+                    gameID={this.state.roomID}
+                    players={this.state.players}
+                    map = {this.state.game_map}
+                    timeLimit = {this.state.game_time}
+                    mode = {this.state.game_mode}
+                />
             );
         } else {
             comp = (
