@@ -75,7 +75,7 @@ class ViewLobbies extends Component {
         socket.emit('please give lobbies');
 
         socket.emit('join certain lobby', {
-            code: join_code,
+            room: join_code,
             email: this.state.email,
             username: this.state.userName,
         });

@@ -61,6 +61,8 @@ async function createUser(info){
 
 // returns all users
 async function getLobbies(){
+    // use .lean() to not use mongoose documents, but plain old javascript objects,
+    // allowing the user to change shit up (possibly bad)
     return await Lobby.find().lean();
 }
 
@@ -180,6 +182,7 @@ async function removeUserFromLobby(info){
     // load the document
     const doc = await Lobby.findOne({join_code: roomID});
     let players = doc.players;
+    console.log("Database player list for lobby:", players);
 
     let index = -1;
     //iterate through all the players until player is found
@@ -201,31 +204,7 @@ async function removeUserFromLobby(info){
 
     // check to see that it updated correctly
     const updatedDoc = await Lobby.findOne({join_code: roomID});
-    console.log(updatedDoc.players);
-}
-
-// function that given info room, email and username, will find the place of the user
-// in rooms_playerlist[room] and delete him
-function deletePlayerFromRoom(info) {
-    console.log("Player list for lobby before deletion", rooms_playerlist[info.room]);
-
-    let index = -1;
-    // iterate through all the players
-
-    for (let i = 0; i < rooms_playerlist[info.room].length; i++) {
-        if (rooms_playerlist[info.room][i].email === info.email) {
-            index = i;
-            break;
-        }
-    }
-
-    if (index !== -1) {
-        rooms_playerlist[info.room].splice(index, 1);
-    } else {
-        console.log("Could not find user to delete");
-    }
-
-    console.log("Player list for lobby after deletion", rooms_playerlist[info.room]);
+    console.log("updated player list for lobby:", updatedDoc.players);
 }
 
 module.exports = {
@@ -240,5 +219,4 @@ module.exports = {
     createUser,
     addUserToLobby,
     removeUserFromLobby,
-    deletePlayerFromRoom
 };
