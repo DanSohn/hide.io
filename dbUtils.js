@@ -3,7 +3,7 @@ let mongoose = require('mongoose');
 // set up db connection
 let db = 'mongodb+srv://dbUser:dbUserPassword@hideio-wic1l.mongodb.net/Game?retryWrites=true&w=majority';
 // Connect to mongo
-mongoose.connect(db, {useNewUrlParser: true, useUnifiedTopology: true})
+mongoose.connect(db, {useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true})
     .then(() => console.log("MongoDB Connected"))
     .catch(err => console.log(err));
 // Database models (schema)
@@ -155,6 +155,7 @@ async function addUserToLobby(info){
     const {roomID, email, username} = info;
     // load the document
     const doc = await Lobby.findOne({join_code: roomID});
+    console.log("Received lobby", doc);
     let players = doc.players;
     console.log("Current lobby players", players);
 
@@ -168,9 +169,13 @@ async function addUserToLobby(info){
 
     // update the document
     const new_player = {email: email, name: username};
+    console.log("new player:", new_player);
     players.push(new_player);
-    await doc.updateOne(players);
+    console.log("players:", players);
+    const update = { players: players};
+    await doc.updateOne(update);
 
+    console.log("mark 1");
     // check to see that it updated correctly
     const updatedDoc = await Lobby.findOne({join_code: roomID});
     console.log("updated player list:", updatedDoc.players);
@@ -179,10 +184,10 @@ async function addUserToLobby(info){
 // give the player and the room they're leaving, it'll remove them to the lobbies playerlist
 async function removeUserFromLobby(info){
     console.log("dbUtils - removeUserFromLobby", info);
-    const {roomID, email} = info;
+    const {room, email} = info;
 
     // load the document
-    const doc = await Lobby.findOne({join_code: roomID});
+    const doc = await Lobby.findOne({join_code: room});
     let players = doc.players;
     console.log("Database player list for lobby:", players);
 
@@ -202,10 +207,11 @@ async function removeUserFromLobby(info){
     }
 
     // update the document
-    await doc.updateOne(players);
+    const update = {players: players};
+    await doc.updateOne(update);
 
     // check to see that it updated correctly
-    const updatedDoc = await Lobby.findOne({join_code: roomID});
+    const updatedDoc = await Lobby.findOne({join_code: room});
     console.log("updated player list for lobby:", updatedDoc.players);
 }
 
