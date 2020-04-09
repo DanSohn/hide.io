@@ -177,11 +177,17 @@ tr .btn-success {
 }
 .chat {
     border: 5px solid navajowhite;
+    text-align: left;
+    overflow-y: auto;
+    word-break: break-word;
 }
+
 .chatRoom {
     height: 100%;
 }
-
+#messages {
+    padding: 5px;
+}
 .chatRoom,
 .online {
     margin: 2%;

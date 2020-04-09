@@ -26,7 +26,7 @@ class Room extends Component {
             map: {},
             start: false,
             players: {},
-            playersList: [{'email': "", 'username': ""}],
+            playersList: [],
             onKeyboard: "",
             message: "",
             messages: [],
@@ -145,10 +145,9 @@ class Room extends Component {
         socket.on("message from server", (info) => {
             let obj = {'username': info.username, 'message': info.message}
 
-                this.setState({
-                    messages: [...this.state.messages, obj]
-                })
-
+            this.setState({
+                messages: [...this.state.messages, obj]
+            })
         })
     }
 
@@ -199,7 +198,7 @@ class Room extends Component {
                                 </ul>
                             </div>
                             <div className="input-group mb-3">
-                                <form onSubmit={this.sendMessage}>
+                                {/* <form onSubmit={this.sendMessage}> */}
                                     <input
                                         type="text"
                                         className="form-control"
@@ -215,7 +214,7 @@ class Room extends Component {
                                             Submit
                                         </button>
                                     </div>
-                                </form>
+                                {/* </form> */}
                             </div>
                         </div>
 
