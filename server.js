@@ -26,31 +26,6 @@ app.get('/', (req, res) => {
 const starting_pos_module = require(__dirname + "/starting_positions");
 let starting_pos = starting_pos_module.starting_positions;
 
-// create players object
-let players = {};
-// console.log("Initial players list: ", players);
-
-/* the structure of rooms_playerlist is :
-rooms_playerlist = {
-a1a1a1a: players = [{email: str, username: str}, {email: str, username: str} ... ]
-b1b1b1b1: players = as above
-c1...
-d1d1....
-}
- */
-
-/*let rooms_playerlist = roomPlayerList();
-// create a rooms object to keep track of rooms and the players inside each room
-// key equals room_id (join code)
-async function roomPlayerList() {
-    await dbUtil.getLobbyCodes()
-        .then(lobbies => {
-            rooms_playerlist = lobbies;
-            console.log("rooms player list", rooms_playerlist);
-        })
-        .catch(err => console.log(err));
-}*/
-
 
 io.on('connection', (socket) => {
     // console.log("A User has connected");

@@ -75,7 +75,6 @@ async function getUsers(){
 // returns the specified lobby if it exists. Otherwise, return null
 async function getLobby(roomID){
     // console.log("--------- GETLOBBY IN DBUTILS ----------");
-
     let res;
     await Lobby.findOne({join_code: roomID})
         .then(lobby => {
@@ -85,7 +84,6 @@ async function getLobby(roomID){
                 res = null;
             }
         });
-
     return res;
 }
 
@@ -127,7 +125,6 @@ async function getAllLobbyPlayers(){
     });
 
     return rooms_playerlist;
-
 }
 
 // returns the specified user if he exists. Otherwise, returns null
@@ -145,7 +142,6 @@ async function getUser(email){
         })
         .catch(err => console.log(err));
 
-
     return res;
 }
 
@@ -155,7 +151,6 @@ async function addUserToLobby(info){
     const {roomID, email, username} = info;
     // load the document
     const doc = await Lobby.findOne({join_code: roomID});
-    console.log("Received lobby", doc);
     let players = doc.players;
     console.log("Current lobby players", players);
 
@@ -169,13 +164,10 @@ async function addUserToLobby(info){
 
     // update the document
     const new_player = {email: email, name: username};
-    console.log("new player:", new_player);
     players.push(new_player);
-    console.log("players:", players);
     const update = { players: players};
     await doc.updateOne(update);
 
-    console.log("mark 1");
     // check to see that it updated correctly
     const updatedDoc = await Lobby.findOne({join_code: roomID});
     console.log("updated player list:", updatedDoc.players);
@@ -189,7 +181,6 @@ async function removeUserFromLobby(info){
     // load the document
     const doc = await Lobby.findOne({join_code: room});
     let players = doc.players;
-    console.log("Database player list for lobby:", players);
 
     let index = -1;
     //iterate through all the players until player is found
@@ -205,8 +196,6 @@ async function removeUserFromLobby(info){
     }else{
         console.log("User could not be found for deletion");
     }
-
-    console.log("Did players splice?", players);
 
     // update the document
     const update = {players: players};
