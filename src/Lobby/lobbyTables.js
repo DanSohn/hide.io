@@ -31,9 +31,8 @@ class LobbyTables extends Component {
             return;
         }
         return this.state.lobbies.map((lobby) => {
-            // CURRENTLY JUST UTILIZING ALL THE INFORMATION, HOWEVER IN THE END IF I DON'T NEED
-            // THEN REMOVE THE CONSTANTS THAT IS NOT USED
-            const {join_code, creator_email, lobby_name, game_mode, game_time, game_map, num_players} = lobby;
+            const {join_code, lobby_name, players} = lobby;
+            let num_players = players.length;
             return (
                 <tr key={join_code}>
                     <td>{lobby_name}</td>

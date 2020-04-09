@@ -26,6 +26,7 @@ async function createLobby(roomID, info){
         game_mode: info.gameMode,
         game_time: info.gameTime,
         game_map: info.gameMap,
+        players: [],
         creation_date: Date.now()
     });
 
@@ -155,6 +156,7 @@ async function addUserToLobby(info){
     // load the document
     const doc = await Lobby.findOne({join_code: roomID});
     let players = doc.players;
+    console.log("Current lobby players", players);
 
     // first check to see if the user is in that player list to begin with
     for(let i = 0; i < players.length; i++){
@@ -171,7 +173,7 @@ async function addUserToLobby(info){
 
     // check to see that it updated correctly
     const updatedDoc = await Lobby.findOne({join_code: roomID});
-    console.log(updatedDoc.players);
+    console.log("updated player list:", updatedDoc.players);
 }
 
 // give the player and the room they're leaving, it'll remove them to the lobbies playerlist

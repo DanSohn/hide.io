@@ -97,7 +97,7 @@ io.on('connection', (socket) => {
             .then(lobbies=>{
                 io.emit("receive lobby list", lobbies);
             })
-            .catch(err=>console.log(err));
+            .catch(err=>console.log("addUserToLobby", err));
 
     });
 
@@ -130,12 +130,12 @@ io.on('connection', (socket) => {
                                     socket.emit("created lobby return code", roomID);
 
                                     // Update lobby list for those in viewLobbies
-                                    returnChangedLobbies()
-                                        .then(lobbies => {
-                                            // console.log("New lobbies:", lobbies);
+                                    dbUtil.getLobbies()
+                                        .then(lobbies=>{
                                             io.emit("receive lobby list", lobbies);
                                         })
-                                }).catch(err => console.log(err));
+                                        .catch(err=>console.log("addUserToLobby", err));
+                                }).catch(err => console.log("createLobby", err));
                         })
                 }
             });
@@ -259,7 +259,6 @@ io.on('connection', (socket) => {
         }, timer);
 
     });
-
 
     socket.on("disconnect", () => {
         console.log("SOCKET EVENT DISCONNECT");
