@@ -279,18 +279,15 @@ io.on('connection', (socket) => {
     socket.on('start game timer', (room, game_time) => {
         console.log("game started " + game_time);
         let mins =  game_time.split(" ")[0];
-        let time = {minutes:mins, seconds:0};
+        let time = {minutes:mins, seconds:15};
         console.log(time, room);
-        let counter = 0;
         let timerID = setInterval(() => {
-            console.log(counter);
-
             if (time.seconds > 0){
                 time.seconds = time.seconds - 1;
             }
-            if (time.seconds === 0){
+            else if (time.seconds === 0){
                 if(time.minutes > 0){
-                    time.seconds = 0;
+                    time.seconds = 59;
                     time.minutes = time.minutes - 1;
                 }
             }
@@ -300,7 +297,7 @@ io.on('connection', (socket) => {
         setTimeout(() => {
             clearInterval(timerID);
             console.log("Time's up");
-        }, (time.minutes*60000)+100);
+        }, (time.minutes*60000)+15100);
     });
 
 
