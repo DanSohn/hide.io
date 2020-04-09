@@ -206,6 +206,14 @@ async function removeUserFromLobby(info){
     console.log("updated player list for lobby:", updatedDoc.players);
 }
 
+// iterates through ALL LOBBIES in db and ensures that they all have players property of an EMPTY array
+async function serverStartLobbies(){
+    let res = await Lobby.updateMany({}, { $set: {players: []}});
+    if(res.n !== res.nModified){
+        console.log("Not all documents were modified");
+    }
+}
+
 module.exports = {
     getLobbies,
     getUsers,
@@ -218,4 +226,5 @@ module.exports = {
     createUser,
     addUserToLobby,
     removeUserFromLobby,
+    serverStartLobbies
 };

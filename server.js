@@ -26,6 +26,13 @@ app.get('/', (req, res) => {
 const starting_pos_module = require(__dirname + "/starting_positions");
 let starting_pos = starting_pos_module.starting_positions;
 
+// this occurs upon server start, or more importantly, server restart.
+// the lobbies that exist should have NO ONE IN THEIR PLAYER LISTS
+dbUtil.serverStartLobbies()
+    .then(()=>{
+        console.log("Lobbies have been reset")
+    })
+    .catch(err=>console.log(err));
 
 io.on('connection', (socket) => {
     // console.log("A User has connected");
