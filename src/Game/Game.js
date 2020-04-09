@@ -645,7 +645,9 @@ class Game extends Component {
         return (
             <div className="gameAction">
                 <AliveList />
-                <canvas ref="canvas" width={1024} height={620} />
+                <div className="fade-in">
+                    <canvas ref="canvas" width={1024} height={620} />
+                </div>
             </div>
         );
     }
