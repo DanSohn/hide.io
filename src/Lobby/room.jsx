@@ -31,6 +31,7 @@ class Room extends Component {
             message: "",
             messages: [],
             time: 3,
+            startTimer: false,
         };
         this.goPrevious = this.goPrevious.bind(this);
         this.startTimer = this.startTimer.bind(this);
@@ -79,6 +80,9 @@ class Room extends Component {
         // }
 
         // 3 second timer currently
+        this.setState({
+            startTimer: true,
+        });
         TimerSound();
         socket.emit("game starting");
     }
@@ -151,9 +155,9 @@ class Room extends Component {
             let obj = { username: info.username, message: info.message };
 
             this.setState({
-                messages: [...this.state.messages, obj]
-            })
-        })
+                messages: [...this.state.messages, obj],
+            });
+        });
     }
 
     componentWillUnmount() {
@@ -166,6 +170,22 @@ class Room extends Component {
     render() {
         console.log("rendering in ROOM");
         let comp;
+        let countdownTimer;
+        if (this.state.startTimer) {
+            countdownTimer = (
+                <React.Fragment>
+                    <h4>Game Starting in </h4>
+                    <h2>{this.state.time}</h2>
+                </React.Fragment>
+            );
+        } else {
+            countdownTimer = (
+                <React.Fragment>
+                    <h4></h4>
+                    <h2></h2>
+                </React.Fragment>
+            );
+        }
         if (this.state.previous) {
             comp = (
                 <ViewLobbies
@@ -208,29 +228,28 @@ class Room extends Component {
                             </div>
                             <div className="input-group mb-3">
                                 {/* <form onSubmit={this.sendMessage}> */}
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        aria-describedby="basic-addon2"
-                                        onChange={this.handleKeyboard}
-                                        value={this.state.onKeyboard}
-                                    />
-                                    <div className="input-group-append">
-                                        <button
-                                            onClick={this.sendMessage}
-                                            className="btn btn-outline-secondary"
-                                            type="button">
-                                            Submit
-                                        </button>
-                                    </div>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    aria-describedby="basic-addon2"
+                                    onChange={this.handleKeyboard}
+                                    value={this.state.onKeyboard}
+                                />
+                                <div className="input-group-append">
+                                    <button
+                                        onClick={this.sendMessage}
+                                        className="btn btn-outline-secondary"
+                                        type="button">
+                                        Submit
+                                    </button>
+                                </div>
                                 {/* </form> */}
                             </div>
                         </div>
 
                         <div className="roomActions">
                             <h5>Join Code: {this.state.roomID}</h5>
-                            <h4>Game Starting in </h4>
-                            <h2>{this.state.time}</h2>
+                            <React.Fragment>{countdownTimer}</React.Fragment>
                             <button className="btn btn-success" onClick={this.startTimer}>
                                 Start Game
                             </button>
