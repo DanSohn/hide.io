@@ -8,7 +8,7 @@ body {
     align-items: center;
     color: white;
     padding: 40px;
-    font-family: 'Montserrat', sans-serif;
+    font-family: "Montserrat", sans-serif;
     text-align: center;
 }
 
@@ -210,6 +210,9 @@ tr .btn-success {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+#messages {
+    padding: 0px;
 }
 form {
     height: 100%;
