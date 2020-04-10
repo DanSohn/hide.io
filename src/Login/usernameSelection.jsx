@@ -1,15 +1,15 @@
-import React, { Component } from 'react';
-import MenuScreen from '../menuScreen';
-import { socket } from '../assets/socket';
-import Header from '../assets/header';
-import Break from '../assets/break';
+import React, { Component } from "react";
+import MenuScreen from "../menuScreen";
+import { socket } from "../assets/socket";
+import Header from "../assets/header";
+import Break from "../assets/break";
 
 class UsernameSelection extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            typing: '',
-            username: '',
+            typing: "",
+            username: "",
             email: this.props.email,
             image: this.props.image,
         };
@@ -25,10 +25,10 @@ class UsernameSelection extends Component {
     }
 
     submitUsername() {
-        console.log('full name: ', this.state.typing);
+        console.log("full name: ", this.state.typing);
         // i do the socket events before i set the state as I'm not sure if setting it will automatically go to rendering
         // before i continue this function
-        socket.emit('create user', {
+        socket.emit("create user", {
             username: this.state.typing,
             email: this.state.email,
         });
@@ -40,7 +40,7 @@ class UsernameSelection extends Component {
 
     render() {
         let comp;
-        if (this.state.username === '') {
+        if (this.state.username === "") {
             comp = (
                 <div className="GameWindow">
                     <Header showBack={false} showProfile={false} />

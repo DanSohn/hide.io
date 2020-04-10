@@ -11,7 +11,7 @@ class Router extends Component {
         //console.log("Router constructor");
         super(props);
         this.state = {
-            apiResponse: ""
+            apiResponse: "",
         };
         // initialize my socket
         //socket = io();
