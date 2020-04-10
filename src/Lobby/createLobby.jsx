@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import Header from '../assets/header';
 import Break from '../assets/break';
-import { socket } from '../assets/socket';
+import {socket} from '../assets/socket';
 
 import 'bootstrap/dist/js/bootstrap.bundle';
 import '../assets/App.css';
@@ -73,18 +73,21 @@ class CreateLobby extends Component {
             lobbyName: event.target.value,
         });
     }
+
     handleChangeGameMode(event) {
         ClickSound();
         this.setState({
             gameMode: event.target.value,
         });
     }
+
     handleChangeGameTime(event) {
         ClickSound();
         this.setState({
             gameTime: event.target.value,
         });
     }
+
     handleChangeGameMap(event) {
         ClickSound();
         this.setState({
@@ -119,7 +122,7 @@ class CreateLobby extends Component {
                         image={this.props.image}
                         title={this.state.title}
                     />
-                    <Break />
+                    <Break/>
                     <div className="ContentScreen">
                         <div className="createLobbyText">
                             <h2>Name</h2>
@@ -144,7 +147,7 @@ class CreateLobby extends Component {
                                             onChange={this.handleChangeGameMode}
                                             className="browser-default custom-select"
                                             required>
-                                            <option defaultValue />
+                                            <option defaultValue/>
                                             <option value="1">Lover's Paradise</option>
                                             <option value="2">
                                                 Do you want to build a snowman?
@@ -156,7 +159,7 @@ class CreateLobby extends Component {
                                             onChange={this.handleChangeGameTime}
                                             className="browser-default custom-select"
                                             required>
-                                            <option defaultValue />
+                                            <option defaultValue/>
                                             <option value="1">3 mins</option>
                                             <option value="2">4 mins</option>
                                             <option value="3">5 mins</option>
@@ -166,17 +169,10 @@ class CreateLobby extends Component {
                                             onChange={this.handleChangeGameMap}
                                             className="browser-default custom-select"
                                             required>
-                                            <option defaultValue />
-                                            <option value="1">Never gonna give you up</option>
-                                            <option value="2">Never gonna let you down</option>
-                                            <option value="3">
-                                                Never gonna run around and desert you
-                                            </option>
-                                            <option value="4">Never gonna make you cry</option>
-                                            <option value="5">Never gonna say goodbye</option>
-                                            <option value="6">
-                                                Never gonna tell a lie and hurt you
-                                            </option>
+                                            <option defaultValue/>
+                                            <option value="1">Small</option>
+                                            <option value="2">Medium</option>
+                                            <option value="3">Large</option>
                                         </select>
                                     </div>
                                     <div className="createLobbyContainer">
