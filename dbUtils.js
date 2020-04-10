@@ -180,6 +180,7 @@ async function removeUserFromLobby(info){
 
     // load the document
     const doc = await Lobby.findOne({join_code: room});
+    console.log("found lobby: ", doc);
     let players = doc.players;
 
     let index = -1;
