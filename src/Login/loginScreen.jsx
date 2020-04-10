@@ -1,16 +1,16 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import { socket } from '../assets/socket';
-import '../assets/App.css';
-import UsernameSelection from './usernameSelection';
-import MenuScreen from '../menuScreen';
-import Header from '../assets/header';
-import Break from '../assets/break';
-import FacebookLogin from 'react-facebook-login';
-import GitHubLogin from 'react-github-login';
-import Sound from 'react-sound';
-import { wait } from '@testing-library/dom';
-import ClickSound from '../sounds/click.js';
+import { socket } from "../assets/socket";
+import "../assets/App.css";
+import UsernameSelection from "./usernameSelection";
+import MenuScreen from "../menuScreen";
+import Header from "../assets/header";
+import Break from "../assets/break";
+import FacebookLogin from "react-facebook-login";
+import GitHubLogin from "react-github-login";
+import Sound from "react-sound";
+import { wait } from "@testing-library/dom";
+import ClickSound from "../sounds/click.js";
 
 class LoginScreen extends Component {
     constructor(props) {
@@ -18,11 +18,11 @@ class LoginScreen extends Component {
         this.state = {
             SignIn: false,
             newUser: true,
-            userName: '',
-            id: '',
-            email: '',
-            image: '',
-            clickStatus: 'PAUSED',
+            userName: "",
+            id: "",
+            email: "",
+            image: "",
+            clickStatus: "PAUSED",
         };
         this.goToLobby = this.goToLobby.bind(this);
         this.googleSDK = this.googleSDK.bind(this);
@@ -32,11 +32,11 @@ class LoginScreen extends Component {
     }
 
     componentDidMount() {
-        console.log('component did mount!');
+        console.log("component did mount!");
         this.googleSDK();
 
-        socket.on('user database check', (username) => {
-            console.log('checking if user exists');
+        socket.on("user database check", (username) => {
+            console.log("checking if user exists");
             // if the user "exists" in database, then not a new user and will go straight to main menu
             // otherwise, go to the username selection
             if (username !== null) {
@@ -56,7 +56,7 @@ class LoginScreen extends Component {
     }
 
     componentWillUnmount() {
-        socket.off('user database check');
+        socket.off("user database check");
     }
 
     goToLobby() {
@@ -66,13 +66,13 @@ class LoginScreen extends Component {
     }
 
     googleSDK() {
-        window['googleSDKLoaded'] = () => {
-            window['gapi'].load('auth2', () => {
-                this.auth2 = window['gapi'].auth2.init({
+        window["googleSDKLoaded"] = () => {
+            window["gapi"].load("auth2", () => {
+                this.auth2 = window["gapi"].auth2.init({
                     client_id:
-                        '855332695584-bdpq7iidn0g11ehf2l3h5r3s61cs922m.apps.googleusercontent.com',
-                    cookiepolicy: 'single_host_origin',
-                    scope: 'profile email',
+                        "855332695584-bdpq7iidn0g11ehf2l3h5r3s61cs922m.apps.googleusercontent.com",
+                    cookiepolicy: "single_host_origin",
+                    scope: "profile email",
                 });
                 this.prepareLoginButton();
             });
@@ -93,9 +93,9 @@ class LoginScreen extends Component {
             }
             js = d.createElement(s);
             js.id = id;
-            js.src = 'https://apis.google.com/js/platform.js?onload=googleSDKLoaded';
+            js.src = "https://apis.google.com/js/platform.js?onload=googleSDKLoaded";
             fjs.parentNode.insertBefore(js, fjs);
-        })(document, 'script', 'google-jssdk');
+        })(document, "script", "google-jssdk");
     }
 
     prepareLoginButton = () => {
@@ -105,17 +105,17 @@ class LoginScreen extends Component {
             this.refs.googleLoginBtn,
             {},
             (googleUser) => {
-                console.log('BUTTON PRESSED');
+                console.log("BUTTON PRESSED");
                 let profile = googleUser.getBasicProfile();
-                console.log('Token || ' + googleUser.getAuthResponse().id_token);
-                console.log('ID: ' + profile.getId());
-                console.log('Name: ' + profile.getName());
-                console.log('Image URL: ' + profile.getImageUrl());
-                console.log('Email: ' + profile.getEmail());
+                console.log("Token || " + googleUser.getAuthResponse().id_token);
+                console.log("ID: " + profile.getId());
+                console.log("Name: " + profile.getName());
+                console.log("Image URL: " + profile.getImageUrl());
+                console.log("Email: " + profile.getEmail());
 
                 // send event to server to check whether the user exists in our database
-                console.log('emitting check to server');
-                socket.emit('user exists check', profile.getEmail());
+                console.log("emitting check to server");
+                socket.emit("user exists check", profile.getEmail());
 
                 // i removed the signin = true portion and will do it once i get a check if the user exists
                 this.setState({
@@ -129,7 +129,7 @@ class LoginScreen extends Component {
                 // alert(JSON.stringify(error, undefined, 2));
                 // If you close the popup, it still says that user is signedin
                 console.log(this.auth2.isSignedIn.get());
-                console.log('USERNAME: ' + this.state.userName);
+                console.log("USERNAME: " + this.state.userName);
             }
         );
     };
@@ -185,31 +185,31 @@ class LoginScreen extends Component {
                 );
             }
         }
-        let songURL = '';
+        let songURL = "";
         switch (this.songSelection) {
             case 0:
                 songURL =
-                    'https://vgmdownloads.com/soundtracks/mega-man-bass-gba/pxegwbro/04%20Robot%20Museum.mp3';
+                    "https://vgmdownloads.com/soundtracks/mega-man-bass-gba/pxegwbro/04%20Robot%20Museum.mp3";
                 break;
             case 1:
                 songURL =
-                    'https://vgmdownloads.com/soundtracks/half-life-2-episode-two-rip-ost/itjbtwqb/03.%20Eon%20Trap.mp3';
+                    "https://vgmdownloads.com/soundtracks/half-life-2-episode-two-rip-ost/itjbtwqb/03.%20Eon%20Trap.mp3";
                 break;
             case 2:
                 songURL =
-                    'https://vgmdownloads.com/soundtracks/uncharted-the-nathan-drake-collection/jpqzmvae/1-01.%20Nate%27s%20Theme.mp3';
+                    "https://vgmdownloads.com/soundtracks/uncharted-the-nathan-drake-collection/jpqzmvae/1-01.%20Nate%27s%20Theme.mp3";
                 break;
             case 3:
                 songURL =
-                    'https://vgmdownloads.com/soundtracks/super-smash-bros.-for-nintendo-3ds-and-wii-u-vol-02.-donkey-kong/lsdyorvy/19.%20Swinger%20Flinger.mp3';
+                    "https://vgmdownloads.com/soundtracks/super-smash-bros.-for-nintendo-3ds-and-wii-u-vol-02.-donkey-kong/lsdyorvy/19.%20Swinger%20Flinger.mp3";
                 break;
             case 4:
                 songURL =
-                    'https://vgmdownloads.com/soundtracks/uncharted-the-nathan-drake-collection/jpqzmvae/1-01.%20Nate%27s%20Theme.mp3';
+                    "https://vgmdownloads.com/soundtracks/uncharted-the-nathan-drake-collection/jpqzmvae/1-01.%20Nate%27s%20Theme.mp3";
                 break;
         }
         return (
-            <div>
+            <div className="fade-in-2">
                 <Sound
                     volume="60"
                     url={songURL}
