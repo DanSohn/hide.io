@@ -198,6 +198,13 @@ io.on('connection', (socket) => {
             .catch(err => console.log(err));
     });
 
+    socket.on("send message", (info) => {
+        io.emit("message from server", {
+            'username': info.username,
+            'message': info.message
+        })
+    })
+
     // method for a player to leave a lobby (room.js)
     socket.on("leave lobby", (info) => {
         console.log("SOCKET EVENT LEAVE LOBBY");
