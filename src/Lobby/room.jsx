@@ -1,4 +1,4 @@
-simport React, {Component} from "react";
+import React, {Component} from "react";
 import Header from "../assets/header";
 import Break from "../assets/break";
 import {socket} from "../assets/socket";
