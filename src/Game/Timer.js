@@ -8,42 +8,45 @@ class Timer extends Component {
         this.state = {
             // minutes:props.minutes,
             //TODO: Depending on the role of the player, display a black screen for the first 15 seconds for hider, while seekers are hiding
-            player_role:'hider',
-            blackoutscreen:false,
-            minutes: 0,
-            seconds: 15
-        };
+            // player_role: this.props.player_role,
+            player_role:"hider",
+            ingame_prompt:'',
+            gamestage1: true,
+            time:{ minutes:this.props.gameDuration, seconds: 15}
+        }
+    }
+
+    updatePrompt(){
+        if(this.state.player_role === "seeker" && this.state.gamestage1){
+            this.setState({ingame_prompt:"Wait while Hiders are running away from you!"});
+        }
+        else if(this.state.player_role === "hider" && this.state.gamestage1){
+            this.setState({ingame_prompt:"Hurry! Run away before they find you"});
+        }
     }
 
     componentDidMount() {
-        this.myInterval = setInterval(() => {
-            const {seconds, minutes} = this.state;
+        this.updatePrompt();
+        socket.on('game in progress', (game_time) => {
+            if(game_time.seconds === 0 && this.state.gamestage1){
+                this.setState({gamestage1: false, ingame_prompt:"Time Remaining"});
+            }
 
-            if (seconds > 0) {
-                this.setState({seconds: seconds - 1});
+            if(game_time.minutes === 0 && game_time.seconds === 15){
+                this.setState({ingame_prompt:"Hurry you don't have much time left!"});
             }
-            if (seconds === 0) {
-                if (minutes === 0) {
-                    clearInterval(this.myInterval);
-                } else {
-                    this.setState(({minutes}) => ({
-                        minutes: minutes - 1,
-                        seconds: 59
-                    }));
-                }
-            }
-        }, 1000);
+            this.setState({time:game_time});
+        });
     }
 
     render() {
-        const {minutes, seconds} = this.state;
         return (
             <div>
-                {minutes === 0 && seconds === 0 ? (
-                    <h1>Busted!</h1>
+                {this.state.time.minutes === 0 && this.state.time.seconds === 0 ? (
+                    <h1>Time's Up!</h1>
                 ) : (
                     <h1>
-                        Time Remaining: {minutes}:{seconds < 10 ? `0${seconds}` : seconds}
+                        {this.state.ingame_prompt} {this.state.time.minutes}:{this.state.time.seconds < 10 ? `0${this.state.time.seconds}` : this.state.time.seconds}
                     </h1>
                 )}
             </div>

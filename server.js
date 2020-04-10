@@ -258,7 +258,7 @@ io.on('connection', (socket) => {
                     time.minutes = time.minutes - 1;
                 }
             }
-            io.to(room).emit(time);
+            io.to(room).emit('game in progress', time);
         }, 1000);
 
         setTimeout(() => {

@@ -649,10 +649,12 @@ class Game extends Component {
 
     render() {
         return (
-            <div className="gameAction">
-                <Timer />
-                <AliveList />
-                <canvas ref="canvas" width={1024} height={620} />
+            <div>
+                <Timer gameDuration={this.state.timeLimit.split(" ")[0]}/>
+                <div className="gameAction">
+                    <AliveList />
+                    <canvas ref="canvas" width={1024} height={620} />
+                </div>
             </div>
         );
     }
