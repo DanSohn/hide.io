@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-
 import OtherPlayers from "./OtherPlayers";
 
 import "../assets/App.css";
@@ -649,13 +648,17 @@ class Game extends Component {
 
     render() {
         return (
-            <div>
-                <Timer gameDuration={this.state.timeLimit.split(" ")[0]}/>
+            <React.Fragment>
                 <div className="gameAction">
+                    <Timer gameDuration={this.state.timeLimit.split(" ")[0]}/>
                     <AliveList />
-                    <canvas ref="canvas" width={1024} height={620} />
+                    <canvas className="fade-in" ref="canvas" width={1024} height={620} />
+                    <div className="PlayerText">
+                        <h1>You are a hider</h1>
+                        <h5>Objective: Hide BITCH</h5>
+                    </div>
                 </div>
-            </div>
+            </React.Fragment>
         );
     }
 }
