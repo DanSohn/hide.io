@@ -1,30 +1,30 @@
-import React, { Component } from 'react';
-import Header from '../assets/header';
-import Break from '../assets/break';
-import { socket } from '../assets/socket';
+import React, { Component } from "react";
+import Header from "../assets/header";
+import Break from "../assets/break";
+import { socket } from "../assets/socket";
 
-import 'bootstrap/dist/js/bootstrap.bundle';
-import '../assets/App.css';
-import ViewLobbies from './viewLobbies';
-import Room from './room';
-import ClickSound from '../sounds/click';
+import "bootstrap/dist/js/bootstrap.bundle";
+import "../assets/App.css";
+import ViewLobbies from "./viewLobbies";
+import Room from "./room";
+import ClickSound from "../sounds/click";
 
 class CreateLobby extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            title: 'Create a Lobby',
+            title: "Create a Lobby",
             userName: this.props.name,
             email: this.props.email,
             previous: false,
             submitted: false,
             image: this.props.image,
-            lobbyName: '',
-            gameMode: '',
-            gameTime: '',
-            gameMap: '',
-            join_code: '',
+            lobbyName: "",
+            gameMode: "",
+            gameTime: "",
+            gameMap: "",
+            join_code: "",
         };
         this.goPrevious = this.goPrevious.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -44,14 +44,14 @@ class CreateLobby extends Component {
     handleSubmit(event) {
         event.preventDefault();
         ClickSound();
-        console.log('Submitting!!!!');
-        console.log('i will be providing to the server this information:');
-        console.log('lobby name: ', this.state.lobbyName);
-        console.log('game mode: ', this.state.gameMode);
-        console.log('game time: ', this.state.gameTime);
-        console.log('game map: ', this.state.gameMap);
+        console.log("Submitting!!!!");
+        console.log("i will be providing to the server this information:");
+        console.log("lobby name: ", this.state.lobbyName);
+        console.log("game mode: ", this.state.gameMode);
+        console.log("game time: ", this.state.gameTime);
+        console.log("game map: ", this.state.gameMap);
 
-        socket.emit('create lobby', {
+        socket.emit("create lobby", {
             email: this.state.email,
             name: this.state.userName,
             lobbyName: this.state.lobbyName,
@@ -60,7 +60,7 @@ class CreateLobby extends Component {
             gameMap: this.state.gameMap,
         });
 
-        socket.on('created lobby return code', (join_code) => {
+        socket.on("created lobby return code", (join_code) => {
             this.setState({
                 join_code: join_code,
                 submitted: true,
@@ -73,18 +73,21 @@ class CreateLobby extends Component {
             lobbyName: event.target.value,
         });
     }
+
     handleChangeGameMode(event) {
         ClickSound();
         this.setState({
             gameMode: event.target.value,
         });
     }
+
     handleChangeGameTime(event) {
         ClickSound();
         this.setState({
             gameTime: event.target.value,
         });
     }
+
     handleChangeGameMap(event) {
         ClickSound();
         this.setState({
@@ -134,6 +137,7 @@ class CreateLobby extends Component {
                                         <input
                                             value={this.state.lobbyName}
                                             onChange={this.handleChangeLobbyName}
+                                            maxLength="20"
                                             type="text"
                                             className="form-control"
                                             id="usr"
@@ -167,16 +171,9 @@ class CreateLobby extends Component {
                                             className="browser-default custom-select"
                                             required>
                                             <option defaultValue />
-                                            <option value="1">Never gonna give you up</option>
-                                            <option value="2">Never gonna let you down</option>
-                                            <option value="3">
-                                                Never gonna run around and desert you
-                                            </option>
-                                            <option value="4">Never gonna make you cry</option>
-                                            <option value="5">Never gonna say goodbye</option>
-                                            <option value="6">
-                                                Never gonna tell a lie and hurt you
-                                            </option>
+                                            <option value="1">Small</option>
+                                            <option value="2">Medium</option>
+                                            <option value="3">Large</option>
                                         </select>
                                     </div>
                                     <div className="createLobbyContainer">
