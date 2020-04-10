@@ -236,11 +236,6 @@ class Game extends Component {
         });
         this.update_player_component = this.update_player_component.bind(this);
     }
-<<<<<<< HEAD
-    
-
-=======
->>>>>>> f169b43805aa24c849a6dbf8e329972b45b5f4d2
 
     //init game state seppereate from did load. could be used for start restrictions.
     init() {
@@ -506,17 +501,10 @@ class Game extends Component {
         this.ctx.fill();
         this.ctx.restore();
     }
-<<<<<<< HEAD
     drawEnamies(x, y, index){
         this.ctx.beginPath();
         this.ctx.rect(x -32, y-32 / 2, 64, 64);
         this.ctx.fillStyle = '#D5C7BC';
-=======
-    drawHiders() {
-        this.ctx.beginPath();
-        this.ctx.rect(299 - 64 / 2, 65 - 64 / 2, 64, 64);
-        this.ctx.fillStyle = "#D5C7BC";
->>>>>>> f169b43805aa24c849a6dbf8e329972b45b5f4d2
         this.ctx.fill();
     }
 
