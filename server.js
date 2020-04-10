@@ -224,7 +224,12 @@ io.on('connection', (socket) => {
     socket.on("lobby start timer", (info) => {
         console.log("SOCKET EVENT LOBBY START TIMER");
         let {timer, room} = info;
-        console.log("TIMER, ROOM: ", timer, room);
+
+        // get all the sockets in the room, then choose one random socket to be the hider
+        var roomies = Object.keys(io.sockets.adapter.rooms[room].sockets);
+        var randomSeeker = roomies[Math.floor(Math.random()*roomies.length)];
+        io.to(`${randomSeeker}`).emit('youre the seeker');
+
         let countdown = Math.floor(timer / 1000);
         // send to all sockets an event every second
         let timerID = setInterval(() => {
@@ -237,7 +242,6 @@ io.on('connection', (socket) => {
         setTimeout(() => {
             clearInterval(timerID)
         }, timer);
-
     });
 
     socket.on("disconnect", () => {

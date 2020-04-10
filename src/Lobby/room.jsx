@@ -19,6 +19,7 @@ class Room extends Component {
             email: this.props.email,
             image: this.props.image,
             roomID: this.props.join_code,
+            playerStatus: 'hider',
             title: "",
             game_mode: "",
             game_map: {},
@@ -98,6 +99,7 @@ class Room extends Component {
                 this.start();
             }
         });
+        socket.on('youre the seeker', ()=> {this.state.playerStatus = 'Seeker'; console.log("Congrats! Youre the seeker!")});
     }
 
     componentWillUnmount() {
@@ -125,6 +127,7 @@ class Room extends Component {
                 <Game
                     gameID={this.state.roomID}
                     players={this.state.players}
+                    playerStatus = {this.state.playerStatus}
                     map = {this.state.game_map}
                     timeLimit = {this.state.game_time}
                     mode = {this.state.game_mode}

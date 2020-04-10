@@ -178,6 +178,7 @@ class Game extends Component {
             msg: "",
             num_of_players: this.props.numPlayers,
             players: this.props.players,
+            playerState: this.props.playerState,
 
             gameID: this.props.gameID,
             game_status: "not started",
@@ -578,7 +579,8 @@ class Game extends Component {
         let pastInfo = {
             roomID: this.state.gameID,
             x: this.Player.x,
-            y: this.Player.y
+            y: this.Player.y,
+            id: socket.id,
         };
 
         this.update(delta);
