@@ -19,7 +19,7 @@ class Room extends Component {
             email: this.props.email,
             image: this.props.image,
             roomID: this.props.join_code,
-            playerStatus: 'hider',
+            playerState: 'hider',
             title: "",
             header: "Join Code: " + this.props.join_code,
             game_mode: "",
@@ -53,7 +53,8 @@ class Room extends Component {
     startTimer() {
         // 3 second timer currently
         // TimerSound();
-        socket.emit("game starting");
+        socket.emit("lobby start timer", {timer: 4300, room: this.state.roomID});
+
         this.setState({
             header: "Game is starting in ..."
         })
@@ -85,11 +86,6 @@ class Room extends Component {
         socket.on("update lobby list", (lobby_users) => {
             console.log("Received current lobby users ", lobby_users);
         });
-
-        // this event occurs on function startTimer()
-        socket.on("game starting ack", () => {
-            socket.emit("lobby start timer", {timer: 4100, room: this.state.roomID});
-        });
         
         socket.on("lobby current timer", (countdown) => {
             console.log(countdown);
@@ -103,7 +99,7 @@ class Room extends Component {
                 this.start();
             }
         });
-        socket.on('youre the seeker', ()=> {this.state.playerStatus = 'Seeker'; console.log("Congrats! Youre the seeker!")});
+        socket.on('youre the seeker', ()=> {this.state.playerState = 'Seeker'; console.log("Congrats! Youre the seeker!")});
     }
 
     componentWillUnmount() {
@@ -131,7 +127,7 @@ class Room extends Component {
                 <Game
                     gameID={this.state.roomID}
                     players={this.state.players}
-                    playerStatus = {this.state.playerStatus}
+                    playerState = {this.state.playerState}
                     map = {this.state.game_map}
                     timeLimit = {this.state.game_time}
                     mode = {this.state.game_mode}

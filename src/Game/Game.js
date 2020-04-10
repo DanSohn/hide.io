@@ -674,14 +674,24 @@ class Game extends Component {
     }
 
     render() {
+        let comp1;
+        let comp2;
+        if (this.state.playerState === 'Seeker') {
+            comp1 = "You're the seeker";
+            comp2 = "Objective: Hunt them down.";
+        }
+        else {
+            comp1 = "You are a hider";
+            comp2 = "Objective: Hide BITCH";
+        }
         return (
             <React.Fragment>
                 <div className="gameAction">
                     <AliveList />
                     <canvas className="fade-in" ref="canvas" width={1024} height={620} />
                     <div className="PlayerText">
-                        <h1>You are a hider</h1>
-                        <h5>Objective: Hide BITCH</h5>
+                        <h1>{comp1}</h1>
+                        <h5>{comp2}</h5>
                     </div>
                 </div>
             </React.Fragment>
