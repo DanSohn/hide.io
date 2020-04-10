@@ -180,6 +180,7 @@ async function removeUserFromLobby(info){
 
     // load the document
     const doc = await Lobby.findOne({join_code: room});
+    console.log("found lobby: ", doc);
     let players = doc.players;
 
     let index = -1;
@@ -191,12 +192,12 @@ async function removeUserFromLobby(info){
         }
     }
     // if the user was found in the lobby's player list, remove him
-    if(index !== -1){
-        players.splice(index, 1);
-    }else{
+    if(index === -1) {
         console.log("User could not be found for deletion");
+        return;
     }
 
+    players.splice(index, 1);
     // update the document
     const update = {players: players};
     await doc.updateOne(update);

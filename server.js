@@ -6,7 +6,7 @@ const PORT = process.env.PORT || 3001;
 
 const cors = require('cors');
 //const io = require('socket.io').listen(server);
-const socket = require('socket.io')
+const socket = require('socket.io');
 // const io = socket(server);
 // const server = app.listen(process.env.PORT || 3000);
 // const io = require('socket.io').listen(server);
@@ -15,7 +15,6 @@ const socket = require('socket.io')
 let app = require('express')();
 let server = require('http').Server(app);
 let io = require('socket.io')(server);
-
 server.listen(PORT);
 
 app.use(cors());
@@ -97,11 +96,6 @@ io.on('connection', (socket) => {
                 if (!lobby) {
                     dbUtil.createLobby(roomID, info)
                         .then(() => {
-                            // creating the lobby player list
-                            /*rooms_playerlist[roomID] = [];
-                            rooms_playerlist[roomID].push({email: info.email, username: info.name});
-                            console.log("Added to rooms playerlist", rooms_playerlist[roomID]);
-                            console.log("Current rooms_playerlist", rooms_playerlist);*/
                             dbUtil.addUserToLobby({roomID: roomID, email: info.email, username: info.name})
                                 .then(() => {
                                     // create a socket room, in which from now on, all your communications
@@ -129,7 +123,6 @@ io.on('connection', (socket) => {
         let res = null;
         dbUtil.getLobby(roomID)
             .then(lobby => {
-                // console.log("Got lobby", lobby);
                 // if the lobby somehow doesn't exist, print an error statement
                 if (!lobby) {
                     console.log("Error with the roomID");
@@ -224,7 +217,12 @@ io.on('connection', (socket) => {
     socket.on("lobby start timer", (info) => {
         console.log("SOCKET EVENT LOBBY START TIMER");
         let {timer, room} = info;
-        console.log("TIMER, ROOM: ", timer, room);
+
+        // get all the sockets in the room, then choose one random socket to be the hider
+        let roomies = Object.keys(io.sockets.adapter.rooms[room].sockets);
+        let randomSeeker = roomies[Math.floor(Math.random()*roomies.length)];
+        io.to(`${randomSeeker}`).emit('youre the seeker');
+
         let countdown = Math.floor(timer / 1000);
         // send to all sockets an event every second
         let timerID = setInterval(() => {
@@ -237,9 +235,9 @@ io.on('connection', (socket) => {
         setTimeout(() => {
             clearInterval(timerID)
         }, timer);
-
     });
-
+    // when a user disconnects from the tab, either by closing or refreshing, we remove them from any lobbies they
+    // might've been a part of
     socket.on("disconnect", () => {
         console.log("SOCKET EVENT DISCONNECT");
         if(socket_info.email && socket_info.lobby){

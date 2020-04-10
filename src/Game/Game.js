@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-
 import OtherPlayers from "./OtherPlayers";
 
 import "../assets/App.css";
@@ -67,6 +66,7 @@ class Game extends Component {
             msg: "",
             num_of_players: this.props.numPlayers,
             players: this.props.players,
+            playerState: this.props.playerState,
 
             gameID: this.props.gameID,
             game_status: "not started",
@@ -120,8 +120,11 @@ class Game extends Component {
         });
         this.update_player_component = this.update_player_component.bind(this);
     }
+<<<<<<< HEAD
     
 
+=======
+>>>>>>> b5d6fec2529bb5839b2498ac148f86dc64750f4a
 
     //init game state seppereate from did load. could be used for start restrictions.
     init() {
@@ -389,6 +392,7 @@ class Game extends Component {
         this.ctx.restore();
     }
     drawEnamies(x, y, index){
+<<<<<<< HEAD
         x = x - 32;
         y = y - 32;
 
@@ -405,6 +409,12 @@ class Game extends Component {
             this.ctx.fill();
         }
 
+=======
+        this.ctx.beginPath();
+        this.ctx.rect(x -32, y-32 / 2, 64, 64);
+        this.ctx.fillStyle = '#D5C7BC';
+        this.ctx.fill();
+>>>>>>> b5d6fec2529bb5839b2498ac148f86dc64750f4a
     }
 
     drawPillarLight() {
@@ -574,10 +584,16 @@ class Game extends Component {
 
     render() {
         return (
-            <div className="gameAction">
-                <AliveList />
-                <canvas ref="canvas" width={1024} height={620} />
-            </div>
+            <React.Fragment>
+                <div className="gameAction">
+                    <AliveList />
+                    <canvas className="fade-in" ref="canvas" width={1024} height={620} />
+                    <div className="PlayerText">
+                        <h1>You are a hider</h1>
+                        <h5>Objective: Hide BITCH</h5>
+                    </div>
+                </div>
+            </React.Fragment>
         );
     }
 }
