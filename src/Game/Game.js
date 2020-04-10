@@ -1,18 +1,17 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
+import OtherPlayers from "./OtherPlayers";
 
-import OtherPlayers from './OtherPlayers';
+import "../assets/App.css";
 
-import '../assets/App.css';
-
-import Wall from './Wall';
-import Camera from './Camera';
-import Player from './PlayerTest';
+import Wall from "./Wall";
+import Camera from "./Camera";
+import Player from "./PlayerTest";
 import { socket } from "../assets/socket";
-import Point from './Point';
+import Point from "./Point";
+import AliveList from "./aliveList";
 // import Keyboard from './Keyboard'
 let Keyboard = {};
-
 
 Keyboard.LEFT = 37;
 Keyboard.RIGHT = 39;
@@ -22,8 +21,8 @@ Keyboard.DOWN = 40;
 Keyboard._keys = {};
 
 Keyboard.listenForEvents = function (keys) {
-    window.addEventListener('keydown', this._onKeyDown.bind(this));
-    window.addEventListener('keyup', this._onKeyUp.bind(this));
+    window.addEventListener("keydown", this._onKeyDown.bind(this));
+    window.addEventListener("keyup", this._onKeyUp.bind(this));
 
     keys.forEach(
         function (key) {
@@ -50,7 +49,7 @@ Keyboard._onKeyUp = function (event) {
 
 Keyboard.isDown = function (keyCode) {
     if (!keyCode in this._keys) {
-        throw new Error('Keycode ' + keyCode + ' is not being listened to');
+        throw new Error("Keycode " + keyCode + " is not being listened to");
     }
     return this._keys[keyCode];
 };
@@ -176,7 +175,7 @@ class Game extends Component {
             context: this.context,
             windowHeight: window.innerHeight,
             windowWidth: window.innerWidth,
-            msg: '',
+            msg: "",
             num_of_players: this.props.numPlayers,
             players: this.props.players,
 
@@ -187,7 +186,6 @@ class Game extends Component {
             enamies: new Map(),
 
             //Game window size, it is used in the calculation of what portion of the map is viewed.
-
 
             //This will be handling current game functions, and constants
             map: {
@@ -219,7 +217,7 @@ class Game extends Component {
                 },
                 getY: function (row) {
                     return row * this.tsize;
-                }
+                },
             },
         };
 
@@ -238,8 +236,11 @@ class Game extends Component {
         });
         this.update_player_component = this.update_player_component.bind(this);
     }
+<<<<<<< HEAD
     
 
+=======
+>>>>>>> f169b43805aa24c849a6dbf8e329972b45b5f4d2
 
     //init game state seppereate from did load. could be used for start restrictions.
     init() {
@@ -253,12 +254,11 @@ class Game extends Component {
     drawLayer() {
         this.setState({ walls: [] });
 
-
         //calculate camera view space and attains apropriate start and end of the render space.
         let startCol = Math.floor(this.camera.x / this.state.map.tsize);
-        let endCol = startCol + (this.camera.width / this.state.map.tsize);
+        let endCol = startCol + this.camera.width / this.state.map.tsize;
         let startRow = Math.floor(this.camera.y / this.state.map.tsize);
-        let endRow = startRow + (this.camera.height / this.state.map.tsize);
+        let endRow = startRow + this.camera.height / this.state.map.tsize;
         let offsetX = -this.camera.x + startCol * this.state.map.tsize;
         let offsetY = -this.camera.y + startRow * this.state.map.tsize;
 
@@ -267,23 +267,24 @@ class Game extends Component {
                 let tile = this.state.map.getTile(c, r);
                 let x = (c - startCol) * this.state.map.tsize + offsetX;
                 let y = (r - startRow) * this.state.map.tsize + offsetY;
-                if (tile !== 0) { // 0 => empty tile
+                if (tile !== 0) {
+                    // 0 => empty tile
 
                     this.ctx.beginPath();
                     this.ctx.rect(Math.round(x), Math.round(y), 64, 64);
 
                     //Floor tile --- traversable.
                     if (tile === 1) {
-                        this.ctx.fillStyle = '#0c0c0c';
+                        this.ctx.fillStyle = "#0c0c0c";
 
                         //Barracade tile -- non traversable
                     } else if (tile === 2) {
-                        this.ctx.fillStyle = '#0c0c0c';
+                        this.ctx.fillStyle = "#0c0c0c";
                         this.updateWalls(x, y);
 
                         //Map edge tile -- non traversable
                     } else {
-                        this.ctx.fillStyle = '#0c0c0c';
+                        this.ctx.fillStyle = "#0c0c0c";
                         this.updateWalls(x, y);
                     }
                     this.ctx.stroke();
@@ -295,25 +296,42 @@ class Game extends Component {
     //Add walls each frame to calculate the rays
     updateWalls(x, y) {
         //Top side of a square
-        this.state.walls.push(new Wall(new Point(Math.round(x), Math.round(y)), new Point(Math.round(x + 64), Math.round(y))));
+        this.state.walls.push(
+            new Wall(
+                new Point(Math.round(x), Math.round(y)),
+                new Point(Math.round(x + 64), Math.round(y))
+            )
+        );
         //Right side of a square
-        this.state.walls.push(new Wall(new Point(Math.round(x + 64), Math.round(y)), new Point(Math.round(x + 64), Math.round(y + 64))));
+        this.state.walls.push(
+            new Wall(
+                new Point(Math.round(x + 64), Math.round(y)),
+                new Point(Math.round(x + 64), Math.round(y + 64))
+            )
+        );
         //Bottom side of a square
-        this.state.walls.push(new Wall(new Point(Math.round(x + 64), Math.round(y + 64)), new Point(Math.round(x), Math.round(y + 64))));
+        this.state.walls.push(
+            new Wall(
+                new Point(Math.round(x + 64), Math.round(y + 64)),
+                new Point(Math.round(x), Math.round(y + 64))
+            )
+        );
         //Left side of a square
-        this.state.walls.push(new Wall(new Point(Math.round(x), Math.round(y + 64)), new Point(Math.round(x), Math.round(y))));
-
+        this.state.walls.push(
+            new Wall(
+                new Point(Math.round(x), Math.round(y + 64)),
+                new Point(Math.round(x), Math.round(y))
+            )
+        );
 
         //uses camera view border to emulate a wall so that the light is used for the current view position
         this.state.walls.push(new Wall(new Point(0, 0), new Point(1024, 0)));
         this.state.walls.push(new Wall(new Point(0, 0), new Point(0, 620)));
         this.state.walls.push(new Wall(new Point(0, 620), new Point(1024, 620)));
         this.state.walls.push(new Wall(new Point(1024, 620), new Point(1024, 0)));
-    };
-
+    }
 
     getIntersection(ray, segment) {
-
         // RAY in parametric: Point + Delta*T1
         let r_px = ray.a.x;
         let r_py = ray.a.y;
@@ -347,17 +365,13 @@ class Game extends Component {
         return {
             x: r_px + r_dx * T1,
             y: r_py + r_dy * T1,
-            param: T1
+            param: T1,
         };
-
     }
 
-
     updateLightTrace() {
-
-        let playerX = (this.Player.screenX - this.Player.width / 2) + 32;
-        let playerY = (this.Player.screenY - this.Player.height / 2) + 32;
-
+        let playerX = this.Player.screenX - this.Player.width / 2 + 32;
+        let playerY = this.Player.screenY - this.Player.height / 2 + 32;
 
         //get all points from the walls p1 and p2
         let points = [];
@@ -403,7 +417,7 @@ class Game extends Component {
             // Ray from center of screen to mouse
             let ray = {
                 a: { x: playerX, y: playerY },
-                b: { x: playerX + dx, y: playerY + dy }
+                b: { x: playerX + dx, y: playerY + dy },
             };
 
             // Find CLOSEST intersection
@@ -423,9 +437,8 @@ class Game extends Component {
 
             // Add to list of intersects
             this.state.hitpoints.push(closestIntersect);
-
-        };
-    };
+        }
+    }
     //sort angles so the polygon can be drawn from  0th hitpoint to 360 degrees.
     sortAngles() {
         let sortedAngles = this.state.hitpoints.sort(function (a, b) {
@@ -434,16 +447,13 @@ class Game extends Component {
         this.setState({ hitpoints: sortedAngles });
     }
 
-    drawEnamy(){
-
-    }
-
+    drawEnamy() {}
 
     //Draws the rays from each point from this.state.hitpoints -- DISABLED -- used to Debug
     drawLightLines() {
         this.ctx.save();
-        let playerX = (this.Player.screenX - this.Player.width / 2) + 32;
-        let playerY = (this.Player.screenY - this.Player.height / 2) + 32;
+        let playerX = this.Player.screenX - this.Player.width / 2 + 32;
+        let playerY = this.Player.screenY - this.Player.height / 2 + 32;
         this.ctx.strokeStyle = "#FFFFFF";
         this.ctx.beginPath();
         for (let i = 0; i < this.state.hitpoints.length; i++) {
@@ -454,13 +464,12 @@ class Game extends Component {
         }
         this.ctx.stroke();
         this.ctx.restore();
-    };
-
+    }
 
     // Goes through each hitpoint to create a visibile light polygon - then a circular light emits from players x y position- first circle is more intense than second circle
     drawLight() {
-        let playerX = (this.Player.screenX - this.Player.width / 2) + 32;
-        let playerY = (this.Player.screenY - this.Player.height / 2) + 32;
+        let playerX = this.Player.screenX - this.Player.width / 2 + 32;
+        let playerY = this.Player.screenY - this.Player.height / 2 + 32;
 
         this.ctx.save();
         let fill = this.ctx.createRadialGradient(playerX, playerY, 1, playerX, playerY, 300);
@@ -468,24 +477,19 @@ class Game extends Component {
         fill.addColorStop(0.9, "rgba(255, 255, 255, 0.01)");
         fill.addColorStop(1, "rgba(255, 255, 255, 0.009)");
 
-
-
-
         this.ctx.fillStyle = fill;
 
         this.ctx.beginPath();
         this.ctx.moveTo(this.state.hitpoints[0].x, this.state.hitpoints[0].y);
         for (let i = 1; i < this.state.hitpoints.length; i++) {
             let intersect = this.state.hitpoints[i];
-            this.ctx.lineTo(intersect.x, intersect.y)
+            this.ctx.lineTo(intersect.x, intersect.y);
         }
-
 
         this.ctx.fill();
 
         this.ctx.restore();
-
-    };
+    }
 
     //Draws an inverse polygon layer that covers the shadows to remove the floor lines.
     drawShadow() {
@@ -495,24 +499,30 @@ class Game extends Component {
         this.ctx.moveTo(this.state.hitpoints[0].x, this.state.hitpoints[0].y);
         for (let i = 1; i < this.state.hitpoints.length; i++) {
             let intersect = this.state.hitpoints[i];
-            this.ctx.lineTo(intersect.x, intersect.y)
+            this.ctx.lineTo(intersect.x, intersect.y);
         }
         this.ctx.rect(1024, 0, -1024, 620);
 
         this.ctx.fill();
         this.ctx.restore();
-
     }
+<<<<<<< HEAD
     drawEnamies(x, y, index){
         this.ctx.beginPath();
         this.ctx.rect(x -32, y-32 / 2, 64, 64);
         this.ctx.fillStyle = '#D5C7BC';
+=======
+    drawHiders() {
+        this.ctx.beginPath();
+        this.ctx.rect(299 - 64 / 2, 65 - 64 / 2, 64, 64);
+        this.ctx.fillStyle = "#D5C7BC";
+>>>>>>> f169b43805aa24c849a6dbf8e329972b45b5f4d2
         this.ctx.fill();
     }
 
     drawPillarLight() {
-        let playerX = (this.Player.screenX - this.Player.width / 2) + 32;
-        let playerY = (this.Player.screenY - this.Player.height / 2) + 32;
+        let playerX = this.Player.screenX - this.Player.width / 2 + 32;
+        let playerY = this.Player.screenY - this.Player.height / 2 + 32;
 
         this.ctx.save();
         let fill = this.ctx.createRadialGradient(playerX, playerY, 1, playerX, playerY, 64);
@@ -524,39 +534,45 @@ class Game extends Component {
         this.ctx.moveTo(this.state.hitpoints[0].x, this.state.hitpoints[0].y);
         for (let i = 1; i < this.state.hitpoints.length; i++) {
             let intersect = this.state.hitpoints[i];
-            this.ctx.lineTo(intersect.x, intersect.y)
+            this.ctx.lineTo(intersect.x, intersect.y);
         }
         this.ctx.rect(1024, 0, -1024, 620);
 
         this.ctx.fill();
         this.ctx.restore();
-
     }
-
-
 
     //Draws a player in the center of the screen. The camera will follow the player unless they are close to the edge of the map. -- Map in starting_positions.js
     drawPlayer() {
         // draw main character
         this.ctx.beginPath();
-        this.ctx.rect(this.Player.screenX - this.Player.width / 2, this.Player.screenY - this.Player.height / 2, 64, 64);
-        this.ctx.fillStyle = '#D5C7BC';
+        this.ctx.rect(
+            this.Player.screenX - this.Player.width / 2,
+            this.Player.screenY - this.Player.height / 2,
+            64,
+            64
+        );
+        this.ctx.fillStyle = "#D5C7BC";
         this.ctx.fill();
-    };
+    }
 
     update(delta) {
         // handle Player movement with arrow keys
         let dirx = 0;
         let diry = 0;
-        if (Keyboard.isDown(Keyboard.LEFT)) { dirx = -1; }
-        else if (Keyboard.isDown(Keyboard.RIGHT)) { dirx = 1; }
-        else if (Keyboard.isDown(Keyboard.UP)) { diry = -1; }
-        else if (Keyboard.isDown(Keyboard.DOWN)) { diry = 1; }
+        if (Keyboard.isDown(Keyboard.LEFT)) {
+            dirx = -1;
+        } else if (Keyboard.isDown(Keyboard.RIGHT)) {
+            dirx = 1;
+        } else if (Keyboard.isDown(Keyboard.UP)) {
+            diry = -1;
+        } else if (Keyboard.isDown(Keyboard.DOWN)) {
+            diry = 1;
+        }
 
         this.Player.move(delta, dirx, diry);
         this.camera.update();
     }
-
 
     run(context) {
         this.ctx = context;
@@ -568,7 +584,7 @@ class Game extends Component {
     //each game frame
     tick() {
         this.ctx.clearRect(0, 0, 1024, 640);
-        let delta = .25;
+        let delta = 0.25;
         delta = Math.min(delta, 0.25); // maximum delta of 250 ms
 
         let pastInfo = {
@@ -611,20 +627,16 @@ class Game extends Component {
         this.drawShadow();
         // this.drawPillarLight();
         this.drawPlayer();
-
-    };
-
+    }
 
     componentDidMount() {
         // this will only happen the first time, and will set the ball rolling to handle any updates!
         // this.state.context = this.refs.canvas.getContext('2d');
-        let context = this.refs.canvas.getContext('2d');
+        let context = this.refs.canvas.getContext("2d");
 
-        this.setState({ context: this.refs.canvas.getContext('2d'),
-                        game_status: "in progress", });
+        this.setState({ context: this.refs.canvas.getContext("2d"), game_status: "in progress" });
 
         this.run(context);
-
 
         socket.on("Redraw positions", (players) => {
             // if there has been a change to players' positions, then reset the state of players to new coordinates
@@ -667,8 +679,7 @@ class Game extends Component {
             }
         }
 
-        for (let i = 0; i < players_arr.length; i++) {
-        }
+        for (let i = 0; i < players_arr.length; i++) {}
 
         return <div>{component_insides}</div>;
     }
@@ -676,28 +687,7 @@ class Game extends Component {
     render() {
         return (
             <div className="gameAction">
-                <div className="alivePlayers">
-                    <ul className="aliveList">
-                        <li>
-                            <img src="https://scontent.fyyc5-1.fna.fbcdn.net/v/t31.0-8/21743593_2110943032265084_6203761706521445673_o.jpg?_nc_cat=101&_nc_sid=09cbfe&_nc_oc=AQlDJBhH_6U0KA1xQ-EqEn8oH3PVboShBOYtAlCNGUMMibi5lGFE02Q8aISjPD6HdhzaZpz6xjxPYgIeI2jzxTrq&_nc_ht=scontent.fyyc5-1.fna&oh=abde33669f8da29cfe3a140b08b570b0&oe=5EB25D58" />
-                        </li>
-                        <li>
-                            <img src="https://scontent.fyyc5-1.fna.fbcdn.net/v/t31.0-8/21743593_2110943032265084_6203761706521445673_o.jpg?_nc_cat=101&_nc_sid=09cbfe&_nc_oc=AQlDJBhH_6U0KA1xQ-EqEn8oH3PVboShBOYtAlCNGUMMibi5lGFE02Q8aISjPD6HdhzaZpz6xjxPYgIeI2jzxTrq&_nc_ht=scontent.fyyc5-1.fna&oh=abde33669f8da29cfe3a140b08b570b0&oe=5EB25D58" />
-                        </li>
-                        <li>
-                            <img src="https://scontent.fyyc5-1.fna.fbcdn.net/v/t31.0-8/21743593_2110943032265084_6203761706521445673_o.jpg?_nc_cat=101&_nc_sid=09cbfe&_nc_oc=AQlDJBhH_6U0KA1xQ-EqEn8oH3PVboShBOYtAlCNGUMMibi5lGFE02Q8aISjPD6HdhzaZpz6xjxPYgIeI2jzxTrq&_nc_ht=scontent.fyyc5-1.fna&oh=abde33669f8da29cfe3a140b08b570b0&oe=5EB25D58" />
-                        </li>
-                        <li>
-                            <img src="https://scontent.fyyc5-1.fna.fbcdn.net/v/t31.0-8/21743593_2110943032265084_6203761706521445673_o.jpg?_nc_cat=101&_nc_sid=09cbfe&_nc_oc=AQlDJBhH_6U0KA1xQ-EqEn8oH3PVboShBOYtAlCNGUMMibi5lGFE02Q8aISjPD6HdhzaZpz6xjxPYgIeI2jzxTrq&_nc_ht=scontent.fyyc5-1.fna&oh=abde33669f8da29cfe3a140b08b570b0&oe=5EB25D58" />
-                        </li>
-                        <li>
-                            <img src="https://scontent.fyyc5-1.fna.fbcdn.net/v/t31.0-8/21743593_2110943032265084_6203761706521445673_o.jpg?_nc_cat=101&_nc_sid=09cbfe&_nc_oc=AQlDJBhH_6U0KA1xQ-EqEn8oH3PVboShBOYtAlCNGUMMibi5lGFE02Q8aISjPD6HdhzaZpz6xjxPYgIeI2jzxTrq&_nc_ht=scontent.fyyc5-1.fna&oh=abde33669f8da29cfe3a140b08b570b0&oe=5EB25D58" />
-                        </li>
-                        <li>
-                            <img src="https://scontent.fyyc5-1.fna.fbcdn.net/v/t31.0-8/21743593_2110943032265084_6203761706521445673_o.jpg?_nc_cat=101&_nc_sid=09cbfe&_nc_oc=AQlDJBhH_6U0KA1xQ-EqEn8oH3PVboShBOYtAlCNGUMMibi5lGFE02Q8aISjPD6HdhzaZpz6xjxPYgIeI2jzxTrq&_nc_ht=scontent.fyyc5-1.fna&oh=abde33669f8da29cfe3a140b08b570b0&oe=5EB25D58" />
-                        </li>
-                    </ul>
-                </div>
+                <AliveList />
                 <canvas ref="canvas" width={1024} height={620} />
             </div>
         );
