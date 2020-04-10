@@ -219,8 +219,8 @@ io.on('connection', (socket) => {
         let {timer, room} = info;
 
         // get all the sockets in the room, then choose one random socket to be the hider
-        var roomies = Object.keys(io.sockets.adapter.rooms[room].sockets);
-        var randomSeeker = roomies[Math.floor(Math.random()*roomies.length)];
+        let roomies = Object.keys(io.sockets.adapter.rooms[room].sockets);
+        let randomSeeker = roomies[Math.floor(Math.random()*roomies.length)];
         io.to(`${randomSeeker}`).emit('youre the seeker');
 
         let countdown = Math.floor(timer / 1000);
