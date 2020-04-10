@@ -214,6 +214,12 @@ io.on('connection', (socket) => {
             .then(()=>{
                 socket.emit("may successfully leave lobby");
                 socket.leave(info.room);
+                dbUtil.getLobbyPlayers(info.room)
+                    .then((players) => {
+                        // send to all sockets part of the room, inside room.js
+                        io.to(info.room).emit("update lobby list", players);
+                    })
+                    .catch(err => console.log(err));
             })
             .catch(err=>console.log(err));
     });

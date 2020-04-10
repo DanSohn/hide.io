@@ -125,7 +125,7 @@ class Room extends Component {
             //     })
             // })
             this.setState({
-                playersList: [lobby_users],
+                playersList: lobby_users,
             });
 
             // for (let i =0; i<this.state.playersList.length; i++) {
@@ -262,9 +262,11 @@ class Room extends Component {
                             </div>
                         </div>
                         <div className="online">
-                            {this.state.playersList.map((player, index) => {
-                                return <li key={index}>{player.username}</li>;
-                            })}
+                            <ul>
+                                {this.state.playersList.map((player, index) => {
+                                    return <li style={{ listStyleType: "none" }} key={index}>{player.name}</li>;
+                                })}
+                            </ul>
                         </div>
                     </div>
                 </div>
