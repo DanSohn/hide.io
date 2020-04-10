@@ -12,10 +12,9 @@ const socket = require("socket.io");
 // const io = require('socket.io').listen(server);
 // io.set( "origins", "*:*" );
 
-let app = require("express")();
-let server = require("http").Server(app);
-let io = require("socket.io")(server);
-
+let app = require('express')();
+let server = require('http').Server(app);
+let io = require('socket.io')(server);
 server.listen(PORT);
 
 app.use(cors());
@@ -97,11 +96,6 @@ io.on('connection', (socket) => {
                 if (!lobby) {
                     dbUtil.createLobby(roomID, info)
                         .then(() => {
-                            // creating the lobby player list
-                            /*rooms_playerlist[roomID] = [];
-                            rooms_playerlist[roomID].push({email: info.email, username: info.name});
-                            console.log("Added to rooms playerlist", rooms_playerlist[roomID]);
-                            console.log("Current rooms_playerlist", rooms_playerlist);*/
                             dbUtil.addUserToLobby({roomID: roomID, email: info.email, username: info.name})
                                 .then(() => {
                                     // create a socket room, in which from now on, all your communications
@@ -129,7 +123,6 @@ io.on('connection', (socket) => {
         let res = null;
         dbUtil.getLobby(roomID)
             .then(lobby => {
-                // console.log("Got lobby", lobby);
                 // if the lobby somehow doesn't exist, print an error statement
                 if (!lobby) {
                     console.log("Error with the roomID");
@@ -253,7 +246,8 @@ io.on('connection', (socket) => {
             clearInterval(timerID)
         }, timer);
     });
-
+    // when a user disconnects from the tab, either by closing or refreshing, we remove them from any lobbies they
+    // might've been a part of
     socket.on("disconnect", () => {
         console.log("SOCKET EVENT DISCONNECT");
         if(socket_info.email && socket_info.lobby){

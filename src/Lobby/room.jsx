@@ -20,6 +20,7 @@ class Room extends Component {
             image: this.props.image,
             roomID: this.props.join_code,
             title: "",
+            header: "Join Code: " + this.props.join_code,
             game_mode: "",
             game_map: {},
             game_time: "",
@@ -29,15 +30,11 @@ class Room extends Component {
             onKeyboard: "",
             message: "",
             messages: [],
-            time: 3,
-            startTimer: false,
+            time: ""
         };
         this.goPrevious = this.goPrevious.bind(this);
         this.startTimer = this.startTimer.bind(this);
         this.start = this.start.bind(this);
-        this.decreaseTimer = this.decreaseTimer.bind(this);
-        this.sendMessage = this.sendMessage.bind(this);
-        this.handleKeyboard = this.handleKeyboard.bind(this);
 
         // this lets the socket join the specific room
         socket.emit("ask for lobby info", this.state.roomID);
@@ -78,22 +75,16 @@ class Room extends Component {
 
     startTimer() {
         // 3 second timer currently
-        this.setState({
-            startTimer: true,
-        });
-        TimerSound();
+        // TimerSound();
         socket.emit("game starting");
+        this.setState({
+            header: "Game is starting in ..."
+        })
     }
 
     start() {
         this.setState({
             start: true,
-        });
-    }
-
-    decreaseTimer() {
-        this.setState({
-            time: this.state.time - 1,
         });
     }
 
@@ -135,13 +126,15 @@ class Room extends Component {
 
         // this event occurs on function startTimer()
         socket.on("game starting ack", () => {
-            socket.emit("lobby start timer", { timer: 3100, room: this.state.roomID });
+            socket.emit("lobby start timer", {timer: 4100, room: this.state.roomID});
         });
 
         socket.on("lobby current timer", (countdown) => {
-            this.decreaseTimer();
             console.log(countdown);
-            TimerSound();
+            this.setState({
+                time: countdown.toString()
+            });
+            // TimerSound();
             // after i reach 0, call startGame
             if (countdown <= 0) {
                 console.log("starting game");
@@ -247,9 +240,11 @@ class Room extends Component {
                         </div>
 
                         <div className="roomActions">
-                            <h5>Join Code: {this.state.roomID}</h5>
-                            <React.Fragment>{countdownTimer}</React.Fragment>
-                            <button className="btn btn-success" onClick={this.startTimer}>
+                            <h5>{this.state.header}</h5>
+                            <h1>{this.state.time}</h1>
+                            <button
+                                className="btn btn-success"
+                                onClick={this.startTimer}>
                                 Start Game
                             </button>
                             <div className="roomSettings">
