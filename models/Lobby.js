@@ -25,9 +25,13 @@ const LobbySchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    players: {
+        type: Array,
+        required: true
+    },
     createdAt: {
         type: Date,
-        expires: '60m',
+        expires: '5m',
         default: Date.now()
     }
 });
