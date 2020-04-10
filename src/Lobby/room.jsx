@@ -35,7 +35,9 @@ class Room extends Component {
         this.goPrevious = this.goPrevious.bind(this);
         this.startTimer = this.startTimer.bind(this);
         this.start = this.start.bind(this);
-
+        this.handleKeyboard = this.handleKeyboard.bind(this);
+        this.sendMessage = this.sendMessage.bind(this);
+        
         // this lets the socket join the specific room
         socket.emit("ask for lobby info", this.state.roomID);
     }
@@ -69,8 +71,8 @@ class Room extends Component {
 
     handleKeyboard(e) {
         this.setState({
-            onKeyboard: e.currentTarget.value,
-        });
+            onKeyboard: e.target.value,
+        })
     }
 
     startTimer() {
