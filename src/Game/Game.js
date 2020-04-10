@@ -182,9 +182,9 @@ class Game extends Component {
 
             gameID: this.props.gameID,
             game_status: "not started",
-            images: {},
             walls: [],
             hitpoints: [],
+            enamies: new Map(),
 
             //Game window size, it is used in the calculation of what portion of the map is viewed.
 
@@ -224,17 +224,21 @@ class Game extends Component {
         };
 
         // TODO: do stuff when getting the location information
-        socket.on('player moved', (position) => {
-            let {x,y} = position;
-            console.log(position);
-            console.log("PlayerX: ", this.Player.x, " New position X: ", x);
-            console.log("Received positions from socket",
-                (x === this.Player.x && y === this.Player.y) ? "myself! Or collision?": "This is where favians function fires!");
-        });
+        socket.on('player moved', (playerinfo) => {
+            // let {x,y} = position;
+            // console.log(position);
+            // console.log(position.id);
+            // console.log("Received positions from socket",
+            //     (x === this.Player.x && y === this.Player.y) ? "myself! Or collision?": "This is where favians function fires!");
 
+            // console.log(socket.id);
+            if(socket.id !== playerinfo.id && playerinfo.room === this.state.gameID){
+                    this.state.enamies.set(playerinfo.id, playerinfo);
+            };
+        });
         this.update_player_component = this.update_player_component.bind(this);
     }
-
+    
 
 
     //init game state seppereate from did load. could be used for start restrictions.
@@ -499,9 +503,9 @@ class Game extends Component {
         this.ctx.restore();
 
     }
-    drawHiders(){
+    drawEnamies(x, y, index){
         this.ctx.beginPath();
-        this.ctx.rect(299 - 64 / 2, 65 - 64 / 2, 64, 64);
+        this.ctx.rect(x -32, y-32 / 2, 64, 64);
         this.ctx.fillStyle = '#D5C7BC';
         this.ctx.fill();
     }
@@ -581,11 +585,13 @@ class Game extends Component {
         let info = {
             roomID: this.state.gameID,
             x: this.Player.x,
-            y: this.Player.y
+            y: this.Player.y,
+            id: socket.id,
         };
         // Only send across socket if there's an update in position
         if (JSON.stringify(info) !== JSON.stringify(pastInfo)) {
             console.log("I emitted:", info.x, info.y);
+            
             socket.emit("player movement", info);
         }
 
@@ -597,6 +603,10 @@ class Game extends Component {
         this.updateLightTrace();
         this.sortAngles();
         // this.drawLightLines();
+        for(let value of this.state.enamies.values()){
+            this.drawEnamies(value.x, value.y);
+        }
+
         this.drawLight();
         this.drawShadow();
         // this.drawPillarLight();
