@@ -21,9 +21,8 @@ class Room extends Component {
             roomID: this.props.join_code,
             title: "",
             game_mode: "",
+            game_map: {},
             game_time: "",
-            game_map: "",
-            map: {},
             start: false,
             players: {},
             time: 3
@@ -39,18 +38,18 @@ class Room extends Component {
 
     goPrevious() {
         socket.emit("leave lobby", {room: this.state.roomID, email: this.state.email});
-        ClickSound();
-        this.setState({
-            previous: true
-        });
+        // i ensure everything is first handled properly in the server, and is up to date
+        // before i leave
+        socket.on("may successfully leave lobby", ()=>{
+            ClickSound();
+            this.setState({
+                previous: true
+            });
+        })
+
     }
 
     startTimer() {
-        // if (this.state.numPlayers <= 1) {
-        //     alert("Go make some friends first ya loner...")
-        //     return
-        // }
-
         // 3 second timer currently
         TimerSound();
         socket.emit("lobby start timer", {timer: 3100, room: this.state.roomID});
@@ -74,6 +73,7 @@ class Room extends Component {
             if(!lobby){
                 console.log("Received not a lobby! Check room.js line 54, and server.js line 119");
             }else{
+                console.log("Received lobby info", lobby);
                 this.setState({
                     title: lobby.lobby_name,
                     game_mode: returnGameMode(lobby.game_mode),
@@ -101,6 +101,7 @@ class Room extends Component {
     }
 
     componentWillUnmount() {
+        console.log("Component unmounting!!!===================");
         socket.off("giving lobby info");
         socket.off("update lobby list");
         socket.off("lobby current timer");
@@ -174,7 +175,7 @@ class Room extends Component {
                                 <h4>Time Limit:</h4>
                                 <h6>{this.state.game_time}</h6>
                                 <h4>Map:</h4>
-                                <h6>{this.state.game_map.name}</h6>
+                                <h6>{this.state.game_map["name"]}</h6>
                             </div>
                         </div>
                         <div className="online"></div>

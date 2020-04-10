@@ -14,7 +14,7 @@
     "jquery": "^3.4.1",
     "minimist": "^1.2.5",
     "mongoose": "^5.9.5",
-    "nodemon": "^2.0.2",
+    "nodemon": "^2.0.3",
     "react": "^16.13.0",
     "react-bootstrap": "^1.0.0-beta.17",
     "react-dom": "^16.13.0",
