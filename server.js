@@ -6,7 +6,7 @@ const PORT = process.env.PORT || 3001;
 
 const cors = require('cors');
 //const io = require('socket.io').listen(server);
-const socket = require('socket.io')
+const socket = require('socket.io');
 // const io = socket(server);
 // const server = app.listen(process.env.PORT || 3000);
 // const io = require('socket.io').listen(server);
@@ -242,18 +242,11 @@ io.on('connection', (socket) => {
 
     socket.on("disconnect", () => {
         console.log("SOCKET EVENT DISCONNECT");
-<<<<<<< HEAD
-        // socket_info.email && socket_info.lobby ? deletePlayerFromRoom({room: socket_info.lobby, email: socket_info.email}) : null;
-        console.log("Updated rooms player list", rooms_playerlist);
-        // i do a check if he's in a game or in a room
-        // if he's in a room, then he's part of a room_playerlist where he must be removed
-=======
         if(socket_info.email && socket_info.lobby){
             dbUtil.removeUserFromLobby({room: socket_info.lobby, email: socket_info.email})
                 .then()
                 .catch(err=>console.log(err));
         }
->>>>>>> f169b43805aa24c849a6dbf8e329972b45b5f4d2
     });
 
 });
