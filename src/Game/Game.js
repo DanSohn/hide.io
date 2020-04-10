@@ -53,117 +53,6 @@ Keyboard.isDown = function (keyCode) {
     return this._keys[keyCode];
 };
 
-// function Camera(map, width, height) {
-//     this.x = 0;
-//     this.y = 0;
-//     this.width = width;
-//     this.height = height;
-//     this.maxX = map.cols * map.tsize - width;
-//     this.maxY = map.rows * map.tsize - height;
-// }
-
-// Camera.prototype.follow = function (sprite) {
-//     this.following = sprite;
-//     sprite.screenX = 0;
-//     sprite.screenY = 0;
-// };
-
-// Camera.prototype.update = function () {
-//     console.log('camera update')
-//     // assume followed sprite should be placed at the center of the screen
-//     // whenever possible
-//     this.following.screenX = this.width / 2;
-//     this.following.screenY = this.height / 2;
-
-//     // make the camera follow the sprite
-//     this.x = this.following.x - this.width / 2;
-//     this.y = this.following.y - this.height / 2;
-//     // clamp values
-//     this.x = Math.max(0, Math.min(this.x, this.maxX));
-//     this.y = Math.max(0, Math.min(this.y, this.maxY));
-
-//     // in map corners, the sprite cannot be placed in the center of the screen
-//     // and we have to change its screen coordinates
-
-//     // left and right sides
-//     if (this.following.x < this.width / 2 ||
-//         this.following.x > this.maxX + this.width / 2) {
-//         this.following.screenX = this.following.x - this.x;
-//     }
-//     // top and bottom sides
-//     if (this.following.y < this.height / 2 ||
-//         this.following.y > this.maxY + this.height / 2) {
-//         this.following.screenY = this.following.y - this.y;
-//     }
-// };
-
-// function Player(map, x, y) {
-//     this.map = map;
-//     this.x = x;
-//     this.y = y;
-//     this.width = map.tsize;
-//     this.height = map.tsize;
-
-//     // this.image = Loader.getImage('Player');
-// }
-
-// Player.SPEED = 256; // pixels per second
-
-// Player.prototype.move = function (delta, dirx, diry) {
-//     // move
-//     // if(dirx === 1){
-//     //     this.x = this.x + 64;
-//     // }else if(dirx === -1){
-//     //     this.x = this.x - 64;
-//     // }
-//     this.x += dirx ;
-//     this.y += diry ;
-//     console.log(dirx +' '+diry)
-//     // check if we walked into a non-walkable tile
-//     this._collide(dirx, diry);
-
-//     // clamp values
-//     var maxX = this.map.cols * this.map.tsize;
-//     var maxY = this.map.rows * this.map.tsize;
-//     this.x = Math.max(0, Math.min(this.x, maxX));
-//     this.y = Math.max(0, Math.min(this.y, maxY));
-// };
-
-// Player.prototype._collide = function (dirx, diry) {
-//     var row, col;
-//     // -1 in right and bottom is because image ranges from 0..63
-//     // and not up to 64
-//     var left = this.x - this.width / 2;
-//     var right = this.x + this.width / 2 - 1;
-//     var top = this.y - this.height / 2;
-//     var bottom = this.y + this.height / 2 - 1;
-
-//     // check for collisions on sprite sides
-//     var collision =
-//         this.map.isSolidTileAtXY(left, top) ||
-//         this.map.isSolidTileAtXY(right, top) ||
-//         this.map.isSolidTileAtXY(right, bottom) ||
-//         this.map.isSolidTileAtXY(left, bottom);
-//     if (!collision) { return; }
-
-//     if (diry > 0) {
-//         row = this.map.getRow(bottom);
-//         this.y = -this.height / 2 + this.map.getY(row);
-//     }
-//     else if (diry < 0) {
-//         row = this.map.getRow(top);
-//         this.y = this.height / 2 + this.map.getY(row + 1);
-//     }
-//     else if (dirx > 0) {
-//         col = this.map.getCol(right);
-//         this.x = -this.width / 2 + this.map.getX(col);
-//     }
-//     else if (dirx < 0) {
-//         col = this.map.getCol(left);
-//         this.x = this.width / 2 + this.map.getX(col + 1);
-//     }
-// };
-
 class Game extends Component {
     constructor(props) {
         super(props);
@@ -223,19 +112,19 @@ class Game extends Component {
 
         // TODO: do stuff when getting the location information
         socket.on('player moved', (playerinfo) => {
-            // let {x,y} = position;
-            // console.log(position);
-            // console.log(position.id);
-            // console.log("Received positions from socket",
-            //     (x === this.Player.x && y === this.Player.y) ? "myself! Or collision?": "This is where favians function fires!");
 
-            // console.log(socket.id);
             if(socket.id !== playerinfo.id && playerinfo.room === this.state.gameID){
+                console.log(playerinfo)
                     this.state.enamies.set(playerinfo.id, playerinfo);
             };
         });
         this.update_player_component = this.update_player_component.bind(this);
     }
+<<<<<<< HEAD
+    
+
+=======
+>>>>>>> b5d6fec2529bb5839b2498ac148f86dc64750f4a
 
     //init game state seppereate from did load. could be used for start restrictions.
     init() {
@@ -248,25 +137,28 @@ class Game extends Component {
 
     drawLayer() {
         this.setState({ walls: [] });
-
         //calculate camera view space and attains apropriate start and end of the render space.
-        let startCol = Math.floor(this.camera.x / this.state.map.tsize);
+        let startCol = Math.floor(this.camera.x / this.state.map.tsize);//
         let endCol = startCol + this.camera.width / this.state.map.tsize;
         let startRow = Math.floor(this.camera.y / this.state.map.tsize);
         let endRow = startRow + this.camera.height / this.state.map.tsize;
         let offsetX = -this.camera.x + startCol * this.state.map.tsize;
         let offsetY = -this.camera.y + startRow * this.state.map.tsize;
-
+        // console.log('combined ' + startCol * this.state.map.tsize + offsetX);
+        // console.log('offset'+offsetX);
+        // console.log('camera'+this.camera.x);
         for (let c = startCol; c <= endCol; c++) {
             for (let r = startRow; r <= endRow; r++) {
                 let tile = this.state.map.getTile(c, r);
                 let x = (c - startCol) * this.state.map.tsize + offsetX;
                 let y = (r - startRow) * this.state.map.tsize + offsetY;
+                // console.log('draw'+x)
+
                 if (tile !== 0) {
                     // 0 => empty tile
 
                     this.ctx.beginPath();
-                    this.ctx.rect(Math.round(x), Math.round(y), 64, 64);
+                    this.ctx.rect(Math.round(x), Math.round(y), this.state.map.tsize, this.state.map.tsize);
 
                     //Floor tile --- traversable.
                     if (tile === 1) {
@@ -442,8 +334,6 @@ class Game extends Component {
         this.setState({ hitpoints: sortedAngles });
     }
 
-    drawEnamy() {}
-
     //Draws the rays from each point from this.state.hitpoints -- DISABLED -- used to Debug
     drawLightLines() {
         this.ctx.save();
@@ -502,10 +392,29 @@ class Game extends Component {
         this.ctx.restore();
     }
     drawEnamies(x, y, index){
+<<<<<<< HEAD
+        x = x - 32;
+        y = y - 32;
+
+        let playerX = this.Player.screenX - this.Player.width / 2 + 32;
+        let playerY = this.Player.screenY - this.Player.height / 2 + 32;
+
+
+        if (x < this.camera.x || y < this.camera.y || x > this.camera.x + this.camera.width || y > this.camera.y + this.camera.height){
+            return;
+        }else{
+            this.ctx.beginPath();
+            this.ctx.rect(x, y, this.state.map.tsize, this.state.map.tsize);
+            this.ctx.fillStyle = '#D5C7BC';
+            this.ctx.fill();
+        }
+
+=======
         this.ctx.beginPath();
         this.ctx.rect(x -32, y-32 / 2, 64, 64);
         this.ctx.fillStyle = '#D5C7BC';
         this.ctx.fill();
+>>>>>>> b5d6fec2529bb5839b2498ac148f86dc64750f4a
     }
 
     drawPillarLight() {
