@@ -1,30 +1,30 @@
-import React, {Component} from 'react';
-import Header from '../assets/header';
-import Break from '../assets/break';
-import {socket} from '../assets/socket';
+import React, { Component } from "react";
+import Header from "../assets/header";
+import Break from "../assets/break";
+import { socket } from "../assets/socket";
 
-import 'bootstrap/dist/js/bootstrap.bundle';
-import '../assets/App.css';
-import ViewLobbies from './viewLobbies';
-import Room from './room';
-import ClickSound from '../sounds/click';
+import "bootstrap/dist/js/bootstrap.bundle";
+import "../assets/App.css";
+import ViewLobbies from "./viewLobbies";
+import Room from "./room";
+import ClickSound from "../sounds/click";
 
 class CreateLobby extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            title: 'Create a Lobby',
+            title: "Create a Lobby",
             userName: this.props.name,
             email: this.props.email,
             previous: false,
             submitted: false,
             image: this.props.image,
-            lobbyName: '',
-            gameMode: '',
-            gameTime: '',
-            gameMap: '',
-            join_code: '',
+            lobbyName: "",
+            gameMode: "",
+            gameTime: "",
+            gameMap: "",
+            join_code: "",
         };
         this.goPrevious = this.goPrevious.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -44,14 +44,14 @@ class CreateLobby extends Component {
     handleSubmit(event) {
         event.preventDefault();
         ClickSound();
-        console.log('Submitting!!!!');
-        console.log('i will be providing to the server this information:');
-        console.log('lobby name: ', this.state.lobbyName);
-        console.log('game mode: ', this.state.gameMode);
-        console.log('game time: ', this.state.gameTime);
-        console.log('game map: ', this.state.gameMap);
+        console.log("Submitting!!!!");
+        console.log("i will be providing to the server this information:");
+        console.log("lobby name: ", this.state.lobbyName);
+        console.log("game mode: ", this.state.gameMode);
+        console.log("game time: ", this.state.gameTime);
+        console.log("game map: ", this.state.gameMap);
 
-        socket.emit('create lobby', {
+        socket.emit("create lobby", {
             email: this.state.email,
             name: this.state.userName,
             lobbyName: this.state.lobbyName,
@@ -60,7 +60,7 @@ class CreateLobby extends Component {
             gameMap: this.state.gameMap,
         });
 
-        socket.on('created lobby return code', (join_code) => {
+        socket.on("created lobby return code", (join_code) => {
             this.setState({
                 join_code: join_code,
                 submitted: true,
@@ -122,7 +122,7 @@ class CreateLobby extends Component {
                         image={this.props.image}
                         title={this.state.title}
                     />
-                    <Break/>
+                    <Break />
                     <div className="ContentScreen">
                         <div className="createLobbyText">
                             <h2>Name</h2>
@@ -137,6 +137,7 @@ class CreateLobby extends Component {
                                         <input
                                             value={this.state.lobbyName}
                                             onChange={this.handleChangeLobbyName}
+                                            maxLength="20"
                                             type="text"
                                             className="form-control"
                                             id="usr"
@@ -147,7 +148,7 @@ class CreateLobby extends Component {
                                             onChange={this.handleChangeGameMode}
                                             className="browser-default custom-select"
                                             required>
-                                            <option defaultValue/>
+                                            <option defaultValue />
                                             <option value="1">Lover's Paradise</option>
                                             <option value="2">
                                                 Do you want to build a snowman?
@@ -159,7 +160,7 @@ class CreateLobby extends Component {
                                             onChange={this.handleChangeGameTime}
                                             className="browser-default custom-select"
                                             required>
-                                            <option defaultValue/>
+                                            <option defaultValue />
                                             <option value="1">3 mins</option>
                                             <option value="2">4 mins</option>
                                             <option value="3">5 mins</option>
@@ -169,7 +170,7 @@ class CreateLobby extends Component {
                                             onChange={this.handleChangeGameMap}
                                             className="browser-default custom-select"
                                             required>
-                                            <option defaultValue/>
+                                            <option defaultValue />
                                             <option value="1">Small</option>
                                             <option value="2">Medium</option>
                                             <option value="3">Large</option>

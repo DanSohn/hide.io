@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-
 import OtherPlayers from "./OtherPlayers";
 
 import "../assets/App.css";
@@ -643,12 +642,16 @@ class Game extends Component {
 
     render() {
         return (
-            <div className="gameAction">
-                <AliveList />
-                <div className="fade-in">
-                    <canvas ref="canvas" width={1024} height={620} />
+            <React.Fragment>
+                <div className="gameAction">
+                    <AliveList />
+                    <canvas className="fade-in" ref="canvas" width={1024} height={620} />
+                    <div className="PlayerText">
+                        <h1>You are a hider</h1>
+                        <h5>Objective: Hide BITCH</h5>
+                    </div>
                 </div>
-            </div>
+            </React.Fragment>
         );
     }
 }
