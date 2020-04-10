@@ -120,11 +120,6 @@ class Game extends Component {
         });
         this.update_player_component = this.update_player_component.bind(this);
     }
-<<<<<<< HEAD
-    
-
-=======
->>>>>>> b5d6fec2529bb5839b2498ac148f86dc64750f4a
 
     //init game state seppereate from did load. could be used for start restrictions.
     init() {
@@ -392,7 +387,6 @@ class Game extends Component {
         this.ctx.restore();
     }
     drawEnamies(x, y, index){
-<<<<<<< HEAD
         x = x - 32;
         y = y - 32;
 
@@ -402,19 +396,13 @@ class Game extends Component {
 
         if (x < this.camera.x || y < this.camera.y || x > this.camera.x + this.camera.width || y > this.camera.y + this.camera.height){
             return;
-        }else{
+        }
+        else{
             this.ctx.beginPath();
             this.ctx.rect(x, y, this.state.map.tsize, this.state.map.tsize);
             this.ctx.fillStyle = '#D5C7BC';
             this.ctx.fill();
         }
-
-=======
-        this.ctx.beginPath();
-        this.ctx.rect(x -32, y-32 / 2, 64, 64);
-        this.ctx.fillStyle = '#D5C7BC';
-        this.ctx.fill();
->>>>>>> b5d6fec2529bb5839b2498ac148f86dc64750f4a
     }
 
     drawPillarLight() {
