@@ -329,9 +329,7 @@ tr .btn-success {
 #messages {
     padding: 0px;
 }
-form {
-    height: 100%;
-}
+
 .createLobbyContainer {
     order: 2;
     flex: 1;
