@@ -40,17 +40,29 @@ class Timer extends Component {
     }
 
     render() {
-        return (
-            <div>
-                {this.state.time.minutes === 0 && this.state.time.seconds === 0 ? (
-                    <h1>Time's Up!</h1>
-                ) : (
-                    <h1>
-                        {this.state.ingame_prompt} {this.state.time.minutes}:{this.state.time.seconds < 10 ? `0${this.state.time.seconds}` : this.state.time.seconds}
-                    </h1>
-                )}
-            </div>
-        );
+        let comp;
+        if(this.state.gamestage1) {
+            comp = (
+                <h1>
+                    {this.state.ingame_prompt} ({this.state.time.seconds} seconds)
+                </h1>
+            );
+        }
+        else {
+            comp = (
+                <div>
+                    {this.state.time.minutes === 0 && this.state.time.seconds === 0 ? (
+                        <h1>Time's Up!</h1>
+                    ) : (
+                        <h1>
+                            {this.state.ingame_prompt} {this.state.time.minutes}:{this.state.time.seconds < 10 ? `0${this.state.time.seconds}` : this.state.time.seconds}
+                        </h1>
+                    )}
+                </div>
+            );
+
+        }
+        return <React.Fragment>{comp}</React.Fragment>;
     }
 }
 

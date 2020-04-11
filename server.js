@@ -257,7 +257,7 @@ io.on('connection', (socket) => {
         setTimeout(() => {
             clearInterval(timerID);
             console.log("Time's up");
-        }, (time.minutes*60000)+15100);
+        }, (time.minutes*60000)+16100);
     });
     // when a user disconnects from the tab, either by closing or refreshing, we remove them from any lobbies they
     // might've been a part of

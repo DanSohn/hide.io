@@ -26,7 +26,7 @@ class Room extends Component {
             game_time: "",
             start: false,
             players: {},
-            time: 3
+            time: ""
         };
         this.goPrevious = this.goPrevious.bind(this);
         this.startTimer = this.startTimer.bind(this);
@@ -87,7 +87,7 @@ class Room extends Component {
 
         // this event occurs on function startTimer(), it will count down from 3 to start the game
         socket.on("game starting ack", () => {
-            socket.emit("lobby start timer", {countdowntime: (this.state.time*1000)+100, room: this.state.roomID});
+            socket.emit("lobby start timer", {countdowntime: 4100, room: this.state.roomID});
         });
 
         // This event will be used to count down the start of the game and then send an event to the server to start
@@ -99,7 +99,6 @@ class Room extends Component {
             });
             // TimerSound();
             // after i reach 0, call startGame
-            this.decreaseTimer();
             if (countdown <= 0) {
                 console.log("starting game");
                 this.start();
