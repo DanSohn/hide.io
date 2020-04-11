@@ -292,11 +292,17 @@ tr .btn-success {
 }
 .chat {
     border: 5px solid navajowhite;
+    text-align: left;
+    overflow-y: auto;
+    word-break: break-word;
 }
+
 .chatRoom {
     height: 100%;
 }
-
+#messages {
+    margin: 5%;
+}
 .chatRoom,
 .online {
     margin: 2%;
@@ -320,9 +326,10 @@ tr .btn-success {
     align-items: center;
     justify-content: center;
 }
-form {
-    height: 100%;
+#messages {
+    padding: 0px;
 }
+
 .createLobbyContainer {
     order: 2;
     flex: 1;

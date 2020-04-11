@@ -1,12 +1,12 @@
-const express = require('express');
-const path = require('path');
-const dbUtil = require('./dbUtils');
+const express = require("express");
+const path = require("path");
+const dbUtil = require("./dbUtils");
 //const server = require('http').createServer(app);
 const PORT = process.env.PORT || 3001;
 
-const cors = require('cors');
+const cors = require("cors");
 //const io = require('socket.io').listen(server);
-const socket = require('socket.io');
+const socket = require("socket.io");
 // const io = socket(server);
 // const server = app.listen(process.env.PORT || 3000);
 // const io = require('socket.io').listen(server);
@@ -18,7 +18,7 @@ let io = require('socket.io')(server);
 server.listen(PORT);
 
 app.use(cors());
-app.get('/', (req, res) => {
+app.get("/", (req, res) => {
     res.send("API working properly!");
 });
 
@@ -118,7 +118,7 @@ io.on('connection', (socket) => {
     });
 
     // once the room is created, it will ask for the rest of the lobby information with the roomid (room.js)
-    socket.on('ask for lobby info', (roomID) => {
+    socket.on("ask for lobby info", (roomID) => {
         console.log("SOCKET EVENT ASK FOR LOBBY INFO", roomID);
         let res = null;
         dbUtil.getLobby(roomID)
@@ -184,6 +184,11 @@ io.on('connection', (socket) => {
 
                         // send to all sockets part of the room, inside room.js
                         io.to(info.room).emit("update lobby list", players);
+                        dbUtil.getLobbies()
+                        .then(lobbies=>{
+                            io.emit("receive lobby list", lobbies);
+                        })
+                        .catch(err=>console.log("could not update lobby list for everyone else", err));
                     })
                     .catch(err => console.log(err));
 
@@ -191,8 +196,15 @@ io.on('connection', (socket) => {
             .catch(err => console.log(err));
     });
 
+    socket.on("send message", (info) => {
+        io.emit("message from server", {
+            'username': info.username,
+            'message': info.message
+        })
+    })
+
     // method for a player to leave a lobby (room.js)
-    socket.on("leave lobby", info => {
+    socket.on("leave lobby", (info) => {
         console.log("SOCKET EVENT LEAVE LOBBY");
 
         socket_info["lobby"] = "";
@@ -200,6 +212,17 @@ io.on('connection', (socket) => {
             .then(()=>{
                 socket.emit("may successfully leave lobby");
                 socket.leave(info.room);
+                dbUtil.getLobbyPlayers(info.room)
+                    .then((players) => {
+                        // send to all sockets part of the room, inside room.js
+                        io.to(info.room).emit("update lobby list", players);
+                        dbUtil.getLobbies()
+                        .then(lobbies=>{
+                            io.emit("receive lobby list", lobbies);
+                        })
+                        .catch(err=>console.log("could not update lobby list for everyone else", err));
+                    })
+                    .catch(err => console.log(err));
             })
             .catch(err=>console.log(err));
     });
@@ -231,10 +254,34 @@ io.on('connection', (socket) => {
             io.to(room).emit("lobby current timer", countdown);
         }, 1000);
 
-        // after the timer amount of seconds (default 5), stop emitting
-        setTimeout(() => {
+        // after the timer amount of seconds (default 3), stop emitting
+        setTimeout(() =>{
             clearInterval(timerID)
-        }, timer);
+        }, countdowntime);
+    });
+
+    socket.on('start game timer', (room, game_time) => {
+        console.log("game started " + game_time);
+        let mins =  game_time.split(" ")[0];
+        let time = {minutes:mins, seconds:15};
+        console.log(time, room);
+        let timerID = setInterval(() => {
+            if (time.seconds > 0){
+                time.seconds = time.seconds - 1;
+            }
+            else if (time.seconds === 0){
+                if(time.minutes > 0){
+                    time.seconds = 59;
+                    time.minutes = time.minutes - 1;
+                }
+            }
+            io.to(room).emit('game in progress', time);
+        }, 1000);
+
+        setTimeout(() => {
+            clearInterval(timerID);
+            console.log("Time's up");
+        }, (time.minutes*60000)+16100);
     });
     // when a user disconnects from the tab, either by closing or refreshing, we remove them from any lobbies they
     // might've been a part of
@@ -246,7 +293,6 @@ io.on('connection', (socket) => {
                 .catch(err=>console.log(err));
         }
     });
-
 });
 
 

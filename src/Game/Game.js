@@ -7,8 +7,11 @@ import Wall from "./Wall";
 import Camera from "./Camera";
 import Player from "./PlayerTest";
 import { socket } from "../assets/socket";
-import Point from "./Point";
+
+import Point from './Point';
+import Timer from "../Game/Timer";
 import AliveList from "./aliveList";
+
 // import Keyboard from './Keyboard'
 let Keyboard = {};
 
@@ -75,6 +78,7 @@ class Game extends Component {
             enamies: new Map(),
 
             //Game window size, it is used in the calculation of what portion of the map is viewed.
+            timeLimit: this.props.timeLimit,
 
             //This will be handling current game functions, and constants
             map: {
@@ -531,7 +535,9 @@ class Game extends Component {
     componentDidMount() {
         // this will only happen the first time, and will set the ball rolling to handle any updates!
         // this.state.context = this.refs.canvas.getContext('2d');
-        let context = this.refs.canvas.getContext("2d");
+        socket.emit('start game timer', this.state.gameID, this.state.timeLimit);
+        console.log(this.state.timeLimit);
+        let context = this.refs.canvas.getContext('2d');
 
         this.setState({ context: this.refs.canvas.getContext("2d"), game_status: "in progress" });
 
@@ -596,6 +602,7 @@ class Game extends Component {
         }
         return (
             <React.Fragment>
+                <Timer gameDuration={this.state.timeLimit.split(" ")[0]}/>
                 <div className="gameAction">
                     <AliveList />
                     <canvas className="fade-in" ref="canvas" width={1024} height={620} />
