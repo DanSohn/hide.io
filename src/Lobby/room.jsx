@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Header from "../assets/header";
 import Break from "../assets/break";
 import { socket } from "../assets/socket";
-
+import Chat from "./chat";
 import "bootstrap/dist/js/bootstrap.bundle";
 import "../assets/App.css";
 import { returnGameMode, returnGameMap, returnGameTime } from "../assets/utils";
@@ -27,16 +27,11 @@ class Room extends Component {
             start: false,
             players: {},
             playersList: [],
-            onKeyboard: "",
-            message: "",
-            messages: [],
             time: ""
         };
         this.goPrevious = this.goPrevious.bind(this);
         this.startTimer = this.startTimer.bind(this);
         this.start = this.start.bind(this);
-        this.handleKeyboard = this.handleKeyboard.bind(this);
-        this.sendMessage = this.sendMessage.bind(this);
         
         // this lets the socket join the specific room
         socket.emit("ask for lobby info", this.state.roomID);
@@ -51,27 +46,6 @@ class Room extends Component {
             this.setState({
                 previous: true
             });
-        })
-    }
-
-    sendMessage() {
-        console.log("send this message: " + this.state.onKeyboard);
-        socket.emit("send message", {
-            room: this.state.roomID,
-            username: this.state.userName,
-            message: this.state.onKeyboard,
-        });
-
-        let obj = { username: this.state.username, message: this.state.onKeyboard };
-        this.setState({
-            message: this.state.onKeyboard,
-            onKeyboard: "",
-        });
-    }
-
-    handleKeyboard(e) {
-        this.setState({
-            onKeyboard: e.target.value,
         })
     }
 
@@ -102,6 +76,7 @@ class Room extends Component {
                     game_mode: returnGameMode(lobby.game_mode),
                     game_time: returnGameTime(lobby.game_time),
                     game_map: returnGameMap(lobby.game_map),
+                    playersList: lobby.players
                 });
                 console.log(this.state.game_map);
             }
@@ -110,17 +85,9 @@ class Room extends Component {
         // parameter: lobby_users - a SET containing all the users username
         socket.on("update lobby list", (lobby_users) => {
             console.log("Received current lobby users ", lobby_users);
-            // lobby_users.map((value, key) => {
-            //     console.log("Received: " + value.username)
-            //     const obj = {'username': value.username, 'email': value.email}
-            //     this.setState ({
-            //         playersList: [...this.state.player
-            //     })
-            // })
             this.setState({
                 playersList: lobby_users,
             });
-
             // for (let i =0; i<this.state.playersList.length; i++) {
             //     console.log("Player: " + this.state.playersList[i].username)
             // }
@@ -142,14 +109,6 @@ class Room extends Component {
                 console.log("starting game");
                 this.start();
             }
-        });
-
-        socket.on("message from server", (info) => {
-            let obj = { username: info.username, message: info.message };
-
-            this.setState({
-                messages: [...this.state.messages, obj],
-            });
         });
     }
 
@@ -208,38 +167,7 @@ class Room extends Component {
                     />
                     <Break />
                     <div className="ContentScreen">
-                        <div className="chatRoom">
-                            <div className="chat">
-                                <ul id="messages" style={{ color: "white" }}>
-                                    {this.state.messages.map(function (d, idx) {
-                                        return (
-                                            <li style={{ listStyleType: "none" }} key={idx}>
-                                                {d.username}: {d.message}
-                                            </li>
-                                        );
-                                    })}
-                                </ul>
-                            </div>
-                            <div className="input-group mb-3">
-                                {/* <form onSubmit={this.sendMessage}> */}
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    aria-describedby="basic-addon2"
-                                    onChange={this.handleKeyboard}
-                                    value={this.state.onKeyboard}
-                                />
-                                <div className="input-group-append">
-                                    <button
-                                        onClick={this.sendMessage}
-                                        className="btn btn-outline-secondary"
-                                        type="button">
-                                        Submit
-                                    </button>
-                                </div>
-                                {/* </form> */}
-                            </div>
-                        </div>
+                        <Chat userName={this.state.userName} roomID={this.state.roomID}/>
 
                         <div className="roomActions">
                             <h5>{this.state.header}</h5>

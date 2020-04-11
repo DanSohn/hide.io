@@ -184,6 +184,11 @@ io.on('connection', (socket) => {
 
                         // send to all sockets part of the room, inside room.js
                         io.to(info.room).emit("update lobby list", players);
+                        dbUtil.getLobbies()
+                        .then(lobbies=>{
+                            io.emit("receive lobby list", lobbies);
+                        })
+                        .catch(err=>console.log("could not update lobby list for everyone else", err));
                     })
                     .catch(err => console.log(err));
 
@@ -211,6 +216,11 @@ io.on('connection', (socket) => {
                     .then((players) => {
                         // send to all sockets part of the room, inside room.js
                         io.to(info.room).emit("update lobby list", players);
+                        dbUtil.getLobbies()
+                        .then(lobbies=>{
+                            io.emit("receive lobby list", lobbies);
+                        })
+                        .catch(err=>console.log("could not update lobby list for everyone else", err));
                     })
                     .catch(err => console.log(err));
             })

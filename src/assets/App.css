@@ -301,7 +301,7 @@ tr .btn-success {
     height: 100%;
 }
 #messages {
-    padding: 5px;
+    margin-left: 10px;
 }
 .chatRoom,
 .online {
