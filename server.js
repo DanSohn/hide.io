@@ -241,9 +241,9 @@ io.on('connection', (socket) => {
 
     socket.on("lobby start timer", (info) => {
         console.log("SOCKET EVENT LOBBY START TIMER");
-        let { timer, room } = info;
-        console.log("TIMER, ROOM: ", timer, room);
-        let countdown = Math.floor(timer / 1000);
+        let {countdowntime, room} = info;
+        console.log("TIMER, ROOM: ", countdowntime, room);
+        let countdown = Math.floor(countdowntime/1000);
         // send to all sockets an event every second
         let timerID = setInterval(() => {
             console.log(countdown);
@@ -251,10 +251,34 @@ io.on('connection', (socket) => {
             io.to(room).emit("lobby current timer", countdown);
         }, 1000);
 
-        // after the timer amount of seconds (default 5), stop emitting
-        setTimeout(() => {
+        // after the timer amount of seconds (default 3), stop emitting
+        setTimeout(() =>{
             clearInterval(timerID)
-        }, timer);
+        }, countdowntime);
+    });
+
+    socket.on('start game timer', (room, game_time) => {
+        console.log("game started " + game_time);
+        let mins =  game_time.split(" ")[0];
+        let time = {minutes:mins, seconds:15};
+        console.log(time, room);
+        let timerID = setInterval(() => {
+            if (time.seconds > 0){
+                time.seconds = time.seconds - 1;
+            }
+            else if (time.seconds === 0){
+                if(time.minutes > 0){
+                    time.seconds = 59;
+                    time.minutes = time.minutes - 1;
+                }
+            }
+            io.to(room).emit('game in progress', time);
+        }, 1000);
+
+        setTimeout(() => {
+            clearInterval(timerID);
+            console.log("Time's up");
+        }, (time.minutes*60000)+16100);
     });
     // when a user disconnects from the tab, either by closing or refreshing, we remove them from any lobbies they
     // might've been a part of
