@@ -347,11 +347,14 @@ class Game extends Component {
     }
 
     // Goes through each hitpoint to create a visibile light polygon - then a circular light emits from players x y position- first circle is more intense than second circle
-    drawLight(positionX, positionY) {
-   
-        
+    drawLight() {
+        let playerX = this.Player.screenX - this.Player.width / 2 + 32;
+        let playerY = this.Player.screenY - this.Player.height / 2 + 32;
+
+        let lightRadius = this.state.playerState === "Seeker" ? 300 : 150;
+
         this.ctx.save();
-        let fill = this.ctx.createRadialGradient(positionX, positionY, 1, positionX, positionY, 300);
+        let fill = this.ctx.createRadialGradient(playerX, playerY, 1, playerX, playerY, lightRadius);
         fill.addColorStop(0, "rgba(255, 255, 255, 0.65)");
         fill.addColorStop(0.9, "rgba(255, 255, 255, 0.01)");
         fill.addColorStop(1, "rgba(255, 255, 255, 0.009)");
@@ -395,16 +398,6 @@ class Game extends Component {
         this.ctx.fillStyle = '#525252';
         this.ctx.fill();
 
-        // this.ctx.save();
-        // this.ctx.beginPath();
-        // let fill = this.ctx.createRadialGradient(enamyScreenX, enamyScreenY, 1, enamyScreenX, enamyScreenY, 250);
-        // fill.addColorStop(0, "rgba(255, 255, 255, 0.65)");
-        // fill.addColorStop(0.9, "rgba(255, 255, 255, 0.01)");
-        // fill.addColorStop(1, "rgba(255, 255, 255, 0.009)");
-        // this.ctx.rect(enamyScreenX, enamyScreenY, this.state.map.tsize, this.state.map.tsize);
-
-        // this.ctx.fillStyle = fill;
-        // this.ctx.fill();
         this.ctx.restore();
 
 
