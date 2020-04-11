@@ -53,7 +53,7 @@ class Room extends Component {
     startTimer() {
         // 3 second timer currently
         // TimerSound();
-        socket.emit("lobby start timer", {timer: 4300, room: this.state.roomID});
+        socket.emit("lobby start timer", {countdowntime: 4300, room: this.state.roomID});
 
         this.setState({
             header: "Game is starting in ..."
