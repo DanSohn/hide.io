@@ -649,8 +649,8 @@ class Game extends Component {
     render() {
         return (
             <React.Fragment>
+                <Timer gameDuration={this.state.timeLimit.split(" ")[0]}/>
                 <div className="gameAction">
-                    <Timer gameDuration={this.state.timeLimit.split(" ")[0]}/>
                     <AliveList />
                     <canvas className="fade-in" ref="canvas" width={1024} height={620} />
                     <div className="PlayerText">
