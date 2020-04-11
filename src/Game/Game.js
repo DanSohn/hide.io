@@ -113,9 +113,9 @@ class Game extends Component {
         // TODO: do stuff when getting the location information
         socket.on('player moved', (playerinfo) => {
 
-            if(socket.id !== playerinfo.id && playerinfo.room === this.state.gameID){
+            if (socket.id !== playerinfo.id && playerinfo.room === this.state.gameID) {
                 console.log(playerinfo)
-                    this.state.enamies.set(playerinfo.id, playerinfo);
+                this.state.enamies.set(playerinfo.id, playerinfo);
             };
         });
         this.update_player_component = this.update_player_component.bind(this);
@@ -347,12 +347,11 @@ class Game extends Component {
     }
 
     // Goes through each hitpoint to create a visibile light polygon - then a circular light emits from players x y position- first circle is more intense than second circle
-    drawLight() {
-        let playerX = this.Player.screenX - this.Player.width / 2 + 32;
-        let playerY = this.Player.screenY - this.Player.height / 2 + 32;
-
+    drawLight(positionX, positionY) {
+   
+        
         this.ctx.save();
-        let fill = this.ctx.createRadialGradient(playerX, playerY, 1, playerX, playerY, 300);
+        let fill = this.ctx.createRadialGradient(positionX, positionY, 1, positionX, positionY, 300);
         fill.addColorStop(0, "rgba(255, 255, 255, 0.65)");
         fill.addColorStop(0.9, "rgba(255, 255, 255, 0.01)");
         fill.addColorStop(1, "rgba(255, 255, 255, 0.009)");
@@ -386,23 +385,30 @@ class Game extends Component {
         this.ctx.fill();
         this.ctx.restore();
     }
-    drawEnamies(x, y, index){
-        x = x - 32;
-        y = y - 32;
-
-        let playerX = this.Player.screenX - this.Player.width / 2 + 32;
-        let playerY = this.Player.screenY - this.Player.height / 2 + 32;
+    drawEnamies(enamyX, enamyY) {
+        let enamyScreenX = (enamyX - this.camera.x) - this.Player.width / 2;
+        let enamyScreenY = (enamyY - this.camera.y) - this.Player.height / 2;
 
 
-        if (x < this.camera.x || y < this.camera.y || x > this.camera.x + this.camera.width || y > this.camera.y + this.camera.height){
-            return;
-        }
-        else{
-            this.ctx.beginPath();
-            this.ctx.rect(x, y, this.state.map.tsize, this.state.map.tsize);
-            this.ctx.fillStyle = '#D5C7BC';
-            this.ctx.fill();
-        }
+        this.ctx.beginPath();
+        this.ctx.rect(enamyScreenX, enamyScreenY, this.state.map.tsize, this.state.map.tsize);
+        this.ctx.fillStyle = '#525252';
+        this.ctx.fill();
+
+        // this.ctx.save();
+        // this.ctx.beginPath();
+        // let fill = this.ctx.createRadialGradient(enamyScreenX, enamyScreenY, 1, enamyScreenX, enamyScreenY, 250);
+        // fill.addColorStop(0, "rgba(255, 255, 255, 0.65)");
+        // fill.addColorStop(0.9, "rgba(255, 255, 255, 0.01)");
+        // fill.addColorStop(1, "rgba(255, 255, 255, 0.009)");
+        // this.ctx.rect(enamyScreenX, enamyScreenY, this.state.map.tsize, this.state.map.tsize);
+
+        // this.ctx.fillStyle = fill;
+        // this.ctx.fill();
+        this.ctx.restore();
+
+
+
     }
 
     drawPillarLight() {
@@ -492,27 +498,41 @@ class Game extends Component {
         };
         // Only send across socket if there's an update in position
         if (JSON.stringify(info) !== JSON.stringify(pastInfo)) {
-            console.log("I emitted:", info.x, info.y);
-            
+            // console.log("I emitted:", info.x, info.y);
+            console.log('this.player.x=  ' + this.Player.x + '  this.Player.screenX=  ' + this.Player.screenX + '  camera x= ' + this.camera.x)
+
+
             socket.emit("player movement", info);
         }
 
     }
 
     gameRender() {
+        let playerX = this.Player.screenX - this.Player.width / 2 + 32;
+        let playerY = this.Player.screenY - this.Player.height / 2 + 32;
+
         this.drawLayer();
         // this.drawHiders();
         this.updateLightTrace();
         this.sortAngles();
+       
+
         // this.drawLightLines();
-        for(let value of this.state.enamies.values()){
-            this.drawEnamies(value.x, value.y);
+        for (let value of this.state.enamies.values()) {
+            if (value.x < this.camera.x || value.y < this.camera.y || value.x > this.camera.x + this.camera.width || value.y > this.camera.y + this.camera.height) {
+                break;
+            } else {
+                this.drawEnamies(value.x, value.y);
+                // this.drawLight(value.x,value.y, true);
+            }
         }
 
-        this.drawLight();
+
+        this.drawLight(playerX, playerY);
+        this.drawPlayer();
+
         this.drawShadow();
         // this.drawPillarLight();
-        this.drawPlayer();
     }
 
     componentDidMount() {
@@ -565,7 +585,7 @@ class Game extends Component {
             }
         }
 
-        for (let i = 0; i < players_arr.length; i++) {}
+        for (let i = 0; i < players_arr.length; i++) { }
 
         return <div>{component_insides}</div>;
     }
