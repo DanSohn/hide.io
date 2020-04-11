@@ -351,7 +351,7 @@ class Game extends Component {
         let playerX = this.Player.screenX - this.Player.width / 2 + 32;
         let playerY = this.Player.screenY - this.Player.height / 2 + 32;
 
-        let lightRadius = this.state.playerState === "Seeker" ? 350 : 150;
+        let lightRadius = this.state.playerState === "Seeker" ? 300 : 150;
 
         this.ctx.save();
         let fill = this.ctx.createRadialGradient(playerX, playerY, 1, playerX, playerY, lightRadius);
