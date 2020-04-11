@@ -85,11 +85,13 @@ class Room extends Component {
             console.log("Received current lobby users ", lobby_users);
         });
 
-        // this event occurs on function startTimer()
+        // this event occurs on function startTimer(), it will count down from 3 to start the game
         socket.on("game starting ack", () => {
-            socket.emit("lobby start timer", {timer: 4100, room: this.state.roomID});
+            socket.emit("lobby start timer", {countdowntime: 4100, room: this.state.roomID});
         });
-        
+
+        // This event will be used to count down the start of the game and then send an event to the server to start
+        // the timer for the game while players are playing
         socket.on("lobby current timer", (countdown) => {
             console.log(countdown);
             this.setState({
