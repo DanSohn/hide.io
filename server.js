@@ -1,12 +1,12 @@
-const express = require('express');
-const path = require('path');
-const dbUtil = require('./dbUtils');
+const express = require("express");
+const path = require("path");
+const dbUtil = require("./dbUtils");
 //const server = require('http').createServer(app);
 const PORT = process.env.PORT || 3001;
 
-const cors = require('cors');
+const cors = require("cors");
 //const io = require('socket.io').listen(server);
-const socket = require('socket.io')
+const socket = require("socket.io");
 // const io = socket(server);
 // const server = app.listen(process.env.PORT || 3000);
 // const io = require('socket.io').listen(server);
@@ -18,7 +18,7 @@ let io = require('socket.io')(server);
 server.listen(PORT);
 
 app.use(cors());
-app.get('/', (req, res) => {
+app.get("/", (req, res) => {
     res.send("API working properly!");
 });
 
@@ -118,7 +118,7 @@ io.on('connection', (socket) => {
     });
 
     // once the room is created, it will ask for the rest of the lobby information with the roomid (room.js)
-    socket.on('ask for lobby info', (roomID) => {
+    socket.on("ask for lobby info", (roomID) => {
         console.log("SOCKET EVENT ASK FOR LOBBY INFO", roomID);
         let res = null;
         dbUtil.getLobby(roomID)
@@ -184,6 +184,11 @@ io.on('connection', (socket) => {
 
                         // send to all sockets part of the room, inside room.js
                         io.to(info.room).emit("update lobby list", players);
+                        dbUtil.getLobbies()
+                        .then(lobbies=>{
+                            io.emit("receive lobby list", lobbies);
+                        })
+                        .catch(err=>console.log("could not update lobby list for everyone else", err));
                     })
                     .catch(err => console.log(err));
 
@@ -191,8 +196,15 @@ io.on('connection', (socket) => {
             .catch(err => console.log(err));
     });
 
+    socket.on("send message", (info) => {
+        io.emit("message from server", {
+            'username': info.username,
+            'message': info.message
+        })
+    })
+
     // method for a player to leave a lobby (room.js)
-    socket.on("leave lobby", info => {
+    socket.on("leave lobby", (info) => {
         console.log("SOCKET EVENT LEAVE LOBBY");
 
         socket_info["lobby"] = "";
@@ -200,6 +212,17 @@ io.on('connection', (socket) => {
             .then(()=>{
                 socket.emit("may successfully leave lobby");
                 socket.leave(info.room);
+                dbUtil.getLobbyPlayers(info.room)
+                    .then((players) => {
+                        // send to all sockets part of the room, inside room.js
+                        io.to(info.room).emit("update lobby list", players);
+                        dbUtil.getLobbies()
+                        .then(lobbies=>{
+                            io.emit("receive lobby list", lobbies);
+                        })
+                        .catch(err=>console.log("could not update lobby list for everyone else", err));
+                    })
+                    .catch(err => console.log(err));
             })
             .catch(err=>console.log(err));
     });
@@ -207,16 +230,14 @@ io.on('connection', (socket) => {
     // upon a player movement event, i will update the players array object with their new positions, and
     // emit a event to redraw the new positions
     socket.on("player movement", (info) => {
-
         // console.log("received player movement across socket: ",info);
-        io.to(info.room).emit('player moved', {X: info.X, Y: info.Y})
+        io.to(info.room).emit("player moved", { X: info.X, Y: info.Y });
     });
 
     // In the lobby, when finalized that the game is starting, send the map to client
-    socket.on('game starting', () => {
-        socket.emit('game starting ack');
+    socket.on("game starting", () => {
+        socket.emit("game starting ack");
     });
-
 
     socket.on("lobby start timer", (info) => {
         console.log("SOCKET EVENT LOBBY START TIMER");
@@ -269,7 +290,6 @@ io.on('connection', (socket) => {
                 .catch(err=>console.log(err));
         }
     });
-
 });
 
 
