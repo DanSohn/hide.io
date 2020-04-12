@@ -386,7 +386,6 @@ select,
 }
 .createLobby button {
     margin: 20px;
-    height: 40%;
     width: 70%;
 }
 .menuScreen button,

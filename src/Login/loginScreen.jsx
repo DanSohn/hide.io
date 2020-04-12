@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {Redirect} from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import googleAuth from './GoogleAuth';
 import {auth} from "../assets/auth";
 import { socket } from "../assets/socket";
@@ -13,6 +13,7 @@ import ClickSound from "../sounds/click.js";
 
 class LoginScreen extends Component {
     constructor(props) {
+        console.log("loading loginscreenn... auth is", auth.isAuthenticated);
         super(props);
         this.state = {
             SignIn: false,
@@ -23,14 +24,13 @@ class LoginScreen extends Component {
             image: "",
             clickStatus: "PAUSED",
         };
-        // console.log("auth in const of loginscreen is ...", auth.isAuthenticated());
         this.playSound = this.playSound.bind(this);
         this.songSelection = Math.floor(Math.random() * 5);
     }
 
     componentDidMount() {
+        console.log("component did mount");
         googleAuth.load();
-        // this.googleSDK();
 
         socket.on("user database check", (username) => {
             auth.login();

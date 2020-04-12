@@ -9,7 +9,17 @@ class googleAuth {
         return this.info;
     }
 
+    /*signOut(){
+        console.log("In googleAuth signing out");
+
+        let auth2 = gapi.auth2.getAuthInstance();
+        auth2.signOut().then(function () {
+            console.log('User signed out.');
+        });
+    }*/
+
     load(){
+        console.log("In googleAuth load");
         window["googleSDKLoaded"] = () => {
             window["gapi"].load("auth2", () => {
                 this.auth2 = window["gapi"].auth2.init({
@@ -37,22 +47,22 @@ class googleAuth {
 
     prepareLoginButton = () => {
         let element = document.getElementById("googleLogin");
-        console.log("here!", element);
+        // console.log("here!", element);
 
         this.auth2.attachClickHandler(
             element,
             {},
             (googleUser) => {
-                console.log("BUTTON PRESSED");
+                // console.log("BUTTON PRESSED");
                 let profile = googleUser.getBasicProfile();
-                console.log("Token || " + googleUser.getAuthResponse().id_token);
-                console.log("ID: " + profile.getId());
-                console.log("Name: " + profile.getName());
-                console.log("Image URL: " + profile.getImageUrl());
-                console.log("Email: " + profile.getEmail());
+                // console.log("Token || " + googleUser.getAuthResponse().id_token);
+                // console.log("ID: " + profile.getId());
+                // console.log("Name: " + profile.getName());
+                // console.log("Image URL: " + profile.getImageUrl());
+                // console.log("Email: " + profile.getEmail());
 
                 // send event to server to check whether the user exists in our database
-                console.log("emitting check to server");
+                // console.log("emitting check to server");
                 socket.emit("user exists check", profile.getEmail());
 
                 this.info = {

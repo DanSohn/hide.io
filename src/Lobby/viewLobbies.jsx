@@ -1,68 +1,40 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
+import {Link, Redirect} from 'react-router-dom';
+import {socket} from '../assets/socket';
+
 import Header from '../assets/header';
 import Break from '../assets/break';
-import MenuScreen from '../menuScreen';
-import CreateLobby from './createLobby';
 import Room from './room';
 import LobbyTables from './lobbyTables';
+import ClickSound from '../sounds/click';
 
 import '../assets/App.css';
-import { socket } from '../assets/socket';
-import ClickSound from '../sounds/click';
-import JoinCode from './joinCode';
+
 
 class ViewLobbies extends Component {
     constructor(props) {
         super(props);
 
-        console.log(
-            'In lobby selection screen, received the props: ',
-            this.props.name,
-            this.props.email
-        );
         // note: enter lobby is what the lobbytable child fills, when the user clicks a lobby to join. ROOMID
         this.state = {
-            userName: this.props.name,
-            email: this.props.email,
+            userName: this.props.location.state.name,
+            email: this.props.location.state.email,
+            image: this.props.location.state.image,
             previous: false,
-            image: this.props.image,
-            stage: 0,
+            goToRoom: false,
             enter_lobby: '',
         };
 
-        this.createLobby = this.createLobby.bind(this);
         this.goPrevious = this.goPrevious.bind(this);
-        this.goToCreateLobby = this.goToCreateLobby.bind(this);
         this.goToJoinLobby = this.goToJoinLobby.bind(this);
-        this.goToJoinCode = this.goToJoinCode.bind(this);
     }
 
-    createLobby() {
-        ClickSound();
-        socket.emit('create lobby', {
-            userName: this.state.userName,
-            email: this.state.email,
-            settings: 'no settings rn',
-        });
-    }
+
+
     goPrevious() {
         ClickSound();
         this.setState({
             previous: true,
-        });
-    }
-
-    goToCreateLobby() {
-        ClickSound();
-        this.setState({
-            stage: 1,
-        });
-    }
-
-    goToJoinCode() {
-        ClickSound();
-        this.setState({
-            stage: 2,
         });
     }
 
@@ -80,9 +52,9 @@ class ViewLobbies extends Component {
             username: this.state.userName,
         });
         // once i emit join certain lobby and everything went alright in server, i receive event to go to room
-        socket.on("joining certain lobby success", ()=>{
+        socket.on("joining certain lobby success", () => {
             this.setState({
-                stage: 3,
+                goToRoom: true,
                 enter_lobby: join_code,
             });
         });
@@ -93,69 +65,69 @@ class ViewLobbies extends Component {
         //the idea is, for each record in the lobby database, a new div or list will appear.
         let comp;
         if (this.state.previous) {
-            comp = (
-                <MenuScreen
-                    email={this.state.email}
-                    name={this.state.userName}
-                    image={this.state.image}
-                />
-            );
-        } else if (this.state.stage === 1) {
-            comp = (
-                <CreateLobby
-                    name={this.state.userName}
-                    email={this.state.email}
-                    image={this.state.image}
-                />
-            );
-        } else if (this.state.stage === 2) {
-            comp = (
-                <JoinCode
-                    name={this.state.userName}
-                    email={this.state.email}
-                    image={this.state.image}
-                />
-            );
-        } else if (this.state.stage === 3) {
-            comp = (
-                <Room
-                    name={this.state.userName}
-                    email={this.state.email}
-                    image={this.state.image}
-                    join_code={this.state.enter_lobby}
-                />
-            );
-        } else if (this.state.stage === 0) {
-            comp = (
-                <div className="GameWindow">
-                    <Header previous={this.goPrevious} image={this.props.image} />
-                    <Break />
-                    <div className="ContentScreen">
-                        <LobbyTables lobbyCallback={this.goToJoinLobby} />
-                        <div className="createLobby">
-                            {/* <button
-                                type="button"
-                                className="btn btn-success"
-                                onClick={this.createLobby}
-                            /> */}
-                            <button
-                                type="button"
-                                className="btn btn-danger"
-                                onClick={this.goToCreateLobby}>
-                                CREATE LOBBY
-                            </button>
-                            <button
-                                type="button"
-                                className="btn btn-info"
-                                onClick={this.goToJoinCode}>
-                                JOIN BY CODE
-                            </button>
+            comp = <Redirect to={{
+                pathname: '/MainMenu',
+                state: {
+                    name: this.state.userName,
+                    email: this.state.email,
+                    image: this.state.image
+                }
+            }}/>
+        } else {
+            if (this.state.goToRoom === true) {
+                comp = <Redirect to={{
+                    pathname: '/Room',
+                    state: {
+                        name: this.state.userName,
+                        email: this.state.email,
+                        image: this.state.image,
+                        join_code: this.state.enter_lobby
+                    }
+                    }}/>
+            } else {
+                comp = (
+                    <div className="GameWindow">
+                        <Header previous={this.goPrevious} image={this.state.image}/>
+                        <Break/>
+                        <div className="ContentScreen">
+                            <LobbyTables lobbyCallback={this.goToJoinLobby}/>
+                            <div className="createLobby">
+                                <Link to={{
+                                    pathname: '/CreateLobby',
+                                    state: {
+                                        name: this.state.userName,
+                                        email: this.state.email,
+                                        image: this.state.image
+                                    }
+                                }}>
+                                    <button
+                                        type="button"
+                                        className="btn btn-danger">
+                                        CREATE LOBBY
+                                    </button>
+                                </Link>
+                                <Link to={{
+                                    pathname: '/JoinByCode',
+                                    state: {
+                                        name: this.state.userName,
+                                        email: this.state.email,
+                                        image: this.state.image
+                                    }
+                                }}>
+                                    <button
+                                        type="button"
+                                        className="btn btn-info">
+                                        JOIN BY CODE
+                                    </button>
+                                </Link>
+                            </div>
                         </div>
                     </div>
-                </div>
-            );
+                );
+            }
         }
-        return <React.Fragment>{comp}</React.Fragment>;
+        return <>{ comp }</>;
     }
 }
+
 export default ViewLobbies;
