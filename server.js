@@ -25,6 +25,8 @@ app.get("/", (req, res) => {
 const starting_pos_module = require(__dirname + "/starting_positions");
 let starting_pos = starting_pos_module.starting_positions;
 
+let gamesInSession = {};
+
 // this occurs upon server start, or more importantly, server restart.
 // the lobbies that exist should have NO ONE IN THEIR PLAYER LISTS
 dbUtil
@@ -254,7 +256,21 @@ io.on("connection", (socket) => {
         // get all the sockets in the room, then choose one random socket to be the hider
         let roomies = Object.keys(io.sockets.adapter.rooms[room].sockets);
         let randomSeeker = roomies[Math.floor(Math.random()*roomies.length)];
+
         io.to(`${randomSeeker}`).emit('youre the seeker');
+        for (let i=0; i<roomies.length; i++) {
+            if (roomies[i] === randomSeeker) {
+                roomies.splice(i, 1);
+            }
+        }
+        gamesInSession[room] = {
+            'roomID': room,
+            'seeker': randomSeeker,
+            'hiders': roomies,
+            'caught': []
+        }
+        console.log("RANDOM SEEKER IS: " + gamesInSession[room].seeker);
+        console.log("LENGTH OF HIDERS " + gamesInSession[room].hiders.length);
 
         let countdown = Math.floor(countdowntime / 1000);
         // send to all sockets an event every second
