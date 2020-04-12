@@ -2,11 +2,11 @@ export const auth = {
     isAuthenticated: false,
     login(cb){
         this.isAuthenticated = true;
-        cb();
+        setTimeout(cb, 500);
     },
     logout(cb){
         this.isAuthenticated = false;
-        cb();
+        setTimeout(cb, 500);
     }
 
 };
