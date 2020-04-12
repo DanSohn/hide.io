@@ -317,6 +317,7 @@ tr .btn-success {
     margin: 0px 0px 0px 50px;
 }
 .createLobbyForm {
+    display: flex;
     order: 3;
     flex: 2;
 }
