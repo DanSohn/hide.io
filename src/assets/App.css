@@ -11,12 +11,12 @@ body {
     font-family: "Montserrat", sans-serif;
     text-align: center;
 }
-.fade-out {
-    animation: fadeOut ease 8s;
-    -webkit-animation: fadeOut ease 8s;
-    -moz-animation: fadeOut ease 8s;
-    -o-animation: fadeOut ease 8s;
-    -ms-animation: fadeOut ease 8s;
+.fade-out-15 {
+    animation: fadeOut ease 15s;
+    -webkit-animation: fadeOut ease 15s;
+    -moz-animation: fadeOut ease 15s;
+    -o-animation: fadeOut ease 15s;
+    -ms-animation: fadeOut ease 15s;
 }
 @keyframes fadeOut {
     0% {
@@ -317,6 +317,7 @@ tr .btn-success {
     margin: 0px 0px 0px 50px;
 }
 .createLobbyForm {
+    display: flex;
     order: 3;
     flex: 2;
 }
