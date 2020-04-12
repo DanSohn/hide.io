@@ -1,12 +1,12 @@
 import React, { Component } from "react";
+import {Redirect} from "react-router-dom";
+import { socket } from "../assets/socket";
+
 import Header from "../assets/header";
 import Break from "../assets/break";
-import { socket } from "../assets/socket";
 
 import "bootstrap/dist/js/bootstrap.bundle";
 import "../assets/App.css";
-import ViewLobbies from "./viewLobbies";
-import Room from "./room";
 import ClickSound from "../sounds/click";
 
 class CreateLobby extends Component {
@@ -14,17 +14,17 @@ class CreateLobby extends Component {
         super(props);
 
         this.state = {
+            userName: this.props.location.state.name,
+            email: this.props.location.state.email,
+            image: this.props.location.state.image,
             title: "Create a Lobby",
-            userName: this.props.name,
-            email: this.props.email,
             previous: false,
             submitted: false,
-            image: this.props.image,
             lobbyName: "",
             gameMode: "",
             gameTime: "",
             gameMap: "",
-            join_code: "",
+            roomID: "",
         };
         this.goPrevious = this.goPrevious.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -44,7 +44,6 @@ class CreateLobby extends Component {
     handleSubmit(event) {
         event.preventDefault();
         ClickSound();
-        console.log("Submitting!!!!");
         console.log("i will be providing to the server this information:");
         console.log("lobby name: ", this.state.lobbyName);
         console.log("game mode: ", this.state.gameMode);
@@ -60,9 +59,9 @@ class CreateLobby extends Component {
             gameMap: this.state.gameMap,
         });
 
-        socket.on("created lobby return code", (join_code) => {
+        socket.on("created lobby return code", (code) => {
             this.setState({
-                join_code: join_code,
+                roomID: code,
                 submitted: true,
             });
         });
@@ -98,22 +97,24 @@ class CreateLobby extends Component {
     render() {
         let comp;
         if (this.state.previous) {
-            comp = (
-                <ViewLobbies
-                    email={this.state.email}
-                    name={this.state.userName}
-                    image={this.state.image}
-                />
-            );
+            comp = <Redirect to={{
+                pathname: '/LobbyScreen',
+                state: {
+                    name: this.state.userName,
+                    email: this.state.email,
+                    image: this.state.image
+                }
+            }}/>
         } else if (this.state.submitted) {
-            comp = (
-                <Room
-                    name={this.state.userName}
-                    email={this.state.email}
-                    image={this.state.image}
-                    join_code={this.state.join_code}
-                />
-            );
+            comp = <Redirect to={{
+                pathname: '/Room',
+                state: {
+                    name: this.state.userName,
+                    email: this.state.email,
+                    image: this.state.image,
+                    join_code: this.state.roomID
+                }
+            }}/>
         } else {
             comp = (
                 <div className="GameWindow">
@@ -149,11 +150,8 @@ class CreateLobby extends Component {
                                             className="browser-default custom-select"
                                             required>
                                             <option defaultValue />
-                                            <option value="1">Lover's Paradise</option>
-                                            <option value="2">
-                                                Do you want to build a snowman?
-                                            </option>
-                                            <option value="3">Love is an open door</option>
+                                            <option value="1">Regular</option>
+                                            <option value="2">Zombies</option>
                                         </select>
                                         <select
                                             value={this.state.gameTime}

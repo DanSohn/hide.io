@@ -67,7 +67,7 @@ class JoinCode extends Component {
         let comp;
         if (this.state.previous) {
             comp = <Redirect to={{
-                pathname: '/MainMenu',
+                pathname: '/LobbyScreen',
                 state: {
                     name: this.state.userName,
                     email: this.state.email,
