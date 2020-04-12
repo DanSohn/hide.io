@@ -8,7 +8,7 @@ import Camera from "./Camera";
 import Player from "./PlayerTest";
 import { socket } from "../assets/socket";
 
-import Point from './Point';
+import Point from "./Point";
 import Timer from "../Game/Timer";
 import AliveList from "./aliveList";
 
@@ -189,6 +189,7 @@ class Game extends Component {
 
             //Game window size, it is used in the calculation of what portion of the map is viewed.
             timeLimit: this.props.timeLimit,
+            countdown: true,
 
             //This will be handling current game functions, and constants
             map: {
@@ -591,9 +592,9 @@ class Game extends Component {
     componentDidMount() {
         // this will only happen the first time, and will set the ball rolling to handle any updates!
         // this.state.context = this.refs.canvas.getContext('2d');
-        socket.emit('start game timer', this.state.gameID, this.state.timeLimit);
+        socket.emit("start game timer", this.state.gameID, this.state.timeLimit);
         console.log(this.state.timeLimit);
-        let context = this.refs.canvas.getContext('2d');
+        let context = this.refs.canvas.getContext("2d");
 
         this.setState({ context: this.refs.canvas.getContext("2d"), game_status: "in progress" });
 
@@ -604,6 +605,15 @@ class Game extends Component {
             //console.log("original players ", this.state.players);
             if (this.state.players !== players) {
                 this.setState({ players: players });
+            }
+        });
+
+        socket.on("countdown", (seconds) => {
+            if (seconds - 1 == 0) {
+                console.log("HELLO~~~~~");
+                this.setState({ countdown: false });
+            } else {
+                console.log("not done yet");
             }
         });
         // console.log(this.state);
@@ -647,15 +657,30 @@ class Game extends Component {
     }
 
     render() {
+        let dragon = "";
+        if (this.state.countdown == true) {
+            dragon = (
+                <React.Fragment>
+                    <h1>You are a hider</h1>
+                    <h5>Objective: Hide BITCH</h5>
+                </React.Fragment>
+            );
+        } else if (this.state.countdown == false) {
+            dragon = (
+                <React.Fragment>
+                    <h1></h1>
+                    <h5></h5>
+                </React.Fragment>
+            );
+        }
         return (
             <React.Fragment>
-                <Timer gameDuration={this.state.timeLimit.split(" ")[0]}/>
+                <Timer gameDuration={this.state.timeLimit.split(" ")[0]} />
                 <div className="gameAction">
                     <AliveList />
                     <canvas className="fade-in" ref="canvas" width={1024} height={620} />
                     <div className="PlayerText">
-                        <h1>You are a hider</h1>
-                        <h5>Objective: Hide BITCH</h5>
+                        <div className="fade-out-15">{dragon}</div>
                     </div>
                 </div>
             </React.Fragment>
