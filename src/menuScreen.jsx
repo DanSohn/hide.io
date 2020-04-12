@@ -18,17 +18,16 @@ class MenuScreen extends Component {
         this.state = {
             /*userName: this.props.location.state.name,
             email: this.props.location.state.email,
-            image: this.props.location.state.image,*/
+            */
             userName: cookies.get("name"),
             email: cookies.get("email"),
-            image: cookies.get("image")
         };
     }
 
 
     render() {
         return <div className="GameWindow">
-            <Header showBack={false} image={this.state.image}/>
+            <Header showBack={false}/>
             <Break/>
             <div className="ContentScreen">
                 <div className="menuScreen">
@@ -37,7 +36,6 @@ class MenuScreen extends Component {
                         /*state: {
                             name: this.state.userName,
                             email: this.state.email,
-                            image: this.state.image
                         }*/
                     }}>
                         <button
@@ -50,8 +48,8 @@ class MenuScreen extends Component {
                         pathname: '/Instructions',
                         state: {
                             /*name: this.state.userName,
-                            email: this.state.email,
-                            image: this.state.image*/
+                            email: this.state.email
+                            */
                         }
                     }}>
                         <button
@@ -64,8 +62,8 @@ class MenuScreen extends Component {
                         pathname: '/Profile',
                         state: {
                             /*name: this.state.userName,
-                            email: this.state.email,
-                            image: this.state.image*/
+                            email: this.state.email
+                            */
                         }
                     }}>
                         <button

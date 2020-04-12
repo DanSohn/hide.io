@@ -14,11 +14,10 @@ class PlayerProfile extends Component {
         super(props);
         this.state = {
             /*userName: this.props.location.state.name,
-            email: this.props.location.state.email,
-            image: this.props.location.state.image,*/
+            email: this.props.location.state.email
+            */
             userName: cookies.get("name"),
             email: cookies.get("email"),
-            image: cookies.get("image"),
             signedIn: true,
             previous: false,
         };
@@ -39,7 +38,6 @@ class PlayerProfile extends Component {
                 <div className="GameWindow">
                     <Header
                         previous={this.goPrevious}
-                        image={this.state.image}
                         title="Profile"
                     />
                     <Break/>
@@ -90,7 +88,6 @@ class PlayerProfile extends Component {
                 /*state: {
                     name: this.state.userName,
                     email: this.state.email,
-                    image: this.state.image
                 }*/
             }}/>
         }

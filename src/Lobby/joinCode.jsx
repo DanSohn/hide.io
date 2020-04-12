@@ -19,10 +19,9 @@ class JoinCode extends Component {
         this.state = {
             /*userName: this.props.location.state.name,
             email: this.props.location.state.email,
-            image: this.props.location.state.image,*/
+            */
             userName: cookies.get("name"),
             email: cookies.get("email"),
-            image: cookies.get("image"),
             previous: false,
             roomID: '',
             enter_room: false,
@@ -77,7 +76,6 @@ class JoinCode extends Component {
                 /*state: {
                     name: this.state.userName,
                     email: this.state.email,
-                    image: this.state.image
                 }*/
             }}/>
 
@@ -87,14 +85,14 @@ class JoinCode extends Component {
                 state: {
                     /*name: this.state.userName,
                     email: this.state.email,
-                    image: this.state.image,*/
+                    */
                     join_code: this.state.roomID
                 }
             }}/>
         } else {
             comp = (
                 <div className="GameWindow">
-                    <Header previous={this.goPrevious} image={this.state.image} />
+                    <Header previous={this.goPrevious}/>
                     <Break />
                     <div className="ContentScreen">
                         <div className="usernameSelection">

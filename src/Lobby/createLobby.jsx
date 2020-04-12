@@ -19,11 +19,9 @@ class CreateLobby extends Component {
         this.state = {
             /*userName: this.props.location.state.name,
             email: this.props.location.state.email,
-            image: this.props.location.state.image,*/
+            */
             userName: cookies.get("name"),
             email: cookies.get("email"),
-            image: cookies.get("image"),
-            title: "Create a Lobby",
             previous: false,
             submitted: false,
             lobbyName: "",
@@ -108,7 +106,6 @@ class CreateLobby extends Component {
                 /*state: {
                     name: this.state.userName,
                     email: this.state.email,
-                    image: this.state.image
                 }*/
             }}/>
         } else if (this.state.submitted) {
@@ -117,7 +114,7 @@ class CreateLobby extends Component {
                 state: {
                     /*name: this.state.userName,
                     email: this.state.email,
-                    image: this.state.image,*/
+                    */
                     join_code: this.state.roomID
                 }
             }}/>
@@ -126,8 +123,7 @@ class CreateLobby extends Component {
                 <div className="GameWindow">
                     <Header
                         previous={this.goPrevious}
-                        image={this.state.image}
-                        title={this.state.title}
+                        title="Create a Lobby"
                     />
                     <Break />
                     <div className="ContentScreen">

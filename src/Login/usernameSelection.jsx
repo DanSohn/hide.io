@@ -15,9 +15,7 @@ class UsernameSelection extends Component {
             typing: "",
             username: "",
             //email: this.props.location.state.email,
-            //image: this.props.location.state.image,
             email: cookies.get("email"),
-            image: cookies.get("image")
         };
         this.submitUsername = this.submitUsername.bind(this);
         this.handleKeyboard = this.handleKeyboard.bind(this);
@@ -50,7 +48,7 @@ class UsernameSelection extends Component {
         if (this.state.username === "") {
             component = (
                 <div className="GameWindow">
-                    <Header showBack={false} showProfile={false} />
+                    <Header showBack={false} />
                     <Break />
                     <div className="ContentScreen">
                         <div className="usernameSelection">
@@ -83,7 +81,6 @@ class UsernameSelection extends Component {
                 /*state: {
                     email: this.state.email,
                     name: this.state.username,
-                    image: this.state.image
                 }*/
             }}/>;
         }

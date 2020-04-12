@@ -20,10 +20,9 @@ class Room extends Component {
         this.state = {
             /*userName: this.props.location.state.name,
             email: this.props.location.state.email,
-            image: this.props.location.state.image,*/
+            */
             userName: cookies.get("name"),
             email: cookies.get("email"),
-            image: cookies.get("image"),
             roomID: this.props.location.state.join_code,
             title: "",
             header: "Join Code: " + this.props.location.state.join_code,
@@ -121,7 +120,7 @@ class Room extends Component {
     }
 
     componentWillUnmount() {
-        console.log("Component unmounting!!!===================");
+        console.log("Room unmounting...");
         socket.off("giving lobby info");
         socket.off("update lobby list");
         socket.off("game starting ack");
@@ -138,7 +137,6 @@ class Room extends Component {
                 /*state: {
                     name: this.state.userName,
                     email: this.state.email,
-                    image: this.state.image
                 }*/
             }}/>
         } else if (this.state.start) {
@@ -158,7 +156,6 @@ class Room extends Component {
                 <div className="GameWindow">
                     <Header
                         previous={this.goPrevious}
-                        image={this.state.image}
                         title={this.state.title}
                     />
                     <Break />

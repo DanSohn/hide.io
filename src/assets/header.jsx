@@ -1,5 +1,9 @@
 import React, { Component } from "react";
+import Cookies from 'universal-cookie';
+
 import "./App.css";
+
+const cookies = new Cookies();
 
 class Header extends Component {
     constructor(props) {
@@ -7,9 +11,8 @@ class Header extends Component {
         this.state = {
             showBack: this.props.showBack,
             showProfile: this.props.showProfile,
-            image: this.props.image,
-            email: this.props.email,
-            name: this.props.name,
+            image: cookies.get("image"),
+            email: cookies.get("email"),
             title: this.props.title,
             goBack: false,
             goProfile: false

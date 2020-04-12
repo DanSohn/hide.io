@@ -23,7 +23,6 @@ class LoginScreen extends Component {
             userName: "",
             id: "",
             email: "",
-            image: "",
             clickStatus: "PAUSED",
         };
 
@@ -54,14 +53,12 @@ class LoginScreen extends Component {
                     newUser: false,
                     userName: username,
                     email: googleUser.email,
-                    image: googleUser.image
                 });
             } else {
                 // this else statement is a little redundant since newUser is initialized to be true
                 // but for better readability, i'll keep it in
                 this.setState({
                     email: googleUser.email,
-                    image: googleUser.image
                 });
             }
         });
@@ -114,7 +111,6 @@ class LoginScreen extends Component {
                         pathname: '/UsernameSelection',
                         /*state: {
                             email: this.state.email,
-                            image: this.state.image
                         }*/
                     }}/>;
             } else {
@@ -123,7 +119,6 @@ class LoginScreen extends Component {
                     /*state: {
                         name: this.state.userName,
                         email: this.state.email,
-                        image: this.state.image
                     }*/
                 }}/>;
             }
