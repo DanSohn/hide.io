@@ -8,8 +8,7 @@ class Timer extends Component {
         this.state = {
             // minutes:props.minutes,
             //TODO: Depending on the role of the player, display a black screen for the first 15 seconds for hider, while seekers are hiding
-            // player_role: this.props.player_role,
-            player_role:"hider",
+            playerState:this.props.playerState,
             ingame_prompt:'',
             gamestage1: true,
             time:{ minutes:this.props.gameDuration, seconds: 15}
@@ -17,10 +16,10 @@ class Timer extends Component {
     }
 
     updatePrompt(){
-        if(this.state.player_role === "seeker" && this.state.gamestage1){
-            this.setState({ingame_prompt:"Wait while Hiders are running away from you!"});
+        if(this.state.playerState === "seeker" && this.state.gamestage1){
+            this.setState({ingame_prompt:"Let the pigs hide... We'll get them soon"});
         }
-        else if(this.state.player_role === "hider" && this.state.gamestage1){
+        else if(this.state.playerState === "hider" && this.state.gamestage1){
             this.setState({ingame_prompt:"Hurry! Run away before they find you"});
         }
     }
@@ -30,6 +29,7 @@ class Timer extends Component {
         socket.on('game in progress', (game_time) => {
             if(game_time.seconds === 0 && this.state.gamestage1){
                 this.setState({gamestage1: false, ingame_prompt:"Time Remaining"});
+                socket.emit("game begun")
             }
 
             if(game_time.minutes === 0 && game_time.seconds === 15){

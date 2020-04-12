@@ -60,6 +60,13 @@ class Game extends Component {
     constructor(props) {
         super(props);
 
+        // // if its a seeker use the standardized color, else randomize a hex color
+        // if (this.state.playerState === "seeker")
+        //     let playerColor = "#D5C7BC";
+        // else
+        //     let playerColor= '#'+Math.floor(Math.random()*16777215).toString(16);
+        let playerColor = this.props.playerState === "seeker" ? "#D5C7BC" : '#'+Math.floor(Math.random()*16777215).toString(16);
+
         document.body.style.overflow = "hidden";
 
         this.state = {
@@ -70,6 +77,7 @@ class Game extends Component {
             num_of_players: this.props.numPlayers,
             players: this.props.players,
             playerState: this.props.playerState,
+            playerColor: playerColor,
 
             gameID: this.props.gameID,
             game_status: "not started",
@@ -118,9 +126,16 @@ class Game extends Component {
         socket.on('player moved', (playerinfo) => {
 
             if (socket.id !== playerinfo.id && playerinfo.room === this.state.gameID) {
-                console.log(playerinfo)
+                console.log(playerinfo);
                 this.state.enamies.set(playerinfo.id, playerinfo);
-            };
+            }
+        });
+
+        // if the game is initiated, let the seeker move
+        socket.on('game in progress', (game_time) => {
+            if (game_time.seconds === 0) {
+                this.state.game_status = 'started';
+            }
         });
         this.update_player_component = this.update_player_component.bind(this);
     }
@@ -355,7 +370,7 @@ class Game extends Component {
         let playerX = this.Player.screenX - this.Player.width / 2 + 32;
         let playerY = this.Player.screenY - this.Player.height / 2 + 32;
 
-        let lightRadius = this.state.playerState === "Seeker" ? 300 : 150;
+        let lightRadius = this.state.playerState === "seeker" ? 300 : 150;
 
         this.ctx.save();
         let fill = this.ctx.createRadialGradient(playerX, playerY, 1, playerX, playerY, lightRadius);
@@ -440,7 +455,8 @@ class Game extends Component {
             64,
             64
         );
-        this.ctx.fillStyle = "#D5C7BC";
+        // set the playerColor
+        this.ctx.fillStyle = this.state.playerColor;
         this.ctx.fill();
     }
 
@@ -457,8 +473,8 @@ class Game extends Component {
         } else if (Keyboard.isDown(Keyboard.DOWN)) {
             diry = 1;
         }
-
-        this.Player.move(delta, dirx, diry);
+        if (this.state.game_status === 'started' || this.state.playerState === 'hider')
+            this.Player.move(delta, dirx, diry);
         this.camera.update();
     }
 
@@ -539,7 +555,7 @@ class Game extends Component {
         console.log(this.state.timeLimit);
         let context = this.refs.canvas.getContext('2d');
 
-        this.setState({ context: this.refs.canvas.getContext("2d"), game_status: "in progress" });
+        this.setState({ context: this.refs.canvas.getContext("2d") });
 
         this.run(context);
 
@@ -592,7 +608,7 @@ class Game extends Component {
     render() {
         let comp1;
         let comp2;
-        if (this.state.playerState === 'Seeker') {
+        if (this.state.playerState === 'seeker') {
             comp1 = "You're the seeker";
             comp2 = "Objective: Hunt them down.";
         }
@@ -602,7 +618,9 @@ class Game extends Component {
         }
         return (
             <React.Fragment>
-                <Timer gameDuration={this.state.timeLimit.split(" ")[0]}/>
+                <Timer gameDuration={this.state.timeLimit.split(" ")[0]}
+                        playerState={this.state.playerState}
+                />
                 <div className="gameAction">
                     <AliveList />
                     <canvas className="fade-in" ref="canvas" width={1024} height={620} />

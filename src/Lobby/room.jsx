@@ -90,9 +90,6 @@ class Room extends Component {
             this.setState({
                 playersList: lobby_users,
             });
-            // for (let i =0; i<this.state.playersList.length; i++) {
-            //     console.log("Player: " + this.state.playersList[i].username)
-            // }
         });
         
         socket.on("lobby current timer", (countdown) => {
@@ -107,7 +104,7 @@ class Room extends Component {
                 this.start();
             }
         });
-        socket.on('youre the seeker', ()=> {this.state.playerState = 'Seeker'; console.log("Congrats! Youre the seeker!")});
+        socket.on('youre the seeker', ()=> {this.state.playerState = 'seeker'; console.log("Congrats! Youre the seeker!")});
     }
 
     componentWillUnmount() {
