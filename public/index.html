@@ -18,8 +18,18 @@
     <link rel="stylesheet" href="App.css"/>
     <meta
             name="description"
-            content="Web site created using create-react-app"
+            content="Hide.io is an online hide-and-seek multiplayer game! Enjoy!"
     />
+
+    <script src="https://apis.google.com/js/platform.js?onload=init" async defer></script>
+    <script type="text/javascript">
+        function triggerGoogleLoaded() {
+            console.log("google event loaded");
+            window.dispatchEvent(new Event('google-loaded'));
+        }
+    </script>
+    <meta name="google-signin-client_id" content="855332695584-bdpq7iidn0g11ehf2l3h5r3s61cs922m.apps.googleusercontent.com">
+
 
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png"/>
     <!--

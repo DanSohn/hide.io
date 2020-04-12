@@ -7,7 +7,7 @@ import {socket} from "./assets/socket";
 
 import UsernameSelection from "./Login/usernameSelection";
 import MenuScreen from "./menuScreen";
-import LoginScreen from "./Login/loginScreen";
+import { LoginScreen } from "./Login/loginScreen";
 import PlayerProfile from "./PlayerProfile";
 import ViewLobbies from "./Lobby/viewLobbies";
 import CreateLobby from "./Lobby/createLobby";

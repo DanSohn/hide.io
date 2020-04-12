@@ -1,28 +1,31 @@
 import {socket} from "../assets/socket";
+import {gapi} from "gapi-script";
 
 class googleAuth {
     constructor() {
         this.info = {};
+        this.auth2 = null;
     }
 
-    loginInfo(){
+    loginInfo() {
         return this.info;
     }
 
-    /*signOut(){
+    signOut() {
         console.log("In googleAuth signing out");
 
         let auth2 = gapi.auth2.getAuthInstance();
-        auth2.signOut().then(function () {
-            console.log('User signed out.');
-        });
-    }*/
+        auth2.disconnect();
+        auth2.signOut()
+            .then(() => {
+                console.log('User signed out.');
+            });
+    }
 
-    load(){
+    load() {
         console.log("In googleAuth load");
-        window["googleSDKLoaded"] = () => {
-            window["gapi"].load("auth2", () => {
-                this.auth2 = window["gapi"].auth2.init({
+            window.gapi.load("auth2", () => {
+                this.auth2 = window.gapi.auth2.init({
                     client_id:
                         "855332695584-bdpq7iidn0g11ehf2l3h5r3s61cs922m.apps.googleusercontent.com",
                     cookiepolicy: "single_host_origin",
@@ -31,7 +34,6 @@ class googleAuth {
                 console.log("prepping login");
                 this.prepareLoginButton();
             });
-        };
         (function (d, s, id) {
             let js,
                 fjs = d.getElementsByTagName(s)[0];

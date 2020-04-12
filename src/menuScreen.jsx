@@ -1,10 +1,8 @@
 import React, {Component} from "react";
 import {Link} from 'react-router-dom';
-import Lobby from "./Lobby/Lobby";
 import "./assets/App.css";
-import PlayerProfile from "./PlayerProfile.js";
-import ViewLobbies from "./Lobby/viewLobbies";
 import {auth} from "./Router";
+import { googleAuth } from "./Login/loginScreen";
 import Header from "./assets/header";
 import Break from "./assets/break";
 import ClickSound from "./sounds/click";
@@ -76,6 +74,7 @@ class MenuScreen extends Component {
                             auth.logout(() => {
                                 // reason history is avail on props is b/c we loaded it via a route, which passes
                                 // in a prop called history always
+                                googleAuth.signOut();
                                 console.log("going to logout!");
                                 this.props.history.push('/');
                             });

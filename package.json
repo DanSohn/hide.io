@@ -10,6 +10,7 @@
     "core-js": "^3.6.4",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "gapi-script": "^1.0.2",
     "hashids": "^2.2.1",
     "jquery": "^3.4.1",
     "minimist": "^1.2.5",
