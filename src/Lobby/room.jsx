@@ -10,17 +10,18 @@ import ViewLobbies from "./viewLobbies";
 import Game from "../Game/Game";
 import ClickSound from "../sounds/click";
 import TimerSound from "../sounds/timer";
+import {Redirect} from "react-router-dom";
 
 class Room extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            userName: this.props.name,
-            email: this.props.email,
-            image: this.props.image,
-            roomID: this.props.join_code,
+            userName: this.props.location.state.name,
+            email: this.props.location.state.email,
+            image: this.props.location.state.image,
+            roomID: this.props.location.state.join_code,
             title: "",
-            header: "Join Code: " + this.props.join_code,
+            header: "Join Code: " + this.props.location.state.join_code,
             game_mode: "",
             game_map: {},
             game_time: "",
@@ -128,37 +129,40 @@ class Room extends Component {
         let countdownTimer;
         if (this.state.startTimer) {
             countdownTimer = (
-                <React.Fragment>
+                <>
                     <h4>Game Starting in </h4>
                     <h2>{this.state.time}</h2>
-                </React.Fragment>
+                </>
             );
         } else {
             countdownTimer = (
-                <React.Fragment>
+                <>
                     <h4></h4>
                     <h2></h2>
-                </React.Fragment>
+                </>
             );
         }
         if (this.state.previous) {
-            comp = (
-                <ViewLobbies
-                    email={this.state.email}
-                    name={this.state.userName}
-                    image={this.state.image}
-                />
-            );
+            comp = <Redirect to={{
+                pathname: '/LobbyScreen',
+                state: {
+                    name: this.state.userName,
+                    email: this.state.email,
+                    image: this.state.image
+                }
+            }}/>
         } else if (this.state.start) {
-            comp = (
-                <Game
-                    gameID={this.state.roomID}
-                    players={this.state.players}
-                    map={this.state.game_map}
-                    timeLimit={this.state.game_time}
-                    mode={this.state.game_mode}
-                />
-            );
+            comp = <Redirect to={{
+                pathname: '/Game',
+                state: {
+                    gameID: this.state.roomID,
+                    players: this.state.players,
+                    map: this.state.game_map,
+                    timeLimit: this.state.game_time,
+                    mode: this.state.game_mode
+                }
+            }}/>
+
         } else {
             comp = (
                 <div className="GameWindow">
@@ -199,7 +203,7 @@ class Room extends Component {
                 </div>
             );
         }
-        return <React.Fragment>{comp}</React.Fragment>;
+        return <>{comp}</>;
     }
 }
 
