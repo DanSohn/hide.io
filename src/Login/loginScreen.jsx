@@ -1,15 +1,14 @@
 import React, { Component } from "react";
-
+import {Redirect} from 'react-router-dom';
+import googleAuth from './GoogleAuth';
+import {auth} from "../assets/auth";
 import { socket } from "../assets/socket";
 import "../assets/App.css";
 import UsernameSelection from "./usernameSelection";
 import MenuScreen from "../menuScreen";
 import Header from "../assets/header";
 import Break from "../assets/break";
-import FacebookLogin from "react-facebook-login";
-import GitHubLogin from "react-github-login";
 import Sound from "react-sound";
-import { wait } from "@testing-library/dom";
 import ClickSound from "../sounds/click.js";
 
 class LoginScreen extends Component {
@@ -24,25 +23,30 @@ class LoginScreen extends Component {
             image: "",
             clickStatus: "PAUSED",
         };
-        this.goToLobby = this.goToLobby.bind(this);
-        this.googleSDK = this.googleSDK.bind(this);
-        this.prepareLoginButton = this.prepareLoginButton.bind(this);
+        // console.log("auth in const of loginscreen is ...", auth.isAuthenticated());
         this.playSound = this.playSound.bind(this);
         this.songSelection = Math.floor(Math.random() * 5);
     }
 
     componentDidMount() {
-        console.log("component did mount!");
-        this.googleSDK();
+        googleAuth.load();
+        // this.googleSDK();
 
         socket.on("user database check", (username) => {
+            auth.login();
+
             console.log("checking if user exists");
             // if the user "exists" in database, then not a new user and will go straight to main menu
             // otherwise, go to the username selection
             if (username !== null) {
+                let googleUser = googleAuth.loginInfo();
+                console.log("got info from auth ... ", googleUser);
                 this.setState({
                     newUser: false,
                     userName: username,
+                    id: googleUser.id,
+                    email: googleUser.email,
+                    image: googleUser.image
                 });
             } else {
                 // this else statement is a little redundant since newUser is initialized to be true
@@ -51,97 +55,30 @@ class LoginScreen extends Component {
                     newUser: true,
                 });
             }
-            this.goToLobby();
+            // this.goToLobby();
         });
     }
 
     componentWillUnmount() {
+        console.log("Unmounting login screen!");
         socket.off("user database check");
     }
 
-    goToLobby() {
-        this.setState((state) => ({
+    /*goToLobby() {
+        this.setState({
             SignIn: true,
-        }));
-    }
+        });
+    }*/
 
-    googleSDK() {
-        window["googleSDKLoaded"] = () => {
-            window["gapi"].load("auth2", () => {
-                this.auth2 = window["gapi"].auth2.init({
-                    client_id:
-                        "855332695584-bdpq7iidn0g11ehf2l3h5r3s61cs922m.apps.googleusercontent.com",
-                    cookiepolicy: "single_host_origin",
-                    scope: "profile email",
-                });
-                this.prepareLoginButton();
-            });
-            // this.prepareLoginButton();
-            // this.auth2.then(() => {
-            //     this.setState({
-            //       SignIn: this.auth2.isSignedIn.get(),
-            //     });
-            //   });
-            //   });
-        };
-
-        (function (d, s, id) {
-            var js,
-                fjs = d.getElementsByTagName(s)[0];
-            if (d.getElementById(id)) {
-                return;
-            }
-            js = d.createElement(s);
-            js.id = id;
-            js.src = "https://apis.google.com/js/platform.js?onload=googleSDKLoaded";
-            fjs.parentNode.insertBefore(js, fjs);
-        })(document, "script", "google-jssdk");
-    }
-
-    prepareLoginButton = () => {
-        console.log(this.refs.googleLoginBtn);
-
-        this.auth2.attachClickHandler(
-            this.refs.googleLoginBtn,
-            {},
-            (googleUser) => {
-                console.log("BUTTON PRESSED");
-                let profile = googleUser.getBasicProfile();
-                console.log("Token || " + googleUser.getAuthResponse().id_token);
-                console.log("ID: " + profile.getId());
-                console.log("Name: " + profile.getName());
-                console.log("Image URL: " + profile.getImageUrl());
-                console.log("Email: " + profile.getEmail());
-
-                // send event to server to check whether the user exists in our database
-                console.log("emitting check to server");
-                socket.emit("user exists check", profile.getEmail());
-
-                // i removed the signin = true portion and will do it once i get a check if the user exists
-                this.setState({
-                    userName: profile.getName(),
-                    id: profile.getId(),
-                    email: profile.getEmail(),
-                    image: profile.getImageUrl(),
-                });
-            },
-            (error) => {
-                // alert(JSON.stringify(error, undefined, 2));
-                // If you close the popup, it still says that user is signedin
-                console.log(this.auth2.isSignedIn.get());
-                console.log("USERNAME: " + this.state.userName);
-            }
-        );
-    };
 
     playSound() {
         ClickSound();
     }
 
     render() {
-        let comp;
-        if (this.state.SignIn === false) {
-            comp = (
+        let component = null;
+        if (!auth.isAuthenticated) {
+            component = (
                 <div className="GameWindow">
                     <div className="header">
                         <div className="logo">
@@ -153,36 +90,35 @@ class LoginScreen extends Component {
                         <div className="LoginScreen">
                             <button
                                 type="button"
+                                id="googleLogin"
                                 className="btn btn-danger"
-                                ref="googleLoginBtn"
-                                onClick={this.playSound}>
+                                >
                                 Google
                             </button>
 
-                            {/* <GitHubLogin clientId="a4f49e854204af56549d"
-                                redirectUri=""
-                                onSuccess={this.ghData}
-                                onFailure={this.ghFail}
-                                className="btn btn-success"
-                                buttonText="Github"
-                            /> */}
                         </div>
                     </div>
                 </div>
             );
         } else {
-            // comp = <MenuScreen name={this.state.userName} id={this.state.id}/>
-            // comp = <Lobby/>
             if (this.state.newUser) {
-                comp = <UsernameSelection email={this.state.email} image={this.state.image} />;
+                component = <Redirect to={{
+                        pathname: '/UsernameSelection',
+                        state: {
+                            email: this.state.email,
+                            image: this.state.image
+                        }
+                    }}/>;
+                    //<UsernameSelection email={this.state.email} image={this.state.image} />;
             } else {
-                comp = (
-                    <MenuScreen
-                        name={this.state.userName}
-                        email={this.state.email}
-                        image={this.state.image}
-                    />
-                );
+                component = <Redirect to={{
+                    pathname: '/MainMenu',
+                    state: {
+                        name: this.state.userName,
+                        email: this.state.email,
+                        image: this.state.image
+                    }
+                }}/>;
             }
         }
         let songURL = "";
@@ -218,7 +154,7 @@ class LoginScreen extends Component {
                     muted="muted"
                     loop="true"
                 />
-                {comp}
+                {component}
             </div>
         );
     }

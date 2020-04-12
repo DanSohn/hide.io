@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import MenuScreen from "../menuScreen";
+import {Redirect } from "react-router-dom";
 import { socket } from "../assets/socket";
 import Header from "../assets/header";
 import Break from "../assets/break";
@@ -10,15 +10,15 @@ class UsernameSelection extends Component {
         this.state = {
             typing: "",
             username: "",
-            email: this.props.email,
-            image: this.props.image,
+            email: this.props.location.state.email,
+            image: this.props.location.state.image,
         };
         this.submitUsername = this.submitUsername.bind(this);
         this.handleKeyboard = this.handleKeyboard.bind(this);
     }
 
     handleKeyboard(e) {
-        console.log(e.target.value);
+        // console.log(e.target.value);
         this.setState({
             typing: e.target.value,
         });
@@ -39,9 +39,9 @@ class UsernameSelection extends Component {
     }
 
     render() {
-        let comp;
+        let component;
         if (this.state.username === "") {
-            comp = (
+            component = (
                 <div className="GameWindow">
                     <Header showBack={false} showProfile={false} />
                     <Break />
@@ -62,7 +62,7 @@ class UsernameSelection extends Component {
                                 <button
                                     className="btn btn-outline-secondary"
                                     type="button"
-                                    onClick={this.submitUsername}>
+                                    >
                                     Submit
                                 </button>
                             </form>
@@ -71,15 +71,16 @@ class UsernameSelection extends Component {
                 </div>
             );
         } else {
-            comp = (
-                <MenuScreen
-                    email={this.state.email}
-                    name={this.state.username}
-                    image={this.state.image}
-                />
-            );
+            component = <Redirect to={{
+                pathname: '/MainMenu',
+                state: {
+                    email: this.state.email,
+                    name: this.state.username,
+                    image: this.state.image
+                }
+            }}/>;
         }
-        return <div>{comp}</div>;
+        return <div>{component}</div>;
     }
 }
 

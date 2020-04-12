@@ -3,6 +3,7 @@ import Lobby from "./Lobby/Lobby";
 import "./assets/App.css";
 import PlayerProfile from "./PlayerProfile.js";
 import ViewLobbies from "./Lobby/viewLobbies";
+import { auth } from "./Router";
 import Header from "./assets/header";
 import Break from "./assets/break";
 import ClickSound from "./sounds/click";
@@ -11,12 +12,12 @@ class MenuScreen extends Component {
     constructor(props) {
         super(props);
 
-        console.log("In menu screen, received the props: ", this.props.name, this.props.email);
+        console.log("In menu screen, received the props: ", this.props.location.state.name, this.props.location.state.email);
         this.state = {
             stage: 0,
-            userName: this.props.name,
-            email: this.props.email,
-            image: this.props.image,
+            userName: this.props.location.state.name,
+            email: this.props.location.state.email,
+            image: this.props.location.state.image,
         };
         this.goToPlayScreen = this.goToPlayScreen.bind(this);
         this.goToInstructions = this.goToInstructions.bind(this);
@@ -80,7 +81,14 @@ class MenuScreen extends Component {
                             <button
                                 type="button"
                                 className="btn btn-success"
-                                onClick={this.goToLogout}>
+                                onClick={()=>{
+                                    // this.goToLogout;
+                                    auth.logout(()=>{
+                                        // reason history is avail on props is b/c we loaded it via a route, which passes
+                                        // in a prop called history always
+                                        this.props.history.push('/');
+                                    });
+                                }}>
                                 Logout
                             </button>
                         </div>
