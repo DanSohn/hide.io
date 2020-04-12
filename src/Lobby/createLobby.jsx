@@ -188,7 +188,7 @@ class CreateLobby extends Component {
                 </div>
             );
         }
-        return <div>{comp}</div>;
+        return <>{comp}</>;
     }
 }
 

@@ -1,23 +1,23 @@
 import React, { Component } from 'react';
+import {Redirect} from "react-router-dom";
+
 import Header from '../assets/header';
 import Break from '../assets/break';
 import { socket } from '../assets/socket';
 
 import 'bootstrap/dist/js/bootstrap.bundle';
 import '../assets/App.css';
-import ViewLobbies from './viewLobbies';
 import ClickSound from '../sounds/click';
-import Room from './room';
 
 class JoinCode extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            userName: this.props.name,
-            email: this.props.email,
+            userName: this.props.location.state.name,
+            email: this.props.location.state.email,
+            image: this.props.location.state.image,
             previous: false,
-            image: this.props.image,
             roomID: '',
             enter_room: false,
             errorMsg: ""
@@ -59,31 +59,32 @@ class JoinCode extends Component {
                     errorMsg: "Incorrect join code. Please try again."
                 })
             }
-
-        })
-
+        });
     }
 
 
     render() {
         let comp;
         if (this.state.previous) {
-            comp = (
-                <ViewLobbies
-                    name={this.state.userName}
-                    email={this.state.email}
-                    image={this.state.image}
-                />
-            );
+            comp = <Redirect to={{
+                pathname: '/MainMenu',
+                state: {
+                    name: this.state.userName,
+                    email: this.state.email,
+                    image: this.state.image
+                }
+            }}/>
+
         } else if (this.state.enter_room === true) {
-            comp = (
-                <Room
-                    name={this.state.userName}
-                    email={this.state.email}
-                    image={this.state.image}
-                    join_code={this.state.roomID}
-                />
-            );
+            comp = <Redirect to={{
+                pathname: '/Room',
+                state: {
+                    name: this.state.userName,
+                    email: this.state.email,
+                    image: this.state.image,
+                    join_code: this.state.roomID
+                }
+            }}/>
         } else {
             comp = (
                 <div className="GameWindow">
@@ -114,7 +115,7 @@ class JoinCode extends Component {
                 </div>
             );
         }
-        return <div>{comp}</div>;
+        return <>{comp}</>;
     }
 }
 export default JoinCode;
