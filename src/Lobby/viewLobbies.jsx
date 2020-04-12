@@ -1,15 +1,16 @@
 import React, {Component} from 'react';
 import {Link, Redirect} from 'react-router-dom';
 import {socket} from '../assets/socket';
+import Cookies from 'universal-cookie';
 
 import Header from '../assets/header';
 import Break from '../assets/break';
-import Room from './room';
 import LobbyTables from './lobbyTables';
-import ClickSound from '../sounds/click';
 
 import '../assets/App.css';
+import ClickSound from '../sounds/click';
 
+const cookies = new Cookies();
 
 class ViewLobbies extends Component {
     constructor(props) {
@@ -17,9 +18,12 @@ class ViewLobbies extends Component {
 
         // note: enter lobby is what the lobbytable child fills, when the user clicks a lobby to join. ROOMID
         this.state = {
-            userName: this.props.location.state.name,
+            /*userName: this.props.location.state.name,
             email: this.props.location.state.email,
-            image: this.props.location.state.image,
+            image: this.props.location.state.image,*/
+            userName: cookies.get("name"),
+            email: cookies.get("email"),
+            image: cookies.get("image"),
             previous: false,
             goToRoom: false,
             enter_lobby: '',
@@ -67,20 +71,20 @@ class ViewLobbies extends Component {
         if (this.state.previous) {
             comp = <Redirect to={{
                 pathname: '/MainMenu',
-                state: {
+                /*state: {
                     name: this.state.userName,
                     email: this.state.email,
                     image: this.state.image
-                }
+                }*/
             }}/>
         } else {
             if (this.state.goToRoom === true) {
                 comp = <Redirect to={{
                     pathname: '/Room',
                     state: {
-                        name: this.state.userName,
+                        /*name: this.state.userName,
                         email: this.state.email,
-                        image: this.state.image,
+                        image: this.state.image,*/
                         join_code: this.state.enter_lobby
                     }
                     }}/>
@@ -94,11 +98,11 @@ class ViewLobbies extends Component {
                             <div className="createLobby">
                                 <Link to={{
                                     pathname: '/CreateLobby',
-                                    state: {
+                                    /*state: {
                                         name: this.state.userName,
                                         email: this.state.email,
                                         image: this.state.image
-                                    }
+                                    }*/
                                 }}>
                                     <button
                                         type="button"
@@ -108,11 +112,11 @@ class ViewLobbies extends Component {
                                 </Link>
                                 <Link to={{
                                     pathname: '/JoinByCode',
-                                    state: {
+                                    /*state: {
                                         name: this.state.userName,
                                         email: this.state.email,
                                         image: this.state.image
-                                    }
+                                    }*/
                                 }}>
                                     <button
                                         type="button"

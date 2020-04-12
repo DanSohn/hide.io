@@ -1,20 +1,24 @@
 import React, {Component} from "react";
-import "./assets/App.css";
-import LoginScreen from "./Login/loginScreen";
 import { Redirect } from "react-router-dom";
-import {BrowserRouter as Router} from "react-router-dom";
-import MenuScreen from "./menuScreen";
+import Cookies from "universal-cookie";
 import Header from "./assets/header";
 import Break from "./assets/break";
+
+import "./assets/App.css";
 import ClickSound from "./sounds/click";
+
+const cookies = new Cookies();
 
 class PlayerProfile extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            userName: this.props.location.state.name,
+            /*userName: this.props.location.state.name,
             email: this.props.location.state.email,
-            image: this.props.location.state.image,
+            image: this.props.location.state.image,*/
+            userName: cookies.get("name"),
+            email: cookies.get("email"),
+            image: cookies.get("image"),
             signedIn: true,
             previous: false,
         };
@@ -83,11 +87,11 @@ class PlayerProfile extends Component {
         } else {
             comp = <Redirect to={{
                 pathname: '/MainMenu',
-                state: {
+                /*state: {
                     name: this.state.userName,
                     email: this.state.email,
                     image: this.state.image
-                }
+                }*/
             }}/>
         }
 

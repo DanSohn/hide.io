@@ -1,24 +1,29 @@
 import React, { Component } from "react";
+import {Redirect} from "react-router-dom";
+import { socket } from "../assets/socket";
+import Cookies from 'universal-cookie';
+
 import Header from "../assets/header";
 import Break from "../assets/break";
-import { socket } from "../assets/socket";
 import Chat from "./chat";
+
+import { returnGameMode, returnGameMap, returnGameTime } from "../assets/utils";
 import "bootstrap/dist/js/bootstrap.bundle";
 import "../assets/App.css";
-import { returnGameMode, returnGameMap, returnGameTime } from "../assets/utils";
-import ViewLobbies from "./viewLobbies";
-import Game from "../Game/Game";
 import ClickSound from "../sounds/click";
-import TimerSound from "../sounds/timer";
-import {Redirect} from "react-router-dom";
+
+const cookies = new Cookies();
 
 class Room extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            userName: this.props.location.state.name,
+            /*userName: this.props.location.state.name,
             email: this.props.location.state.email,
-            image: this.props.location.state.image,
+            image: this.props.location.state.image,*/
+            userName: cookies.get("name"),
+            email: cookies.get("email"),
+            image: cookies.get("image"),
             roomID: this.props.location.state.join_code,
             title: "",
             header: "Join Code: " + this.props.location.state.join_code,
@@ -130,11 +135,11 @@ class Room extends Component {
         if (this.state.previous) {
             comp = <Redirect to={{
                 pathname: '/LobbyScreen',
-                state: {
+                /*state: {
                     name: this.state.userName,
                     email: this.state.email,
                     image: this.state.image
-                }
+                }*/
             }}/>
         } else if (this.state.start) {
             comp = <Redirect to={{

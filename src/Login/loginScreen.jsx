@@ -11,6 +11,8 @@ import "../assets/App.css";
 import Sound from "react-sound";
 import ClickSound from "../sounds/click.js";
 
+const cookies = new Cookies();
+
 class LoginScreen extends Component {
     constructor(props) {
         console.log("loading loginscreenn... auth is", auth.isAuthenticated);
@@ -24,7 +26,6 @@ class LoginScreen extends Component {
             image: "",
             clickStatus: "PAUSED",
         };
-        const cookies = new Cookies();
 
         this.playSound = this.playSound.bind(this);
         this.songSelection = Math.floor(Math.random() * 5);
@@ -35,34 +36,34 @@ class LoginScreen extends Component {
         googleAuth.load();
 
         socket.on("user database check", (username) => {
+            // user is now authenticated
             auth.login();
+            let googleUser = googleAuth.loginInfo();
 
-            console.log("checking if user exists");
+            // the cookies last for a maximum time of 1 day
+            cookies.set("email", googleUser.email, { path: "/", maxAge: 60*60*24});
+            cookies.set("image", googleUser.image, { path: "/", maxAge: 60*60*24});
+
+            // console.log("checking if user exists");
             // if the user "exists" in database, then not a new user and will go straight to main menu
             // otherwise, go to the username selection
             if (username !== null) {
-                let googleUser = googleAuth.loginInfo();
                 console.log("got info from auth ... ", googleUser);
+                cookies.set("name", username, { path: "/", maxAge: 60*60*24});
                 this.setState({
                     newUser: false,
                     userName: username,
-                    id: googleUser.id,
                     email: googleUser.email,
                     image: googleUser.image
                 });
-
-                this.cookies.set("name", username, { path: "/", maxAge: 60*60*24});
-                this.cookies.set("email", googleUser.email, { path: "/", maxAge: 60*60*24});
-                this.cookies.set("image", googleUser.image, { path: "/", maxAge: 60*60*24});
-
             } else {
                 // this else statement is a little redundant since newUser is initialized to be true
                 // but for better readability, i'll keep it in
                 this.setState({
-                    newUser: true,
+                    email: googleUser.email,
+                    image: googleUser.image
                 });
             }
-            // this.goToLobby();
         });
     }
 
@@ -111,20 +112,19 @@ class LoginScreen extends Component {
             if (this.state.newUser) {
                 component = <Redirect to={{
                         pathname: '/UsernameSelection',
-                        state: {
+                        /*state: {
                             email: this.state.email,
                             image: this.state.image
-                        }
+                        }*/
                     }}/>;
-                    //<UsernameSelection email={this.state.email} image={this.state.image} />;
             } else {
                 component = <Redirect to={{
                     pathname: '/MainMenu',
-                    state: {
+                    /*state: {
                         name: this.state.userName,
                         email: this.state.email,
                         image: this.state.image
-                    }
+                    }*/
                 }}/>;
             }
         }

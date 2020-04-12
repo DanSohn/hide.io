@@ -1,22 +1,28 @@
 import React, { Component } from 'react';
 import {Redirect} from "react-router-dom";
+import { socket } from '../assets/socket';
+import Cookies from "universal-cookie";
 
 import Header from '../assets/header';
 import Break from '../assets/break';
-import { socket } from '../assets/socket';
 
 import 'bootstrap/dist/js/bootstrap.bundle';
 import '../assets/App.css';
 import ClickSound from '../sounds/click';
+
+const cookies = new Cookies();
 
 class JoinCode extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            userName: this.props.location.state.name,
+            /*userName: this.props.location.state.name,
             email: this.props.location.state.email,
-            image: this.props.location.state.image,
+            image: this.props.location.state.image,*/
+            userName: cookies.get("name"),
+            email: cookies.get("email"),
+            image: cookies.get("image"),
             previous: false,
             roomID: '',
             enter_room: false,
@@ -68,20 +74,20 @@ class JoinCode extends Component {
         if (this.state.previous) {
             comp = <Redirect to={{
                 pathname: '/LobbyScreen',
-                state: {
+                /*state: {
                     name: this.state.userName,
                     email: this.state.email,
                     image: this.state.image
-                }
+                }*/
             }}/>
 
         } else if (this.state.enter_room === true) {
             comp = <Redirect to={{
                 pathname: '/Room',
                 state: {
-                    name: this.state.userName,
+                    /*name: this.state.userName,
                     email: this.state.email,
-                    image: this.state.image,
+                    image: this.state.image,*/
                     join_code: this.state.roomID
                 }
             }}/>

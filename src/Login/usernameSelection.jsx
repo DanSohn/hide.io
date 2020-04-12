@@ -1,8 +1,12 @@
 import React, { Component } from "react";
 import {Redirect } from "react-router-dom";
 import { socket } from "../assets/socket";
+import Cookies from 'universal-cookie';
+
 import Header from "../assets/header";
 import Break from "../assets/break";
+
+const cookies = new Cookies();
 
 class UsernameSelection extends Component {
     constructor(props) {
@@ -10,11 +14,14 @@ class UsernameSelection extends Component {
         this.state = {
             typing: "",
             username: "",
-            email: this.props.location.state.email,
-            image: this.props.location.state.image,
+            //email: this.props.location.state.email,
+            //image: this.props.location.state.image,
+            email: cookies.get("email"),
+            image: cookies.get("image")
         };
         this.submitUsername = this.submitUsername.bind(this);
         this.handleKeyboard = this.handleKeyboard.bind(this);
+
     }
 
     handleKeyboard(e) {
@@ -25,7 +32,7 @@ class UsernameSelection extends Component {
     }
 
     submitUsername() {
-        console.log("full name: ", this.state.typing);
+        cookies.set("name", this.state.typing, { path: "/", maxAge: 60*60*24});
         // i do the socket events before i set the state as I'm not sure if setting it will automatically go to rendering
         // before i continue this function
         socket.emit("create user", {
@@ -73,11 +80,11 @@ class UsernameSelection extends Component {
         } else {
             component = <Redirect to={{
                 pathname: '/MainMenu',
-                state: {
+                /*state: {
                     email: this.state.email,
                     name: this.state.username,
                     image: this.state.image
-                }
+                }*/
             }}/>;
         }
         return <div>{component}</div>;

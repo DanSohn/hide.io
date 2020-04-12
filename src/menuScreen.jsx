@@ -1,20 +1,27 @@
 import React, {Component} from "react";
 import {Link} from 'react-router-dom';
-import "./assets/App.css";
 import {auth} from "./Router";
+import Cookies from "universal-cookie";
 import { googleAuth } from "./Login/loginScreen";
+
+import "./assets/App.css";
+
 import Header from "./assets/header";
 import Break from "./assets/break";
 import ClickSound from "./sounds/click";
 
+const cookies = new Cookies();
+
 class MenuScreen extends Component {
     constructor(props) {
         super(props);
-        console.log("In menu screen, received the props: ", this.props.location.state.name, this.props.location.state.email);
         this.state = {
-            userName: this.props.location.state.name,
+            /*userName: this.props.location.state.name,
             email: this.props.location.state.email,
-            image: this.props.location.state.image,
+            image: this.props.location.state.image,*/
+            userName: cookies.get("name"),
+            email: cookies.get("email"),
+            image: cookies.get("image")
         };
     }
 
@@ -27,11 +34,11 @@ class MenuScreen extends Component {
                 <div className="menuScreen">
                     <Link to={{
                         pathname: '/LobbyScreen',
-                        state: {
+                        /*state: {
                             name: this.state.userName,
                             email: this.state.email,
                             image: this.state.image
-                        }
+                        }*/
                     }}>
                         <button
                             type="button"
@@ -42,9 +49,9 @@ class MenuScreen extends Component {
                     <Link to={{
                         pathname: '/Instructions',
                         state: {
-                            name: this.state.userName,
+                            /*name: this.state.userName,
                             email: this.state.email,
-                            image: this.state.image
+                            image: this.state.image*/
                         }
                     }}>
                         <button
@@ -56,9 +63,9 @@ class MenuScreen extends Component {
                     <Link to={{
                         pathname: '/Profile',
                         state: {
-                            name: this.state.userName,
+                            /*name: this.state.userName,
                             email: this.state.email,
-                            image: this.state.image
+                            image: this.state.image*/
                         }
                     }}>
                         <button
@@ -74,6 +81,9 @@ class MenuScreen extends Component {
                             auth.logout(() => {
                                 // reason history is avail on props is b/c we loaded it via a route, which passes
                                 // in a prop called history always
+                                cookies.remove("name");
+                                cookies.remove("email");
+                                cookies.remove("image");
                                 googleAuth.signOut();
                                 console.log("going to logout!");
                                 this.props.history.push('/');
