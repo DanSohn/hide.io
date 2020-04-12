@@ -1,9 +1,7 @@
 import React, {Component} from "react";
-import {BrowserRouter, Switch, Route} from "react-router-dom";
+import {BrowserRouter, HashRouter, Switch, Route} from "react-router-dom";
 import ProtectedRoute from "./assets/ProtectedRoute";
 import {auth} from "./assets/auth";
-import {get_cookies, set_cookies} from "./assets/cookies";
-import {socket} from "./assets/socket";
 
 import UsernameSelection from "./Login/usernameSelection";
 import MenuScreen from "./menuScreen";
@@ -26,12 +24,7 @@ class Router extends Component {
 
     componentDidMount() {
         // if cookies show authentication, then set auth to be true
-        /*let cookies_email = get_cookies("email");
-        let cookies_uname = get_cookies("name");
-        let cookies_img = get_cookies("profilePic");
-        if (cookies_email) {
-            socket.emit("user exists check", cookies_email);
-        }
+        /*
 
         socket.on("user database check", (username) => {
             if (cookies_email && cookies_uname && cookies_img) {
@@ -47,7 +40,7 @@ class Router extends Component {
 
     render() {
         return (
-            <BrowserRouter>
+            <HashRouter>
                 <div className="App">
                     <Switch>
                         <Route path="/" exact component={LoginScreen}/>
@@ -64,7 +57,7 @@ class Router extends Component {
                         <Route path="*" component={() => "404 NOT FOUND"}/>
                     </Switch>
                 </div>
-            </BrowserRouter>
+            </HashRouter>
         );
     }
 }

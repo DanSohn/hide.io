@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import { Redirect } from 'react-router-dom';
 import googleAuth from './GoogleAuth';
-import {auth} from "../assets/auth";
+import {auth} from "../Router";
 import { socket } from "../assets/socket";
-import "../assets/App.css";
-import UsernameSelection from "./usernameSelection";
-import MenuScreen from "../menuScreen";
-import Header from "../assets/header";
+import Cookies from 'universal-cookie';
+
 import Break from "../assets/break";
+
+import "../assets/App.css";
 import Sound from "react-sound";
 import ClickSound from "../sounds/click.js";
 
@@ -24,6 +24,8 @@ class LoginScreen extends Component {
             image: "",
             clickStatus: "PAUSED",
         };
+        const cookies = new Cookies();
+
         this.playSound = this.playSound.bind(this);
         this.songSelection = Math.floor(Math.random() * 5);
     }
@@ -48,6 +50,11 @@ class LoginScreen extends Component {
                     email: googleUser.email,
                     image: googleUser.image
                 });
+
+                this.cookies.set("name", username, { path: "/", maxAge: 60*60*24});
+                this.cookies.set("email", googleUser.email, { path: "/", maxAge: 60*60*24});
+                this.cookies.set("image", googleUser.image, { path: "/", maxAge: 60*60*24});
+
             } else {
                 // this else statement is a little redundant since newUser is initialized to be true
                 // but for better readability, i'll keep it in
