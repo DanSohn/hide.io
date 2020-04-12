@@ -569,7 +569,7 @@ class Game extends Component {
         });
 
         socket.on("countdown", (seconds) => {
-            if (seconds - 1 == 0) {
+            if (seconds - 1 === 0) {
                 this.setState({ countdown: false });
             }
         });
@@ -618,7 +618,7 @@ class Game extends Component {
         let comp1;
         let comp2;
         let dragon = "";
-        if (this.state.countdown == true) {
+        if (this.state.countdown === true) {
             if (this.state.playerState === 'seeker') {
                 comp1 = "You're the seeker";
                 comp2 = "Objective: Hunt them down.";
@@ -633,7 +633,7 @@ class Game extends Component {
                     <h5>{comp2}</h5>
                 </React.Fragment>
             );
-        } else if (this.state.countdown == false) {
+        } else if (this.state.countdown === false) {
             dragon = (
                 <React.Fragment>
                     <h1></h1>
