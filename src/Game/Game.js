@@ -610,10 +610,7 @@ class Game extends Component {
 
         socket.on("countdown", (seconds) => {
             if (seconds - 1 == 0) {
-                console.log("HELLO~~~~~");
                 this.setState({ countdown: false });
-            } else {
-                console.log("not done yet");
             }
         });
         // console.log(this.state);

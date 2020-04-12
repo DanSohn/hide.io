@@ -276,7 +276,6 @@ io.on("connection", (socket) => {
                 io.to(room).emit("countdown", time.seconds);
             }
             if (time.seconds > 0) {
-                console.log("we in here2");
                 time.seconds = time.seconds - 1;
             } else if (time.seconds === 0) {
                 if (time.minutes > 0) {
