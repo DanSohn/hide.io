@@ -120,7 +120,7 @@ class CreateLobby extends Component {
                 <div className="GameWindow">
                     <Header
                         previous={this.goPrevious}
-                        image={this.props.image}
+                        image={this.state.image}
                         title={this.state.title}
                     />
                     <Break />

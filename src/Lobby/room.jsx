@@ -126,22 +126,7 @@ class Room extends Component {
     render() {
         console.log("rendering in ROOM");
         let comp;
-        let countdownTimer;
-        if (this.state.startTimer) {
-            countdownTimer = (
-                <>
-                    <h4>Game Starting in </h4>
-                    <h2>{this.state.time}</h2>
-                </>
-            );
-        } else {
-            countdownTimer = (
-                <>
-                    <h4></h4>
-                    <h2></h2>
-                </>
-            );
-        }
+
         if (this.state.previous) {
             comp = <Redirect to={{
                 pathname: '/LobbyScreen',
