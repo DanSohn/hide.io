@@ -22,21 +22,6 @@ class Router extends Component {
 
     }
 
-    componentDidMount() {
-        // if cookies show authentication, then set auth to be true
-        /*
-
-        socket.on("user database check", (username) => {
-            if (cookies_email && cookies_uname && cookies_img) {
-                if (username && username === cookies_uname) {
-                    auth.login();
-                }
-            }else{
-                console.log("either don't have email or username or image stored");
-                alert("Theres been a change to your account, please log in");
-            }
-        });*/
-    }
 
     render() {
         return (

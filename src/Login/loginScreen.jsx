@@ -23,44 +23,62 @@ class LoginScreen extends Component {
             userName: "",
             id: "",
             email: "",
+            cookieCheck: false,
             clickStatus: "PAUSED",
         };
 
         this.playSound = this.playSound.bind(this);
+        this.checkExistingCookies = this.checkExistingCookies.bind(this);
         this.songSelection = Math.floor(Math.random() * 5);
     }
 
+    // i will check for existing cookies and ask the server if the email username combination exists
+    checkExistingCookies(){
+        // if cookies show authentication, then set auth to be true
+        if(cookies.get("email") && cookies.get("name") && cookies.get("image")){
+            socket.emit("user exists check", cookies.get("email"));
+            this.setState({cookieCheck: true})
+        }
+
+    }
     componentDidMount() {
-        console.log("component did mount");
+        this.checkExistingCookies();
+        // load the google API and have it ready
         googleAuth.load();
 
         socket.on("user database check", (username) => {
-            // user is now authenticated
-            auth.login();
-            let googleUser = googleAuth.loginInfo();
+            // i go through this if statement if checkExistingCookies was called
+            // if cookies and username does match, i will log right in
+            if(this.state.cookieCheck){
+                this.setState({cookieCheck: false});
+                if(username === cookies.get("name")){
+                    console.log("Using cookies to log in ");
+                    auth.login();
+                    this.setState({newUser: false})
+                }
+            }else{
+                // user is now authenticated
+                auth.login();
+                let googleUser = googleAuth.loginInfo();
 
-            // the cookies last for a maximum time of 1 day
-            cookies.set("email", googleUser.email, { path: "/", maxAge: 60*60*24});
-            cookies.set("image", googleUser.image, { path: "/", maxAge: 60*60*24});
+                // the cookies last for a maximum time of 1 day
+                cookies.set("email", googleUser.email, { path: "/", maxAge: 60*60*24});
+                cookies.set("image", googleUser.image, { path: "/", maxAge: 60*60*24});
 
-            // console.log("checking if user exists");
-            // if the user "exists" in database, then not a new user and will go straight to main menu
-            // otherwise, go to the username selection
-            if (username !== null) {
-                console.log("got info from auth ... ", googleUser);
-                cookies.set("name", username, { path: "/", maxAge: 60*60*24});
-                this.setState({
-                    newUser: false,
-                    userName: username,
-                    email: googleUser.email,
-                });
-            } else {
-                // this else statement is a little redundant since newUser is initialized to be true
-                // but for better readability, i'll keep it in
-                this.setState({
-                    email: googleUser.email,
-                });
+                if (username !== null) {
+                    cookies.set("name", username, { path: "/", maxAge: 60*60*24});
+                    this.setState({
+                        newUser: false,
+                        userName: username,
+                        email: googleUser.email,
+                    });
+                } else {
+                    this.setState({
+                        email: googleUser.email,
+                    });
+                }
             }
+
         });
     }
 
