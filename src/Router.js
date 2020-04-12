@@ -21,9 +21,7 @@ class Router extends Component {
     constructor(props) {
         //console.log("Router constructor");
         super(props);
-        this.state = {
-            apiResponse: "",
-        };
+
     }
 
     componentDidMount() {
