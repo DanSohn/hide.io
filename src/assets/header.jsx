@@ -1,5 +1,9 @@
 import React, { Component } from "react";
+import Cookies from 'universal-cookie';
+
 import "./App.css";
+
+const cookies = new Cookies();
 
 class Header extends Component {
     constructor(props) {
@@ -7,7 +11,8 @@ class Header extends Component {
         this.state = {
             showBack: this.props.showBack,
             showProfile: this.props.showProfile,
-            image: this.props.image,
+            image: cookies.get("image"),
+            email: cookies.get("email"),
             title: this.props.title,
             goBack: false,
             goProfile: false
@@ -20,6 +25,7 @@ class Header extends Component {
             goBack: true
         });
     }
+
     goProfile() {
         this.setState({
             goProfile: true
@@ -54,14 +60,14 @@ class Header extends Component {
             );
         }
         comp = (
-            <React.Fragment>
+            <>
                 <div className="backButton">{back}</div>
                 <div className="logo">
                     <h1>Hide.IO</h1>
                     <h2>{this.state.title}</h2>
                 </div>
                 <div className="profile">{profile}</div>
-            </React.Fragment>
+            </>
         );
         return <div className="header">{comp}</div>;
     }
