@@ -393,33 +393,19 @@ class Game extends Component {
 
         this.ctx.fillStyle = fill;
 
-<<<<<<< HEAD
      
 
         this.ctx.beginPath();
         if (this.state.hitpoints.length > 0){
             this.ctx.beginPath();
-=======
-        if (this.state.hitpoints.length === 0) {
-
-        }
-
-        this.ctx.beginPath();
-        if (this.state.hitpoints.length > 0) {
->>>>>>> 3d852aee7b4974f6b89d7a4159f6d7e2e0e2367a
             this.ctx.moveTo(this.state.hitpoints[0].x, this.state.hitpoints[0].y);
             for (let i = 1; i < this.state.hitpoints.length; i++) {
                 let intersect = this.state.hitpoints[i];
                 this.ctx.lineTo(intersect.x, intersect.y);
             }
-<<<<<<< HEAD
         }else{
             console.log(playerX, this.camera.x);
             this.ctx.rect(0, 0, this.camera.width, this.camera.height )
-=======
-        } else {
-            this.ctx.rect(this.camera.x, this.camera.y, this.camera.width, this.camera.height)
->>>>>>> 3d852aee7b4974f6b89d7a4159f6d7e2e0e2367a
         }
 
         this.ctx.fill();
@@ -427,7 +413,6 @@ class Game extends Component {
         this.ctx.restore();
     }
 
-<<<<<<< HEAD
     detectEnamies(playerValues){
 
         let enamyScreenX = (playerValues.x - this.camera.x);
@@ -443,18 +428,6 @@ class Game extends Component {
                 socket.emit("player caught", playerValues.id)
                 return;
             }
-=======
-    detectEnamies(valuex, valuey) {
-
-
-        if (this.Player.screenX < valuex + this.state.map.tsize &&
-            this.Player.screenX + this.state.map.tsize > valuex &&
-            this.Player.screenY < valuey + this.state.map.tsize &&
-            this.Player.screenY + this.state.map.tsize > valuey) {
-            console.log("collision detected")
-            return;
-        }
->>>>>>> 3d852aee7b4974f6b89d7a4159f6d7e2e0e2367a
 
     }
 
