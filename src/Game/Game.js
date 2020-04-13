@@ -85,6 +85,8 @@ class Game extends Component {
             hitpoints: [],
             enamies: new Map(),
 
+            alive: true,
+
             //Game window size, it is used in the calculation of what portion of the map is viewed.
             timeLimit: this.props.timeLimit,
             countdown: true,
@@ -145,35 +147,41 @@ class Game extends Component {
     init() {
         Keyboard.listenForEvents([Keyboard.LEFT, Keyboard.RIGHT, Keyboard.UP, Keyboard.DOWN]);
         // this.tileAtlas = Loader.getImage('tiles');
-        this.Player = new Player(this.state.map, 160, 160);
+        if(this.state.playerState === "seeker"){
+            this.Player = new Player(this.state.map, 160, 160);
+        }else{
+            this.Player = new Player(this.state.map, 288, 160);
+        }
         this.camera = new Camera(this.state.map, 1024, 640);
         this.camera.follow(this.Player);
     }
 
     drawLayer() {
         this.setState({ walls: [] });
+
+        let tileSize = this.state.map.tsize;
         //calculate camera view space and attains apropriate start and end of the render space.
-        let startCol = Math.floor(this.camera.x / this.state.map.tsize);//
-        let endCol = startCol + this.camera.width / this.state.map.tsize;
-        let startRow = Math.floor(this.camera.y / this.state.map.tsize);
-        let endRow = startRow + this.camera.height / this.state.map.tsize;
-        let offsetX = -this.camera.x + startCol * this.state.map.tsize;
-        let offsetY = -this.camera.y + startRow * this.state.map.tsize;
+        let startCol = Math.floor(this.camera.x / tileSize);//
+        let endCol = startCol + this.camera.width / tileSize;
+        let startRow = Math.floor(this.camera.y / tileSize);
+        let endRow = startRow + this.camera.height / tileSize;
+        let offsetX = -this.camera.x + startCol * tileSize;
+        let offsetY = -this.camera.y + startRow * tileSize;
         // console.log('combined ' + startCol * this.state.map.tsize + offsetX);
         // console.log('offset'+offsetX);
         // console.log('camera'+this.camera.x);
         for (let c = startCol; c <= endCol; c++) {
             for (let r = startRow; r <= endRow; r++) {
                 let tile = this.state.map.getTile(c, r);
-                let x = (c - startCol) * this.state.map.tsize + offsetX;
-                let y = (r - startRow) * this.state.map.tsize + offsetY;
+                let x = (c - startCol) * tileSize + offsetX;
+                let y = (r - startRow) * tileSize + offsetY;
                 // console.log('draw'+x)
 
                 if (tile !== 0) {
                     // 0 => empty tile
 
                     this.ctx.beginPath();
-                    this.ctx.rect(Math.round(x), Math.round(y), this.state.map.tsize, this.state.map.tsize);
+                    this.ctx.rect(Math.round(x), Math.round(y), tileSize, tileSize);
 
                     //Floor tile --- traversable.
                     if (tile === 1) {
@@ -189,6 +197,8 @@ class Game extends Component {
                         this.ctx.fillStyle = "#0c0c0c";
                         this.updateWalls(x, y);
                     }
+                    this.ctx.strokeStyle = "#FF0000";
+
                     this.ctx.stroke();
                     this.ctx.fill();
                 }
@@ -381,19 +391,19 @@ class Game extends Component {
 
         this.ctx.fillStyle = fill;
 
-        if(this.state.hitpoints.length === 0){
-
-        }
+     
 
         this.ctx.beginPath();
         if (this.state.hitpoints.length > 0){
+            this.ctx.beginPath();
             this.ctx.moveTo(this.state.hitpoints[0].x, this.state.hitpoints[0].y);
             for (let i = 1; i < this.state.hitpoints.length; i++) {
                 let intersect = this.state.hitpoints[i];
                 this.ctx.lineTo(intersect.x, intersect.y);
             }
         }else{
-            this.ctx.rect(this.camera.x, this.camera.y, this.camera.width, this.camera.height )
+            console.log(playerX, this.camera.x);
+            this.ctx.rect(0, 0, this.camera.width, this.camera.height )
         }
     
         this.ctx.fill();
@@ -401,14 +411,19 @@ class Game extends Component {
         this.ctx.restore();
     }
 
-    detectEnamies(valuex, valuey){
+    detectEnamies(playerValues){
 
-   
-            if (this.Player.screenX < valuex + this.state.map.tsize &&
-                this.Player.screenX + this.state.map.tsize > valuex &&
-                this.Player.screenY < valuey + this.state.map.tsize &&
-                this.Player.screenY + this.state.map.tsize > valuey) {
+        let enamyScreenX = (playerValues.x - this.camera.x);
+        let enamyScreenY = (playerValues.y - this.camera.y);
+
+
+
+            if (this.Player.screenX < enamyScreenX + this.state.map.tsize &&
+                this.Player.screenX + this.state.map.tsize > enamyScreenX &&
+                this.Player.screenY < enamyScreenY + this.state.map.tsize &&
+                this.Player.screenY + this.state.map.tsize > enamyScreenY) {
                 console.log("collision detected")
+                socket.emit("player caught", playerValues.id)
                 return;
             }
 
@@ -418,6 +433,9 @@ class Game extends Component {
     drawShadow() {
         this.ctx.save();
         this.ctx.fillStyle = "#0b0b0b";
+
+        if (this.state.hitpoints.length > 0){
+
         this.ctx.beginPath();
         this.ctx.moveTo(this.state.hitpoints[0].x, this.state.hitpoints[0].y);
         for (let i = 1; i < this.state.hitpoints.length; i++) {
@@ -428,12 +446,13 @@ class Game extends Component {
 
         this.ctx.fill();
         this.ctx.restore();
+    }else{
+        return;
+    }
     }
     drawEnamies(enamyX, enamyY) {
         let enamyScreenX = (enamyX - this.camera.x) - this.Player.width / 2;
         let enamyScreenY = (enamyY - this.camera.y) - this.Player.height / 2;
-
-        this.detectEnamies(enamyScreenX + 32, enamyScreenY + 32);
 
         this.ctx.beginPath();
         this.ctx.rect(enamyScreenX, enamyScreenY, this.state.map.tsize, this.state.map.tsize);
@@ -510,37 +529,51 @@ class Game extends Component {
 
     //each game frame
     tick() {
-        this.ctx.clearRect(0, 0, 1024, 640);
-        let delta = 0.25;
-        delta = Math.min(delta, 0.25); // maximum delta of 250 ms
+        this.aliveStatusCheck();
 
-        let pastInfo = {
-            roomID: this.state.gameID,
-            x: this.Player.x,
-            y: this.Player.y,
-            id: socket.id,
-        };
+            this.ctx.clearRect(0, 0, 1024, 640);
+            let delta = 0.25;
+            delta = Math.min(delta, 0.25); // maximum delta of 250 ms
+    
+            let pastInfo = {
+                roomID: this.state.gameID,
+                x: this.Player.x,
+                y: this.Player.y,
+                id: socket.id,
+            };
 
-        this.update(delta);
-        this.gameRender();
+            //stops movement if they died.
+            if(this.state.alive){
+                this.update(delta);
+            }
+            this.gameRender();
+    
+            window.requestAnimationFrame(this.tick.bind(this));
+    
+            let info = {
+                roomID: this.state.gameID,
+                x: this.Player.x,
+                y: this.Player.y,
+                id: socket.id,
+            };
+            // Only send across socket if there's an update in position
+            if (JSON.stringify(info) !== JSON.stringify(pastInfo)  && this.state.alive) {
+                // console.log("I emitted:", info.x, info.y);
+                // console.log('this.player.x=  ' + this.Player.x + '  this.Player.screenX=  ' + this.Player.screenX + '  camera x= ' + this.camera.x)
+    
+    
+                socket.emit("player movement", info);
+            }
+   
+    }
 
-        window.requestAnimationFrame(this.tick.bind(this));
+    aliveStatusCheck(){
+        socket.on("I died", (playerID, playerName) => {
+            if(playerID === socket.id){
+                this.setState({alive: false})
+            }
 
-        let info = {
-            roomID: this.state.gameID,
-            x: this.Player.x,
-            y: this.Player.y,
-            id: socket.id,
-        };
-        // Only send across socket if there's an update in position
-        if (JSON.stringify(info) !== JSON.stringify(pastInfo)) {
-            // console.log("I emitted:", info.x, info.y);
-            // console.log('this.player.x=  ' + this.Player.x + '  this.Player.screenX=  ' + this.Player.screenX + '  camera x= ' + this.camera.x)
-
-
-            socket.emit("player movement", info);
-        }
-
+        });
     }
 
     gameRender() {
@@ -553,12 +586,14 @@ class Game extends Component {
         this.sortAngles();
        
 
-        for (let value of this.state.enamies.values()) {
-            if (value.x < this.camera.x || value.y < this.camera.y || value.x > this.camera.x + this.camera.width || value.y > this.camera.y + this.camera.height) {
+        for (let playerValue of this.state.enamies.values()) {
+            if (playerValue.x < this.camera.x || playerValue.y < this.camera.y || playerValue.x > this.camera.x + this.camera.width || playerValue.y > this.camera.y + this.camera.height) {
                 break;
             } else {
-                this.drawEnamies(value.x, value.y);
-                // this.drawLight(value.x,value.y, true);
+                if(this.state.playerState === "seeker"){
+                    this.detectEnamies(playerValue);
+                }
+                this.drawEnamies(playerValue.x, playerValue.y);
             }
         }
 
@@ -610,7 +645,7 @@ class Game extends Component {
                 //console.log("inside updating x and y are: ", players_arr[i][1].x, players_arr[i][1].y);
                 component_insides.push(
                     <Player
-                        key={players_arr[i][0]}
+                        key={players_arr[i][0]} 
                         keyVal={players_arr[i][0]}
                         xPos={players_arr[i][1].x}
                         yPos={players_arr[i][1].y}
