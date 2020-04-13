@@ -273,9 +273,6 @@ tr .btn-success {
     flex-direction: column;
     justify-content: center;
 }
-.ContentScreen p {
-    width:80%;
-}
 
 .instructions {
     width:100%;

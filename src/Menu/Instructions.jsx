@@ -29,6 +29,7 @@ class Instructions extends Component {
         });
     }
 
+
     render() {
         let comp;
         if (!this.state.previous) {

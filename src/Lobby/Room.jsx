@@ -33,7 +33,8 @@ class Room extends Component {
             start: false,
             players: {},
             playersList: [],
-            time: ""
+            time: "",
+            networkError: false
         };
         this.goPrevious = this.goPrevious.bind(this);
         this.startTimer = this.startTimer.bind(this);
@@ -118,6 +119,11 @@ class Room extends Component {
                 this.start();
             }
         });
+        socket.on("reconnect_error", (error) => {
+            // console.log("Error! Disconnected from server", error);
+            console.log("Error! Can't connect to server");
+            this.setState({networkError: true})
+        });
     }
 
     componentWillUnmount() {
@@ -126,10 +132,16 @@ class Room extends Component {
         socket.off("update lobby list");
         socket.off("game starting ack");
         socket.off("lobby current timer");
+        socket.off("reconnect_error");
+
     }
 
     render() {
-        console.log("rendering in ROOM");
+        if(this.state.networkError){
+            console.log("Going to main menu");
+            return <Redirect to="/MainMenu" />
+        }
+
         let comp;
 
         if (this.state.previous) {

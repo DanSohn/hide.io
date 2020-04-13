@@ -26,13 +26,25 @@ class ViewLobbies extends Component {
             previous: false,
             goToRoom: false,
             enter_lobby: '',
+            networkError: false
+
         };
 
         this.goPrevious = this.goPrevious.bind(this);
         this.goToJoinLobby = this.goToJoinLobby.bind(this);
     }
 
+    componentDidMount() {
+        socket.on("reconnect_error", (error) => {
+            // console.log("Error! Disconnected from server", error);
+            console.log("Error! Can't connect to server");
+            this.setState({networkError: true})
+        });
+    }
 
+    componentWillUnmount() {
+        socket.off("reconnect_error");
+    }
 
     goPrevious() {
         ClickSound();
@@ -65,6 +77,11 @@ class ViewLobbies extends Component {
     }
 
     render() {
+        if(this.state.networkError){
+            console.log("Going to main menu");
+            return <Redirect to="/MainMenu" />
+        }
+
         //the idea is, for each record in the lobby database, a new div or list will appear.
         let comp;
         if (this.state.previous) {

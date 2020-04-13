@@ -29,6 +29,7 @@ class CreateLobby extends Component {
             gameTime: "",
             gameMap: "",
             roomID: "",
+            networkError: false
         };
         this.goPrevious = this.goPrevious.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -98,7 +99,24 @@ class CreateLobby extends Component {
         });
     }
 
+    componentDidMount() {
+        socket.on("reconnect_error", (error) => {
+            // console.log("Error! Disconnected from server", error);
+            console.log("Error! Can't connect to server");
+            this.setState({networkError: true})
+        });
+    }
+
+    componentWillUnmount() {
+        socket.off("reconnect_error");
+    }
+
     render() {
+        if(this.state.networkError){
+            console.log("Going to main menu");
+            return <Redirect to="/MainMenu" />
+        }
+
         let comp;
         if (this.state.previous) {
             comp = <Redirect to={{

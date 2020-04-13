@@ -16,9 +16,22 @@ class UsernameSelection extends Component {
             username: "",
             //email: this.props.location.state.email,
             email: cookies.get("email"),
+            networkError: false
         };
         this.submitUsername = this.submitUsername.bind(this);
         this.handleKeyboard = this.handleKeyboard.bind(this);
+    }
+
+    componentDidMount() {
+        socket.on("reconnect_error", (error) => {
+            // console.log("Error! Disconnected from server", error);
+            console.log("Error! Can't connect to server");
+            this.setState({networkError: true})
+        });
+    }
+
+    componentWillUnmount() {
+        socket.off("reconnect_error");
     }
 
     handleKeyboard(e) {
@@ -41,6 +54,10 @@ class UsernameSelection extends Component {
     }
 
     render() {
+        if(this.state.networkError){
+            console.log("Going to main menu");
+            return <Redirect to="/" />
+        }
         let component;
         if (this.state.username === "") {
             component = (

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Redirect} from "react-router-dom";
+import {Link, Redirect} from "react-router-dom";
 import { socket } from '../assets/socket';
 import Cookies from "universal-cookie";
 
@@ -25,12 +25,25 @@ class JoinCode extends Component {
             previous: false,
             roomID: '',
             enter_room: false,
-            errorMsg: ""
+            errorMsg: "",
+            networkError: false
         };
 
         this.goPrevious = this.goPrevious.bind(this);
         this.handleKeyboard = this.handleKeyboard.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    componentDidMount() {
+        socket.on("reconnect_error", (error) => {
+            // console.log("Error! Disconnected from server", error);
+            console.log("Error! Can't connect to server");
+            this.setState({networkError: true})
+        });
+    }
+
+    componentWillUnmount() {
+        socket.off("reconnect_error");
     }
 
     goPrevious() {
@@ -69,6 +82,11 @@ class JoinCode extends Component {
 
 
     render() {
+        if(this.state.networkError){
+            console.log("Going to main menu");
+            return <Redirect to="/MainMenu" />
+        }
+
         let comp;
         if (this.state.previous) {
             comp = <Redirect to={{

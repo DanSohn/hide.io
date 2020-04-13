@@ -11,6 +11,7 @@ import { socket } from "../assets/socket";
 import Point from "./Point";
 import Timer from "../Game/Timer";
 import AliveList from "./AliveList";
+import {Redirect} from "react-router-dom";
 
 // import Keyboard from './Keyboard'
 let Keyboard = {};
@@ -614,6 +615,19 @@ class Game extends Component {
             }
         });
         // console.log(this.state);
+
+        socket.on("reconnect_error", (error) => {
+            // console.log("Error! Disconnected from server", error);
+            console.log("Error! Can't connect to server");
+            this.setState({networkError: true})
+        });
+    }
+
+    componentWillUnmount() {
+        socket.off("Redraw positions");
+        socket.off("countdown");
+        socket.off("reconnect_error");
+
     }
 
     // this function creates multiple player components
@@ -654,6 +668,11 @@ class Game extends Component {
     }
 
     render() {
+        if(this.state.networkError){
+            console.log("Going to main menu");
+            return <Redirect to="/MainMenu" />
+        }
+
         let dragon = "";
         if (this.state.countdown == true) {
             dragon = (
