@@ -1,7 +1,8 @@
 import React, {Component} from "react";
 import {Link} from 'react-router-dom';
-import {auth} from "./Router";
 import Cookies from "universal-cookie";
+
+import {auth} from "./Router";
 import { googleAuth } from "./Login/LoginScreen";
 
 import "./assets/App.css";
