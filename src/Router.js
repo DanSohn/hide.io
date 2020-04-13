@@ -1,6 +1,6 @@
 import React from "react";
 import { HashRouter, Switch, Route } from "react-router-dom";
-import ProtectedRoute from "./assets/ProtectedRoute";
+import ProtectedRoute from "./assets/ProtectedRoute.jsx";
 import { auth } from "./assets/auth";
 
 import UsernameSelection from "./Login/UsernameSelection";
