@@ -1,5 +1,6 @@
 import React from "react";
 import { HashRouter, Switch, Route } from "react-router-dom";
+
 import ProtectedRoute from "./assets/ProtectedRoute.jsx";
 import { auth } from "./assets/auth";
 import { socket } from "./assets/socket";
@@ -15,13 +16,15 @@ import JoinCode from "./Lobby/JoinCode";
 import Room from "./Lobby/Room";
 import Game from "./Game/Game";
 
+
 function Router() {
     socket.on("reconnect", attemptNumber => {
         console.log("Reconnected to server on try", attemptNumber);
     });
-    
+
     socket.on("reconnect_error", (error) =>{
-        console.log("Error! Disconnected from server", error);
+        // console.log("Error! Disconnected from server", error);
+        console.log("Error! Can't connect to server");
     });
 
     return (
