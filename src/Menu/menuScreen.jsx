@@ -5,11 +5,13 @@ import Cookies from "universal-cookie";
 import {auth} from "./Router";
 import { googleAuth } from "./Login/LoginScreen";
 
-import "./assets/App.css";
 
-import Header from "./assets/Header";
-import Break from "./assets/Break";
+import "../assets/App.css";
+
+import Header from "../assets/Header";
+import Break from "../assets/Break";
 import ClickSound from "./sounds/click";
+
 
 const cookies = new Cookies();
 
@@ -28,8 +30,8 @@ class MenuScreen extends Component {
 
     render() {
         return <div className="GameWindow">
-            <Header showBack={false}/>
-            <Break/>
+            <Header showBack={false} />
+            <Break />
             <div className="ContentScreen">
                 <div className="menuScreen">
                     <Link to={{

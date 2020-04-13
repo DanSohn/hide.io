@@ -4,15 +4,15 @@ import ProtectedRoute from "./assets/ProtectedRoute.jsx";
 import { auth } from "./assets/auth";
 
 import UsernameSelection from "./Login/UsernameSelection";
-import MenuScreen from "./MenuScreen";
+import MenuScreen from "./Menu/MenuScreen";
 import {LoginScreen} from "./Login/LoginScreen";
-import PlayerProfile from "./PlayerProfile";
+import PlayerProfile from "./Menu/PlayerProfile";
 import ViewLobbies from "./Lobby/ViewLobbies";
 import CreateLobby from "./Lobby/CreateLobby";
 import JoinCode from "./Lobby/JoinCode";
 import Room from "./Lobby/Room";
 import Game from "./Game/Game";
-
+import Instructions from "./Menu/Instructions";
 
 function Router() {
     return (
@@ -21,14 +21,15 @@ function Router() {
                 <Switch>
                     <Route path="/" exact component={LoginScreen}/>
 
-                    <ProtectedRoute path="/UsernameSelection" component={UsernameSelection}/>
-                    <ProtectedRoute path="/MainMenu" component={MenuScreen}/>
-                    <ProtectedRoute path="/LobbyScreen" component={ViewLobbies}/>
-                    <ProtectedRoute path="/Profile" component={PlayerProfile}/>
-                    <ProtectedRoute path="/CreateLobby" component={CreateLobby}/>
-                    <ProtectedRoute path="/JoinByCode" component={JoinCode}/>
-                    <ProtectedRoute path="/Room" component={Room}/>
-                    <ProtectedRoute path="/Game" component={Game}/>
+                    <ProtectedRoute path="/UsernameSelection" component={UsernameSelection} />
+                    <ProtectedRoute path="/MainMenu" component={MenuScreen} />
+                    <ProtectedRoute path="/LobbyScreen" component={ViewLobbies} />
+                    <ProtectedRoute path="/Profile" component={PlayerProfile} />
+                    <ProtectedRoute path="/Instructions" component={Instructions} />
+                    <ProtectedRoute path="/CreateLobby" component={CreateLobby} />
+                    <ProtectedRoute path="/JoinByCode" component={JoinCode} />
+                    <ProtectedRoute path="/Room" component={Room} />
+                    <ProtectedRoute path="/Game" component={Game} />
 
                     <Route path="*" component={() => "404 NOT FOUND"}/>
                 </Switch>
@@ -37,4 +38,4 @@ function Router() {
     );
 }
 
-export {Router, auth};
+export { Router, auth };
