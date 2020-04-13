@@ -1,14 +1,14 @@
-import React, {Component} from "react";
-import {Link} from 'react-router-dom';
-import {auth} from "./Router";
+import React, { Component } from "react";
+import { Link } from 'react-router-dom';
+import { auth } from "../Router";
 import Cookies from "universal-cookie";
-import { googleAuth } from "./Login/loginScreen";
+import { googleAuth } from "../Login/loginScreen";
 
-import "./assets/App.css";
+import "../assets/App.css";
 
-import Header from "./assets/header";
-import Break from "./assets/break";
-import ClickSound from "./sounds/click";
+import Header from "../assets/header";
+import Break from "../assets/break";
+import ClickSound from "../sounds/click";
 
 const cookies = new Cookies();
 
@@ -27,8 +27,8 @@ class MenuScreen extends Component {
 
     render() {
         return <div className="GameWindow">
-            <Header showBack={false}/>
-            <Break/>
+            <Header showBack={false} />
+            <Break />
             <div className="ContentScreen">
                 <div className="menuScreen">
                     <Link to={{

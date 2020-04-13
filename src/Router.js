@@ -1,12 +1,12 @@
-import React, {Component} from "react";
-import {BrowserRouter, HashRouter, Switch, Route} from "react-router-dom";
+import React, { Component } from "react";
+import { BrowserRouter, HashRouter, Switch, Route } from "react-router-dom";
 import ProtectedRoute from "./assets/ProtectedRoute";
-import {auth} from "./assets/auth";
+import { auth } from "./assets/auth";
 
 import UsernameSelection from "./Login/usernameSelection";
-import MenuScreen from "./menuScreen";
+import MenuScreen from "./Menu/menuScreen";
 import { LoginScreen } from "./Login/loginScreen";
-import PlayerProfile from "./PlayerProfile";
+import PlayerProfile from "./Menu/PlayerProfile";
 import ViewLobbies from "./Lobby/viewLobbies";
 import CreateLobby from "./Lobby/createLobby";
 import JoinCode from "./Lobby/joinCode";
@@ -28,18 +28,18 @@ class Router extends Component {
             <HashRouter>
                 <div className="App">
                     <Switch>
-                        <Route path="/" exact component={LoginScreen}/>
+                        <Route path="/" exact component={LoginScreen} />
 
-                        <ProtectedRoute path="/UsernameSelection" component={UsernameSelection}/>
-                        <ProtectedRoute path="/MainMenu" component={MenuScreen}/>
-                        <ProtectedRoute path="/LobbyScreen" component={ViewLobbies}/>
-                        <ProtectedRoute path="/Profile" component={PlayerProfile}/>
-                        <ProtectedRoute path="/CreateLobby" component={CreateLobby}/>
-                        <ProtectedRoute path="/JoinByCode" component={JoinCode}/>
-                        <ProtectedRoute path="/Room" component={Room}/>
-                        <ProtectedRoute path="/Game" component={Game}/>
+                        <ProtectedRoute path="/UsernameSelection" component={UsernameSelection} />
+                        <ProtectedRoute path="/MainMenu" component={MenuScreen} />
+                        <ProtectedRoute path="/LobbyScreen" component={ViewLobbies} />
+                        <ProtectedRoute path="/Profile" component={PlayerProfile} />
+                        <ProtectedRoute path="/CreateLobby" component={CreateLobby} />
+                        <ProtectedRoute path="/JoinByCode" component={JoinCode} />
+                        <ProtectedRoute path="/Room" component={Room} />
+                        <ProtectedRoute path="/Game" component={Game} />
 
-                        <Route path="*" component={() => "404 NOT FOUND"}/>
+                        <Route path="*" component={() => "404 NOT FOUND"} />
                     </Switch>
                 </div>
             </HashRouter>
@@ -47,4 +47,4 @@ class Router extends Component {
     }
 }
 
-export {Router, auth};
+export { Router, auth };
