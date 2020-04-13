@@ -76,7 +76,7 @@ class Game extends Component {
             msg: "",
             num_of_players: this.props.numPlayers,
             players: this.props.players,
-            playerState: this.props.playerState,
+            playerState: this.props.location.state.playerState,
             playerColor: playerColor,
 
             gameID: this.props.location.state.gameID,
