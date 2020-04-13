@@ -1,8 +1,9 @@
-import React, { Component } from "react";
-import { Redirect } from "react-router-dom";
+import React, {Component} from "react";
+import {Redirect} from "react-router-dom";
 import Cookies from "universal-cookie";
-import Header from "../assets/header";
-import Break from "../assets/break";
+
+import Header from "../assets/Header";
+import Break from "../assets/Break";
 
 import "../assets/App.css";
 import ClickSound from "../sounds/click";
@@ -25,7 +26,7 @@ class PlayerProfile extends Component {
     }
 
     goPrevious() {
-        ClickSound()
+        ClickSound();
         this.setState({
             previous: true
         });
@@ -40,7 +41,7 @@ class PlayerProfile extends Component {
                         previous={this.goPrevious}
                         title="Profile"
                     />
-                    <Break />
+                    <Break/>
                     <div className="ContentScreen">
                         <div className="profileLabels">
                             <h2>Name:</h2>
@@ -83,13 +84,16 @@ class PlayerProfile extends Component {
                 </div>
             );
         } else {
-            comp = <Redirect to={{
-                pathname: '/MainMenu',
-                /*state: {
-                    name: this.state.userName,
-                    email: this.state.email,
-                }*/
-            }} />
+            comp = (
+                <Redirect to={{
+                    pathname: '/MainMenu',
+                    /*state: {
+                        name: this.state.userName,
+                        email: this.state.email,
+                    }*/
+                }}/>
+            );
+
         }
 
         return <>{comp}</>;

@@ -3,9 +3,9 @@ import {Link, Redirect} from 'react-router-dom';
 import {socket} from '../assets/socket';
 import Cookies from 'universal-cookie';
 
-import Header from '../assets/header';
-import Break from '../assets/break';
-import LobbyTables from './lobbyTables';
+import Header from '../assets/Header';
+import Break from '../assets/Break';
+import LobbyTables from './LobbyTables';
 
 import '../assets/App.css';
 import ClickSound from '../sounds/click';

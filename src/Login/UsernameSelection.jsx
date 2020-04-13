@@ -1,10 +1,10 @@
-import React, { Component } from "react";
-import {Redirect } from "react-router-dom";
-import { socket } from "../assets/socket";
+import React, {Component} from "react";
+import {Redirect} from "react-router-dom";
+import {socket} from "../assets/socket";
 import Cookies from 'universal-cookie';
 
-import Header from "../assets/header";
-import Break from "../assets/break";
+import Header from "../assets/Header";
+import Break from "../assets/Break";
 
 const cookies = new Cookies();
 
@@ -19,20 +19,17 @@ class UsernameSelection extends Component {
         };
         this.submitUsername = this.submitUsername.bind(this);
         this.handleKeyboard = this.handleKeyboard.bind(this);
-
     }
 
     handleKeyboard(e) {
-        // console.log(e.target.value);
         this.setState({
             typing: e.target.value,
         });
     }
 
     submitUsername() {
-        cookies.set("name", this.state.typing, { path: "/", maxAge: 60*60*24});
-        // i do the socket events before i set the state as I'm not sure if setting it will automatically go to rendering
-        // before i continue this function
+        cookies.set("name", this.state.typing, {path: "/", maxAge: 60 * 60 * 24});
+
         socket.emit("create user", {
             username: this.state.typing,
             email: this.state.email,
@@ -48,8 +45,8 @@ class UsernameSelection extends Component {
         if (this.state.username === "") {
             component = (
                 <div className="GameWindow">
-                    <Header showBack={false} />
-                    <Break />
+                    <Header showBack={false}/>
+                    <Break/>
                     <div className="ContentScreen">
                         <div className="usernameSelection">
                             <h2>Choose GamerTag</h2>
@@ -63,11 +60,11 @@ class UsernameSelection extends Component {
                                     onChange={this.handleKeyboard}
                                     value={this.state.typing}
                                 />
-                                <br />
+                                <br/>
                                 <button
                                     className="btn btn-outline-secondary"
                                     type="button"
-                                    >
+                                >
                                     Submit
                                 </button>
                             </form>
@@ -76,15 +73,17 @@ class UsernameSelection extends Component {
                 </div>
             );
         } else {
-            component = <Redirect to={{
-                pathname: '/MainMenu',
-                /*state: {
-                    email: this.state.email,
-                    name: this.state.username,
-                }*/
-            }}/>;
+            component = (
+                <Redirect to={{
+                    pathname: '/MainMenu',
+                    /*state: {
+                        email: this.state.email,
+                        name: this.state.username,
+                    }*/
+                }}/>
+            );
         }
-        return <div>{component}</div>;
+        return <>{component}</>;
     }
 }
 
