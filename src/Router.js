@@ -1,51 +1,50 @@
-import React, { Component } from "react";
-// import Lobby from "./Lobby/Lobby";
-// import Background from './Background';
-import LoginScreen from "./Login/loginScreen";
+import React, {Component} from "react";
+import {BrowserRouter, HashRouter, Switch, Route} from "react-router-dom";
+import ProtectedRoute from "./assets/ProtectedRoute";
+import {auth} from "./assets/auth";
 
-//import {socket} from './socket';
+import UsernameSelection from "./Login/usernameSelection";
+import MenuScreen from "./menuScreen";
+import { LoginScreen } from "./Login/loginScreen";
+import PlayerProfile from "./PlayerProfile";
+import ViewLobbies from "./Lobby/viewLobbies";
+import CreateLobby from "./Lobby/createLobby";
+import JoinCode from "./Lobby/joinCode";
+import Room from "./Lobby/room";
+import Game from "./Game/Game";
+
 
 class Router extends Component {
     // might need to import props at another time?
     constructor(props) {
         //console.log("Router constructor");
         super(props);
-        this.state = {
-            apiResponse: "",
-        };
-        // initialize my socket
-        //socket = io();
-    }
 
-    /*
-
-EXAMPLE OF FETCHING API CALL FROM THE SERVER
-    callAPI() {
-        console.log("Router callAPI");
-
-        fetch("http://localhost:3001/")
-            .then(res => res.text())
-            .then(res => this.setState({ apiResponse: res }));
-    }
-
-    componentWillMount() {
-        console.log("Router componentWillMount");
-
-        this.callAPI();
     }
 
 
- */
     render() {
-        //console.log("Router render");
-        // here, or whenever I actually enter the game, I would pass in the number of players
         return (
-            <div className="App">
-                <LoginScreen />
-                <p className="App-intro">{this.state.apiResponse}</p>
-            </div>
+            <HashRouter>
+                <div className="App">
+                    <Switch>
+                        <Route path="/" exact component={LoginScreen}/>
+
+                        <ProtectedRoute path="/UsernameSelection" component={UsernameSelection}/>
+                        <ProtectedRoute path="/MainMenu" component={MenuScreen}/>
+                        <ProtectedRoute path="/LobbyScreen" component={ViewLobbies}/>
+                        <ProtectedRoute path="/Profile" component={PlayerProfile}/>
+                        <ProtectedRoute path="/CreateLobby" component={CreateLobby}/>
+                        <ProtectedRoute path="/JoinByCode" component={JoinCode}/>
+                        <ProtectedRoute path="/Room" component={Room}/>
+                        <ProtectedRoute path="/Game" component={Game}/>
+
+                        <Route path="*" component={() => "404 NOT FOUND"}/>
+                    </Switch>
+                </div>
+            </HashRouter>
         );
     }
 }
 
-export { Router };
+export {Router, auth};

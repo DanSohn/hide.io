@@ -1,25 +1,29 @@
-import React, { Component } from "react";
-import "./assets/App.css";
-import LoginScreen from "./Login/loginScreen";
+import React, {Component} from "react";
 import { Redirect } from "react-router-dom";
-import { BrowserRouter as Router } from "react-router-dom";
-import MenuScreen from "./menuScreen";
+import Cookies from "universal-cookie";
 import Header from "./assets/header";
 import Break from "./assets/break";
+
+import "./assets/App.css";
 import ClickSound from "./sounds/click";
+
+const cookies = new Cookies();
 
 class PlayerProfile extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            userName: this.props.name,
-            email: this.props.email,
+            /*userName: this.props.location.state.name,
+            email: this.props.location.state.email
+            */
+            userName: cookies.get("name"),
+            email: cookies.get("email"),
             signedIn: true,
             previous: false,
-            image: this.props.image
         };
         this.goPrevious = this.goPrevious.bind(this);
     }
+
     goPrevious() {
         ClickSound()
         this.setState({
@@ -34,67 +38,62 @@ class PlayerProfile extends Component {
                 <div className="GameWindow">
                     <Header
                         previous={this.goPrevious}
-                        image={this.state.image}
+                        title="Profile"
                     />
-                    <Break />
+                    <Break/>
                     <div className="ContentScreen">
                         <div className="profileLabels">
-                            <h2>Profile:</h2>
                             <h2>Name:</h2>
                             <h2>Email:</h2>
                             <h2>Win/Loss:</h2>
                             <h2>Total Games:</h2>
                         </div>
                         <div className="profileResults">
-                            <input
-                                type="text"
-                                id="email"
-                                className="form-control"
-                                placeholder="what goes here?"
-                                readOnly
-                            ></input>
+
                             <input
                                 type="text"
                                 className="form-control"
                                 id="userName"
                                 placeholder={this.state.userName}
-                            ></input>
+                                readOnly
+                            />
                             <input
                                 type="text"
                                 id="email"
                                 className="form-control"
                                 placeholder={this.state.email}
                                 readOnly
-                            ></input>
+                            />
                             <input
                                 type="text"
-                                id="email"
+                                id="kdr"
                                 className="form-control"
                                 placeholder="200/0"
                                 readOnly
-                            ></input>
+                            />
                             <input
                                 type="text"
-                                id="email"
+                                id="totalgames"
                                 className="form-control"
                                 placeholder="I assume wins + loss"
                                 readOnly
-                            ></input>
+                            />
                         </div>
                     </div>
                 </div>
             );
         } else {
-            comp = (
-                <MenuScreen
-                    name={this.state.userName}
-                    email={this.state.email}
-                    image={this.state.image}
-                />
-            );
+            comp = <Redirect to={{
+                pathname: '/MainMenu',
+                /*state: {
+                    name: this.state.userName,
+                    email: this.state.email,
+                }*/
+            }}/>
         }
 
-        return <div>{comp}</div>;
+        return <>{comp}</>;
     }
 }
+
 export default PlayerProfile;
