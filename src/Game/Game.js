@@ -178,25 +178,25 @@ class Game extends Component {
             windowHeight: window.innerHeight,
             windowWidth: window.innerWidth,
             msg: "",
-            num_of_players: this.props.numPlayers,
-            players: this.props.players,
+            num_of_players: this.props.location.state.numPlayers,
+            players: this.props.location.state.players,
 
-            gameID: this.props.gameID,
+            gameID: this.props.location.state.gameID,
             game_status: "not started",
             images: {},
             walls: [],
             hitpoints: [],
 
             //Game window size, it is used in the calculation of what portion of the map is viewed.
-            timeLimit: this.props.timeLimit,
+            timeLimit: this.props.location.state.timeLimit,
             countdown: true,
 
             //This will be handling current game functions, and constants
             map: {
-                cols: this.props.map.cols,
-                rows: this.props.map.rows,
-                tsize: this.props.map.tsize,
-                tiles: this.props.map.tiles,
+                cols: this.props.location.state.map.cols,
+                rows: this.props.location.state.map.rows,
+                tsize: this.props.location.state.map.tsize,
+                tiles: this.props.location.state.map.tiles,
                 getTile: function (col, row) {
                     return this.tiles[row * this.cols + col];
                 },
