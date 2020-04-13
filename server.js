@@ -326,9 +326,10 @@ io.on("connection", (socket) => {
                         gamesInSession[room].hiders[j].splice(j, 1);
                         gamesInSession[room].caught.push(playerID);
                         io.to(room).emit("display player caught", playerID);
+                        break;
                     }
                 }
-
+                
                 if(gamesInSession[room].hiders.length === 0){
                     endGame(room, gamesInSession[room].timerID);
                 }
