@@ -318,14 +318,15 @@ io.on("connection", (socket) => {
     //When a hider is caught, they emit an event to the server to update the list of players who are still hiding and
     //haven't been caught by the seeker. Incase all the players are caught, endGame() is called before time expires.
     socket.on("player caught", (info) => {
-        let {playerID, room} = info;
+        let {playerID, playerName, room} = info;
         for(let i = 0; i < gamesInSession.length; i++){
             if(gamesInSession[room].hiders.includes(playerID)) {
                 for (let j = 0; j < gamesInSession[room].hiders.length; j++) {
                     if (gamesInSession[room].hiders[j] === playerID) {
                         gamesInSession[room].hiders[j].splice(j, 1);
                         gamesInSession[room].caught.push(playerID);
-                        io.to(room).emit("display player caught", playerID);
+                        socket.to(room).emit("I died", playerID, playerName);
+                        io.to(room).emit("display player caught", playerName);
                         break;
                     }
                 }
@@ -355,6 +356,12 @@ io.on("connection", (socket) => {
         //TODO get information about the players that were in that game and update their stats
         //TODO emit an event to all players about who won the game between hiders and seeker
         clearInterval(timerID);
+        if(gamesInSession[room].hiders.length === 0){
+            io.to(room).emit("game winner", "seeker");
+        }
+        else if(gamesInSession[room].hiders.length > 0){
+            io.to(room).emit("game winner", "hider");
+        }
         delete gamesInSession[room];
     }
 });
