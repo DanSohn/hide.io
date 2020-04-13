@@ -26,6 +26,7 @@ class Room extends Component {
             roomID: this.props.location.state.join_code,
             title: "",
             header: "Join Code: " + this.props.location.state.join_code,
+            playerState: 'hider',
             game_mode: "",
             game_map: {},
             game_time: "",
@@ -138,6 +139,7 @@ class Room extends Component {
                 state: {
                     gameID: this.state.roomID,
                     players: this.state.players,
+                    playerState: this.state.playerState,
                     map: this.state.game_map,
                     timeLimit: this.state.game_time,
                     mode: this.state.game_mode

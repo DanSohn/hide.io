@@ -124,7 +124,8 @@ class Game extends Component {
                 },
             },
         };
-
+        console.log("AM I THE SEEKER?", this.state.playerState);
+        console.log(this.props.playerState);
         // TODO: do stuff when getting the location information
         socket.on('player moved', (playerinfo) => {
 
@@ -393,41 +394,23 @@ class Game extends Component {
 
         this.ctx.fillStyle = fill;
 
-<<<<<<< HEAD
-     
 
         this.ctx.beginPath();
         if (this.state.hitpoints.length > 0){
             this.ctx.beginPath();
-=======
-        if (this.state.hitpoints.length === 0) {
-
-        }
-
-        this.ctx.beginPath();
-        if (this.state.hitpoints.length > 0) {
->>>>>>> 3d852aee7b4974f6b89d7a4159f6d7e2e0e2367a
             this.ctx.moveTo(this.state.hitpoints[0].x, this.state.hitpoints[0].y);
             for (let i = 1; i < this.state.hitpoints.length; i++) {
                 let intersect = this.state.hitpoints[i];
                 this.ctx.lineTo(intersect.x, intersect.y);
             }
-<<<<<<< HEAD
-        }else{
-            console.log(playerX, this.camera.x);
-            this.ctx.rect(0, 0, this.camera.width, this.camera.height )
-=======
         } else {
             this.ctx.rect(this.camera.x, this.camera.y, this.camera.width, this.camera.height)
->>>>>>> 3d852aee7b4974f6b89d7a4159f6d7e2e0e2367a
         }
-
         this.ctx.fill();
 
         this.ctx.restore();
     }
 
-<<<<<<< HEAD
     detectEnamies(playerValues){
 
         let enamyScreenX = (playerValues.x - this.camera.x);
@@ -443,18 +426,6 @@ class Game extends Component {
                 socket.emit("player caught", playerValues.id)
                 return;
             }
-=======
-    detectEnamies(valuex, valuey) {
-
-
-        if (this.Player.screenX < valuex + this.state.map.tsize &&
-            this.Player.screenX + this.state.map.tsize > valuex &&
-            this.Player.screenY < valuey + this.state.map.tsize &&
-            this.Player.screenY + this.state.map.tsize > valuey) {
-            console.log("collision detected")
-            return;
-        }
->>>>>>> 3d852aee7b4974f6b89d7a4159f6d7e2e0e2367a
 
     }
 
@@ -699,10 +670,11 @@ class Game extends Component {
     }
 
     render() {
-
+        // console.log(this.state.playerState==='seeker' && this.state.game_status === 'not started');
         let comp1;
         let comp2;
         let dragon = "";
+        let canvasDisplay = this.state.playerState==='seeker' && this.state.game_status === 'not started' ? ['darkness',''] : ['','fade-in'];
         if (this.state.countdown === true) {
             if (this.state.playerState === 'seeker') {
                 comp1 = "You're the seeker";
@@ -732,8 +704,8 @@ class Game extends Component {
                     playerState={this.state.playerState} />
                 <div className="gameAction">
                     <AliveList />
-                    <div className="darkness" />
-                    <canvas className="fade-in" ref="canvas" width={1024} height={620} />
+                    <div className={canvasDisplay[0]} />
+                    <canvas className={canvasDisplay[1]} ref="canvas" width={1024} height={620} />
                     <div className="PlayerText">
                         <div className="fade-out-15">{dragon}</div>
                     </div>
