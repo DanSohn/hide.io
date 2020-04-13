@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
-import {Link, Redirect} from 'react-router-dom';
-import {socket} from '../assets/socket';
+import React, { Component } from 'react';
+import { Link, Redirect } from 'react-router-dom';
+import { socket } from '../assets/socket';
 import Cookies from 'universal-cookie';
 
 import Header from '../assets/header';
@@ -74,7 +74,7 @@ class ViewLobbies extends Component {
                     name: this.state.userName,
                     email: this.state.email,
                 }*/
-            }}/>
+            }} />
         } else {
             if (this.state.goToRoom === true) {
                 comp = <Redirect to={{
@@ -85,14 +85,14 @@ class ViewLobbies extends Component {
                         */
                         join_code: this.state.enter_lobby
                     }
-                    }}/>
+                }} />
             } else {
                 comp = (
-                    <div className="GameWindow">
-                        <Header previous={this.goPrevious}/>
-                        <Break/>
+                    <div className="z-depth-5 GameWindow">
+                        <Header previous={this.goPrevious} />
+                        <Break />
                         <div className="ContentScreen">
-                            <LobbyTables lobbyCallback={this.goToJoinLobby}/>
+                            <LobbyTables lobbyCallback={this.goToJoinLobby} />
                             <div className="createLobby">
                                 <Link to={{
                                     pathname: '/CreateLobby',
@@ -103,7 +103,7 @@ class ViewLobbies extends Component {
                                 }}>
                                     <button
                                         type="button"
-                                        className="btn btn-danger">
+                                        className="z-depth-3 btn btn-danger">
                                         CREATE LOBBY
                                     </button>
                                 </Link>
@@ -116,7 +116,7 @@ class ViewLobbies extends Component {
                                 }}>
                                     <button
                                         type="button"
-                                        className="btn btn-info">
+                                        className="z-depth-3 btn btn-info">
                                         JOIN BY CODE
                                     </button>
                                 </Link>
@@ -126,7 +126,7 @@ class ViewLobbies extends Component {
                 );
             }
         }
-        return <>{ comp }</>;
+        return <>{comp}</>;
     }
 }
 

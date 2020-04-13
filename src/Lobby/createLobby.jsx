@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {Redirect} from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import { socket } from "../assets/socket";
 import Cookies from "universal-cookie";
 
@@ -107,7 +107,7 @@ class CreateLobby extends Component {
                     name: this.state.userName,
                     email: this.state.email,
                 }*/
-            }}/>
+            }} />
         } else if (this.state.submitted) {
             comp = <Redirect to={{
                 pathname: '/Room',
@@ -117,10 +117,10 @@ class CreateLobby extends Component {
                     */
                     join_code: this.state.roomID
                 }
-            }}/>
+            }} />
         } else {
             comp = (
-                <div className="GameWindow">
+                <div className="z-depth-5 GameWindow">
                     <Header
                         previous={this.goPrevious}
                         title="Create a Lobby"
@@ -177,7 +177,7 @@ class CreateLobby extends Component {
                                         </select>
                                     </div>
                                     <div className="createLobbyContainer">
-                                        <button type="submit" className="btn btn-info">
+                                        <button type="submit" className="z-depth-3 btn btn-info">
                                             Submit
                                         </button>
                                     </div>

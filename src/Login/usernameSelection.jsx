@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {Redirect } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import { socket } from "../assets/socket";
 import Cookies from 'universal-cookie';
 
@@ -30,7 +30,7 @@ class UsernameSelection extends Component {
     }
 
     submitUsername() {
-        cookies.set("name", this.state.typing, { path: "/", maxAge: 60*60*24});
+        cookies.set("name", this.state.typing, { path: "/", maxAge: 60 * 60 * 24 });
         // i do the socket events before i set the state as I'm not sure if setting it will automatically go to rendering
         // before i continue this function
         socket.emit("create user", {
@@ -47,7 +47,7 @@ class UsernameSelection extends Component {
         let component;
         if (this.state.username === "") {
             component = (
-                <div className="GameWindow">
+                <div className="z-depth-5 GameWindow">
                     <Header showBack={false} />
                     <Break />
                     <div className="ContentScreen">
@@ -67,7 +67,7 @@ class UsernameSelection extends Component {
                                 <button
                                     className="btn btn-outline-secondary"
                                     type="button"
-                                    >
+                                >
                                     Submit
                                 </button>
                             </form>
@@ -82,7 +82,7 @@ class UsernameSelection extends Component {
                     email: this.state.email,
                     name: this.state.username,
                 }*/
-            }}/>;
+            }} />;
         }
         return <div>{component}</div>;
     }
