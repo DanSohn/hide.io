@@ -1,27 +1,31 @@
 import React, { Component } from "react";
+import {Redirect} from "react-router-dom";
+import { socket } from "../assets/socket";
+import Cookies from 'universal-cookie';
+
 import Header from "../assets/header";
 import Break from "../assets/break";
-import { socket } from "../assets/socket";
 import Chat from "./chat";
+
+import { returnGameMode, returnGameMap, returnGameTime } from "../assets/utils";
 import "bootstrap/dist/js/bootstrap.bundle";
 import "../assets/App.css";
-import { returnGameMode, returnGameMap, returnGameTime } from "../assets/utils";
-import ViewLobbies from "./viewLobbies";
-import Game from "../Game/Game";
 import ClickSound from "../sounds/click";
-import TimerSound from "../sounds/timer";
+
+const cookies = new Cookies();
 
 class Room extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            userName: this.props.name,
-            email: this.props.email,
-            image: this.props.image,
-            roomID: this.props.join_code,
-            playerState: 'hider',
+            /*userName: this.props.location.state.name,
+            email: this.props.location.state.email,
+            */
+            userName: cookies.get("name"),
+            email: cookies.get("email"),
+            roomID: this.props.location.state.join_code,
             title: "",
-            header: "Join Code: " + this.props.join_code,
+            header: "Join Code: " + this.props.location.state.join_code,
             game_mode: "",
             game_map: {},
             game_time: "",
@@ -108,7 +112,7 @@ class Room extends Component {
     }
 
     componentWillUnmount() {
-        console.log("Component unmounting!!!===================");
+        console.log("Room unmounting...");
         socket.off("giving lobby info");
         socket.off("update lobby list");
         socket.off("lobby current timer");
@@ -119,47 +123,32 @@ class Room extends Component {
     render() {
         console.log("rendering in ROOM");
         let comp;
-        let countdownTimer;
-        if (this.state.startTimer) {
-            countdownTimer = (
-                <React.Fragment>
-                    <h4>Game Starting in </h4>
-                    <h2>{this.state.time}</h2>
-                </React.Fragment>
-            );
-        } else {
-            countdownTimer = (
-                <React.Fragment>
-                    <h4></h4>
-                    <h2></h2>
-                </React.Fragment>
-            );
-        }
+
         if (this.state.previous) {
-            comp = (
-                <ViewLobbies
-                    email={this.state.email}
-                    name={this.state.userName}
-                    image={this.state.image}
-                />
-            );
+            comp = <Redirect to={{
+                pathname: '/LobbyScreen',
+                /*state: {
+                    name: this.state.userName,
+                    email: this.state.email,
+                }*/
+            }}/>
         } else if (this.state.start) {
-            comp = (
-                <Game
-                    gameID={this.state.roomID}
-                    players={this.state.players}
-                    playerState = {this.state.playerState}
-                    map = {this.state.game_map}
-                    timeLimit = {this.state.game_time}
-                    mode = {this.state.game_mode}
-                />
-            );
+            comp = <Redirect to={{
+                pathname: '/Game',
+                state: {
+                    gameID: this.state.roomID,
+                    players: this.state.players,
+                    map: this.state.game_map,
+                    timeLimit: this.state.game_time,
+                    mode: this.state.game_mode
+                }
+            }}/>
+
         } else {
             comp = (
                 <div className="GameWindow">
                     <Header
                         previous={this.goPrevious}
-                        image={this.state.image}
                         title={this.state.title}
                     />
                     <Break />
@@ -194,7 +183,7 @@ class Room extends Component {
                 </div>
             );
         }
-        return <React.Fragment>{comp}</React.Fragment>;
+        return <>{comp}</>;
     }
 }
 
