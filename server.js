@@ -70,7 +70,7 @@ io.on("connection", (socket) => {
 
     //Send the rooms that are available when the user clicks play to see the available lobbies
     // it will find all the lobbies in database, and once its done, it will send the collection to the socket
-    // from lobbyTables.js
+    // from LobbyTables
     socket.on("please give lobbies", () => {
         console.log("socket event please give lobbies");
         dbUtil

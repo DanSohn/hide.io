@@ -7,10 +7,10 @@ import UsernameSelection from "./Login/usernameSelection";
 import MenuScreen from "./menuScreen";
 import { LoginScreen } from "./Login/loginScreen";
 import PlayerProfile from "./PlayerProfile";
-import ViewLobbies from "./Lobby/viewLobbies";
-import CreateLobby from "./Lobby/createLobby";
-import JoinCode from "./Lobby/joinCode";
-import Room from "./Lobby/room";
+import ViewLobbies from "./Lobby/ViewLobbies";
+import CreateLobby from "./Lobby/CreateLobby";
+import JoinCode from "./Lobby/JoinCode";
+import Room from "./Lobby/Room";
 import Game from "./Game/Game";
 
 

@@ -5,8 +5,8 @@ import Cookies from 'universal-cookie';
 
 import Header from "../assets/header";
 import Break from "../assets/break";
-import Chat from "./chat";
-import GameSettings from "./gameSettings";
+import Chat from "./Chat";
+import GameSettings from "./GameSettings";
 
 import { returnGameMode, returnGameMap, returnGameTime } from "../assets/utils";
 import "bootstrap/dist/js/bootstrap.bundle";

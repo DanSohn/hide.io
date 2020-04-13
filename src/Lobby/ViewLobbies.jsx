@@ -5,7 +5,7 @@ import Cookies from 'universal-cookie';
 
 import Header from '../assets/header';
 import Break from '../assets/break';
-import LobbyTables from './lobbyTables';
+import LobbyTables from './LobbyTables';
 
 import '../assets/App.css';
 import ClickSound from '../sounds/click';
