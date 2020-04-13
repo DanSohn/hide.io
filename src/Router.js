@@ -12,6 +12,7 @@ import CreateLobby from "./Lobby/createLobby";
 import JoinCode from "./Lobby/joinCode";
 import Room from "./Lobby/room";
 import Game from "./Game/Game";
+import Instructions from "./Menu/Instructions";
 
 
 class Router extends Component {
@@ -38,6 +39,7 @@ class Router extends Component {
                         <ProtectedRoute path="/JoinByCode" component={JoinCode} />
                         <ProtectedRoute path="/Room" component={Room} />
                         <ProtectedRoute path="/Game" component={Game} />
+                        <ProtectedRoute path="/Instructions" component={Instructions} />
 
                         <Route path="*" component={() => "404 NOT FOUND"} />
                     </Switch>
