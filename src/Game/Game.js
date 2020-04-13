@@ -127,7 +127,7 @@ class Game extends Component {
         socket.on('player moved', (playerinfo) => {
 
             if (socket.id !== playerinfo.id && playerinfo.room === this.state.gameID) {
-                console.log(playerinfo);
+                // console.log(playerinfo);
                 this.state.enamies.set(playerinfo.id, playerinfo);
             }
         });
@@ -381,16 +381,37 @@ class Game extends Component {
 
         this.ctx.fillStyle = fill;
 
-        this.ctx.beginPath();
-        this.ctx.moveTo(this.state.hitpoints[0].x, this.state.hitpoints[0].y);
-        for (let i = 1; i < this.state.hitpoints.length; i++) {
-            let intersect = this.state.hitpoints[i];
-            this.ctx.lineTo(intersect.x, intersect.y);
+        if(this.state.hitpoints.length === 0){
+
         }
 
+        this.ctx.beginPath();
+        if (this.state.hitpoints.length > 0){
+            this.ctx.moveTo(this.state.hitpoints[0].x, this.state.hitpoints[0].y);
+            for (let i = 1; i < this.state.hitpoints.length; i++) {
+                let intersect = this.state.hitpoints[i];
+                this.ctx.lineTo(intersect.x, intersect.y);
+            }
+        }else{
+            this.ctx.rect(this.camera.x, this.camera.y, this.camera.width, this.camera.height )
+        }
+    
         this.ctx.fill();
 
         this.ctx.restore();
+    }
+
+    detectEnamies(valuex, valuey){
+
+   
+            if (this.Player.screenX < valuex + this.state.map.tsize &&
+                this.Player.screenX + this.state.map.tsize > valuex &&
+                this.Player.screenY < valuey + this.state.map.tsize &&
+                this.Player.screenY + this.state.map.tsize > valuey) {
+                console.log("collision detected")
+                return;
+            }
+
     }
 
     //Draws an inverse polygon layer that covers the shadows to remove the floor lines.
@@ -412,6 +433,7 @@ class Game extends Component {
         let enamyScreenX = (enamyX - this.camera.x) - this.Player.width / 2;
         let enamyScreenY = (enamyY - this.camera.y) - this.Player.height / 2;
 
+        this.detectEnamies(enamyScreenX + 32, enamyScreenY + 32);
 
         this.ctx.beginPath();
         this.ctx.rect(enamyScreenX, enamyScreenY, this.state.map.tsize, this.state.map.tsize);
@@ -475,7 +497,7 @@ class Game extends Component {
             diry = 1;
         }
         if (this.state.game_status === 'started' || this.state.playerState === 'hider')
-            this.Player.move(delta, dirx, diry);
+            this.Player.move(delta, dirx, diry, this.state.enamies);
         this.camera.update();
     }
 
@@ -513,7 +535,7 @@ class Game extends Component {
         // Only send across socket if there's an update in position
         if (JSON.stringify(info) !== JSON.stringify(pastInfo)) {
             // console.log("I emitted:", info.x, info.y);
-            console.log('this.player.x=  ' + this.Player.x + '  this.Player.screenX=  ' + this.Player.screenX + '  camera x= ' + this.camera.x)
+            // console.log('this.player.x=  ' + this.Player.x + '  this.Player.screenX=  ' + this.Player.screenX + '  camera x= ' + this.camera.x)
 
 
             socket.emit("player movement", info);
@@ -531,7 +553,6 @@ class Game extends Component {
         this.sortAngles();
        
 
-        // this.drawLightLines();
         for (let value of this.state.enamies.values()) {
             if (value.x < this.camera.x || value.y < this.camera.y || value.x > this.camera.x + this.camera.width || value.y > this.camera.y + this.camera.height) {
                 break;
