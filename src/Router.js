@@ -4,15 +4,16 @@ import ProtectedRoute from "./assets/ProtectedRoute.jsx";
 import { auth } from "./assets/auth";
 
 import UsernameSelection from "./Login/UsernameSelection";
-import MenuScreen from "./Menu/MenuScreen";
 import {LoginScreen} from "./Login/LoginScreen";
+import MenuScreen from "./Menu/MenuScreen";
 import PlayerProfile from "./Menu/PlayerProfile";
+import Instructions from "./Menu/Instructions";
+
 import ViewLobbies from "./Lobby/ViewLobbies";
 import CreateLobby from "./Lobby/CreateLobby";
 import JoinCode from "./Lobby/JoinCode";
 import Room from "./Lobby/Room";
 import Game from "./Game/Game";
-import Instructions from "./Menu/Instructions";
 
 function Router() {
     return (

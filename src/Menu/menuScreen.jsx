@@ -2,15 +2,15 @@ import React, {Component} from "react";
 import {Link} from 'react-router-dom';
 import Cookies from "universal-cookie";
 
-import {auth} from "./Router";
-import { googleAuth } from "./Login/LoginScreen";
+import {auth} from "../Router";
+import { googleAuth } from "../Login/LoginScreen";
 
 
 import "../assets/App.css";
 
 import Header from "../assets/Header";
 import Break from "../assets/Break";
-import ClickSound from "./sounds/click";
+import ClickSound from "../sounds/click";
 
 
 const cookies = new Cookies();
