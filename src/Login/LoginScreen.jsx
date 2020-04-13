@@ -5,7 +5,7 @@ import {auth} from "../Router";
 import { socket } from "../assets/socket";
 import Cookies from 'universal-cookie';
 
-import Break from "../assets/break";
+import Break from "../assets/Break";
 
 import "../assets/App.css";
 import Sound from "react-sound";

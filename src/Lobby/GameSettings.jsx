@@ -1,6 +1,6 @@
 import React from "react";
 
-function GameSettings(props) {
+export default function GameSettings(props) {
     return <div className="roomSettings">
         <h4>Game Mode:</h4>
         <h6>{props.mode}</h6>
@@ -10,5 +10,3 @@ function GameSettings(props) {
         <h6>{props.map}</h6>
     </div>
 }
-
-export default GameSettings();

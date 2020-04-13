@@ -3,9 +3,9 @@ import {BrowserRouter, HashRouter, Switch, Route} from "react-router-dom";
 import ProtectedRoute from "./assets/ProtectedRoute";
 import {auth} from "./assets/auth";
 
-import UsernameSelection from "./Login/usernameSelection";
+import UsernameSelection from "./Login/UsernameSelection";
 import MenuScreen from "./menuScreen";
-import { LoginScreen } from "./Login/loginScreen";
+import { LoginScreen } from "./Login/LoginScreen";
 import PlayerProfile from "./PlayerProfile";
 import ViewLobbies from "./Lobby/ViewLobbies";
 import CreateLobby from "./Lobby/CreateLobby";

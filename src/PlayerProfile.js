@@ -1,8 +1,8 @@
 import React, {Component} from "react";
 import { Redirect } from "react-router-dom";
 import Cookies from "universal-cookie";
-import Header from "./assets/header";
-import Break from "./assets/break";
+import Header from "./assets/Header";
+import Break from "./assets/Break";
 
 import "./assets/App.css";
 import ClickSound from "./sounds/click";
