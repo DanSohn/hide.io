@@ -25,7 +25,7 @@ class PlayerProfile extends Component {
     }
 
     goPrevious() {
-        ClickSound()
+        ClickSound();
         this.setState({
             previous: true
         });
@@ -83,13 +83,15 @@ class PlayerProfile extends Component {
                 </div>
             );
         } else {
-            comp = <Redirect to={{
+            comp = (
+                <Redirect to={{
                 pathname: '/MainMenu',
                 /*state: {
                     name: this.state.userName,
                     email: this.state.email,
                 }*/
             }}/>
+            );
         }
 
         return <>{comp}</>;
