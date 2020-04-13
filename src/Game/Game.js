@@ -76,7 +76,7 @@ class Game extends Component {
             msg: "",
             num_of_players: this.props.numPlayers,
             players: this.props.players,
-            playerState: this.props.playerState,
+            playerState: this.props.location.state.playerState,
             playerColor: playerColor,
 
             gameID: this.props.location.state.gameID,
@@ -124,7 +124,8 @@ class Game extends Component {
                 },
             },
         };
-
+        console.log("AM I THE SEEKER?", this.state.playerState);
+        console.log(this.props.playerState);
         // TODO: do stuff when getting the location information
         socket.on('player moved', (playerinfo) => {
 
@@ -407,7 +408,6 @@ class Game extends Component {
             console.log(playerX, this.camera.x);
             this.ctx.rect(0, 0, this.camera.width, this.camera.height )
         }
-
         this.ctx.fill();
 
         this.ctx.restore();
@@ -672,10 +672,11 @@ class Game extends Component {
     }
 
     render() {
-
+        // console.log(this.state.playerState==='seeker' && this.state.game_status === 'not started');
         let comp1;
         let comp2;
         let dragon = "";
+        let canvasDisplay = this.state.playerState==='seeker' && this.state.game_status === 'not started' ? ['darkness',''] : ['','fade-in'];
         if (this.state.countdown === true) {
             if (this.state.playerState === 'seeker') {
                 comp1 = "You're the seeker";
@@ -705,8 +706,8 @@ class Game extends Component {
                     playerState={this.state.playerState} />
                 <div className="gameAction">
                     <AliveList />
-                    <div className="darkness" />
-                    <canvas className="fade-in" ref="canvas" width={1024} height={620} />
+                    <div className={canvasDisplay[0]} />
+                    <canvas className={canvasDisplay[1]} ref="canvas" width={1024} height={620} />
                     <div className="PlayerText">
                         <div className="fade-out-15">{dragon}</div>
                     </div>
