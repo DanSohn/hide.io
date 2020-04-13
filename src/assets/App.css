@@ -360,6 +360,13 @@ select,
     flex: 2;
 }
 
+.darkness {
+    position: absolute;
+    width:1024px;
+    height:620px;
+    background-color: black;
+}
+
 .profileResults input:read-only {
     background-color: #babbbe;
 }

@@ -65,7 +65,7 @@ class Game extends Component {
         //     let playerColor = "#D5C7BC";
         // else
         //     let playerColor= '#'+Math.floor(Math.random()*16777215).toString(16);
-        let playerColor = this.props.playerState === "seeker" ? "#D5C7BC" : '#'+Math.floor(Math.random()*16777215).toString(16);
+        let playerColor = this.props.playerState === "seeker" ? "#D5C7BC" : '#' + Math.floor(Math.random() * 16777215).toString(16);
 
         document.body.style.overflow = "hidden";
 
@@ -349,6 +349,8 @@ class Game extends Component {
         this.setState({ hitpoints: sortedAngles });
     }
 
+    drawEnamy() { }
+
     //Draws the rays from each point from this.state.hitpoints -- DISABLED -- used to Debug
     drawLightLines() {
         this.ctx.save();
@@ -381,36 +383,36 @@ class Game extends Component {
 
         this.ctx.fillStyle = fill;
 
-        if(this.state.hitpoints.length === 0){
+        if (this.state.hitpoints.length === 0) {
 
         }
 
         this.ctx.beginPath();
-        if (this.state.hitpoints.length > 0){
+        if (this.state.hitpoints.length > 0) {
             this.ctx.moveTo(this.state.hitpoints[0].x, this.state.hitpoints[0].y);
             for (let i = 1; i < this.state.hitpoints.length; i++) {
                 let intersect = this.state.hitpoints[i];
                 this.ctx.lineTo(intersect.x, intersect.y);
             }
-        }else{
-            this.ctx.rect(this.camera.x, this.camera.y, this.camera.width, this.camera.height )
+        } else {
+            this.ctx.rect(this.camera.x, this.camera.y, this.camera.width, this.camera.height)
         }
-    
+
         this.ctx.fill();
 
         this.ctx.restore();
     }
 
-    detectEnamies(valuex, valuey){
+    detectEnamies(valuex, valuey) {
 
-   
-            if (this.Player.screenX < valuex + this.state.map.tsize &&
-                this.Player.screenX + this.state.map.tsize > valuex &&
-                this.Player.screenY < valuey + this.state.map.tsize &&
-                this.Player.screenY + this.state.map.tsize > valuey) {
-                console.log("collision detected")
-                return;
-            }
+
+        if (this.Player.screenX < valuex + this.state.map.tsize &&
+            this.Player.screenX + this.state.map.tsize > valuex &&
+            this.Player.screenY < valuey + this.state.map.tsize &&
+            this.Player.screenY + this.state.map.tsize > valuey) {
+            console.log("collision detected")
+            return;
+        }
 
     }
 
@@ -551,7 +553,7 @@ class Game extends Component {
         // this.drawHiders();
         this.updateLightTrace();
         this.sortAngles();
-       
+
 
         for (let value of this.state.enamies.values()) {
             if (value.x < this.camera.x || value.y < this.camera.y || value.x > this.camera.x + this.camera.width || value.y > this.camera.y + this.camera.height) {
@@ -665,9 +667,10 @@ class Game extends Component {
         return (
             <React.Fragment>
                 <Timer gameDuration={this.state.timeLimit.split(" ")[0]}
-                        playerState={this.state.playerState} />
+                    playerState={this.state.playerState} />
                 <div className="gameAction">
                     <AliveList />
+                    <div className="darkness" />
                     <canvas className="fade-in" ref="canvas" width={1024} height={620} />
                     <div className="PlayerText">
                         <div className="fade-out-15">{dragon}</div>
