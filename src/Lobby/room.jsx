@@ -6,6 +6,7 @@ import Cookies from 'universal-cookie';
 import Header from "../assets/header";
 import Break from "../assets/break";
 import Chat from "./chat";
+import GameSettings from "./gameSettings";
 
 import { returnGameMode, returnGameMap, returnGameTime } from "../assets/utils";
 import "bootstrap/dist/js/bootstrap.bundle";
@@ -170,14 +171,11 @@ class Room extends Component {
                                 onClick={this.startTimer}>
                                 Start Game
                             </button>
-                            <div className="roomSettings">
-                                <h4>Game Mode:</h4>
-                                <h6>{this.state.game_mode}</h6>
-                                <h4>Time Limit:</h4>
-                                <h6>{this.state.game_time}</h6>
-                                <h4>Map:</h4>
-                                <h6>{this.state.game_map["name"]}</h6>
-                            </div>
+                            <GameSettings
+                                mode={this.state.game_mode}
+                                time={this.state.game_time}
+                                map={this.state.game_map.name}
+                            />
                         </div>
                         <div className="online">
                             <ul>
