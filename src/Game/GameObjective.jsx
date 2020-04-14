@@ -1,7 +1,7 @@
 import React from "react";
 
 export default function GameObjective(props) {
-    let dragon = "",
+    let description = <></>,
         title = "",
         subtitle = "";
 
@@ -14,24 +14,17 @@ export default function GameObjective(props) {
             subtitle = "Objective: Hide BITCH";
         }
 
-        dragon = (
+        description = (
             <>
                 <h1>{title}</h1>
                 <h5>{subtitle}</h5>
-            </>
-        );
-    } else {
-        dragon = (
-            <>
-                <h1></h1>
-                <h5></h5>
             </>
         );
     }
 
     return (
         <div className="PlayerText">
-            <div className="fade-out-15">{dragon}</div>
+            <div className="fade-out-15">{description}</div>
         </div>
     )
 }

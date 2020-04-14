@@ -362,6 +362,7 @@ io.on("connection", (socket) => {
     //When the game finishes, statistics about the players is updated and the room is deleted from gamesInSession
     //also emit a message to the different players about who won between hiders and seeker
     function endGame(room, timerID) {
+        console.log("End Game has been called");
         //TODO get information about the players that were in that game and update their stats
         //TODO emit an event to all players about who won the game between hiders and seeker
         clearInterval(timerID);

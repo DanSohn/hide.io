@@ -16,43 +16,46 @@ class Results extends Component {
             this.setState({
                 winner: info
             })
-        }) 
+        })
     }
 
-    render(){
+    render() {
         let comp;
+        // If client is a seeker and he wins
         if (this.state.playerRole === "seeker" && this.state.winner === "seeker") {
-            comp = 
-            (<div>
-                <p>Congrats {this.state.userName}...you've caught them all!</p>
-                <p>returning to lobby now...</p>
-            </div>)
+            comp =
+                (<>
+                    <p>Congrats {this.state.userName}...you've caught them all!</p>
+                    <p>returning to lobby now...</p>
+                </>)
         }
+        // If client is a seeker and he loses
         else if (this.state.playerRole === "seeker" && this.state.winner === "hider") {
             comp =
-            (<div>
-                <p>Hey {this.state.userName}...you are a let down!</p>
-                <p>returning to lobby now...</p>
-            </div>)
+                (<>
+                    <p>Hey {this.state.userName}...you are a let down!</p>
+                    <p>returning to lobby now...</p>
+                </>)
         }
+        // If client is a hider and he won
         else if (this.state.playerRole === "hider" && this.state.winner === "hider") {
-            comp = 
-            (<div>
-                <p>Okay I guess you're slick...hiders win!</p>
-                <p>returning to lobby now...</p>
-            </div>)
-        }
-        else if (this.state.playerRole === "hider" && this.state.winner === "seeker"){
             comp =
-            (<div>
-                <p>All hiders have been caught...buncha losers ¯\_(ツ)_/¯</p>
-                <p>returning to lobby now...</p>
-            </div>)
+                (<>
+                    <p>Okay I guess you're slick...hiders win!</p>
+                    <p>returning to lobby now...</p>
+                </>)
         }
-        else {
-            comp = (<div></div>)
+        // If client is a hider and he lost
+        else if (this.state.playerRole === "hider" && this.state.winner === "seeker") {
+            comp =
+                (<>
+                    <p>All hiders have been caught...buncha losers ¯\_(ツ)_/¯</p>
+                    <p>returning to lobby now...</p>
+                </>)
+        } else {
+            comp = (<></>)
         }
-        return <React.Fragment>{comp}</React.Fragment>
+        return <>{comp}</>
     }
 }
 

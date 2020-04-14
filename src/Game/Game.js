@@ -151,7 +151,11 @@ class Game extends Component {
                 this.state.game_status = 'started';
             }
         });
+
+        socket.emit("start game timer", this.state.gameID, this.state.timeLimit);
+
         this.update_player_component = this.update_player_component.bind(this);
+        this.tick = this.tick.bind(this);
     }
 
     //init game state seppereate from did load. could be used for start restrictions.
@@ -566,7 +570,7 @@ class Game extends Component {
         }
         this.gameRender();
 
-        window.requestAnimationFrame(this.tick.bind(this));
+        window.requestAnimationFrame(this.tick);
 
         let info = {
             roomID: this.state.gameID,
@@ -578,8 +582,6 @@ class Game extends Component {
         if (JSON.stringify(info) !== JSON.stringify(pastInfo) && this.state.alive) {
             // console.log("I emitted:", info.x, info.y);
             // console.log('this.player.x=  ' + this.Player.x + '  this.Player.screenX=  ' + this.Player.screenX + '  camera x= ' + this.camera.x)
-
-
             socket.emit("player movement", info);
         }
 
@@ -613,56 +615,6 @@ class Game extends Component {
 
         this.drawShadow();
         // this.drawPillarLight();
-    }
-
-    componentDidMount() {
-        // this will only happen the first time, and will set the ball rolling to handle any updates!
-        // this.state.context = this.refs.canvas.getContext('2d');
-        socket.emit("start game timer", this.state.gameID, this.state.timeLimit);
-        console.log(this.state.timeLimit);
-        let context = this.refs.canvas.getContext("2d");
-
-        this.setState({context: this.refs.canvas.getContext("2d")});
-
-        this.run(context);
-
-        socket.on("Redraw positions", (players) => {
-            // if there has been a change to players' positions, then reset the state of players to new coordinates
-            //console.log("original players ", this.state.players);
-            if (this.state.players !== players) {
-                this.setState({players: players});
-            }
-        });
-
-        socket.on("countdown", (seconds) => {
-            if (seconds - 1 === 0) {
-                this.setState({countdown: false});
-            }
-        });
-        // console.log(this.state);
-
-        socket.on("reconnect_error", (error) => {
-            // console.log("Error! Disconnected from server", error);
-            console.log("Error! Can't connect to server");
-            auth.logout(() => {
-                // reason history is avail on props is b/c we loaded it via a route, which passes
-                // in a prop called history always
-                cookies.remove("name");
-                cookies.remove("email");
-                cookies.remove("image");
-                googleAuth.signOut();
-                console.log("going to logout!");
-                this.props.history.push('/');
-            });
-        });
-    }
-
-
-    componentWillUnmount() {
-        socket.off("Redraw positions");
-        socket.off("countdown");
-        socket.off("reconnect_error");
-
     }
 
     // this function creates multiple player components
@@ -703,18 +655,87 @@ class Game extends Component {
         return <div>{component_insides}</div>;
     }
 
+    componentDidMount() {
+        // this.state.context = this.refs.canvas.getContext('2d');
+        console.log(this.state.timeLimit);
+        let context = this.refs.canvas.getContext("2d");
+
+        this.setState({context: this.refs.canvas.getContext("2d")});
+
+        this.run(context);
+
+        socket.on("Redraw positions", (players) => {
+            // if there has been a change to players' positions, then reset the state of players to new coordinates
+            //console.log("original players ", this.state.players);
+            if (this.state.players !== players) {
+                this.setState({players: players});
+            }
+        });
+
+        socket.on("countdown", (seconds) => {
+            if (seconds - 1 === 0) {
+                this.setState({countdown: false});
+            }
+        });
+        // console.log(this.state);
+
+        // when the server completes the winner and returns event to go back to the lobby
+        socket.on("game finished", () => {
+            // cancel the animation frames
+            let myRequest = window.requestAnimationFrame(this.tick);
+            window.cancelAnimationFrame(myRequest);
+
+            this.setState({
+                game_status: "Completed"
+            })
+        })
+        socket.on("reconnect_error", (error) => {
+            // console.log("Error! Disconnected from server", error);
+            console.log("Error! Can't connect to server");
+            auth.logout(() => {
+                // reason history is avail on props is b/c we loaded it via a route, which passes
+                // in a prop called history always
+                cookies.remove("name");
+                cookies.remove("email");
+                cookies.remove("image");
+                googleAuth.signOut();
+                console.log("going to logout!");
+                this.props.history.push('/');
+            });
+        });
+    }
+
+
+    componentWillUnmount() {
+        console.log("Component unmounted ===================================");
+
+        socket.off("Redraw positions");
+        socket.off("countdown");
+        socket.off("reconnect_error");
+        socket.off("game finished");
+        socket.off("player moved");
+        socket.off("I died");
+        socket.off("game in progress");
+    }
+
     render() {
-        // console.log(this.state.playerState==='seeker' && this.state.game_status === 'not started');
-        let comp1;
-        let comp2;
-        if (this.state.networkError) {
-            console.log("Going to main menu");
-            return <Redirect to="/MainMenu"/>
+        // if the game is completed, head back to lobby
+        if (this.state.game_status === "Completed") {
+            return (
+                <Redirect to={{
+                    pathname: "/Room",
+                    state: {
+                        join_code: this.state.gameID
+                    }
+                }}/>
+            );
         }
 
+        // console.log(this.state.playerState==='seeker' && this.state.game_status === 'not started');
+        // if client is a seeker and game has not started (15 seconds wait), then canvas should be black and waiting
         let canvasDisplay = this.state.playerState === 'seeker' && this.state.game_status === 'not started' ? ['z-depth-5 darkness', ''] : ['', 'z-depth-5 fade-in'];
         return (
-            <React.Fragment>
+            <>
                 <Timer gameDuration={this.state.timeLimit.split(" ")[0]}
                        playerState={this.state.playerState}/>
                 <div className="gameAction">
@@ -728,7 +749,7 @@ class Game extends Component {
 
                 </div>
                 <Results playerState={this.state.playerState} userName={this.state.userName}/>
-            </React.Fragment>
+            </>
         );
     }
 }
