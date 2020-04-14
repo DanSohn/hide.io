@@ -69,7 +69,8 @@ class Game extends Component {
         super(props);
 
         document.body.style.overflow = "hidden";
-
+        // for the window animationframe
+        let requestID;
         this.state = {
             context: this.context,
             windowHeight: window.innerHeight,
@@ -552,7 +553,7 @@ class Game extends Component {
 
     //each game frame
     tick() {
-
+        console.log("TICK NEVER STOPS AHHHHHHHHHHHHHHHHHHHHHHHHH");
         this.ctx.clearRect(0, 0, 1024, 640);
         let delta = 0.25;
         delta = Math.min(delta, 0.25); // maximum delta of 250 ms
@@ -570,7 +571,7 @@ class Game extends Component {
         }
         this.gameRender();
 
-        window.requestAnimationFrame(this.tick);
+        this.requestID = window.requestAnimationFrame(this.tick);
 
         let info = {
             roomID: this.state.gameID,
@@ -682,8 +683,7 @@ class Game extends Component {
         // when the server completes the winner and returns event to go back to the lobby
         socket.on("game finished", () => {
             // cancel the animation frames
-            let myRequest = window.requestAnimationFrame(this.tick);
-            window.cancelAnimationFrame(myRequest);
+            if(this.requestID) window.cancelAnimationFrame(this.requestID);
 
             this.setState({
                 game_status: "Completed"

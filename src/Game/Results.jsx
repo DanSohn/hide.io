@@ -19,6 +19,10 @@ class Results extends Component {
         })
     }
 
+    componentWillUnmount() {
+        socket.off("game winner");
+    }
+
     render() {
         let comp;
         // If client is a seeker and he wins
