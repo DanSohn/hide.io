@@ -442,6 +442,10 @@ tr .btn-success {
 .createLobbyText {
     margin: 0px 0px 0px 50px;
 }
+.createLobbyForm .form-control, .createLobbyForm select {
+    margin-top:2px;
+    margin-bottom:10px;
+}
 .createLobbyForm {
     display: flex;
     order: 3;
@@ -472,16 +476,31 @@ select,
     height: 75%;
 }
 .createLobbyText h2 {
-    text-align: left;
+    font-family: 'Press Start 2p';
+    margin-top: 2px;
+    margin-bottom: 10px;
+    text-align: right;
+}
+.profileLabels h2 {
+    padding-bottom:4px;
+    padding-top:4px;
+    font-family: 'Press Start 2p';
+    font-size: 25px;
 }
 .profileLabels {
     padding: 20px;
+    
     text-align: right;
     order: 1;
     flex: 1;
 }
 
+.profileResults .form-control {
+    margin-top:1px;
+    margin-bottom: 10px;
+}
 .profileResults {
+    
     order: 2;
     flex: 2;
 }
