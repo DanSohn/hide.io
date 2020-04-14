@@ -26,7 +26,7 @@ class MenuScreen extends Component {
 
 
     render() {
-        return <div className="GameWindow">
+        return <div className="z-depth-5 GameWindow">
             <Header showBack={false} />
             <Break />
             <div className="ContentScreen">
@@ -40,7 +40,7 @@ class MenuScreen extends Component {
                     }}>
                         <button
                             type="button"
-                            className="btn btn-success">
+                            className="z-depth-3 btn btn-success">
                             Play
                         </button>
                     </Link>
@@ -54,7 +54,7 @@ class MenuScreen extends Component {
                     }}>
                         <button
                             type="button"
-                            className="btn btn-success">
+                            className="z-depth-3 btn btn-success">
                             Instructions
                         </button>
                     </Link>
@@ -68,13 +68,13 @@ class MenuScreen extends Component {
                     }}>
                         <button
                             type="button"
-                            className="btn btn-success">
+                            className="z-depth-3 btn btn-success">
                             Profile
                         </button>
                     </Link>
                     <button
                         type="button"
-                        className="btn btn-success"
+                        className="z-depth-3 btn btn-success"
                         onClick={() => {
                             auth.logout(() => {
                                 // reason history is avail on props is b/c we loaded it via a route, which passes

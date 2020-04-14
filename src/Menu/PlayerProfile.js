@@ -35,7 +35,7 @@ class PlayerProfile extends Component {
         let comp;
         if (!this.state.previous) {
             comp = (
-                <div className="GameWindow">
+                <div className="z-depth-5 GameWindow">
                     <Header
                         previous={this.goPrevious}
                         title="Profile"

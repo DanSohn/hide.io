@@ -10,7 +10,7 @@ import { socket } from "../assets/socket";
 
 import Point from "./Point";
 import Timer from "../Game/Timer";
-import AliveList from "./aliveList";
+import AliveList from "../Game/AliveList";
 
 // import Keyboard from './Keyboard'
 let Keyboard = {};
@@ -148,9 +148,9 @@ class Game extends Component {
     init() {
         Keyboard.listenForEvents([Keyboard.LEFT, Keyboard.RIGHT, Keyboard.UP, Keyboard.DOWN]);
         // this.tileAtlas = Loader.getImage('tiles');
-        if(this.state.playerState === "seeker"){
+        if (this.state.playerState === "seeker") {
             this.Player = new Player(this.state.map, 160, 160);
-        }else{
+        } else {
             this.Player = new Player(this.state.map, 288, 160);
         }
         this.camera = new Camera(this.state.map, 1024, 640);
@@ -394,40 +394,40 @@ class Game extends Component {
 
         this.ctx.fillStyle = fill;
 
-     
+
 
         this.ctx.beginPath();
-        if (this.state.hitpoints.length > 0){
+        if (this.state.hitpoints.length > 0) {
             this.ctx.beginPath();
             this.ctx.moveTo(this.state.hitpoints[0].x, this.state.hitpoints[0].y);
             for (let i = 1; i < this.state.hitpoints.length; i++) {
                 let intersect = this.state.hitpoints[i];
                 this.ctx.lineTo(intersect.x, intersect.y);
             }
-        }else{
+        } else {
             console.log(playerX, this.camera.x);
-            this.ctx.rect(0, 0, this.camera.width, this.camera.height )
+            this.ctx.rect(0, 0, this.camera.width, this.camera.height)
         }
         this.ctx.fill();
 
         this.ctx.restore();
     }
 
-    detectEnamies(playerValues){
+    detectEnamies(playerValues) {
 
         let enamyScreenX = (playerValues.x - this.camera.x);
         let enamyScreenY = (playerValues.y - this.camera.y);
 
 
 
-            if (this.Player.screenX < enamyScreenX + this.state.map.tsize &&
-                this.Player.screenX + this.state.map.tsize > enamyScreenX &&
-                this.Player.screenY < enamyScreenY + this.state.map.tsize &&
-                this.Player.screenY + this.state.map.tsize > enamyScreenY) {
-                console.log("collision detected")
-                socket.emit("player caught", playerValues.id)
-                return;
-            }
+        if (this.Player.screenX < enamyScreenX + this.state.map.tsize &&
+            this.Player.screenX + this.state.map.tsize > enamyScreenX &&
+            this.Player.screenY < enamyScreenY + this.state.map.tsize &&
+            this.Player.screenY + this.state.map.tsize > enamyScreenY) {
+            console.log("collision detected")
+            socket.emit("player caught", playerValues.id)
+            return;
+        }
 
     }
 
@@ -436,21 +436,21 @@ class Game extends Component {
         this.ctx.save();
         this.ctx.fillStyle = "#0b0b0b";
 
-        if (this.state.hitpoints.length > 0){
+        if (this.state.hitpoints.length > 0) {
 
-        this.ctx.beginPath();
-        this.ctx.moveTo(this.state.hitpoints[0].x, this.state.hitpoints[0].y);
-        for (let i = 1; i < this.state.hitpoints.length; i++) {
-            let intersect = this.state.hitpoints[i];
-            this.ctx.lineTo(intersect.x, intersect.y);
+            this.ctx.beginPath();
+            this.ctx.moveTo(this.state.hitpoints[0].x, this.state.hitpoints[0].y);
+            for (let i = 1; i < this.state.hitpoints.length; i++) {
+                let intersect = this.state.hitpoints[i];
+                this.ctx.lineTo(intersect.x, intersect.y);
+            }
+            this.ctx.rect(1024, 0, -1024, 620);
+
+            this.ctx.fill();
+            this.ctx.restore();
+        } else {
+            return;
         }
-        this.ctx.rect(1024, 0, -1024, 620);
-
-        this.ctx.fill();
-        this.ctx.restore();
-    }else{
-        return;
-    }
     }
     drawEnamies(enamyX, enamyY) {
         let enamyScreenX = (enamyX - this.camera.x) - this.Player.width / 2;
@@ -533,46 +533,46 @@ class Game extends Component {
     tick() {
         this.aliveStatusCheck();
 
-            this.ctx.clearRect(0, 0, 1024, 640);
-            let delta = 0.25;
-            delta = Math.min(delta, 0.25); // maximum delta of 250 ms
-    
-            let pastInfo = {
-                roomID: this.state.gameID,
-                x: this.Player.x,
-                y: this.Player.y,
-                id: socket.id,
-            };
+        this.ctx.clearRect(0, 0, 1024, 640);
+        let delta = 0.25;
+        delta = Math.min(delta, 0.25); // maximum delta of 250 ms
 
-            //stops movement if they died.
-            if(this.state.alive){
-                this.update(delta);
-            }
-            this.gameRender();
-    
-            window.requestAnimationFrame(this.tick.bind(this));
-    
-            let info = {
-                roomID: this.state.gameID,
-                x: this.Player.x,
-                y: this.Player.y,
-                id: socket.id,
-            };
-            // Only send across socket if there's an update in position
-            if (JSON.stringify(info) !== JSON.stringify(pastInfo)  && this.state.alive) {
-                // console.log("I emitted:", info.x, info.y);
-                // console.log('this.player.x=  ' + this.Player.x + '  this.Player.screenX=  ' + this.Player.screenX + '  camera x= ' + this.camera.x)
-    
-    
-                socket.emit("player movement", info);
-            }
-   
+        let pastInfo = {
+            roomID: this.state.gameID,
+            x: this.Player.x,
+            y: this.Player.y,
+            id: socket.id,
+        };
+
+        //stops movement if they died.
+        if (this.state.alive) {
+            this.update(delta);
+        }
+        this.gameRender();
+
+        window.requestAnimationFrame(this.tick.bind(this));
+
+        let info = {
+            roomID: this.state.gameID,
+            x: this.Player.x,
+            y: this.Player.y,
+            id: socket.id,
+        };
+        // Only send across socket if there's an update in position
+        if (JSON.stringify(info) !== JSON.stringify(pastInfo) && this.state.alive) {
+            // console.log("I emitted:", info.x, info.y);
+            // console.log('this.player.x=  ' + this.Player.x + '  this.Player.screenX=  ' + this.Player.screenX + '  camera x= ' + this.camera.x)
+
+
+            socket.emit("player movement", info);
+        }
+
     }
 
-    aliveStatusCheck(){
+    aliveStatusCheck() {
         socket.on("I died", (playerID, playerName) => {
-            if(playerID === socket.id){
-                this.setState({alive: false})
+            if (playerID === socket.id) {
+                this.setState({ alive: false })
             }
 
         });
@@ -592,7 +592,7 @@ class Game extends Component {
             if (playerValue.x < this.camera.x || playerValue.y < this.camera.y || playerValue.x > this.camera.x + this.camera.width || playerValue.y > this.camera.y + this.camera.height) {
                 break;
             } else {
-                if(this.state.playerState === "seeker"){
+                if (this.state.playerState === "seeker") {
                     this.detectEnamies(playerValue);
                 }
                 this.drawEnamies(playerValue.x, playerValue.y);
@@ -647,7 +647,7 @@ class Game extends Component {
                 //console.log("inside updating x and y are: ", players_arr[i][1].x, players_arr[i][1].y);
                 component_insides.push(
                     <Player
-                        key={players_arr[i][0]} 
+                        key={players_arr[i][0]}
                         keyVal={players_arr[i][0]}
                         xPos={players_arr[i][1].x}
                         yPos={players_arr[i][1].y}
@@ -676,7 +676,7 @@ class Game extends Component {
         let comp1;
         let comp2;
         let dragon = "";
-        let canvasDisplay = this.state.playerState==='seeker' && this.state.game_status === 'not started' ? ['darkness',''] : ['','fade-in'];
+        let canvasDisplay = this.state.playerState === 'seeker' && this.state.game_status === 'not started' ? ['z-depth-5 darkness', ''] : ['', 'z-depth-5 fade-in'];
         if (this.state.countdown === true) {
             if (this.state.playerState === 'seeker') {
                 comp1 = "You're the seeker";

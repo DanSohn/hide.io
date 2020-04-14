@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {Redirect} from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import { socket } from "../assets/socket";
 import Cookies from 'universal-cookie';
 
@@ -37,7 +37,7 @@ class Room extends Component {
         this.goPrevious = this.goPrevious.bind(this);
         this.startTimer = this.startTimer.bind(this);
         this.start = this.start.bind(this);
-        
+
         // this lets the socket join the specific room
         socket.emit("ask for lobby info", this.state.roomID);
     }
@@ -46,7 +46,7 @@ class Room extends Component {
         socket.emit("leave lobby", { room: this.state.roomID, email: this.state.email });
         // i ensure everything is first handled properly in the server, and is up to date
         // before i leave
-        socket.on("may successfully leave lobby", ()=>{
+        socket.on("may successfully leave lobby", () => {
             ClickSound();
             this.setState({
                 previous: true
@@ -57,11 +57,7 @@ class Room extends Component {
     startTimer() {
         // 3 second timer currently
         // TimerSound();
-        socket.emit("lobby start timer", {countdowntime: 4300, room: this.state.roomID});
-
-        this.setState({
-            header: "Game is starting in ..."
-        })
+        socket.emit("lobby start timer", { countdowntime: 4300, room: this.state.roomID });
     }
 
     start() {
@@ -75,7 +71,7 @@ class Room extends Component {
         socket.on("giving lobby info", (lobby) => {
             if (!lobby) {
                 console.log("Received not a lobby! Check room.js line 54, and server.js line 119");
-            }else{
+            } else {
                 console.log("Received lobby info", lobby);
                 this.setState({
                     title: lobby.lobby_name,
@@ -95,7 +91,7 @@ class Room extends Component {
                 playersList: lobby_users,
             });
         });
-        
+
         socket.on("lobby current timer", (countdown) => {
             console.log(countdown);
             this.setState({
@@ -108,7 +104,11 @@ class Room extends Component {
                 this.start();
             }
         });
-        socket.on('youre the seeker', ()=> {this.state.playerState = 'seeker'; console.log("Congrats! Youre the seeker!")});
+        socket.on('youre the seeker', () => { this.state.playerState = 'seeker'; console.log("Congrats! Youre the seeker!") });
+
+        socket.on('enough peeps', ()=>this.setState({ header: "Game is starting in ..."}));
+        socket.on('not enough peeps', ()=>this.setState({ header: "Not Enough Players to Begin the Game"}));
+
     }
 
     componentWillUnmount() {
@@ -117,6 +117,8 @@ class Room extends Component {
         socket.off("update lobby list");
         socket.off("lobby current timer");
         socket.off("lobby start timer");
+        socket.off("not enough peeps");
+        socket.off("enough peeps")
 
     }
 
@@ -131,7 +133,7 @@ class Room extends Component {
                     name: this.state.userName,
                     email: this.state.email,
                 }*/
-            }}/>
+            }} />
         } else if (this.state.start) {
             comp = <Redirect to={{
                 pathname: '/Game',
@@ -143,24 +145,24 @@ class Room extends Component {
                     timeLimit: this.state.game_time,
                     mode: this.state.game_mode
                 }
-            }}/>
+            }} />
 
         } else {
             comp = (
-                <div className="GameWindow">
+                <div className="z-depth-5 GameWindow">
                     <Header
                         previous={this.goPrevious}
                         title={this.state.title}
                     />
                     <Break />
                     <div className="ContentScreen">
-                        <Chat userName={this.state.userName} roomID={this.state.roomID}/>
+                        <Chat userName={this.state.userName} roomID={this.state.roomID} />
 
                         <div className="roomActions">
                             <h5>{this.state.header}</h5>
                             <h1>{this.state.time}</h1>
                             <button
-                                className="btn btn-success"
+                                className="z-depth-3 btn btn-success"
                                 onClick={this.startTimer}>
                                 Start Game
                             </button>

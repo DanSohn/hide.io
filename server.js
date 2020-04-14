@@ -273,19 +273,27 @@ io.on("connection", (socket) => {
         console.log("RANDOM SEEKER IS: " + gamesInSession[room].seeker);
         console.log("LENGTH OF HIDERS " + gamesInSession[room].hiders.length);
 
-        let countdown = Math.floor(countdowntime / 1000);
-        // send to all sockets an event every second
-        let timerID = setInterval(() => {
-            console.log(countdown);
-            countdown--;
-            io.to(room).emit("lobby current timer", countdown);
-        }, 1000);
+        // if there is not enough sockets(people) in the lobby, tell the lobby so
+        if (roomies.length < 2){socket.emit('not enough peeps');}
+        else {
+            io.to(room).emit('enough peeps');
+            // choose one random socket to be the seeker
+            let randomSeeker = roomies[Math.floor(Math.random()*roomies.length)];
+            io.to(`${randomSeeker}`).emit('youre the seeker');
 
-        // after the timer amount of seconds (default 3), stop emitting
-        setTimeout(() => {
-            endGame(room);
-            clearInterval(timerID);
-        }, countdowntime);
+            let countdown = Math.floor(countdowntime / 1000);
+            // send to all sockets an event every second
+            let timerID = setInterval(() => {
+                console.log(countdown);
+                countdown--;
+                io.to(room).emit("lobby current timer", countdown);
+            }, 1000);
+
+            // after the timer amount of seconds (default 3), stop emitting
+            setTimeout(() => {
+                endGame(room, timerID);
+            }, countdowntime);
+        }
     });
 
     socket.on("start game timer", (room, game_time) => {
