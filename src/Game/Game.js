@@ -10,7 +10,7 @@ import { socket } from "../assets/socket";
 
 import Point from "./Point";
 import Timer from "../Game/Timer";
-import AliveList from "../Game/aliveList";
+import AliveList from "../Game/AliveList";
 
 // import Keyboard from './Keyboard'
 let Keyboard = {};

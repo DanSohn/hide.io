@@ -59,10 +59,6 @@ class Room extends Component {
         // 3 second timer currently
         // TimerSound();
         socket.emit("lobby start timer", { countdowntime: 4300, room: this.state.roomID });
-
-        this.setState({
-            header: "Game is starting in ..."
-        })
     }
 
     start() {
@@ -110,6 +106,10 @@ class Room extends Component {
             }
         });
         socket.on('youre the seeker', () => { this.state.playerState = 'seeker'; console.log("Congrats! Youre the seeker!") });
+
+        socket.on('enough peeps', ()=>this.setState({ header: "Game is starting in ..."}));
+        socket.on('not enough peeps', ()=>this.setState({ header: "Not Enough Players to Begin the Game"}));
+
     }
 
     componentWillUnmount() {
@@ -118,6 +118,8 @@ class Room extends Component {
         socket.off("update lobby list");
         socket.off("lobby current timer");
         socket.off("lobby start timer");
+        socket.off("not enough peeps");
+        socket.off("enough peeps")
 
     }
 
