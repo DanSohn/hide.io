@@ -26,6 +26,7 @@ dbUtil
     })
     .catch((err) => console.log(err));
 
+let socket_name = {};
 io.on("connection", (socket) => {
     // console.log("A User has connected");
 
@@ -44,6 +45,7 @@ io.on("connection", (socket) => {
             if (user !== null) {
                 socket.emit("user database check", user.username);
                 socket_info["name"] = user.username;
+                socket_name[socket.id] = socket_info["name"];
             } else {
                 socket.emit("user database check", null);
             }
@@ -232,8 +234,8 @@ io.on("connection", (socket) => {
     // emit a event to redraw the new positions
     socket.on('player movement', (info) => {
 
-        console.log("This is what I got from player: ", info);
-        console.log("This is what im sending the player: ", {x: info.x, y: info.y, id: info.id});
+        // console.log("This is what I got from player: ", info);
+        // console.log("This is what im sending the player: ", {x: info.x, y: info.y, id: info.id});
 
         io.to(info.roomID).emit('player moved', {x: info.x, y: info.y, id: info.id, room: info.roomID})
     });
@@ -314,13 +316,21 @@ io.on("connection", (socket) => {
     //When a hider is caught, they emit an event to the server to update the list of players who are still hiding and
     //haven't been caught by the seeker. Incase all the players are caught, endGame() is called before time expires.
     socket.on("player caught", (info) => {
-        let {playerID, playerName, room} = info;
+
+        let {playerID,  room} = info;
+        console.log(socket_name);
+        console.log("COLLISION WITH:",playerID, "room: ", room);
+
         for(let i = 0; i < gamesInSession.length; i++){
             if(gamesInSession[room].hiders.includes(playerID)) {
                 for (let j = 0; j < gamesInSession[room].hiders.length; j++) {
                     if (gamesInSession[room].hiders[j] === playerID) {
                         gamesInSession[room].hiders[j].splice(j, 1);
                         gamesInSession[room].caught.push(playerID);
+
+                        console.log("FOUND THE GUY WHO GOT CAUGHT");
+                        let playerName = socket_name[playerID];
+
                         console.log(">>>>>>> " + playerName);
                         socket.to(room).emit("I died", playerID, playerName);
                         io.to(room).emit("display player caught", playerName);
@@ -344,6 +354,7 @@ io.on("connection", (socket) => {
                 .removeUserFromLobby({room: socket_info.lobby, email: socket_info.email})
                 .then()
                 .catch((err) => console.log(err));
+            socket_name.delete(socket.id);
         }
     });
 

@@ -428,8 +428,14 @@ class Game extends Component {
             this.Player.screenX + this.state.map.tsize > enamyScreenX &&
             this.Player.screenY < enamyScreenY + this.state.map.tsize &&
             this.Player.screenY + this.state.map.tsize > enamyScreenY) {
-            console.log("collision detected")
-            socket.emit("player caught", playerValues.id)
+            console.log("collision detected");
+
+            let info = {
+                playerID: playerValues.id,
+                room: this.state.gameID
+            };
+
+            socket.emit("player caught", info);
             return;
         }
 
