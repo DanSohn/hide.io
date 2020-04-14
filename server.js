@@ -259,11 +259,13 @@ io.on("connection", (socket) => {
             let randomSeeker = roomies[Math.floor(Math.random() * roomies.length)];
             io.to(`${randomSeeker}`).emit('youre the seeker');
 
+            // remove the seeker from the list of roomies
             for (let i = 0; i < roomies.length; i++) {
                 if (roomies[i] === randomSeeker) {
                     roomies.splice(i, 1);
                 }
             }
+            // set the gamesInSession object for this game
             gamesInSession[room] = {
                 'roomID': room,
                 'timerID': 0,
