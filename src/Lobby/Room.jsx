@@ -29,6 +29,7 @@ class Room extends Component {
             roomID: this.props.location.state.join_code,
             title: "",
             header: "Join Code: " + this.props.location.state.join_code,
+            playerState: 'hider',
             game_mode: "",
             game_map: {},
             game_time: "",
@@ -141,7 +142,7 @@ class Room extends Component {
 
     render() {
         let comp;
-
+        console.log("THIS IS STATE BEFORE SENDING TO GAME",this.state.playerState)
         if (this.state.previous) {
             comp = (
                 <Redirect to={{
