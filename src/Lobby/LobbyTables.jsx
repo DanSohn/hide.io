@@ -37,13 +37,14 @@ class LobbyTables extends Component {
                 <tr key={join_code}>
                     <td>{lobby_name}</td>
                     <td>{num_players}</td>
-                    <td>
-                        <button
+                    <td className="buttonColumn">
+                        {/* <button
                             className="btn btn-success"
                             onClick={() => this.sendLobbyCode(join_code)}
                         >
                             Join
-                        </button>
+                        </button> */}
+                        <span onClick={() => this.sendLobbyCode(join_code)} className='start-btn-green ff-10 width-100'>JOIN</span>
                     </td>
                 </tr>
             )

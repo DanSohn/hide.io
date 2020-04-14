@@ -31,7 +31,7 @@ const LobbySchema = new mongoose.Schema({
     },
     createdAt: {
         type: Date,
-        expires: '15m',
+        expires: '50m',
         default: Date.now()
     }
 });

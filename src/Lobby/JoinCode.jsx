@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Link, Redirect} from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { socket } from '../assets/socket';
 import Cookies from "universal-cookie";
 
@@ -9,8 +9,8 @@ import Break from '../assets/Break';
 import 'bootstrap/dist/js/bootstrap.bundle';
 import '../assets/App.css';
 import ClickSound from '../sounds/click';
-import {auth} from "../assets/auth";
-import {googleAuth} from "../Login/LoginScreen";
+import { auth } from "../assets/auth";
+import { googleAuth } from "../Login/LoginScreen";
 
 const cookies = new Cookies();
 
@@ -114,8 +114,8 @@ class JoinCode extends Component {
             }} />
         } else {
             comp = (
-                <div className="z-depth-5 GameWindow">
-                    <Header previous={this.goPrevious} />
+                <div className="GameWindow">
+                    <Header title="Join Lobby" previous={this.goPrevious}/>
                     <Break />
                     <div className="ContentScreen">
                         <div className="usernameSelection">
@@ -131,11 +131,12 @@ class JoinCode extends Component {
                                     required
                                 />
                                 <br />
-                                <button
+                                {/* <button
                                     className="btn btn-outline-secondary"
                                     type="submit">
                                     Submit
-                                </button>
+                                </button> */}
+                                <button type="submit"><span className='start-btn-blue ff-20 width-250'>SUBMIT</span></button>
                             </form>
                         </div>
                     </div>

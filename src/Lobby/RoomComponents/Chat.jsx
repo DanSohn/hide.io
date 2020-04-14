@@ -1,7 +1,7 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import "bootstrap/dist/js/bootstrap.bundle";
-import "../assets/App.css";
-import { socket } from "../assets/socket";
+import "../../assets/App.css";
+import {socket} from "../../assets/socket";
 
 class Chat extends Component {
     constructor(props) {
@@ -18,7 +18,7 @@ class Chat extends Component {
 
     componentDidMount() {
         socket.on("message from server", info => {
-            let obj = { username: info.username, message: info.message };
+            let obj = {username: info.username, message: info.message};
 
             this.setState({
                 messages: [...this.state.messages, obj]
@@ -44,7 +44,6 @@ class Chat extends Component {
             message: this.state.onKeyboard
         });
 
-        let obj = { username: this.props.userName, message: this.state.onKeyboard };
         this.setState({
             message: this.state.onKeyboard,
             onKeyboard: ""
@@ -55,10 +54,10 @@ class Chat extends Component {
         return (
             <div className="chatRoom">
                 <div className="chat">
-                    <ul id="messages" style={{ color: "white" }}>
+                    <ul id="messages" style={{color: "white"}}>
                         {this.state.messages.map(function (d, idx) {
                             return (
-                                <li style={{ listStyleType: "none" }} key={idx}>
+                                <li style={{listStyleType: "none"}} key={idx}>
                                     {d.username}: {d.message}
                                 </li>
                             );
@@ -77,7 +76,8 @@ class Chat extends Component {
                         <div className="input-group-append">
                             <button type="submit" className="btn btn-outline-secondary">
                                 Submit
-              </button>
+
+                            </button>
                         </div>
                     </div>
                 </form>

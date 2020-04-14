@@ -9,8 +9,8 @@ import LobbyTables from './LobbyTables';
 
 import '../assets/App.css';
 import ClickSound from '../sounds/click';
-import {auth} from "../assets/auth";
-import {googleAuth} from "../Login/LoginScreen";
+import { auth } from "../assets/auth";
+import { googleAuth } from "../Login/LoginScreen";
 
 const cookies = new Cookies();
 
@@ -112,9 +112,10 @@ class ViewLobbies extends Component {
                 }} />
             } else {
                 comp = (
-                    <div className="z-depth-5 GameWindow">
-                        <Header previous={this.goPrevious} />
-                        <Break />
+
+                    <div className="GameWindow">
+                        <Header title="Lobby Selection" previous={this.goPrevious}/>
+                        <Break/>
                         <div className="ContentScreen">
                             <LobbyTables lobbyCallback={this.goToJoinLobby} />
                             <div className="createLobby">
@@ -125,11 +126,12 @@ class ViewLobbies extends Component {
                                         email: this.state.email,
                                     }*/
                                 }}>
-                                    <button
+                                    {/* <button
                                         type="button"
                                         className="z-depth-3 btn btn-danger">
                                         CREATE LOBBY
-                                    </button>
+                                    </button> */}
+                                    <span class='start-btn-red ff-20 width-250'>CREATE LOBBY</span>
                                 </Link>
                                 <Link to={{
                                     pathname: '/JoinByCode',
@@ -138,11 +140,12 @@ class ViewLobbies extends Component {
                                         email: this.state.email,
                                     }*/
                                 }}>
-                                    <button
+                                    {/* <button
                                         type="button"
                                         className="z-depth-3 btn btn-info">
                                         JOIN BY CODE
-                                    </button>
+                                    </button> */}
+                                    <span class='start-btn-blue ff-20 width-250'>JOIN BY CODE</span>
                                 </Link>
                             </div>
                         </div>

@@ -1,9 +1,9 @@
-import React, {Component} from "react";
-import {Link} from 'react-router-dom';
+import React, { Component } from "react";
+import { Link } from 'react-router-dom';
 import Cookies from "universal-cookie";
 
-import {auth} from "../Router";
-import {googleAuth} from "../Login/LoginScreen";
+import { auth } from "../Router";
+import { googleAuth } from "../Login/LoginScreen";
 
 
 import "../assets/App.css";
@@ -11,7 +11,7 @@ import "../assets/App.css";
 import Header from "../assets/Header";
 import Break from "../assets/Break";
 import ClickSound from "../sounds/click";
-import {socket} from "../assets/socket";
+import { socket } from "../assets/socket";
 
 
 const cookies = new Cookies();
@@ -50,9 +50,10 @@ class MenuScreen extends Component {
     }
 
     render() {
-        return <div className="z-depth-5 GameWindow">
-            <Header showBack={false} />
-            <Break />
+
+        return <div className="GameWindow">
+            <Header title="Main Menu" showBack={false}/>
+            <Break/>
             <div className="ContentScreen">
                 <div className="menuScreen">
 
@@ -63,11 +64,12 @@ class MenuScreen extends Component {
                             email: this.state.email,
                         }*/
                     }}>
-                        <button
+                        {/* <button
                             type="button"
                             className="z-depth-3 btn btn-success">
                             Play
-                        </button>
+                        </button> */}
+                        <span class='start-btn-green ff-20 width-350'>PLAY</span>
                     </Link>
                     <Link to={{
                         pathname: '/Instructions',
@@ -77,11 +79,12 @@ class MenuScreen extends Component {
                             */
                         }
                     }}>
-                        <button
+                        {/* <button
                             type="button"
                             className="z-depth-3 btn btn-success">
                             Instructions
-                        </button>
+                        </button> */}
+                        <span class='start-btn-green ff-20 width-350'>INSTRUCTIONS</span>
                     </Link>
                     <Link to={{
                         pathname: '/Profile',
@@ -91,13 +94,14 @@ class MenuScreen extends Component {
                             */
                         }
                     }}>
-                        <button
+                        {/* <button
                             type="button"
                             className="z-depth-3 btn btn-success">
                             Profile
-                        </button>
+                        </button> */}
+                        <span class='start-btn-green ff-20 width-350'>PROFILE</span>
                     </Link>
-                    <button
+                    {/* <button
                         type="button"
                         className="z-depth-3 btn btn-success"
                         onClick={() => {
@@ -113,7 +117,19 @@ class MenuScreen extends Component {
                             });
                         }}>
                         Logout
-                    </button>
+                    </button> */}
+                    <span class='start-btn-green ff-20 width-350' onClick={() => {
+                        auth.logout(() => {
+                            // reason history is avail on props is b/c we loaded it via a route, which passes
+                            // in a prop called history always
+                            cookies.remove("name");
+                            cookies.remove("email");
+                            cookies.remove("image");
+                            googleAuth.signOut();
+                            console.log("going to logout!");
+                            this.props.history.push('/');
+                        });
+                    }}>LOGOUT</span>
                 </div>
             </div>
         </div>

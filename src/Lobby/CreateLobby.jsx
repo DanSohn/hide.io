@@ -9,8 +9,8 @@ import Break from "../assets/Break";
 import "bootstrap/dist/js/bootstrap.bundle";
 import "../assets/App.css";
 import ClickSound from "../sounds/click";
-import {auth} from "../assets/auth";
-import {googleAuth} from "../Login/LoginScreen";
+import { auth } from "../assets/auth";
+import { googleAuth } from "../Login/LoginScreen";
 
 const cookies = new Cookies();
 
@@ -200,9 +200,7 @@ class CreateLobby extends Component {
                                         </select>
                                     </div>
                                     <div className="createLobbyContainer">
-                                        <button type="submit" className="z-depth-3 btn btn-info">
-                                            Submit
-                                        </button>
+                                        <button type="submit"><span class='start-btn-blue ff-20 width-250'>SUBMIT</span></button>
                                     </div>
                                 </div>
                             </form>

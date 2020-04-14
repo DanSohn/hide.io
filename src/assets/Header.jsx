@@ -46,9 +46,7 @@ class Header extends Component {
         let profile;
         if (this.state.showBack !== false) {
             back = (
-                <button className="z-depth-3 btn btn-light" onClick={this.props.previous}>
-                    Go Back
-                </button>
+                <span className='start-btn-grey ff-15 width-100 height-75' onClick={this.props.previous}>GO BACK</span>
             );
         }
         if (this.state.showProfile !== false) {
@@ -56,7 +54,7 @@ class Header extends Component {
                 // <button className="btn btn-dark" onClick={this.goProfile}>
                 //     Profile
                 // </button>
-                <img className="z-depth-3" src={this.state.image} alt="Google or facebook's profile" />
+                <img className="z-depth-5" src={this.state.image} alt="Google or facebook's profile" />
             );
         }
         comp = (
