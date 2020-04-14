@@ -284,7 +284,7 @@ tr .btn-success {
 }
 .roomActions,
 .chat {
-    height: 100%;
+    height: 95%;
 }
 .inputBox input {
     border-radius: 0;
