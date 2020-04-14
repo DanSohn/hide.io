@@ -66,13 +66,6 @@ class Game extends Component {
     constructor(props) {
         super(props);
 
-        // // if its a seeker use the standardized color, else randomize a hex color
-        // if (this.state.playerState === "seeker")
-        //     let playerColor = "#D5C7BC";
-        // else
-        //     let playerColor= '#'+Math.floor(Math.random()*16777215).toString(16);
-        let playerColor = this.props.playerState === "seeker" ? "#D5C7BC" : '#' + Math.floor(Math.random() * 16777215).toString(16);
-
         document.body.style.overflow = "hidden";
 
         this.state = {
@@ -83,7 +76,7 @@ class Game extends Component {
             num_of_players: this.props.numPlayers,
             players: this.props.players,
             playerState: this.props.location.state.playerState,
-            playerColor: playerColor,
+            playerColor: "",
 
             gameID: this.props.location.state.gameID,
             game_status: "not started",
@@ -130,6 +123,9 @@ class Game extends Component {
                 },
             },
         };
+
+        this.state.playerColor = this.props.playerState === "seeker" ? "#D5C7BC" : '#' + Math.floor(Math.random() * 16777215).toString(16);
+
         console.log("AM I THE SEEKER?", this.state.playerState);
         console.log(this.props.playerState);
         // TODO: do stuff when getting the location information
