@@ -325,7 +325,7 @@ io.on("connection", (socket) => {
         console.log("COLLISION WITH:", playerID, "room: ", room);
 
         // console.log(">>>>>>>>>>>>>>>>> " + gamesInSession[room].hiders[0] + "    " + playerID);
-        if(gamesInSession[room].hiders.includes(playerID)){
+        if(gamesInSession.hasOwnProperty(room) && gamesInSession[room].hiders.includes(playerID)){
             for(let i = 0; i < gamesInSession[room].hiders.length; i++){
                 if(gamesInSession[room].hiders[i] === playerID){
                     gamesInSession[room].hiders.splice(i,1);
