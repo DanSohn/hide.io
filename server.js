@@ -336,10 +336,10 @@ io.on("connection", (socket) => {
                     io.to(room).emit("display player caught", playerName);
                     break;
                 }
+            }
 
-                if (gamesInSession[room].hiders.length === 0) {
-                    endGame(room, gamesInSession[room].timerID);
-                }
+            if(gamesInSession[room].hiders.length === 0){
+                endGame(room, gamesInSession[room].timerID);
             }
         }
     });

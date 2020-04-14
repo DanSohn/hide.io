@@ -138,6 +138,12 @@ class Game extends Component {
                 this.state.enamies.set(playerinfo.id, playerinfo);
             }
         });
+        socket.on("I died", (playerID, playerName) => {
+            if (playerID === socket.id) {
+                this.setState({ alive: false })
+            }
+
+        });
 
         // if the game is initiated, let the seeker move
         socket.on('game in progress', (game_time) => {
@@ -541,7 +547,6 @@ class Game extends Component {
 
     //each game frame
     tick() {
-        this.aliveStatusCheck();
 
         this.ctx.clearRect(0, 0, 1024, 640);
         let delta = 0.25;
@@ -579,14 +584,7 @@ class Game extends Component {
 
     }
 
-    aliveStatusCheck() {
-        socket.on("I died", (playerID, playerName) => {
-            if (playerID === socket.id) {
-                this.setState({ alive: false })
-            }
 
-        });
-    }
 
     gameRender() {
         let playerX = this.Player.screenX - this.Player.width / 2 + 32;
