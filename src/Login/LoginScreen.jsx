@@ -126,15 +126,7 @@ class LoginScreen extends Component {
                     <div className="ContentScreen">
                         <div className="LoginScreen">
                             <p className="errorMsg">{this.state.errorMsg}</p>
-
-                            {/* <button
-                                type="button"
-                                id="googleLogin"
-                                className="btn btn-danger"
-                            >
-
-                            </button> */}
-                            <span id="googleLogin" class='start-btn-red ff-20 width-250'>GOOGLE</span>
+                            <span id="googleLogin" className='start-btn-red ff-20 width-250'>GOOGLE</span>
 
                         </div>
                     </div>

@@ -268,13 +268,13 @@ io.on("connection", (socket) => {
             // set the gamesInSession object for this game
             gamesInSession[room] = {
                 'roomID': room,
-                'timerID': 0,
+                'timerID': "",
                 'seeker': randomSeeker,
                 'hiders': roomies,
                 'caught': []
             };
             console.log("RANDOM SEEKER IS: " + gamesInSession[room].seeker);
-            console.log("LENGTH OF HIDERS " + gamesInSession[room].hiders.length);
+            console.log("NUMBER OF HIDERS " + gamesInSession[room].hiders.length);
 
             let countdown = Math.floor(countdowntime / 1000);
             // send to all sockets an event every second
@@ -297,12 +297,15 @@ io.on("connection", (socket) => {
         let time = {minutes: mins, seconds: 15};
         console.log(time, room);
         let timerID = setInterval(() => {
-            if (mins === time.minutes) {
-                io.to(room).emit("countdown", time.seconds);
+            // during the hider's running time when seeker can't move, send countdown event to the game
+            if (mins === time.minutes && time.seconds === 0) {
+                io.to(room).emit("countdown ended");
             }
+            // normal decrement of seconds, unless seconds is at 0
             if (time.seconds > 0) {
-                time.seconds = time.seconds - 1;
+                time.seconds--;
             } else if (time.seconds === 0) {
+                // if more than 1 mins left, decrement minute by 1 and restart seconds at 59
                 if (time.minutes > 0) {
                     time.seconds = 59;
                     time.minutes = time.minutes - 1;
@@ -312,10 +315,12 @@ io.on("connection", (socket) => {
         }, 1000);
         gamesInSession[room].timerID = timerID;
 
+        // stop the intervals once the full time is over
+        // mins * 60 0000 (60 seconds x 1 sec per milli) + 15 seconds of count down time
         setTimeout(() => {
             endGame(room, timerID);
             console.log("Time's up");
-        }, time.minutes * 60000 + 16100);
+        }, mins * 60000 + 15000);
     });
 
     //When a hider is caught, they emit an event to the server to update the list of players who are still hiding and
@@ -355,7 +360,7 @@ io.on("connection", (socket) => {
                 .removeUserFromLobby({room: socket_info.lobby, email: socket_info.email})
                 .then()
                 .catch((err) => console.log(err));
-            socket_name.delete(socket.id);
+            delete socket_name[socket.id];
         }
     });
 
@@ -366,6 +371,8 @@ io.on("connection", (socket) => {
         //TODO get information about the players that were in that game and update their stats
         //TODO emit an event to all players about who won the game between hiders and seeker
         clearInterval(timerID);
+        // reset the timer for the room
+        gamesInSession[room].timerID = "";
         // console.log(room + " <<<<<<<< ROOM ID" );
         if(gamesInSession.hasOwnProperty(room)){
             if(gamesInSession[room].hiders.length === 0){
@@ -376,9 +383,13 @@ io.on("connection", (socket) => {
                 console.log("<<<<<<<<<<<<<<HIDER WINS>>>>>>>>>>>.");
                 io.to(room).emit("game winner", "hider");
             }
-            io.to(room).emit("game finished");
-            delete gamesInSession[room];
-            console.log("ROOM WAS DELETED");
+            // after 5 seconds, leave to lobby
+            setTimeout(()=>{
+                console.log("ROOM WAS DELETED");
+                delete gamesInSession[room];
+                io.to(room).emit("game finished");
+            }, 5000);
+
         }
     }
 });

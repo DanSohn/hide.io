@@ -146,17 +146,11 @@ class Game extends Component {
 
         });
 
-        // if the game is initiated, let the seeker move
-        socket.on('game in progress', (game_time) => {
-            if (game_time.seconds === 0) {
-                this.state.game_status = 'started';
-            }
-        });
-
         socket.emit("start game timer", this.state.gameID, this.state.timeLimit);
 
         this.update_player_component = this.update_player_component.bind(this);
         this.tick = this.tick.bind(this);
+        this.endCountdown = this.endCountdown.bind(this);
     }
 
     //init game state seppereate from did load. could be used for start restrictions.
@@ -553,7 +547,6 @@ class Game extends Component {
 
     //each game frame
     tick() {
-        console.log("TICK NEVER STOPS AHHHHHHHHHHHHHHHHHHHHHHHHH");
         this.ctx.clearRect(0, 0, 1024, 640);
         let delta = 0.25;
         delta = Math.min(delta, 0.25); // maximum delta of 250 ms
@@ -656,6 +649,15 @@ class Game extends Component {
         return <div>{component_insides}</div>;
     }
 
+    // callback for Timer component
+    endCountdown(){
+        console.log("Countdown completed. GAME ON");
+        this.setState({
+            countdown: false,
+            game_status: 'started'
+        });
+    }
+
     componentDidMount() {
         // this.state.context = this.refs.canvas.getContext('2d');
         console.log(this.state.timeLimit);
@@ -673,17 +675,12 @@ class Game extends Component {
             }
         });
 
-        socket.on("countdown", (seconds) => {
-            if (seconds - 1 === 0) {
-                this.setState({countdown: false});
-            }
-        });
         // console.log(this.state);
 
         // when the server completes the winner and returns event to go back to the lobby
         socket.on("game finished", () => {
             // cancel the animation frames
-            if(this.requestID) window.cancelAnimationFrame(this.requestID);
+            if (this.requestID) window.cancelAnimationFrame(this.requestID);
 
             this.setState({
                 game_status: "Completed"
@@ -695,9 +692,9 @@ class Game extends Component {
             auth.logout(() => {
                 // reason history is avail on props is b/c we loaded it via a route, which passes
                 // in a prop called history always
-                cookies.remove("name");
+                /*cookies.remove("name");
                 cookies.remove("email");
-                cookies.remove("image");
+                cookies.remove("image");*/
                 googleAuth.signOut();
                 console.log("going to logout!");
                 this.props.history.push('/');
@@ -710,7 +707,6 @@ class Game extends Component {
         console.log("Component unmounted ===================================");
 
         socket.off("Redraw positions");
-        socket.off("countdown");
         socket.off("reconnect_error");
         socket.off("game finished");
         socket.off("player moved");
@@ -737,7 +733,9 @@ class Game extends Component {
         return (
             <>
                 <Timer gameDuration={this.state.timeLimit.split(" ")[0]}
-                       playerState={this.state.playerState}/>
+                       playerState={this.state.playerState}
+                       endCount={this.endCountdown}
+                />
                 <div className="gameAction">
                     <AliveList/>
                     <div className={canvasDisplay[0]}/>

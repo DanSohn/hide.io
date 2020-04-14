@@ -43,7 +43,6 @@ class Room extends Component {
         };
         this.goPrevious = this.goPrevious.bind(this);
         this.startTimer = this.startTimer.bind(this);
-        this.start = this.start.bind(this);
 
         // this lets the socket join the specific room
         socket.emit("ask for lobby info", this.state.roomID);
@@ -68,11 +67,6 @@ class Room extends Component {
         socket.emit("lobby start timer", { countdowntime: 4300, room: this.state.roomID });
     }
 
-    start() {
-        this.setState({
-            start: true,
-        });
-    }
 
     componentDidMount() {
         // socket.emit("player joined");
@@ -115,7 +109,9 @@ class Room extends Component {
             // after i reach 0, call startGame
             if (countdown <= 0) {
                 console.log("starting game");
-                this.start();
+                this.setState({
+                    start: true
+                })
             }
         });
         socket.on('youre the seeker', () => {
@@ -136,9 +132,9 @@ class Room extends Component {
             auth.logout(() => {
                 // reason history is avail on props is b/c we loaded it via a route, which passes
                 // in a prop called history always
-                cookies.remove("name");
+                /*cookies.remove("name");
                 cookies.remove("email");
-                cookies.remove("image");
+                cookies.remove("image");*/
                 googleAuth.signOut();
                 console.log("going to logout!");
                 this.props.history.push('/');
