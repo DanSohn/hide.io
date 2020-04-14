@@ -2,18 +2,16 @@ import React from "react";
 
 export default function ButtonArea(props) {
     let header = props.header,
-        time = props.time;
+        time = props.time,
+        setting = null;
 
-    let setting = null;
     if (time !== "") {
-        setting = <h1 style={{fontSize: 60}}>{time}</h1>;
+        setting = <h1 style={{fontSize: 110}}>{time}</h1>;
     } else {
         setting = (
             <button
                 className="btn btn-success"
-                onClick={() =>
-                    props.timerCallback()
-                }
+                onClick={() => props.timerCallback() }
             >
                 Start Game
             </button>
