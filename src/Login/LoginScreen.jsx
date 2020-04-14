@@ -1,8 +1,8 @@
-import React, {Component} from "react";
-import {Redirect} from 'react-router-dom';
+import React, { Component } from "react";
+import { Redirect } from 'react-router-dom';
 import googleAuth from './GoogleAuth';
-import {auth} from "../Router";
-import {socket} from "../assets/socket";
+import { auth } from "../Router";
+import { socket } from "../assets/socket";
 import Cookies from 'universal-cookie';
 
 import Break from "../assets/Break";
@@ -37,7 +37,7 @@ class LoginScreen extends Component {
         // if cookies show authentication, then set auth to be true
         if (cookies.get("email") && cookies.get("name") && cookies.get("image")) {
             socket.emit("user exists check", cookies.get("email"));
-            this.setState({cookieCheck: true})
+            this.setState({ cookieCheck: true })
         }
 
     }
@@ -55,11 +55,11 @@ class LoginScreen extends Component {
             // i go through this if statement if checkExistingCookies was called
             // if cookies and username does match, i will log right in
             if (this.state.cookieCheck) {
-                this.setState({cookieCheck: false});
+                this.setState({ cookieCheck: false });
                 if (username === cookies.get("name")) {
                     console.log("Using cookies to log in ");
                     auth.login();
-                    this.setState({newUser: false})
+                    this.setState({ newUser: false })
                 }
             } else {
                 // user is now authenticated
@@ -67,11 +67,11 @@ class LoginScreen extends Component {
                 let googleUser = googleAuth.loginInfo();
 
                 // the cookies last for a maximum time of 1 day
-                cookies.set("email", googleUser.email, {path: "/", maxAge: 60 * 60 * 24});
-                cookies.set("image", googleUser.image, {path: "/", maxAge: 60 * 60 * 24});
+                cookies.set("email", googleUser.email, { path: "/", maxAge: 60 * 60 * 24 });
+                cookies.set("image", googleUser.image, { path: "/", maxAge: 60 * 60 * 24 });
 
                 if (username !== null) {
-                    cookies.set("name", username, {path: "/", maxAge: 60 * 60 * 24});
+                    cookies.set("name", username, { path: "/", maxAge: 60 * 60 * 24 });
                     this.setState({
                         newUser: false,
                         userName: username,
@@ -120,20 +120,21 @@ class LoginScreen extends Component {
         if (!auth.isAuthenticated) {
             component = (
                 <div className="GameWindow">
-
                     <Header title="Login" showProfile={false} showBack={false}/>
+
                     <Break />
                     <div className="ContentScreen">
                         <div className="LoginScreen">
                             <p className="errorMsg">{this.state.errorMsg}</p>
 
-                            <button
+                            {/* <button
                                 type="button"
                                 id="googleLogin"
                                 className="btn btn-danger"
                             >
-                                Google
-                            </button>
+
+                            </button> */}
+                            <span id="googleLogin" class='start-btn-red ff-20 width-250'>GOOGLE</span>
 
                         </div>
                     </div>
@@ -147,7 +148,7 @@ class LoginScreen extends Component {
                         /*state: {
                             email: this.state.email,
                         }*/
-                    }}/>
+                    }} />
                 );
             } else {
                 component = (
@@ -157,7 +158,7 @@ class LoginScreen extends Component {
                             name: this.state.userName,
                             email: this.state.email,
                         }*/
-                    }}/>
+                    }} />
                 );
             }
         }
@@ -200,4 +201,4 @@ class LoginScreen extends Component {
     }
 }
 
-export {LoginScreen, googleAuth};
+export { LoginScreen, googleAuth };

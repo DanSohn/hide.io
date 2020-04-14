@@ -1,5 +1,5 @@
-import React, {Component} from "react";
-import {socket} from "../assets/socket";
+import React, { Component } from "react";
+import { socket } from "../assets/socket";
 import "../assets/App.css";
 import ClickSound from "../sounds/click";
 
@@ -18,7 +18,7 @@ class LobbyTables extends Component {
 
     }
 
-    sendLobbyCode(join_code){
+    sendLobbyCode(join_code) {
         ClickSound();
         console.log("Sending back information to viewLobbies", join_code);
         this.props.lobbyCallback(join_code);
@@ -27,23 +27,24 @@ class LobbyTables extends Component {
 
     renderTableData() {
         console.log("re render table data");
-        if(this.state.lobbies === null){
+        if (this.state.lobbies === null) {
             return;
         }
         return this.state.lobbies.map((lobby) => {
-            const {join_code, lobby_name, players} = lobby;
+            const { join_code, lobby_name, players } = lobby;
             let num_players = players.length;
             return (
                 <tr key={join_code}>
                     <td>{lobby_name}</td>
                     <td>{num_players}</td>
-                    <td>
-                        <button
+                    <td className="buttonColumn">
+                        {/* <button
                             className="btn btn-success"
                             onClick={() => this.sendLobbyCode(join_code)}
-                            >
+                        >
                             Join
-                        </button>
+                        </button> */}
+                        <span onClick={() => this.sendLobbyCode(join_code)} className='start-btn-green ff-10 width-100'>JOIN</span>
                     </td>
                 </tr>
             )
