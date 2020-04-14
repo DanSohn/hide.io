@@ -124,22 +124,22 @@ body {
     display: flex;
     flex-direction: column;
     position: absolute;
-    margin: 50px 0px 0px 0px;
+    margin: 50px 0 0 0;
 }
 h1 {
     font-size: 50px;
-    margin: 10px 0px 0px 0px;
+    margin: 10px 0 0 0;
 }
 
 div {
-    margin: 0px;
+    margin: 0;
 }
 .gameAction {
     display: flex;
     justify-content: center;
 }
 .alivePlayers {
-    margin: 0px 0px 0px 550px;
+    margin: 0 0 0 550px;
     background: rgba(0, 0, 0, 0.5);
     border-radius: 50px;
     border: 2px solid #52565c;
@@ -148,7 +148,7 @@ div {
     height: 300px;
 }
 .aliveList {
-    padding: 10px 0px 0px 0px;
+    padding: 10px 0 0 0;
     list-style-type: none;
 }
 .aliveList li {
@@ -167,7 +167,7 @@ div {
     justify-content: center;
     height: 750px;
     width: 1000px;
-    padding: 0px;
+    padding: 0;
     border-radius: 5%;
     border: 5px solid #52565c;
 }
@@ -211,7 +211,7 @@ td {
 
 .header button,
 .header img {
-    margin: 0px;
+    margin: 0;
     width: 75px;
     height: 75px;
     border-radius: 50%;
@@ -240,7 +240,7 @@ td {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0px 0px 100px 0px;
+    padding: 0 0 100px 0;
 }
 
 .lobbySelection,
@@ -287,27 +287,29 @@ tr .btn-success {
     height: 100%;
 }
 .inputBox input {
-    border-radius: 0px;
+    border-radius: 0;
     width: 75%;
 }
 .inputBox button {
-    border-radius: 0px;
+    border-radius: 0;
     width: 10%;
 }
 
-.input-group mb-3 {
-    margin: 0%;
+.input-group {
+    margin: 0;
 }
 .chat {
-    border: 5px solid navajowhite;
     text-align: left;
     overflow-y: auto;
     word-break: break-word;
 }
 
 .chatRoom {
+    border: 5px solid navajowhite;
     height: 100%;
 }
+
+
 #messages {
     margin: 5%;
 }
@@ -317,12 +319,23 @@ tr .btn-success {
     height: 100%;
 }
 .online {
+    justify-content: flex-start;
     border: 5px solid goldenrod;
     border-radius: 0px;
 }
 
+.online ul {
+    margin-top: 20px;
+    padding-inline-start: 0;
+    font-size: 25px;
+}
+
+.online li {
+    padding-bottom: 10px;
+}
+
 .createLobbyText {
-    margin: 0px 0px 0px 50px;
+    margin: 0 0 0 50px;
 }
 .createLobbyForm {
     display: flex;
@@ -336,7 +349,7 @@ tr .btn-success {
     justify-content: center;
 }
 #messages {
-    padding: 0px;
+    padding: 0;
 }
 
 .createLobbyContainer {
