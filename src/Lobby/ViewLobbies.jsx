@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
-import {Link, Redirect} from 'react-router-dom';
-import {socket} from '../assets/socket';
+import React, { Component } from 'react';
+import { Link, Redirect } from 'react-router-dom';
+import { socket } from '../assets/socket';
 import Cookies from 'universal-cookie';
 
 import Header from '../assets/Header';
@@ -9,8 +9,8 @@ import LobbyTables from './LobbyTables';
 
 import '../assets/App.css';
 import ClickSound from '../sounds/click';
-import {auth} from "../assets/auth";
-import {googleAuth} from "../Login/LoginScreen";
+import { auth } from "../assets/auth";
+import { googleAuth } from "../Login/LoginScreen";
 
 const cookies = new Cookies();
 
@@ -98,7 +98,7 @@ class ViewLobbies extends Component {
                     name: this.state.userName,
                     email: this.state.email,
                 }*/
-            }}/>
+            }} />
         } else {
             if (this.state.goToRoom === true) {
                 comp = <Redirect to={{
@@ -109,14 +109,14 @@ class ViewLobbies extends Component {
                         */
                         join_code: this.state.enter_lobby
                     }
-                    }}/>
+                }} />
             } else {
                 comp = (
                     <div className="GameWindow">
-                        <Header previous={this.goPrevious}/>
-                        <Break/>
+                        <Header previous={this.goPrevious} />
+                        <Break />
                         <div className="ContentScreen">
-                            <LobbyTables lobbyCallback={this.goToJoinLobby}/>
+                            <LobbyTables lobbyCallback={this.goToJoinLobby} />
                             <div className="createLobby">
                                 <Link to={{
                                     pathname: '/CreateLobby',
@@ -125,11 +125,12 @@ class ViewLobbies extends Component {
                                         email: this.state.email,
                                     }*/
                                 }}>
-                                    <button
+                                    {/* <button
                                         type="button"
                                         className="btn btn-danger">
                                         CREATE LOBBY
-                                    </button>
+                                    </button> */}
+                                    <span class='start-btn-red ff-20 width-250'>CREATE LOBBY</span>
                                 </Link>
                                 <Link to={{
                                     pathname: '/JoinByCode',
@@ -138,11 +139,12 @@ class ViewLobbies extends Component {
                                         email: this.state.email,
                                     }*/
                                 }}>
-                                    <button
+                                    {/* <button
                                         type="button"
                                         className="btn btn-info">
                                         JOIN BY CODE
-                                    </button>
+                                    </button> */}
+                                    <span class='start-btn-blue ff-20 width-250'>JOIN BY CODE</span>
                                 </Link>
                             </div>
                         </div>
@@ -150,7 +152,7 @@ class ViewLobbies extends Component {
                 );
             }
         }
-        return <>{ comp }</>;
+        return <>{comp}</>;
     }
 }
 

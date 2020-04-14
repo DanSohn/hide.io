@@ -1,6 +1,6 @@
-import React, {Component} from "react";
-import {Redirect} from "react-router-dom";
-import {socket} from "../assets/socket";
+import React, { Component } from "react";
+import { Redirect } from "react-router-dom";
+import { socket } from "../assets/socket";
 import Cookies from 'universal-cookie';
 
 import Header from "../assets/Header";
@@ -8,12 +8,12 @@ import Break from "../assets/Break";
 import Chat from "./Chat";
 import GameSettings from "./GameSettings";
 
-import {returnGameMode, returnGameMap, returnGameTime} from "../assets/utils";
+import { returnGameMode, returnGameMap, returnGameTime } from "../assets/utils";
 import "bootstrap/dist/js/bootstrap.bundle";
 import "../assets/App.css";
 import ClickSound from "../sounds/click";
-import {auth} from "../assets/auth";
-import {googleAuth} from "../Login/LoginScreen";
+import { auth } from "../assets/auth";
+import { googleAuth } from "../Login/LoginScreen";
 
 const cookies = new Cookies();
 
@@ -46,7 +46,7 @@ class Room extends Component {
     }
 
     goPrevious() {
-        socket.emit("leave lobby", {room: this.state.roomID, email: this.state.email});
+        socket.emit("leave lobby", { room: this.state.roomID, email: this.state.email });
         // i ensure everything is first handled properly in the server, and is up to date
         // before i leave
         socket.on("may successfully leave lobby", () => {
@@ -103,7 +103,7 @@ class Room extends Component {
 
         // this event occurs on function startTimer(), it will count down from 3 to start the game
         socket.on("game starting ack", () => {
-            socket.emit("lobby start timer", {countdowntime: 4100, room: this.state.roomID});
+            socket.emit("lobby start timer", { countdowntime: 4100, room: this.state.roomID });
         });
 
         // This event will be used to count down the start of the game and then send an event to the server to start
@@ -151,25 +151,25 @@ class Room extends Component {
         if (this.state.previous) {
             comp = (
                 <Redirect to={{
-                pathname: '/LobbyScreen',
-                /*state: {
-                    name: this.state.userName,
-                    email: this.state.email,
-                }*/
-            }}/>
+                    pathname: '/LobbyScreen',
+                    /*state: {
+                        name: this.state.userName,
+                        email: this.state.email,
+                    }*/
+                }} />
             );
         } else if (this.state.start) {
             comp = (
                 <Redirect to={{
-                pathname: '/Game',
-                state: {
-                    gameID: this.state.roomID,
-                    players: this.state.players,
-                    map: this.state.game_map,
-                    timeLimit: this.state.game_time,
-                    mode: this.state.game_mode
-                }
-            }}/>
+                    pathname: '/Game',
+                    state: {
+                        gameID: this.state.roomID,
+                        players: this.state.players,
+                        map: this.state.game_map,
+                        timeLimit: this.state.game_time,
+                        mode: this.state.game_mode
+                    }
+                }} />
             );
 
         } else {
@@ -179,18 +179,19 @@ class Room extends Component {
                         previous={this.goPrevious}
                         title={this.state.title}
                     />
-                    <Break/>
+                    <Break />
                     <div className="ContentScreen">
-                        <Chat userName={this.state.userName} roomID={this.state.roomID}/>
+                        <Chat userName={this.state.userName} roomID={this.state.roomID} />
 
                         <div className="roomActions">
                             <h5>{this.state.header}</h5>
                             <h1>{this.state.time}</h1>
-                            <button
+                            {/* <button
                                 className="btn btn-success"
                                 onClick={this.startTimer}>
                                 Start Game
-                            </button>
+                            </button> */}
+                            <span onClick={this.startTimer} class='start-btn-green ff-20 width-250'>START GAME</span>
                             <GameSettings
                                 mode={this.state.game_mode}
                                 time={this.state.game_time}
@@ -200,7 +201,7 @@ class Room extends Component {
                         <div className="online">
                             <ul>
                                 {this.state.playersList.map((player, index) => {
-                                    return <li style={{listStyleType: "none"}} key={index}>{player.name}</li>;
+                                    return <li style={{ listStyleType: "none" }} key={index}>{player.name}</li>;
                                 })}
                             </ul>
                         </div>

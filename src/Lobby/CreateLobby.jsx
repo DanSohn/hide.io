@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {Redirect} from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import { socket } from "../assets/socket";
 import Cookies from "universal-cookie";
 
@@ -9,8 +9,8 @@ import Break from "../assets/Break";
 import "bootstrap/dist/js/bootstrap.bundle";
 import "../assets/App.css";
 import ClickSound from "../sounds/click";
-import {auth} from "../assets/auth";
-import {googleAuth} from "../Login/LoginScreen";
+import { auth } from "../assets/auth";
+import { googleAuth } from "../Login/LoginScreen";
 
 const cookies = new Cookies();
 
@@ -130,7 +130,7 @@ class CreateLobby extends Component {
                     name: this.state.userName,
                     email: this.state.email,
                 }*/
-            }}/>
+            }} />
         } else if (this.state.submitted) {
             comp = <Redirect to={{
                 pathname: '/Room',
@@ -140,7 +140,7 @@ class CreateLobby extends Component {
                     */
                     join_code: this.state.roomID
                 }
-            }}/>
+            }} />
         } else {
             comp = (
                 <div className="GameWindow">
@@ -200,9 +200,10 @@ class CreateLobby extends Component {
                                         </select>
                                     </div>
                                     <div className="createLobbyContainer">
-                                        <button type="submit" className="btn btn-info">
+                                        {/* <button type="submit" className="btn btn-info">
                                             Submit
-                                        </button>
+                                        </button> */}
+                                        <button type="submit"><span class='start-btn-blue ff-20 width-250'>SUBMIT</span></button>
                                     </div>
                                 </div>
                             </form>
