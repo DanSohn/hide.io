@@ -113,7 +113,7 @@ class ViewLobbies extends Component {
             } else {
                 comp = (
                     <div className="GameWindow">
-                        <Header previous={this.goPrevious}/>
+                        <Header title="Lobby Selection" previous={this.goPrevious}/>
                         <Break/>
                         <div className="ContentScreen">
                             <LobbyTables lobbyCallback={this.goToJoinLobby}/>
