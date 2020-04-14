@@ -12,6 +12,11 @@ import Point from "./Point";
 import Timer from "../Game/Timer";
 import AliveList from "./AliveList";
 import {Redirect} from "react-router-dom";
+import {auth} from "../assets/auth";
+import {googleAuth} from "../Login/LoginScreen";
+import Cookies from "universal-cookie";
+
+const cookies = new Cookies();
 
 // import Keyboard from './Keyboard'
 let Keyboard = {};
@@ -619,9 +624,19 @@ class Game extends Component {
         socket.on("reconnect_error", (error) => {
             // console.log("Error! Disconnected from server", error);
             console.log("Error! Can't connect to server");
-            this.setState({networkError: true})
+            auth.logout(() => {
+                // reason history is avail on props is b/c we loaded it via a route, which passes
+                // in a prop called history always
+                cookies.remove("name");
+                cookies.remove("email");
+                cookies.remove("image");
+                googleAuth.signOut();
+                console.log("going to logout!");
+                this.props.history.push('/');
+            });
         });
     }
+
 
     componentWillUnmount() {
         socket.off("Redraw positions");

@@ -25,29 +25,27 @@ class MenuScreen extends Component {
             */
             userName: cookies.get("name"),
             email: cookies.get("email"),
-            errorMsg: ""
         };
     }
 
     componentDidMount() {
-        socket.on("reconnect", attemptNumber => {
-            console.log("Reconnected to server on try", attemptNumber);
-            this.setState({
-                errorMsg: ""
-            })
-        });
-
         socket.on("reconnect_error", (error) => {
             // console.log("Error! Disconnected from server", error);
             console.log("Error! Can't connect to server");
-            this.setState({
-                errorMsg: "There is an issue with the server. The Top Programmers in the world and daniel are working on it!"
-            })
+            auth.logout(() => {
+                // reason history is avail on props is b/c we loaded it via a route, which passes
+                // in a prop called history always
+                cookies.remove("name");
+                cookies.remove("email");
+                cookies.remove("image");
+                googleAuth.signOut();
+                console.log("going to logout!");
+                this.props.history.push('/');
+            });
         });
     }
 
     componentWillUnmount() {
-        socket.off("reconnect");
         socket.off("reconnect_error");
     }
 
@@ -57,23 +55,20 @@ class MenuScreen extends Component {
             <Break/>
             <div className="ContentScreen">
                 <div className="menuScreen">
-                    {this.state.errorMsg === "" ?
-                        <Link to={{
-                            pathname: '/LobbyScreen',
-                            /*state: {
-                                name: this.state.userName,
-                                email: this.state.email,
-                            }*/
-                        }}>
-                            <button
-                                type="button"
-                                className="btn btn-success">
-                                Play
-                            </button>
-                        </Link>
-                        :
-                        <p className="errorMsg">{this.state.errorMsg}</p>
-                    }
+
+                    <Link to={{
+                        pathname: '/LobbyScreen',
+                        /*state: {
+                            name: this.state.userName,
+                            email: this.state.email,
+                        }*/
+                    }}>
+                        <button
+                            type="button"
+                            className="btn btn-success">
+                            Play
+                        </button>
+                    </Link>
                     <Link to={{
                         pathname: '/Instructions',
                         state: {

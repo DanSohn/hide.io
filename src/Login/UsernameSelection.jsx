@@ -5,6 +5,8 @@ import Cookies from 'universal-cookie';
 
 import Header from "../assets/Header";
 import Break from "../assets/Break";
+import {auth} from "../assets/auth";
+import {googleAuth} from "./LoginScreen";
 
 const cookies = new Cookies();
 
@@ -16,7 +18,6 @@ class UsernameSelection extends Component {
             username: "",
             //email: this.props.location.state.email,
             email: cookies.get("email"),
-            networkError: false
         };
         this.submitUsername = this.submitUsername.bind(this);
         this.handleKeyboard = this.handleKeyboard.bind(this);
@@ -26,7 +27,16 @@ class UsernameSelection extends Component {
         socket.on("reconnect_error", (error) => {
             // console.log("Error! Disconnected from server", error);
             console.log("Error! Can't connect to server");
-            this.setState({networkError: true})
+            auth.logout(() => {
+                // reason history is avail on props is b/c we loaded it via a route, which passes
+                // in a prop called history always
+                cookies.remove("name");
+                cookies.remove("email");
+                cookies.remove("image");
+                googleAuth.signOut();
+                console.log("going to logout!");
+                this.props.history.push('/');
+            });
         });
     }
 
@@ -54,10 +64,6 @@ class UsernameSelection extends Component {
     }
 
     render() {
-        if(this.state.networkError){
-            console.log("Going to main menu");
-            return <Redirect to="/" />
-        }
         let component;
         if (this.state.username === "") {
             component = (

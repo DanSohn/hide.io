@@ -9,6 +9,8 @@ import Break from "../assets/Break";
 import "bootstrap/dist/js/bootstrap.bundle";
 import "../assets/App.css";
 import ClickSound from "../sounds/click";
+import {auth} from "../assets/auth";
+import {googleAuth} from "../Login/LoginScreen";
 
 const cookies = new Cookies();
 
@@ -29,7 +31,6 @@ class CreateLobby extends Component {
             gameTime: "",
             gameMap: "",
             roomID: "",
-            networkError: false
         };
         this.goPrevious = this.goPrevious.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -37,6 +38,27 @@ class CreateLobby extends Component {
         this.handleChangeGameMode = this.handleChangeGameMode.bind(this);
         this.handleChangeGameTime = this.handleChangeGameTime.bind(this);
         this.handleChangeGameMap = this.handleChangeGameMap.bind(this);
+    }
+
+    componentDidMount() {
+        socket.on("reconnect_error", (error) => {
+            // console.log("Error! Disconnected from server", error);
+            console.log("Error! Can't connect to server");
+            auth.logout(() => {
+                // reason history is avail on props is b/c we loaded it via a route, which passes
+                // in a prop called history always
+                cookies.remove("name");
+                cookies.remove("email");
+                cookies.remove("image");
+                googleAuth.signOut();
+                console.log("going to logout!");
+                this.props.history.push('/');
+            });
+        });
+    }
+
+    componentWillUnmount() {
+        socket.off("reconnect_error");
     }
 
     goPrevious() {
@@ -99,24 +121,7 @@ class CreateLobby extends Component {
         });
     }
 
-    componentDidMount() {
-        socket.on("reconnect_error", (error) => {
-            // console.log("Error! Disconnected from server", error);
-            console.log("Error! Can't connect to server");
-            this.setState({networkError: true})
-        });
-    }
-
-    componentWillUnmount() {
-        socket.off("reconnect_error");
-    }
-
     render() {
-        if(this.state.networkError){
-            console.log("Going to main menu");
-            return <Redirect to="/MainMenu" />
-        }
-
         let comp;
         if (this.state.previous) {
             comp = <Redirect to={{

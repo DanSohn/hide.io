@@ -9,6 +9,8 @@ import LobbyTables from './LobbyTables';
 
 import '../assets/App.css';
 import ClickSound from '../sounds/click';
+import {auth} from "../assets/auth";
+import {googleAuth} from "../Login/LoginScreen";
 
 const cookies = new Cookies();
 
@@ -26,7 +28,6 @@ class ViewLobbies extends Component {
             previous: false,
             goToRoom: false,
             enter_lobby: '',
-            networkError: false
 
         };
 
@@ -38,7 +39,16 @@ class ViewLobbies extends Component {
         socket.on("reconnect_error", (error) => {
             // console.log("Error! Disconnected from server", error);
             console.log("Error! Can't connect to server");
-            this.setState({networkError: true})
+            auth.logout(() => {
+                // reason history is avail on props is b/c we loaded it via a route, which passes
+                // in a prop called history always
+                cookies.remove("name");
+                cookies.remove("email");
+                cookies.remove("image");
+                googleAuth.signOut();
+                console.log("going to logout!");
+                this.props.history.push('/');
+            });
         });
     }
 
@@ -77,10 +87,7 @@ class ViewLobbies extends Component {
     }
 
     render() {
-        if(this.state.networkError){
-            console.log("Going to main menu");
-            return <Redirect to="/MainMenu" />
-        }
+
 
         //the idea is, for each record in the lobby database, a new div or list will appear.
         let comp;
