@@ -1,7 +1,7 @@
-import React, {Component} from "react";
-import {socket} from "../assets/socket";
+import React, { Component } from "react";
+import { socket } from "../assets/socket";
 import "../assets/App.css";
-import ClickSound from "../sounds/click"
+import ClickSound from "../sounds/click";
 
 class LobbyTables extends Component {
     constructor(props) {
@@ -18,7 +18,7 @@ class LobbyTables extends Component {
 
     }
 
-    sendLobbyCode(join_code){
+    sendLobbyCode(join_code) {
         ClickSound();
         console.log("Sending back information to viewLobbies", join_code);
         this.props.lobbyCallback(join_code);
@@ -27,11 +27,11 @@ class LobbyTables extends Component {
 
     renderTableData() {
         console.log("re render table data");
-        if(this.state.lobbies === null){
+        if (this.state.lobbies === null) {
             return;
         }
         return this.state.lobbies.map((lobby) => {
-            const {join_code, lobby_name, players} = lobby;
+            const { join_code, lobby_name, players } = lobby;
             let num_players = players.length;
             return (
                 <tr key={join_code}>
@@ -41,7 +41,7 @@ class LobbyTables extends Component {
                         <button
                             className="btn btn-success"
                             onClick={() => this.sendLobbyCode(join_code)}
-                            >
+                        >
                             Join
                         </button>
                     </td>
@@ -75,7 +75,7 @@ class LobbyTables extends Component {
     render() {
         console.log("render table");
         return (
-            <div className="lobbySelection">
+            <div className="z-depth-3 lobbySelection">
                 <table className="lobbyTable">
                     <tbody>
                         <tr>{this.renderTableHeader()}</tr>

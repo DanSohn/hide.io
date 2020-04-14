@@ -1,11 +1,11 @@
-import React, { Component } from "react";
-import { Redirect } from 'react-router-dom';
+import React, {Component} from "react";
+import {Redirect} from 'react-router-dom';
 import googleAuth from './GoogleAuth';
 import {auth} from "../Router";
-import { socket } from "../assets/socket";
+import {socket} from "../assets/socket";
 import Cookies from 'universal-cookie';
 
-import Break from "../assets/break";
+import Break from "../assets/Break";
 
 import "../assets/App.css";
 import Sound from "react-sound";
@@ -15,16 +15,15 @@ const cookies = new Cookies();
 
 class LoginScreen extends Component {
     constructor(props) {
-        console.log("loading loginscreenn... auth is", auth.isAuthenticated);
         super(props);
         this.state = {
             SignIn: false,
             newUser: true,
             userName: "",
-            id: "",
             email: "",
             cookieCheck: false,
-            clickStatus: "PAUSED",
+            errorMsg: ""
+
         };
 
         this.playSound = this.playSound.bind(this);
@@ -33,14 +32,19 @@ class LoginScreen extends Component {
     }
 
     // i will check for existing cookies and ask the server if the email username combination exists
-    checkExistingCookies(){
+    checkExistingCookies() {
         // if cookies show authentication, then set auth to be true
-        if(cookies.get("email") && cookies.get("name") && cookies.get("image")){
+        if (cookies.get("email") && cookies.get("name") && cookies.get("image")) {
             socket.emit("user exists check", cookies.get("email"));
-            this.setState({cookieCheck: true})
+            this.setState({ cookieCheck: true })
         }
 
     }
+
+    playSound() {
+        ClickSound();
+    }
+
     componentDidMount() {
         this.checkExistingCookies();
         // load the google API and have it ready
@@ -49,24 +53,24 @@ class LoginScreen extends Component {
         socket.on("user database check", (username) => {
             // i go through this if statement if checkExistingCookies was called
             // if cookies and username does match, i will log right in
-            if(this.state.cookieCheck){
+            if (this.state.cookieCheck) {
                 this.setState({cookieCheck: false});
-                if(username === cookies.get("name")){
+                if (username === cookies.get("name")) {
                     console.log("Using cookies to log in ");
                     auth.login();
-                    this.setState({newUser: false})
+                    this.setState({ newUser: false })
                 }
-            }else{
+            } else {
                 // user is now authenticated
                 auth.login();
                 let googleUser = googleAuth.loginInfo();
 
                 // the cookies last for a maximum time of 1 day
-                cookies.set("email", googleUser.email, { path: "/", maxAge: 60*60*24});
-                cookies.set("image", googleUser.image, { path: "/", maxAge: 60*60*24});
+                cookies.set("email", googleUser.email, {path: "/", maxAge: 60 * 60 * 24});
+                cookies.set("image", googleUser.image, {path: "/", maxAge: 60 * 60 * 24});
 
                 if (username !== null) {
-                    cookies.set("name", username, { path: "/", maxAge: 60*60*24});
+                    cookies.set("name", username, {path: "/", maxAge: 60 * 60 * 24});
                     this.setState({
                         newUser: false,
                         userName: username,
@@ -80,42 +84,56 @@ class LoginScreen extends Component {
             }
 
         });
+
+        socket.on("connect_timeout", (timeout) => {
+            console.log("Timeouted after a timeout of ", timeout);
+        })
+
+        socket.on("reconnect", attemptNumber => {
+            console.log("Reconnected to server on try", attemptNumber);
+            this.setState({
+                errorMsg: ""
+            })
+        });
+
+        socket.on("reconnect_error", (error) => {
+            // console.log("Error! Disconnected from server", error);
+            console.log("Error! Can't connect to server");
+            this.setState({
+                errorMsg: "There is an issue with the server. The Top Programmers in the world and daniel are working on it!"
+            })
+        });
     }
 
     componentWillUnmount() {
         console.log("Unmounting login screen!");
         socket.off("user database check");
+        socket.off("reconnect");
+        socket.off("reconnect_error");
+
     }
 
-    /*goToLobby() {
-        this.setState({
-            SignIn: true,
-        });
-    }*/
-
-
-    playSound() {
-        ClickSound();
-    }
 
     render() {
         let component = null;
         if (!auth.isAuthenticated) {
             component = (
-                <div className="GameWindow">
+                <div className="z-depth-5 GameWindow">
                     <div className="header">
                         <div className="logo">
                             <h1>Hide.IO</h1>
                         </div>
                     </div>
-                    <Break />
+                    <Break/>
                     <div className="ContentScreen">
                         <div className="LoginScreen">
+                            <p className="errorMsg">{this.state.errorMsg}</p>
+
                             <button
                                 type="button"
                                 id="googleLogin"
                                 className="btn btn-danger"
-                                >
+                            >
                                 Google
                             </button>
 
@@ -125,20 +143,24 @@ class LoginScreen extends Component {
             );
         } else {
             if (this.state.newUser) {
-                component = <Redirect to={{
+                component = (
+                    <Redirect to={{
                         pathname: '/UsernameSelection',
                         /*state: {
                             email: this.state.email,
                         }*/
-                    }}/>;
+                    }}/>
+                );
             } else {
-                component = <Redirect to={{
-                    pathname: '/MainMenu',
-                    /*state: {
-                        name: this.state.userName,
-                        email: this.state.email,
-                    }*/
-                }}/>;
+                component = (
+                    <Redirect to={{
+                        pathname: '/MainMenu',
+                        /*state: {
+                            name: this.state.userName,
+                            email: this.state.email,
+                        }*/
+                    }}/>
+                );
             }
         }
         let songURL = "";
@@ -180,4 +202,4 @@ class LoginScreen extends Component {
     }
 }
 
-export { LoginScreen, googleAuth };
+export {LoginScreen, googleAuth};

@@ -8,7 +8,7 @@ class Timer extends Component {
         this.state = {
             // minutes:props.minutes,
             //TODO: Depending on the role of the player, display a black screen for the first 15 seconds for hider, while seekers are hiding
-            playerState:this.props.playerState,
+            playerState: this.props.playerState,
             ingame_prompt:'',
             gamestage1: true,
             time: { minutes: this.props.gameDuration, seconds: 15 },

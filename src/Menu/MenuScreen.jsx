@@ -1,14 +1,18 @@
-import React, { Component } from "react";
-import { Link } from 'react-router-dom';
-import { auth } from "../Router";
+import React, {Component} from "react";
+import {Link} from 'react-router-dom';
 import Cookies from "universal-cookie";
-import { googleAuth } from "../Login/loginScreen";
+
+import {auth} from "../Router";
+import {googleAuth} from "../Login/LoginScreen";
+
 
 import "../assets/App.css";
 
-import Header from "../assets/header";
-import Break from "../assets/break";
+import Header from "../assets/Header";
+import Break from "../assets/Break";
 import ClickSound from "../sounds/click";
+import {socket} from "../assets/socket";
+
 
 const cookies = new Cookies();
 
@@ -24,13 +28,34 @@ class MenuScreen extends Component {
         };
     }
 
+    componentDidMount() {
+        socket.on("reconnect_error", (error) => {
+            // console.log("Error! Disconnected from server", error);
+            console.log("Error! Can't connect to server");
+            auth.logout(() => {
+                // reason history is avail on props is b/c we loaded it via a route, which passes
+                // in a prop called history always
+                cookies.remove("name");
+                cookies.remove("email");
+                cookies.remove("image");
+                googleAuth.signOut();
+                console.log("going to logout!");
+                this.props.history.push('/');
+            });
+        });
+    }
+
+    componentWillUnmount() {
+        socket.off("reconnect_error");
+    }
 
     render() {
-        return <div className="GameWindow">
+        return <div className="z-depth-5 GameWindow">
             <Header showBack={false} />
             <Break />
             <div className="ContentScreen">
                 <div className="menuScreen">
+
                     <Link to={{
                         pathname: '/LobbyScreen',
                         /*state: {
@@ -40,7 +65,7 @@ class MenuScreen extends Component {
                     }}>
                         <button
                             type="button"
-                            className="btn btn-success">
+                            className="z-depth-3 btn btn-success">
                             Play
                         </button>
                     </Link>
@@ -54,7 +79,7 @@ class MenuScreen extends Component {
                     }}>
                         <button
                             type="button"
-                            className="btn btn-success">
+                            className="z-depth-3 btn btn-success">
                             Instructions
                         </button>
                     </Link>
@@ -68,13 +93,13 @@ class MenuScreen extends Component {
                     }}>
                         <button
                             type="button"
-                            className="btn btn-success">
+                            className="z-depth-3 btn btn-success">
                             Profile
                         </button>
                     </Link>
                     <button
                         type="button"
-                        className="btn btn-success"
+                        className="z-depth-3 btn btn-success"
                         onClick={() => {
                             auth.logout(() => {
                                 // reason history is avail on props is b/c we loaded it via a route, which passes

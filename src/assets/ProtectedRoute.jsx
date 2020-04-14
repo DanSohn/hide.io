@@ -2,7 +2,7 @@ import React from 'react';
 import {Route, Redirect} from "react-router-dom";
 import { auth } from "../Router";
 
-export default function PrivateRoute({component: Component, ...rest}) {
+export default function ProtectedRoute({component: Component, ...rest}) {
     return (
         <Route
             {...rest}

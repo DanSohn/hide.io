@@ -1,14 +1,16 @@
 import React, { Component } from "react";
-import {Redirect} from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import { socket } from "../assets/socket";
 import Cookies from "universal-cookie";
 
-import Header from "../assets/header";
-import Break from "../assets/break";
+import Header from "../assets/Header";
+import Break from "../assets/Break";
 
 import "bootstrap/dist/js/bootstrap.bundle";
 import "../assets/App.css";
 import ClickSound from "../sounds/click";
+import {auth} from "../assets/auth";
+import {googleAuth} from "../Login/LoginScreen";
 
 const cookies = new Cookies();
 
@@ -36,6 +38,27 @@ class CreateLobby extends Component {
         this.handleChangeGameMode = this.handleChangeGameMode.bind(this);
         this.handleChangeGameTime = this.handleChangeGameTime.bind(this);
         this.handleChangeGameMap = this.handleChangeGameMap.bind(this);
+    }
+
+    componentDidMount() {
+        socket.on("reconnect_error", (error) => {
+            // console.log("Error! Disconnected from server", error);
+            console.log("Error! Can't connect to server");
+            auth.logout(() => {
+                // reason history is avail on props is b/c we loaded it via a route, which passes
+                // in a prop called history always
+                cookies.remove("name");
+                cookies.remove("email");
+                cookies.remove("image");
+                googleAuth.signOut();
+                console.log("going to logout!");
+                this.props.history.push('/');
+            });
+        });
+    }
+
+    componentWillUnmount() {
+        socket.off("reconnect_error");
     }
 
     goPrevious() {
@@ -107,7 +130,7 @@ class CreateLobby extends Component {
                     name: this.state.userName,
                     email: this.state.email,
                 }*/
-            }}/>
+            }} />
         } else if (this.state.submitted) {
             comp = <Redirect to={{
                 pathname: '/Room',
@@ -117,10 +140,10 @@ class CreateLobby extends Component {
                     */
                     join_code: this.state.roomID
                 }
-            }}/>
+            }} />
         } else {
             comp = (
-                <div className="GameWindow">
+                <div className="z-depth-5 GameWindow">
                     <Header
                         previous={this.goPrevious}
                         title="Create a Lobby"
@@ -177,7 +200,7 @@ class CreateLobby extends Component {
                                         </select>
                                     </div>
                                     <div className="createLobbyContainer">
-                                        <button type="submit" className="btn btn-info">
+                                        <button type="submit" className="z-depth-3 btn btn-info">
                                             Submit
                                         </button>
                                     </div>

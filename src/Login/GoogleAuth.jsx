@@ -1,5 +1,5 @@
-import {socket} from "../assets/socket";
-import {gapi} from "gapi-script";
+import { socket } from "../assets/socket";
+import { gapi } from "gapi-script";
 
 class googleAuth {
     constructor() {
@@ -12,18 +12,15 @@ class googleAuth {
     }
 
     signOut() {
-        console.log("In googleAuth signing out");
-
         let auth2 = gapi.auth2.getAuthInstance();
         auth2.disconnect();
         auth2.signOut()
             .then(() => {
-                console.log('User signed out.');
+                console.log('User succesfully signed out.');
             });
     }
 
     load() {
-        console.log("In googleAuth load");
             window.gapi.load("auth2", () => {
                 this.auth2 = window.gapi.auth2.init({
                     client_id:
@@ -31,7 +28,6 @@ class googleAuth {
                     cookiepolicy: "single_host_origin",
                     scope: "profile email",
                 });
-                console.log("prepping login");
                 this.prepareLoginButton();
             });
         (function (d, s, id) {
@@ -49,7 +45,6 @@ class googleAuth {
 
     prepareLoginButton = () => {
         let element = document.getElementById("googleLogin");
-        // console.log("here!", element);
 
         this.auth2.attachClickHandler(
             element,
@@ -57,11 +52,12 @@ class googleAuth {
             (googleUser) => {
                 // console.log("BUTTON PRESSED");
                 let profile = googleUser.getBasicProfile();
-                // console.log("Token || " + googleUser.getAuthResponse().id_token);
-                // console.log("ID: " + profile.getId());
-                // console.log("Name: " + profile.getName());
-                // console.log("Image URL: " + profile.getImageUrl());
-                // console.log("Email: " + profile.getEmail());
+                /*
+                ID: profile.getId()
+                Name: profile.getName()
+                Email: profile.getEmail()
+                Image URL: profile.getImageUrl()
+                 */
 
                 // send event to server to check whether the user exists in our database
                 // console.log("emitting check to server");

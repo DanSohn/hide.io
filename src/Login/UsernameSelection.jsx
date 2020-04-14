@@ -1,10 +1,12 @@
-import React, { Component } from "react";
-import {Redirect } from "react-router-dom";
-import { socket } from "../assets/socket";
+import React, {Component} from "react";
+import {Redirect} from "react-router-dom";
+import {socket} from "../assets/socket";
 import Cookies from 'universal-cookie';
 
-import Header from "../assets/header";
-import Break from "../assets/break";
+import Header from "../assets/Header";
+import Break from "../assets/Break";
+import {auth} from "../assets/auth";
+import {googleAuth} from "./LoginScreen";
 
 const cookies = new Cookies();
 
@@ -19,20 +21,38 @@ class UsernameSelection extends Component {
         };
         this.submitUsername = this.submitUsername.bind(this);
         this.handleKeyboard = this.handleKeyboard.bind(this);
+    }
 
+    componentDidMount() {
+        socket.on("reconnect_error", (error) => {
+            // console.log("Error! Disconnected from server", error);
+            console.log("Error! Can't connect to server");
+            auth.logout(() => {
+                // reason history is avail on props is b/c we loaded it via a route, which passes
+                // in a prop called history always
+                cookies.remove("name");
+                cookies.remove("email");
+                cookies.remove("image");
+                googleAuth.signOut();
+                console.log("going to logout!");
+                this.props.history.push('/');
+            });
+        });
+    }
+
+    componentWillUnmount() {
+        socket.off("reconnect_error");
     }
 
     handleKeyboard(e) {
-        // console.log(e.target.value);
         this.setState({
             typing: e.target.value,
         });
     }
 
     submitUsername() {
-        cookies.set("name", this.state.typing, { path: "/", maxAge: 60*60*24});
-        // i do the socket events before i set the state as I'm not sure if setting it will automatically go to rendering
-        // before i continue this function
+        cookies.set("name", this.state.typing, {path: "/", maxAge: 60 * 60 * 24});
+
         socket.emit("create user", {
             username: this.state.typing,
             email: this.state.email,
@@ -47,7 +67,7 @@ class UsernameSelection extends Component {
         let component;
         if (this.state.username === "") {
             component = (
-                <div className="GameWindow">
+                <div className="z-depth-5 GameWindow">
                     <Header showBack={false} />
                     <Break />
                     <div className="ContentScreen">
@@ -63,11 +83,11 @@ class UsernameSelection extends Component {
                                     onChange={this.handleKeyboard}
                                     value={this.state.typing}
                                 />
-                                <br />
+                                <br/>
                                 <button
                                     className="btn btn-outline-secondary"
                                     type="button"
-                                    >
+                                >
                                     Submit
                                 </button>
                             </form>
@@ -76,15 +96,17 @@ class UsernameSelection extends Component {
                 </div>
             );
         } else {
-            component = <Redirect to={{
-                pathname: '/MainMenu',
-                /*state: {
-                    email: this.state.email,
-                    name: this.state.username,
-                }*/
-            }}/>;
+            component = (
+                <Redirect to={{
+                    pathname: '/MainMenu',
+                    /*state: {
+                        email: this.state.email,
+                        name: this.state.username,
+                    }*/
+                }}/>
+            );
         }
-        return <div>{component}</div>;
+        return <>{component}</>;
     }
 }
 

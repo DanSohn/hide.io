@@ -1,14 +1,16 @@
-import React, {Component} from 'react';
-import {Link, Redirect} from 'react-router-dom';
-import {socket} from '../assets/socket';
+import React, { Component } from 'react';
+import { Link, Redirect } from 'react-router-dom';
+import { socket } from '../assets/socket';
 import Cookies from 'universal-cookie';
 
-import Header from '../assets/header';
-import Break from '../assets/break';
-import LobbyTables from './lobbyTables';
+import Header from '../assets/Header';
+import Break from '../assets/Break';
+import LobbyTables from './LobbyTables';
 
 import '../assets/App.css';
 import ClickSound from '../sounds/click';
+import {auth} from "../assets/auth";
+import {googleAuth} from "../Login/LoginScreen";
 
 const cookies = new Cookies();
 
@@ -26,13 +28,33 @@ class ViewLobbies extends Component {
             previous: false,
             goToRoom: false,
             enter_lobby: '',
+
         };
 
         this.goPrevious = this.goPrevious.bind(this);
         this.goToJoinLobby = this.goToJoinLobby.bind(this);
     }
 
+    componentDidMount() {
+        socket.on("reconnect_error", (error) => {
+            // console.log("Error! Disconnected from server", error);
+            console.log("Error! Can't connect to server");
+            auth.logout(() => {
+                // reason history is avail on props is b/c we loaded it via a route, which passes
+                // in a prop called history always
+                cookies.remove("name");
+                cookies.remove("email");
+                cookies.remove("image");
+                googleAuth.signOut();
+                console.log("going to logout!");
+                this.props.history.push('/');
+            });
+        });
+    }
 
+    componentWillUnmount() {
+        socket.off("reconnect_error");
+    }
 
     goPrevious() {
         ClickSound();
@@ -65,6 +87,8 @@ class ViewLobbies extends Component {
     }
 
     render() {
+
+
         //the idea is, for each record in the lobby database, a new div or list will appear.
         let comp;
         if (this.state.previous) {
@@ -74,7 +98,7 @@ class ViewLobbies extends Component {
                     name: this.state.userName,
                     email: this.state.email,
                 }*/
-            }}/>
+            }} />
         } else {
             if (this.state.goToRoom === true) {
                 comp = <Redirect to={{
@@ -85,14 +109,14 @@ class ViewLobbies extends Component {
                         */
                         join_code: this.state.enter_lobby
                     }
-                    }}/>
+                }} />
             } else {
                 comp = (
-                    <div className="GameWindow">
-                        <Header previous={this.goPrevious}/>
-                        <Break/>
+                    <div className="z-depth-5 GameWindow">
+                        <Header previous={this.goPrevious} />
+                        <Break />
                         <div className="ContentScreen">
-                            <LobbyTables lobbyCallback={this.goToJoinLobby}/>
+                            <LobbyTables lobbyCallback={this.goToJoinLobby} />
                             <div className="createLobby">
                                 <Link to={{
                                     pathname: '/CreateLobby',
@@ -103,7 +127,7 @@ class ViewLobbies extends Component {
                                 }}>
                                     <button
                                         type="button"
-                                        className="btn btn-danger">
+                                        className="z-depth-3 btn btn-danger">
                                         CREATE LOBBY
                                     </button>
                                 </Link>
@@ -116,7 +140,7 @@ class ViewLobbies extends Component {
                                 }}>
                                     <button
                                         type="button"
-                                        className="btn btn-info">
+                                        className="z-depth-3 btn btn-info">
                                         JOIN BY CODE
                                     </button>
                                 </Link>
@@ -126,7 +150,7 @@ class ViewLobbies extends Component {
                 );
             }
         }
-        return <>{ comp }</>;
+        return <>{comp}</>;
     }
 }
 

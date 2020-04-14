@@ -33,7 +33,7 @@ class Header extends Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if(this.props.title !== prevProps.title){
+        if (this.props.title !== prevProps.title) {
             this.setState({
                 title: this.props.title
             })
@@ -46,7 +46,7 @@ class Header extends Component {
         let profile;
         if (this.state.showBack !== false) {
             back = (
-                <button className="btn btn-light" onClick={this.props.previous}>
+                <button className="z-depth-3 btn btn-light" onClick={this.props.previous}>
                     Go Back
                 </button>
             );
@@ -56,7 +56,7 @@ class Header extends Component {
                 // <button className="btn btn-dark" onClick={this.goProfile}>
                 //     Profile
                 // </button>
-                <img src={this.state.image} alt="Google or facebook's profile"/>
+                <img className="z-depth-3" src={this.state.image} alt="Google or facebook's profile" />
             );
         }
         comp = (
