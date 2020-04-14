@@ -242,34 +242,32 @@ io.on("connection", (socket) => {
         console.log("SOCKET EVENT LOBBY START TIMER");
         let {countdowntime, room} = info;
 
-
         // get all the sockets in the room, then choose one random socket to be the hider
         let roomies = Object.keys(io.sockets.adapter.rooms[room].sockets);
-        let randomSeeker = roomies[Math.floor(Math.random() * roomies.length)];
-
-        io.to(`${randomSeeker}`).emit('youre the seeker');
-        for (let i = 0; i < roomies.length; i++) {
-            if (roomies[i] === randomSeeker) {
-                roomies.splice(i, 1);
-            }
-        }
-        gamesInSession[room] = {
-            'roomID': room,
-            'timerID': 0,
-            'seeker': randomSeeker,
-            'hiders': roomies,
-            'caught': []
-        };
-        console.log("RANDOM SEEKER IS: " + gamesInSession[room].seeker);
-        console.log("LENGTH OF HIDERS " + gamesInSession[room].hiders.length);
 
         // if there is not enough sockets(people) in the lobby, tell the lobby so
-        if (roomies.length < 2){socket.emit('not enough peeps');}
-        else {
+        if (roomies.length < 2) {
+            socket.emit('not enough peeps');
+        } else {
             io.to(room).emit('enough peeps');
             // choose one random socket to be the seeker
-            let randomSeeker = roomies[Math.floor(Math.random()*roomies.length)];
+            let randomSeeker = roomies[Math.floor(Math.random() * roomies.length)];
             io.to(`${randomSeeker}`).emit('youre the seeker');
+
+            for (let i = 0; i < roomies.length; i++) {
+                if (roomies[i] === randomSeeker) {
+                    roomies.splice(i, 1);
+                }
+            }
+            gamesInSession[room] = {
+                'roomID': room,
+                'timerID': 0,
+                'seeker': randomSeeker,
+                'hiders': roomies,
+                'caught': []
+            };
+            console.log("RANDOM SEEKER IS: " + gamesInSession[room].seeker);
+            console.log("LENGTH OF HIDERS " + gamesInSession[room].hiders.length);
 
             let countdown = Math.floor(countdowntime / 1000);
             // send to all sockets an event every second
@@ -323,6 +321,7 @@ io.on("connection", (socket) => {
                     if (gamesInSession[room].hiders[j] === playerID) {
                         gamesInSession[room].hiders[j].splice(j, 1);
                         gamesInSession[room].caught.push(playerID);
+                        console.log(">>>>>>> " + playerName);
                         socket.to(room).emit("I died", playerID, playerName);
                         io.to(room).emit("display player caught", playerName);
                         break;
@@ -355,9 +354,11 @@ io.on("connection", (socket) => {
         //TODO emit an event to all players about who won the game between hiders and seeker
         clearInterval(timerID);
         if(gamesInSession[room].hiders.length === 0){
+            console.log("<<<<<<<<<<<<<<SEEKER WINS>>>>>>>>>>>.");
             io.to(room).emit("game winner", "seeker");
         }
         else if(gamesInSession[room].hiders.length > 0){
+            console.log("<<<<<<<<<<<<<<HIDER WINS>>>>>>>>>>>.");
             io.to(room).emit("game winner", "hider");
         }
         delete gamesInSession[room];
