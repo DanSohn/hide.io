@@ -10,7 +10,13 @@ import { socket } from "../assets/socket";
 
 import Point from "./Point";
 import Timer from "../Game/Timer";
-import AliveList from "../Game/AliveList";
+import AliveList from "./AliveList";
+import {Redirect} from "react-router-dom";
+import {auth} from "../assets/auth";
+import {googleAuth} from "../Login/LoginScreen";
+import Cookies from "universal-cookie";
+
+const cookies = new Cookies();
 
 // import Keyboard from './Keyboard'
 let Keyboard = {};
@@ -632,6 +638,29 @@ class Game extends Component {
             }
         });
         // console.log(this.state);
+
+        socket.on("reconnect_error", (error) => {
+            // console.log("Error! Disconnected from server", error);
+            console.log("Error! Can't connect to server");
+            auth.logout(() => {
+                // reason history is avail on props is b/c we loaded it via a route, which passes
+                // in a prop called history always
+                cookies.remove("name");
+                cookies.remove("email");
+                cookies.remove("image");
+                googleAuth.signOut();
+                console.log("going to logout!");
+                this.props.history.push('/');
+            });
+        });
+    }
+
+
+    componentWillUnmount() {
+        socket.off("Redraw positions");
+        socket.off("countdown");
+        socket.off("reconnect_error");
+
     }
 
     // this function creates multiple player components
@@ -675,6 +704,11 @@ class Game extends Component {
         // console.log(this.state.playerState==='seeker' && this.state.game_status === 'not started');
         let comp1;
         let comp2;
+        if(this.state.networkError){
+            console.log("Going to main menu");
+            return <Redirect to="/MainMenu" />
+        }
+
         let dragon = "";
         let canvasDisplay = this.state.playerState === 'seeker' && this.state.game_status === 'not started' ? ['z-depth-5 darkness', ''] : ['', 'z-depth-5 fade-in'];
         if (this.state.countdown === true) {

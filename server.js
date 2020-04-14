@@ -1,26 +1,16 @@
 const express = require("express");
-const path = require("path");
-const dbUtil = require("./dbUtils");
-//const server = require('http').createServer(app);
+const app = express();
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
 const PORT = process.env.PORT || 3001;
 
 const cors = require("cors");
-//const io = require('socket.io').listen(server);
-const socket = require("socket.io");
-// const io = socket(server);
-// const server = app.listen(process.env.PORT || 3000);
-// const io = require('socket.io').listen(server);
-// io.set( "origins", "*:*" );
-
-let app = require("express")();
-let server = require("http").Server(app);
-let io = require("socket.io")(server);
-server.listen(PORT);
-
 app.use(cors());
 app.get("/", (req, res) => {
     res.send("API working properly!");
 });
+
+const dbUtil = require("./dbUtils");
 
 const starting_pos_module = require(__dirname + "/starting_positions");
 let starting_pos = starting_pos_module.starting_positions;
@@ -72,7 +62,7 @@ io.on("connection", (socket) => {
 
     //Send the rooms that are available when the user clicks play to see the available lobbies
     // it will find all the lobbies in database, and once its done, it will send the collection to the socket
-    // from lobbyTables.js
+    // from LobbyTables
     socket.on("please give lobbies", () => {
         console.log("socket event please give lobbies");
         dbUtil
@@ -372,4 +362,8 @@ io.on("connection", (socket) => {
         }
         delete gamesInSession[room];
     }
+});
+
+server.listen(PORT, function(){
+    console.log("Server listening on *: " + PORT);
 });

@@ -1,16 +1,19 @@
-import React, { Component } from "react";
-import { Redirect } from "react-router-dom";
-import { socket } from "../assets/socket";
+import React, {Component} from "react";
+import {Redirect} from "react-router-dom";
+import {socket} from "../assets/socket";
 import Cookies from 'universal-cookie';
 
-import Header from "../assets/header";
-import Break from "../assets/break";
-import Chat from "./chat";
+import Header from "../assets/Header";
+import Break from "../assets/Break";
+import Chat from "./Chat";
+import GameSettings from "./GameSettings";
 
-import { returnGameMode, returnGameMap, returnGameTime } from "../assets/utils";
+import {returnGameMode, returnGameMap, returnGameTime} from "../assets/utils";
 import "bootstrap/dist/js/bootstrap.bundle";
 import "../assets/App.css";
 import ClickSound from "../sounds/click";
+import {auth} from "../assets/auth";
+import {googleAuth} from "../Login/LoginScreen";
 
 const cookies = new Cookies();
 
@@ -32,7 +35,7 @@ class Room extends Component {
             start: false,
             players: {},
             playersList: [],
-            time: ""
+            time: "",
         };
         this.goPrevious = this.goPrevious.bind(this);
         this.startTimer = this.startTimer.bind(this);
@@ -43,7 +46,7 @@ class Room extends Component {
     }
 
     goPrevious() {
-        socket.emit("leave lobby", { room: this.state.roomID, email: this.state.email });
+        socket.emit("leave lobby", {room: this.state.roomID, email: this.state.email});
         // i ensure everything is first handled properly in the server, and is up to date
         // before i leave
         socket.on("may successfully leave lobby", () => {
@@ -109,33 +112,49 @@ class Room extends Component {
         socket.on('enough peeps', ()=>this.setState({ header: "Game is starting in ..."}));
         socket.on('not enough peeps', ()=>this.setState({ header: "Not Enough Players to Begin the Game"}));
 
+        socket.on("reconnect_error", (error) => {
+            // console.log("Error! Disconnected from server", error);
+            console.log("Error! Can't connect to server");
+            auth.logout(() => {
+                // reason history is avail on props is b/c we loaded it via a route, which passes
+                // in a prop called history always
+                cookies.remove("name");
+                cookies.remove("email");
+                cookies.remove("image");
+                googleAuth.signOut();
+                console.log("going to logout!");
+                this.props.history.push('/');
+            });
+        });
     }
 
     componentWillUnmount() {
-        console.log("Room unmounting...");
         socket.off("giving lobby info");
         socket.off("update lobby list");
         socket.off("lobby current timer");
         socket.off("lobby start timer");
         socket.off("not enough peeps");
         socket.off("enough peeps")
+        socket.off("reconnect_error");
 
     }
 
     render() {
-        console.log("rendering in ROOM");
         let comp;
 
         if (this.state.previous) {
-            comp = <Redirect to={{
+            comp = (
+                <Redirect to={{
                 pathname: '/LobbyScreen',
                 /*state: {
                     name: this.state.userName,
                     email: this.state.email,
                 }*/
-            }} />
+            }}/>
+            );
         } else if (this.state.start) {
-            comp = <Redirect to={{
+            comp = (
+                <Redirect to={{
                 pathname: '/Game',
                 state: {
                     gameID: this.state.roomID,
@@ -145,7 +164,8 @@ class Room extends Component {
                     timeLimit: this.state.game_time,
                     mode: this.state.game_mode
                 }
-            }} />
+            }}/>
+            );
 
         } else {
             comp = (
@@ -154,7 +174,7 @@ class Room extends Component {
                         previous={this.goPrevious}
                         title={this.state.title}
                     />
-                    <Break />
+                    <Break/>
                     <div className="ContentScreen">
                         <Chat userName={this.state.userName} roomID={this.state.roomID} />
 
@@ -166,19 +186,16 @@ class Room extends Component {
                                 onClick={this.startTimer}>
                                 Start Game
                             </button>
-                            <div className="roomSettings">
-                                <h4>Game Mode:</h4>
-                                <h6>{this.state.game_mode}</h6>
-                                <h4>Time Limit:</h4>
-                                <h6>{this.state.game_time}</h6>
-                                <h4>Map:</h4>
-                                <h6>{this.state.game_map["name"]}</h6>
-                            </div>
+                            <GameSettings
+                                mode={this.state.game_mode}
+                                time={this.state.game_time}
+                                map={this.state.game_map.name}
+                            />
                         </div>
                         <div className="online">
                             <ul>
                                 {this.state.playersList.map((player, index) => {
-                                    return <li style={{ listStyleType: "none" }} key={index}>{player.name}</li>;
+                                    return <li style={{listStyleType: "none"}} key={index}>{player.name}</li>;
                                 })}
                             </ul>
                         </div>

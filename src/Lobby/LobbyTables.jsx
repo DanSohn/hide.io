@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { socket } from "../assets/socket";
 import "../assets/App.css";
-import ClickSound from "../sounds/click"
+import ClickSound from "../sounds/click";
 
 class LobbyTables extends Component {
     constructor(props) {
