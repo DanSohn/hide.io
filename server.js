@@ -320,27 +320,30 @@ io.on("connection", (socket) => {
         let {playerID,  room} = info;
         console.log(socket_name);
         console.log("COLLISION WITH:",playerID, "room: ", room);
+        console.log(gamesInSession);
 
-        for(let i = 0; i < gamesInSession.length; i++){
-            if(gamesInSession[room].hiders.includes(playerID)) {
-                for (let j = 0; j < gamesInSession[room].hiders.length; j++) {
-                    if (gamesInSession[room].hiders[j] === playerID) {
-                        gamesInSession[room].hiders[j].splice(j, 1);
-                        gamesInSession[room].caught.push(playerID);
+        console.log("DOES IT CONTAIN?",gamesInSession[room].hiders.includes(playerID));
 
-                        console.log("FOUND THE GUY WHO GOT CAUGHT");
-                        let playerName = socket_name[playerID];
+        if(gamesInSession[room].hiders.includes(playerID)) {
 
-                        console.log(">>>>>>> " + playerName);
-                        socket.to(room).emit("I died", playerID, playerName);
-                        io.to(room).emit("display player caught", playerName);
-                        break;
-                    }
+            for (let j = 0; j < gamesInSession[room].hiders.length; j++) {
+                console.log(gamesInSession[room].hiders[j]);
+
+                if (gamesInSession[room].hiders[j] === playerID) {
+                    gamesInSession[room].hiders.splice(j, 1);
+                    gamesInSession[room].caught.push(playerID);
+
+                    let playerName = socket_name[playerID];
+
+                    console.log(">>>>>>> GOT CAUGHT: " + playerName);
+                    socket.to(room).emit("I died", playerID, playerName);
+                    io.to(room).emit("display player caught", playerName);
+                    break;
                 }
-                
-                if(gamesInSession[room].hiders.length === 0){
-                    endGame(room, gamesInSession[room].timerID);
-                }
+            }
+
+            if(gamesInSession[room].hiders.length === 0){
+                endGame(room, gamesInSession[room].timerID);
             }
         }
     });
