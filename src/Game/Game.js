@@ -15,6 +15,7 @@ import {Redirect} from "react-router-dom";
 import {auth} from "../assets/auth";
 import {googleAuth} from "../Login/LoginScreen";
 import Cookies from "universal-cookie";
+import Results from "./Results";
 
 const cookies = new Cookies();
 
@@ -77,6 +78,7 @@ class Game extends Component {
             players: this.props.players,
             playerState: this.props.location.state.playerState,
             playerColor: "",
+            userName: this.props.userName,
 
             gameID: this.props.location.state.gameID,
             game_status: "not started",
@@ -742,6 +744,7 @@ class Game extends Component {
                         <div className="fade-out-15">{dragon}</div>
                     </div>
                 </div>
+                <Results playerState={this.state.playerState} userName={this.state.userName}/>
             </React.Fragment>
         );
     }

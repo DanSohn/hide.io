@@ -164,7 +164,7 @@ class Room extends Component {
                     map: this.state.game_map,
                     timeLimit: this.state.game_time,
                     mode: this.state.game_mode,
-                    playerState: this.state.playerState
+                    playerUsername: this.state.userName
                 }
             }}/>
             );
