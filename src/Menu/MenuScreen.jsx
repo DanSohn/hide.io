@@ -51,8 +51,8 @@ class MenuScreen extends Component {
 
     render() {
         return <div className="GameWindow">
-            <Header showBack={false} />
-            <Break />
+            <Header title="Main Menu" showBack={false}/>
+            <Break/>
             <div className="ContentScreen">
                 <div className="menuScreen">
 

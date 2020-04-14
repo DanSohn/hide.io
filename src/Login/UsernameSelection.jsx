@@ -68,8 +68,8 @@ class UsernameSelection extends Component {
         if (this.state.username === "") {
             component = (
                 <div className="GameWindow">
-                    <Header showBack={false} />
-                    <Break />
+                    <Header title="Choose Username" showBack={false}/>
+                    <Break/>
                     <div className="ContentScreen">
                         <div className="usernameSelection">
                             <h2>Choose GamerTag</h2>
