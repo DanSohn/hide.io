@@ -9,6 +9,8 @@ import LobbyTables from './LobbyTables';
 
 import '../assets/App.css';
 import ClickSound from '../sounds/click';
+import {auth} from "../assets/auth";
+import {googleAuth} from "../Login/LoginScreen";
 
 const cookies = new Cookies();
 
@@ -26,13 +28,33 @@ class ViewLobbies extends Component {
             previous: false,
             goToRoom: false,
             enter_lobby: '',
+
         };
 
         this.goPrevious = this.goPrevious.bind(this);
         this.goToJoinLobby = this.goToJoinLobby.bind(this);
     }
 
+    componentDidMount() {
+        socket.on("reconnect_error", (error) => {
+            // console.log("Error! Disconnected from server", error);
+            console.log("Error! Can't connect to server");
+            auth.logout(() => {
+                // reason history is avail on props is b/c we loaded it via a route, which passes
+                // in a prop called history always
+                cookies.remove("name");
+                cookies.remove("email");
+                cookies.remove("image");
+                googleAuth.signOut();
+                console.log("going to logout!");
+                this.props.history.push('/');
+            });
+        });
+    }
 
+    componentWillUnmount() {
+        socket.off("reconnect_error");
+    }
 
     goPrevious() {
         ClickSound();
@@ -65,6 +87,8 @@ class ViewLobbies extends Component {
     }
 
     render() {
+
+
         //the idea is, for each record in the lobby database, a new div or list will appear.
         let comp;
         if (this.state.previous) {

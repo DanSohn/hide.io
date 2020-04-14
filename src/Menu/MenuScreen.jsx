@@ -3,7 +3,7 @@ import {Link} from 'react-router-dom';
 import Cookies from "universal-cookie";
 
 import {auth} from "../Router";
-import { googleAuth } from "../Login/LoginScreen";
+import {googleAuth} from "../Login/LoginScreen";
 
 
 import "../assets/App.css";
@@ -11,6 +11,7 @@ import "../assets/App.css";
 import Header from "../assets/Header";
 import Break from "../assets/Break";
 import ClickSound from "../sounds/click";
+import {socket} from "../assets/socket";
 
 
 const cookies = new Cookies();
@@ -27,13 +28,34 @@ class MenuScreen extends Component {
         };
     }
 
+    componentDidMount() {
+        socket.on("reconnect_error", (error) => {
+            // console.log("Error! Disconnected from server", error);
+            console.log("Error! Can't connect to server");
+            auth.logout(() => {
+                // reason history is avail on props is b/c we loaded it via a route, which passes
+                // in a prop called history always
+                cookies.remove("name");
+                cookies.remove("email");
+                cookies.remove("image");
+                googleAuth.signOut();
+                console.log("going to logout!");
+                this.props.history.push('/');
+            });
+        });
+    }
+
+    componentWillUnmount() {
+        socket.off("reconnect_error");
+    }
 
     render() {
         return <div className="GameWindow">
-            <Header showBack={false} />
-            <Break />
+            <Header showBack={false}/>
+            <Break/>
             <div className="ContentScreen">
                 <div className="menuScreen">
+
                     <Link to={{
                         pathname: '/LobbyScreen',
                         /*state: {

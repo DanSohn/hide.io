@@ -22,6 +22,8 @@ class LoginScreen extends Component {
             userName: "",
             email: "",
             cookieCheck: false,
+            errorMsg: ""
+
         };
 
         this.playSound = this.playSound.bind(this);
@@ -82,11 +84,33 @@ class LoginScreen extends Component {
             }
 
         });
+
+        socket.on("connect_timeout", (timeout) => {
+            console.log("Timeouted after a timeout of ", timeout);
+        })
+
+        socket.on("reconnect", attemptNumber => {
+            console.log("Reconnected to server on try", attemptNumber);
+            this.setState({
+                errorMsg: ""
+            })
+        });
+
+        socket.on("reconnect_error", (error) => {
+            // console.log("Error! Disconnected from server", error);
+            console.log("Error! Can't connect to server");
+            this.setState({
+                errorMsg: "There is an issue with the server. The Top Programmers in the world and daniel are working on it!"
+            })
+        });
     }
 
     componentWillUnmount() {
         console.log("Unmounting login screen!");
         socket.off("user database check");
+        socket.off("reconnect");
+        socket.off("reconnect_error");
+
     }
 
 
@@ -103,6 +127,8 @@ class LoginScreen extends Component {
                     <Break/>
                     <div className="ContentScreen">
                         <div className="LoginScreen">
+                            <p className="errorMsg">{this.state.errorMsg}</p>
+
                             <button
                                 type="button"
                                 id="googleLogin"

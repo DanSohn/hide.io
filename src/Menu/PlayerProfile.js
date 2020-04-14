@@ -7,6 +7,9 @@ import Break from "../assets/Break";
 
 import "../assets/App.css";
 import ClickSound from "../sounds/click";
+import {socket} from "../assets/socket";
+import {auth} from "../assets/auth";
+import {googleAuth} from "../Login/LoginScreen";
 
 const cookies = new Cookies();
 
@@ -23,6 +26,27 @@ class PlayerProfile extends Component {
             previous: false,
         };
         this.goPrevious = this.goPrevious.bind(this);
+    }
+
+    componentDidMount() {
+        socket.on("reconnect_error", (error) => {
+            // console.log("Error! Disconnected from server", error);
+            console.log("Error! Can't connect to server");
+            auth.logout(() => {
+                // reason history is avail on props is b/c we loaded it via a route, which passes
+                // in a prop called history always
+                cookies.remove("name");
+                cookies.remove("email");
+                cookies.remove("image");
+                googleAuth.signOut();
+                console.log("going to logout!");
+                this.props.history.push('/');
+            });
+        });
+    }
+
+    componentWillUnmount() {
+        socket.off("reconnect_error");
     }
 
     goPrevious() {

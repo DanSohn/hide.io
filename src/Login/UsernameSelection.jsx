@@ -5,6 +5,8 @@ import Cookies from 'universal-cookie';
 
 import Header from "../assets/Header";
 import Break from "../assets/Break";
+import {auth} from "../assets/auth";
+import {googleAuth} from "./LoginScreen";
 
 const cookies = new Cookies();
 
@@ -19,6 +21,27 @@ class UsernameSelection extends Component {
         };
         this.submitUsername = this.submitUsername.bind(this);
         this.handleKeyboard = this.handleKeyboard.bind(this);
+    }
+
+    componentDidMount() {
+        socket.on("reconnect_error", (error) => {
+            // console.log("Error! Disconnected from server", error);
+            console.log("Error! Can't connect to server");
+            auth.logout(() => {
+                // reason history is avail on props is b/c we loaded it via a route, which passes
+                // in a prop called history always
+                cookies.remove("name");
+                cookies.remove("email");
+                cookies.remove("image");
+                googleAuth.signOut();
+                console.log("going to logout!");
+                this.props.history.push('/');
+            });
+        });
+    }
+
+    componentWillUnmount() {
+        socket.off("reconnect_error");
     }
 
     handleKeyboard(e) {
