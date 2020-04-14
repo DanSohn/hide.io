@@ -529,7 +529,8 @@ select,
     width: 50%;
     margin: 1%;
 }
-button {
+
+.usernameSelection button,  .createLobbyContainer button{
     background-color: transparent;
     background-repeat:no-repeat;
     border: none;

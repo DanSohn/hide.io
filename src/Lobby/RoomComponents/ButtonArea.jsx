@@ -6,15 +6,16 @@ export default function ButtonArea(props) {
         setting = null;
 
     if (time !== "") {
-        setting = <h1 style={{fontSize: 110}}>{time}</h1>;
+        setting = <h1 style={{ fontSize: 110 }}>{time}</h1>;
     } else {
         setting = (
-            <button
-                className="btn btn-success"
-                onClick={() => props.timerCallback() }
-            >
-                Start Game
-            </button>
+            // <button
+            //     className="btn btn-success"
+            //     onClick={() => props.timerCallback()}
+            // >
+            //     Start Game
+            // </button>
+            <span onClick={() => props.timerCallback()} class='start-btn-green ff-20 width-250'>START GAME</span>
         )
     }
     return (
