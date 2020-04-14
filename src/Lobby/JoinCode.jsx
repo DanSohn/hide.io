@@ -136,7 +136,7 @@ class JoinCode extends Component {
                                     type="submit">
                                     Submit
                                 </button> */}
-                                <button type="submit"><span className='start-btn-grey ff-20 width-250'>SUBMIT</span></button>
+                                <button type="submit"><span className='start-btn-blue ff-20 width-250'>SUBMIT</span></button>
                             </form>
                         </div>
                     </div>

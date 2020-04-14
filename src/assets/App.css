@@ -94,32 +94,36 @@ body {
   .start-btn-red{
     background-color: #ff6e63;
     color: red;
-    box-shadow: 0 .2em red; 
+    box-shadow: 0 .5em red; 
   }
   .start-btn-black {
     background-color: darkgrey;
     color: darkslategrey;
-    box-shadow: 0 .2em darkslategrey; 
+    box-shadow: 0 .3em darkslategrey; 
   }
   .start-btn-grey {
     background-color: lightgrey;
     color: grey;
-    box-shadow: 0 .2em grey; 
+    box-shadow: 0 .5em grey; 
   }
   .start-btn-green {
     background-color: lightgreen;
     color: green;
     box-shadow: 0 .2em green;  
   }
+  
   .start-btn-blue {
     background-color: lightblue;
     color: lightseagreen;
-    box-shadow: 0 .2em lightseagreen;  
+    box-shadow: 0 .5em lightseagreen;  
+  }
+  .roomActions .start-btn-green, .menuScreen .start-btn-green {
+    box-shadow: 0 .5em green;  
   }
   .video-game-button:active, .start-btn-red:active, .start-btn-grey:active, .start-btn-blue:active, .start-btn-green:active, .start-btn-black:active {
       box-shadow: none;
       position: relative;
-      top: .2em;
+      top: .6em;
   }
   .buttonColumn {
       width:50px;
@@ -500,6 +504,7 @@ button {
     cursor:pointer;
     overflow: hidden;
     outline:none;
+    height:100px
 }
 .roomActions {
     justify-content: space-between;
@@ -511,8 +516,10 @@ button {
 }
 
 .createLobby a {
+    text-decoration: none;
     display:flex;
     width:100%;
+    margin-bottom: 20px;
 }
 
 .createLobby button {
@@ -523,10 +530,9 @@ button {
     display:flex;
     flex-direction: column;
 }
-.menuScreen button,
-.LoginScreen button {
-    /* margin: 20px;
-    width: 125px;
+.menuScreen span {
+     margin-bottom: 20px;
+    /*width: 125px;
     height: 125px;
     border-radius: 50%; */
 }
