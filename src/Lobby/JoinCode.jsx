@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Link, Redirect} from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { socket } from '../assets/socket';
 import Cookies from "universal-cookie";
 
@@ -9,8 +9,8 @@ import Break from '../assets/Break';
 import 'bootstrap/dist/js/bootstrap.bundle';
 import '../assets/App.css';
 import ClickSound from '../sounds/click';
-import {auth} from "../assets/auth";
-import {googleAuth} from "../Login/LoginScreen";
+import { auth } from "../assets/auth";
+import { googleAuth } from "../Login/LoginScreen";
 
 const cookies = new Cookies();
 
@@ -74,14 +74,14 @@ class JoinCode extends Component {
     handleSubmit(event) {
         event.preventDefault();
         ClickSound();
-        socket.emit("validate join code req", {room: this.state.roomID, email: this.state.email, username: this.state.userName});
+        socket.emit("validate join code req", { room: this.state.roomID, email: this.state.email, username: this.state.userName });
 
         socket.on("validate join code res", properRoom => {
-            if(properRoom){
+            if (properRoom) {
                 this.setState({
                     enter_room: true,
                 });
-            }else{
+            } else {
                 // error message saying not a valid room
                 this.setState({
                     errorMsg: "Incorrect join code. Please try again."
@@ -100,7 +100,7 @@ class JoinCode extends Component {
                     name: this.state.userName,
                     email: this.state.email,
                 }*/
-            }}/>
+            }} />
 
         } else if (this.state.enter_room === true) {
             comp = <Redirect to={{
@@ -111,11 +111,11 @@ class JoinCode extends Component {
                     */
                     join_code: this.state.roomID
                 }
-            }}/>
+            }} />
         } else {
             comp = (
                 <div className="GameWindow">
-                    <Header previous={this.goPrevious}/>
+                    <Header previous={this.goPrevious} />
                     <Break />
                     <div className="ContentScreen">
                         <div className="usernameSelection">
@@ -131,11 +131,12 @@ class JoinCode extends Component {
                                     required
                                 />
                                 <br />
-                                <button
+                                {/* <button
                                     className="btn btn-outline-secondary"
                                     type="submit">
                                     Submit
-                                </button>
+                                </button> */}
+                                <button type="submit"><span className='start-btn-blue ff-20 width-250'>SUBMIT</span></button>
                             </form>
                         </div>
                     </div>
