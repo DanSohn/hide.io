@@ -69,7 +69,7 @@ class MenuScreen extends Component {
                             className="z-depth-3 btn btn-success">
                             Play
                         </button> */}
-                        <span class='start-btn-green ff-20 width-350'>PLAY</span>
+                        <span className='start-btn-green ff-20 width-350'>PLAY</span>
                     </Link>
                     <Link to={{
                         pathname: '/Instructions',
@@ -84,7 +84,7 @@ class MenuScreen extends Component {
                             className="z-depth-3 btn btn-success">
                             Instructions
                         </button> */}
-                        <span class='start-btn-green ff-20 width-350'>INSTRUCTIONS</span>
+                        <span className='start-btn-green ff-20 width-350'>INSTRUCTIONS</span>
                     </Link>
                     <Link to={{
                         pathname: '/Profile',
@@ -99,7 +99,7 @@ class MenuScreen extends Component {
                             className="z-depth-3 btn btn-success">
                             Profile
                         </button> */}
-                        <span class='start-btn-green ff-20 width-350'>PROFILE</span>
+                        <span className='start-btn-green ff-20 width-350'>PROFILE</span>
                     </Link>
                     {/* <button
                         type="button"
@@ -118,7 +118,7 @@ class MenuScreen extends Component {
                         }}>
                         Logout
                     </button> */}
-                    <span class='start-btn-green ff-20 width-350' onClick={() => {
+                    <span className='start-btn-green ff-20 width-350' onClick={() => {
                         auth.logout(() => {
                             // reason history is avail on props is b/c we loaded it via a route, which passes
                             // in a prop called history always

@@ -115,7 +115,9 @@ class Room extends Component {
             }
         });
         socket.on('youre the seeker', () => {
-            this.state.playerState = 'seeker';
+            this.setState({
+                playerState: "seeker"
+            })
             console.log("Congrats! Youre the seeker!")
         });
 
