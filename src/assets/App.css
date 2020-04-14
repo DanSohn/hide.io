@@ -334,6 +334,7 @@ td {
     flex: 1;
 }
 .logo {
+    font-family: 'Press Start 2p';
     order: 2;
     flex: 2;
 }
