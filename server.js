@@ -279,7 +279,7 @@ io.on("connection", (socket) => {
 
             // after the timer amount of seconds (default 3), stop emitting
             setTimeout(() => {
-                endGame(room, timerID);
+                clearInterval(timerID);
             }, countdowntime);
         }
     });
@@ -353,6 +353,7 @@ io.on("connection", (socket) => {
         //TODO get information about the players that were in that game and update their stats
         //TODO emit an event to all players about who won the game between hiders and seeker
         clearInterval(timerID);
+        console.log(gamesInSession[room].hiders);
         if(gamesInSession[room].hiders.length === 0){
             console.log("<<<<<<<<<<<<<<SEEKER WINS>>>>>>>>>>>.");
             io.to(room).emit("game winner", "seeker");
