@@ -15,7 +15,11 @@ const dbUtil = require("./dbUtils");
 const starting_pos_module = require(__dirname + "/starting_positions");
 let starting_pos = starting_pos_module.starting_positions;
 
+//Maintain a list of all the games that in progress
 let gamesInSession = {};
+
+//Maintains a list of all the players that are currently online
+let socket_name = {};
 
 // this occurs upon server start, or more importantly, server restart.
 // the lobbies that exist should have NO ONE IN THEIR PLAYER LISTS
@@ -26,7 +30,6 @@ dbUtil
     })
     .catch((err) => console.log(err));
 
-let socket_name = {};
 io.on("connection", (socket) => {
     // console.log("A User has connected");
 
@@ -319,26 +322,22 @@ io.on("connection", (socket) => {
 
         let {playerID,  room} = info;
         console.log(socket_name);
-        console.log("COLLISION WITH:",playerID, "room: ", room);
+        console.log("COLLISION WITH:", playerID, "room: ", room);
 
-        for(let i = 0; i < gamesInSession.length; i++){
-            if(gamesInSession[room].hiders.includes(playerID)) {
-                for (let j = 0; j < gamesInSession[room].hiders.length; j++) {
-                    if (gamesInSession[room].hiders[j] === playerID) {
-                        gamesInSession[room].hiders[j].splice(j, 1);
-                        gamesInSession[room].caught.push(playerID);
+        // console.log(">>>>>>>>>>>>>>>>> " + gamesInSession[room].hiders[0] + "    " + playerID);
+        if(gamesInSession[room].hiders.includes(playerID)){
+            for(let i = 0; i < gamesInSession[room].hiders.length; i++){
+                if(gamesInSession[room].hiders[i] === playerID){
+                    gamesInSession[room].hiders.splice(i,1);
+                    gamesInSession[room].caught.push(playerID);
 
-                        console.log("FOUND THE GUY WHO GOT CAUGHT");
-                        let playerName = socket_name[playerID];
-
-                        console.log(">>>>>>> " + playerName);
-                        socket.to(room).emit("I died", playerID, playerName);
-                        io.to(room).emit("display player caught", playerName);
-                        break;
-                    }
+                    let playerName = socket_name[playerID];
+                    socket.to(room).emit("I died", playerID, playerName);
+                    io.to(room).emit("display player caught", playerName);
+                    break;
                 }
-                
-                if(gamesInSession[room].hiders.length === 0){
+
+                if (gamesInSession[room].hiders.length === 0) {
                     endGame(room, gamesInSession[room].timerID);
                 }
             }
@@ -364,16 +363,19 @@ io.on("connection", (socket) => {
         //TODO get information about the players that were in that game and update their stats
         //TODO emit an event to all players about who won the game between hiders and seeker
         clearInterval(timerID);
-        console.log(gamesInSession[room].hiders);
-        if(gamesInSession[room].hiders.length === 0){
-            console.log("<<<<<<<<<<<<<<SEEKER WINS>>>>>>>>>>>.");
-            io.to(room).emit("game winner", "seeker");
+        // console.log(room + " <<<<<<<< ROOM ID" );
+        if(gamesInSession.hasOwnProperty(room)){
+            if(gamesInSession[room].hiders.length === 0){
+                console.log("<<<<<<<<<<<<<<SEEKER WINS>>>>>>>>>>>.");
+                io.to(room).emit("game winner", "seeker");
+            }
+            else if(gamesInSession[room].hiders.length > 0){
+                console.log("<<<<<<<<<<<<<<HIDER WINS>>>>>>>>>>>.");
+                io.to(room).emit("game winner", "hider");
+            }
+            delete gamesInSession[room];
+            console.log("ROOM WAS DELETED");
         }
-        else if(gamesInSession[room].hiders.length > 0){
-            console.log("<<<<<<<<<<<<<<HIDER WINS>>>>>>>>>>>.");
-            io.to(room).emit("game winner", "hider");
-        }
-        delete gamesInSession[room];
     }
 });
 
