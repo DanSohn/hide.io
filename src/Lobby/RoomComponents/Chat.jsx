@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "bootstrap/dist/js/bootstrap.bundle";
-import "../assets/App.css";
-import { socket } from "../assets/socket";
+import "../../assets/App.css";
+import { socket } from "../../assets/socket";
 
 class Chat extends Component {
   constructor(props) {
@@ -66,7 +66,7 @@ class Chat extends Component {
           </ul>
         </div>
         <form onSubmit={this.sendMessage}>
-          <div className="input-group mb-3">
+          <div className="input-group">
             <input
               type="text"
               className="form-control"
