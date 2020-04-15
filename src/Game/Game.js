@@ -219,7 +219,7 @@ class Game extends Component {
                         this.ctx.fillStyle = "#0c0c0c";
                         this.updateWalls(x, y);
                     }
-                    this.ctx.strokeStyle = "#FF0000";
+                    this.ctx.strokeStyle = "#A1A6B4";
 
                     this.ctx.stroke();
                     this.ctx.fill();
