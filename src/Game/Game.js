@@ -597,7 +597,7 @@ class Game extends Component {
             if (playerValue.x < this.camera.x || playerValue.y < this.camera.y || playerValue.x > this.camera.x + this.camera.width || playerValue.y > this.camera.y + this.camera.height) {
                 break;
             } else {
-                if (this.state.playerState === "seeker") {
+                if (this.state.playerState === "seeker" && this.state.game_status === 'started') {
                     this.detectEnamies(playerValue);
                 }
                 this.drawEnamies(playerValue.x, playerValue.y);
