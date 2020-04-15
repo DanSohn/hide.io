@@ -125,11 +125,11 @@ class Room extends Component {
             console.log("Congrats! Youre the seeker!")
         });
 
-        socket.on('enough peeps', ()=>
-            this.setState({ header: "Game is starting in ..."}));
+        socket.on('enough peeps', () =>
+            this.setState({ header: "Game is starting in ..." }));
 
-        socket.on('not enough peeps', ()=>
-            this.setState({ header: "Not Enough Players to Begin the Game"}));
+        socket.on('not enough peeps', () =>
+            this.setState({ header: "Not Enough Players to Begin the Game" }));
 
         // if the server disconnects, go to login screen, remove cookies and sign out of the google account
         socket.on("reconnect_error", (error) => {
@@ -166,7 +166,7 @@ class Room extends Component {
 
     render() {
         let comp;
-        console.log("THIS IS STATE BEFORE SENDING TO GAME",this.state.playerState)
+        console.log("THIS IS STATE BEFORE SENDING TO GAME", this.state.playerState)
         if (this.state.previous) {
             comp = (
                 <Redirect to={{
@@ -180,24 +180,24 @@ class Room extends Component {
         } else if (this.state.start) {
             comp = (
                 <Redirect to={{
-                pathname: '/Game',
-                state: {
-                    gameID: this.state.roomID,
-                    players: this.state.players,
-                    playerState: this.state.playerState,
-                    map: this.state.game_map,
-                    timeLimit: this.state.game_time,
-                    mode: this.state.game_mode,
-                    playerUsername: this.state.userName,
-                    creator: this.state.creator
-                }
-            }}/>
+                    pathname: '/Game',
+                    state: {
+                        gameID: this.state.roomID,
+                        players: this.state.players,
+                        playerState: this.state.playerState,
+                        map: this.state.game_map,
+                        timeLimit: this.state.game_time,
+                        mode: this.state.game_mode,
+                        playerUsername: this.state.userName,
+                        creator: this.state.creator
+                    }
+                }} />
 
             );
 
         } else {
             comp = (
-                <div className="z-depth-5 GameWindow">
+                <div className="GameWindow">
                     <Header
                         previous={this.goPrevious}
                         title={this.state.title}
