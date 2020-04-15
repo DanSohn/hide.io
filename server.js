@@ -333,7 +333,7 @@ io.on("connection", (socket) => {
         gamesInSession[room].fullTime = setTimeout(() => {
             endGame(room, timerID);
             console.log("Time's up");
-        }, mins * 60000 + 15000);
+        }, mins * 60000 + 16000);
 
         console.log("set a timeout for ", gamesInSession[room].fullTime);
     });
