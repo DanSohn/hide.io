@@ -408,11 +408,6 @@ io.on("connection", (socket) => {
                 loser = seekers;
 
             }
-<<<<<<< HEAD
-            io.to(room).emit("game finished");
-            delete gamesInSession[room];
-            console.log("ROOM WAS DELETED");
-=======
             io.to(room).emit("game winner", winner.group);
 
             dbUtil
@@ -431,8 +426,6 @@ io.on("connection", (socket) => {
                 delete gamesInSession[room];
                 io.to(room).emit("game finished");
             }, 5000);
-
->>>>>>> 6ae8a43eeab7ed36fdaa4e8cee34169a2987b7b2
         }
     }
 });
