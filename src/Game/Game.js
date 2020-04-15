@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import OtherPlayers from "./OtherPlayers";
 
 import "../assets/App.css";
@@ -6,7 +6,7 @@ import "../assets/App.css";
 import Wall from "./Wall";
 import Camera from "./Camera";
 import Player from "./PlayerTest";
-import { socket } from "../assets/socket";
+import {socket} from "../assets/socket";
 
 import Point from "./Point";
 import Timer from "../Game/Timer";
@@ -15,6 +15,8 @@ import {Redirect} from "react-router-dom";
 import {auth} from "../assets/auth";
 import {googleAuth} from "../Login/LoginScreen";
 import Cookies from "universal-cookie";
+import Results from "./Results";
+import GameObjective from "./GameObjective";
 
 const cookies = new Cookies();
 
@@ -62,140 +64,36 @@ Keyboard.isDown = function (keyCode) {
     return this._keys[keyCode];
 };
 
-// function Camera(map, width, height) {
-//     this.x = 0;
-//     this.y = 0;
-//     this.width = width;
-//     this.height = height;
-//     this.maxX = map.cols * map.tsize - width;
-//     this.maxY = map.rows * map.tsize - height;
-// }
-
-// Camera.prototype.follow = function (sprite) {
-//     this.following = sprite;
-//     sprite.screenX = 0;
-//     sprite.screenY = 0;
-// };
-
-// Camera.prototype.update = function () {
-//     console.log('camera update')
-//     // assume followed sprite should be placed at the center of the screen
-//     // whenever possible
-//     this.following.screenX = this.width / 2;
-//     this.following.screenY = this.height / 2;
-
-//     // make the camera follow the sprite
-//     this.x = this.following.x - this.width / 2;
-//     this.y = this.following.y - this.height / 2;
-//     // clamp values
-//     this.x = Math.max(0, Math.min(this.x, this.maxX));
-//     this.y = Math.max(0, Math.min(this.y, this.maxY));
-
-//     // in map corners, the sprite cannot be placed in the center of the screen
-//     // and we have to change its screen coordinates
-
-//     // left and right sides
-//     if (this.following.x < this.width / 2 ||
-//         this.following.x > this.maxX + this.width / 2) {
-//         this.following.screenX = this.following.x - this.x;
-//     }
-//     // top and bottom sides
-//     if (this.following.y < this.height / 2 ||
-//         this.following.y > this.maxY + this.height / 2) {
-//         this.following.screenY = this.following.y - this.y;
-//     }
-// };
-
-// function Player(map, x, y) {
-//     this.map = map;
-//     this.x = x;
-//     this.y = y;
-//     this.width = map.tsize;
-//     this.height = map.tsize;
-
-//     // this.image = Loader.getImage('Player');
-// }
-
-// Player.SPEED = 256; // pixels per second
-
-// Player.prototype.move = function (delta, dirx, diry) {
-//     // move
-//     // if(dirx === 1){
-//     //     this.x = this.x + 64;
-//     // }else if(dirx === -1){
-//     //     this.x = this.x - 64;
-//     // }
-//     this.x += dirx ;
-//     this.y += diry ;
-//     console.log(dirx +' '+diry)
-//     // check if we walked into a non-walkable tile
-//     this._collide(dirx, diry);
-
-//     // clamp values
-//     var maxX = this.map.cols * this.map.tsize;
-//     var maxY = this.map.rows * this.map.tsize;
-//     this.x = Math.max(0, Math.min(this.x, maxX));
-//     this.y = Math.max(0, Math.min(this.y, maxY));
-// };
-
-// Player.prototype._collide = function (dirx, diry) {
-//     var row, col;
-//     // -1 in right and bottom is because image ranges from 0..63
-//     // and not up to 64
-//     var left = this.x - this.width / 2;
-//     var right = this.x + this.width / 2 - 1;
-//     var top = this.y - this.height / 2;
-//     var bottom = this.y + this.height / 2 - 1;
-
-//     // check for collisions on sprite sides
-//     var collision =
-//         this.map.isSolidTileAtXY(left, top) ||
-//         this.map.isSolidTileAtXY(right, top) ||
-//         this.map.isSolidTileAtXY(right, bottom) ||
-//         this.map.isSolidTileAtXY(left, bottom);
-//     if (!collision) { return; }
-
-//     if (diry > 0) {
-//         row = this.map.getRow(bottom);
-//         this.y = -this.height / 2 + this.map.getY(row);
-//     }
-//     else if (diry < 0) {
-//         row = this.map.getRow(top);
-//         this.y = this.height / 2 + this.map.getY(row + 1);
-//     }
-//     else if (dirx > 0) {
-//         col = this.map.getCol(right);
-//         this.x = -this.width / 2 + this.map.getX(col);
-//     }
-//     else if (dirx < 0) {
-//         col = this.map.getCol(left);
-//         this.x = this.width / 2 + this.map.getX(col + 1);
-//     }
-// };
-
 class Game extends Component {
     constructor(props) {
         super(props);
 
         document.body.style.overflow = "hidden";
-
+        // for the window animationframe
+        let requestID;
         this.state = {
             context: this.context,
             windowHeight: window.innerHeight,
             windowWidth: window.innerWidth,
             msg: "",
-            num_of_players: this.props.location.state.numPlayers,
             players: this.props.location.state.players,
-
+            playerState: this.props.location.state.playerState,
+            playerColor: "",
+            userName: this.props.location.state.playerUsername,
+            creator: this.props.location.state.creator,
             gameID: this.props.location.state.gameID,
             game_status: "not started",
-            images: {},
             walls: [],
             hitpoints: [],
+            enamies: new Map(),
+
+            alive: true,
 
             //Game window size, it is used in the calculation of what portion of the map is viewed.
             timeLimit: this.props.location.state.timeLimit,
             countdown: true,
+
+            gameOver: false,
 
             //This will be handling current game functions, and constants
             map: {
@@ -231,44 +129,72 @@ class Game extends Component {
             },
         };
 
-        // socket.on('player moved', (position) => {
-        //     console.log(
-        //     !(position.X === this.player.x && position.Y === this.player.y) ? "myself! Or collision?": "This is where favians function fires!")
-        // });
+        this.state.playerColor = this.props.location.state.playerState === "seeker" ? "#D5C7BC" : '#' + Math.floor(Math.random() * 16777215).toString(16);
+
+        console.log("AM I THE SEEKER?", this.state.playerState);
+        console.log("Am i the button presser?", this.state.creator);
+        // TODO: do stuff when getting the location information
+        socket.on('player moved', (playerinfo) => {
+
+            if (socket.id !== playerinfo.id && playerinfo.room === this.state.gameID) {
+                // console.log(playerinfo);
+                this.state.enamies.set(playerinfo.id, playerinfo);
+            }
+        });
+        socket.on("I died", (playerID, playerName) => {
+            if (playerID === socket.id) {
+                this.setState({alive: false})
+            }
+
+        });
+        if(this.state.creator){
+            socket.emit("start game timer", this.state.gameID, this.state.timeLimit);
+        }
 
         this.update_player_component = this.update_player_component.bind(this);
+        this.tick = this.tick.bind(this);
+        this.endCountdown = this.endCountdown.bind(this);
     }
 
     //init game state seppereate from did load. could be used for start restrictions.
     init() {
         Keyboard.listenForEvents([Keyboard.LEFT, Keyboard.RIGHT, Keyboard.UP, Keyboard.DOWN]);
         // this.tileAtlas = Loader.getImage('tiles');
-        this.Player = new Player(this.state.map, 160, 160);
+        if (this.state.playerState === "seeker") {
+            this.Player = new Player(this.state.map, 160, 160);
+        } else {
+            this.Player = new Player(this.state.map, 288, 160);
+        }
         this.camera = new Camera(this.state.map, 1024, 640);
         this.camera.follow(this.Player);
     }
 
     drawLayer() {
-        this.setState({ walls: [] });
+        this.setState({walls: []});
 
+        let tileSize = this.state.map.tsize;
         //calculate camera view space and attains apropriate start and end of the render space.
-        let startCol = Math.floor(this.camera.x / this.state.map.tsize);
-        let endCol = startCol + this.camera.width / this.state.map.tsize;
-        let startRow = Math.floor(this.camera.y / this.state.map.tsize);
-        let endRow = startRow + this.camera.height / this.state.map.tsize;
-        let offsetX = -this.camera.x + startCol * this.state.map.tsize;
-        let offsetY = -this.camera.y + startRow * this.state.map.tsize;
-
+        let startCol = Math.floor(this.camera.x / tileSize);//
+        let endCol = startCol + this.camera.width / tileSize;
+        let startRow = Math.floor(this.camera.y / tileSize);
+        let endRow = startRow + this.camera.height / tileSize;
+        let offsetX = -this.camera.x + startCol * tileSize;
+        let offsetY = -this.camera.y + startRow * tileSize;
+        // console.log('combined ' + startCol * this.state.map.tsize + offsetX);
+        // console.log('offset'+offsetX);
+        // console.log('camera'+this.camera.x);
         for (let c = startCol; c <= endCol; c++) {
             for (let r = startRow; r <= endRow; r++) {
                 let tile = this.state.map.getTile(c, r);
-                let x = (c - startCol) * this.state.map.tsize + offsetX;
-                let y = (r - startRow) * this.state.map.tsize + offsetY;
+                let x = (c - startCol) * tileSize + offsetX;
+                let y = (r - startRow) * tileSize + offsetY;
+                // console.log('draw'+x)
+
                 if (tile !== 0) {
                     // 0 => empty tile
 
                     this.ctx.beginPath();
-                    this.ctx.rect(Math.round(x), Math.round(y), 64, 64);
+                    this.ctx.rect(Math.round(x), Math.round(y), tileSize, tileSize);
 
                     //Floor tile --- traversable.
                     if (tile === 1) {
@@ -284,12 +210,15 @@ class Game extends Component {
                         this.ctx.fillStyle = "#0c0c0c";
                         this.updateWalls(x, y);
                     }
+                    this.ctx.strokeStyle = "#A1A6B4";
+
                     this.ctx.stroke();
                     this.ctx.fill();
                 }
             }
         }
     }
+
     //Add walls each frame to calculate the rays
     updateWalls(x, y) {
         //Top side of a square
@@ -403,7 +332,7 @@ class Game extends Component {
         }
 
         // RAYS IN ALL DIRECTIONS
-        this.setState({ hitpoints: [] });
+        this.setState({hitpoints: []});
         for (let j = 0; j < uniqueAngles.length; j++) {
             let angle = uniqueAngles[j];
 
@@ -413,8 +342,8 @@ class Game extends Component {
 
             // Ray from center of screen to mouse
             let ray = {
-                a: { x: playerX, y: playerY },
-                b: { x: playerX + dx, y: playerY + dy },
+                a: {x: playerX, y: playerY},
+                b: {x: playerX + dx, y: playerY + dy},
             };
 
             // Find CLOSEST intersection
@@ -436,100 +365,109 @@ class Game extends Component {
             this.state.hitpoints.push(closestIntersect);
         }
     }
+
     //sort angles so the polygon can be drawn from  0th hitpoint to 360 degrees.
     sortAngles() {
         let sortedAngles = this.state.hitpoints.sort(function (a, b) {
             return a.angle - b.angle;
         });
-        this.setState({ hitpoints: sortedAngles });
+        this.setState({hitpoints: sortedAngles});
     }
 
-    drawEnamy() {}
-
-    //Draws the rays from each point from this.state.hitpoints -- DISABLED -- used to Debug
-    drawLightLines() {
-        this.ctx.save();
-        let playerX = this.Player.screenX - this.Player.width / 2 + 32;
-        let playerY = this.Player.screenY - this.Player.height / 2 + 32;
-        this.ctx.strokeStyle = "#FFFFFF";
-        this.ctx.beginPath();
-        for (let i = 0; i < this.state.hitpoints.length; i++) {
-            let hitpoint = this.state.hitpoints[i];
-            this.ctx.moveTo(playerX, playerY);
-            this.ctx.lineTo(hitpoint.x, hitpoint.y);
-            // this.ctx.fillRect(hitpoint.x - 5, hitpoint.y - 5, 10, 10);
-        }
-        this.ctx.stroke();
-        this.ctx.restore();
-    }
 
     // Goes through each hitpoint to create a visibile light polygon - then a circular light emits from players x y position- first circle is more intense than second circle
     drawLight() {
-        let playerX = this.Player.screenX - this.Player.width / 2 + 32;
-        let playerY = this.Player.screenY - this.Player.height / 2 + 32;
+        if(this.state.alive){
+            let playerX = this.Player.screenX - this.Player.width / 2 + 32;
+            let playerY = this.Player.screenY - this.Player.height / 2 + 32;
+    
+            let lightRadius = this.state.playerState === "seeker" ? 300 : 150;
+    
+            this.ctx.save();
+            let fill = this.ctx.createRadialGradient(playerX, playerY, 1, playerX, playerY, lightRadius);
+            fill.addColorStop(0, "rgba(255, 255, 255, 0.65)");
+            fill.addColorStop(0.9, "rgba(255, 255, 255, 0.01)");
+            fill.addColorStop(1, "rgba(255, 255, 255, 0.009)");
+    
+            this.ctx.fillStyle = fill;
+            this.ctx.beginPath();
+            if (this.state.hitpoints.length > 0) {
+                this.ctx.beginPath();
+                this.ctx.moveTo(this.state.hitpoints[0].x, this.state.hitpoints[0].y);
+                for (let i = 1; i < this.state.hitpoints.length; i++) {
+                    let intersect = this.state.hitpoints[i];
+                    this.ctx.lineTo(intersect.x, intersect.y);
+                }
+            } else {
+                console.log(playerX, this.camera.x);
+                this.ctx.rect(0, 0, this.camera.width, this.camera.height)
+            }
+            this.ctx.fill();
+    
+            this.ctx.restore();
+        }else{
+            return;
+        };
+       
+    }
 
-        this.ctx.save();
-        let fill = this.ctx.createRadialGradient(playerX, playerY, 1, playerX, playerY, 300);
-        fill.addColorStop(0, "rgba(255, 255, 255, 0.65)");
-        fill.addColorStop(0.9, "rgba(255, 255, 255, 0.01)");
-        fill.addColorStop(1, "rgba(255, 255, 255, 0.009)");
+    detectEnamies(playerValues) {
 
-        this.ctx.fillStyle = fill;
+        let enamyScreenX = (playerValues.x - this.camera.x);
+        let enamyScreenY = (playerValues.y - this.camera.y);
 
-        this.ctx.beginPath();
-        this.ctx.moveTo(this.state.hitpoints[0].x, this.state.hitpoints[0].y);
-        for (let i = 1; i < this.state.hitpoints.length; i++) {
-            let intersect = this.state.hitpoints[i];
-            this.ctx.lineTo(intersect.x, intersect.y);
+
+        if (this.Player.screenX < enamyScreenX + this.state.map.tsize &&
+            this.Player.screenX + this.state.map.tsize > enamyScreenX &&
+            this.Player.screenY < enamyScreenY + this.state.map.tsize &&
+            this.Player.screenY + this.state.map.tsize > enamyScreenY) {
+            console.log("collision detected");
+
+            let info = {
+                playerID: playerValues.id,
+                room: this.state.gameID
+            };
+
+            socket.emit("player caught", info);
+            return;
         }
 
-        this.ctx.fill();
-
-        this.ctx.restore();
     }
 
     //Draws an inverse polygon layer that covers the shadows to remove the floor lines.
     drawShadow() {
         this.ctx.save();
         this.ctx.fillStyle = "#0b0b0b";
-        this.ctx.beginPath();
-        this.ctx.moveTo(this.state.hitpoints[0].x, this.state.hitpoints[0].y);
-        for (let i = 1; i < this.state.hitpoints.length; i++) {
-            let intersect = this.state.hitpoints[i];
-            this.ctx.lineTo(intersect.x, intersect.y);
+
+        if (this.state.hitpoints.length > 0) {
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(this.state.hitpoints[0].x, this.state.hitpoints[0].y);
+            for (let i = 1; i < this.state.hitpoints.length; i++) {
+                let intersect = this.state.hitpoints[i];
+                this.ctx.lineTo(intersect.x, intersect.y);
+            }
+            this.ctx.rect(1024, 0, -1024, 620);
+
+            this.ctx.fill();
+            this.ctx.restore();
+        } else {
+            return;
         }
-        this.ctx.rect(1024, 0, -1024, 620);
-
-        this.ctx.fill();
-        this.ctx.restore();
-    }
-    drawHiders() {
-        this.ctx.beginPath();
-        this.ctx.rect(299 - 64 / 2, 65 - 64 / 2, 64, 64);
-        this.ctx.fillStyle = "#D5C7BC";
-        this.ctx.fill();
     }
 
-    drawPillarLight() {
-        let playerX = this.Player.screenX - this.Player.width / 2 + 32;
-        let playerY = this.Player.screenY - this.Player.height / 2 + 32;
+    drawEnamies(enamyX, enamyY) {
+        let enamyScreenX = (enamyX - this.camera.x) - this.Player.width / 2;
+        let enamyScreenY = (enamyY - this.camera.y) - this.Player.height / 2;
 
-        this.ctx.save();
-        let fill = this.ctx.createRadialGradient(playerX, playerY, 1, playerX, playerY, 64);
-        fill.addColorStop(0, "rgba(255, 255, 255, 0.55)");
-        fill.addColorStop(1, "rgba(255, 255, 255, 0.01)");
-
-        this.ctx.fillStyle = fill;
         this.ctx.beginPath();
-        this.ctx.moveTo(this.state.hitpoints[0].x, this.state.hitpoints[0].y);
-        for (let i = 1; i < this.state.hitpoints.length; i++) {
-            let intersect = this.state.hitpoints[i];
-            this.ctx.lineTo(intersect.x, intersect.y);
-        }
-        this.ctx.rect(1024, 0, -1024, 620);
-
+        this.ctx.rect(enamyScreenX, enamyScreenY, this.state.map.tsize, this.state.map.tsize);
+        this.ctx.fillStyle = '#525252';
         this.ctx.fill();
+
         this.ctx.restore();
+
+
     }
 
     //Draws a player in the center of the screen. The camera will follow the player unless they are close to the edge of the map. -- Map in starting_positions.js
@@ -542,8 +480,15 @@ class Game extends Component {
             64,
             64
         );
-        this.ctx.fillStyle = "#D5C7BC";
-        this.ctx.fill();
+        // set the playerColor
+        if(this.state.alive === true){
+            this.ctx.fillStyle = this.state.playerColor;
+            this.ctx.fill();
+
+        }else{
+            this.ctx.strokeStyle = this.state.playerColor;
+            this.ctx.stroke();
+        }
     }
 
     update(delta) {
@@ -559,8 +504,8 @@ class Game extends Component {
         } else if (Keyboard.isDown(Keyboard.DOWN)) {
             diry = 1;
         }
-
-        this.Player.move(delta, dirx, diry);
+        if (this.state.game_status === 'started' || this.state.playerState === 'hider')
+            this.Player.move(delta, dirx, diry, this.state.enamies);
         this.camera.update();
     }
 
@@ -577,72 +522,64 @@ class Game extends Component {
         let delta = 0.25;
         delta = Math.min(delta, 0.25); // maximum delta of 250 ms
 
-        this.update(delta);
+        let pastInfo = {
+            roomID: this.state.gameID,
+            x: this.Player.x,
+            y: this.Player.y,
+            id: socket.id,
+        };
+
+        //stops movement if they died.
+
+            this.update(delta);
+        
         this.gameRender();
 
-        window.requestAnimationFrame(this.tick.bind(this));
+        this.requestID = window.requestAnimationFrame(this.tick);
+
+        let info = {
+            roomID: this.state.gameID,
+            x: this.Player.x,
+            y: this.Player.y,
+            id: socket.id,
+        };
+        // Only send across socket if there's an update in position
+        if (JSON.stringify(info) !== JSON.stringify(pastInfo) && this.state.alive) {
+            // console.log("I emitted:", info.x, info.y);
+            // console.log('this.player.x=  ' + this.Player.x + '  this.Player.screenX=  ' + this.Player.screenX + '  camera x= ' + this.camera.x)
+            socket.emit("player movement", info);
+        }
+
     }
 
+
     gameRender() {
+        let playerX = this.Player.screenX - this.Player.width / 2 + 32;
+        let playerY = this.Player.screenY - this.Player.height / 2 + 32;
+
         this.drawLayer();
         // this.drawHiders();
         this.updateLightTrace();
         this.sortAngles();
-        // this.drawLightLines();
-        this.drawLight();
+
+
+        for (let playerValue of this.state.enamies.values()) {
+            if (playerValue.x < this.camera.x || playerValue.y < this.camera.y || playerValue.x > this.camera.x + this.camera.width || playerValue.y > this.camera.y + this.camera.height) {
+                break;
+            } else {
+                if (this.state.playerState === "seeker" && this.state.game_status === 'started') {
+                    this.detectEnamies(playerValue);
+                }
+                this.drawEnamies(playerValue.x, playerValue.y);
+            }
+        }
+
+
+        this.drawLight(playerX, playerY);
+        this.drawPlayer();
+
         this.drawShadow();
         // this.drawPillarLight();
-        this.drawPlayer();
-    }
-
-    componentDidMount() {
-        // this will only happen the first time, and will set the ball rolling to handle any updates!
-        // this.state.context = this.refs.canvas.getContext('2d');
-        socket.emit("start game timer", this.state.gameID, this.state.timeLimit);
-        console.log(this.state.timeLimit);
-        let context = this.refs.canvas.getContext("2d");
-
-        this.setState({ context: this.refs.canvas.getContext("2d"), game_status: "in progress" });
-
-        this.run(context);
-
-        socket.on("Redraw positions", (players) => {
-            // if there has been a change to players' positions, then reset the state of players to new coordinates
-            //console.log("original players ", this.state.players);
-            if (this.state.players !== players) {
-                this.setState({ players: players });
-            }
-        });
-
-        socket.on("countdown", (seconds) => {
-            if (seconds - 1 == 0) {
-                this.setState({ countdown: false });
-            }
-        });
-        // console.log(this.state);
-
-        socket.on("reconnect_error", (error) => {
-            // console.log("Error! Disconnected from server", error);
-            console.log("Error! Can't connect to server");
-            auth.logout(() => {
-                // reason history is avail on props is b/c we loaded it via a route, which passes
-                // in a prop called history always
-                cookies.remove("name");
-                cookies.remove("email");
-                cookies.remove("image");
-                googleAuth.signOut();
-                console.log("going to logout!");
-                this.props.history.push('/');
-            });
-        });
-    }
-
-
-    componentWillUnmount() {
-        socket.off("Redraw positions");
-        socket.off("countdown");
-        socket.off("reconnect_error");
-
     }
 
     // this function creates multiple player components
@@ -677,44 +614,110 @@ class Game extends Component {
             }
         }
 
-        for (let i = 0; i < players_arr.length; i++) {}
+        for (let i = 0; i < players_arr.length; i++) {
+        }
 
         return <div>{component_insides}</div>;
     }
 
+    // callback for Timer component
+    endCountdown(){
+        console.log("Countdown completed. GAME ON");
+        this.setState({
+            countdown: false,
+            game_status: 'started'
+        });
+    }
+
+    componentDidMount() {
+        // this.state.context = this.refs.canvas.getContext('2d');
+        console.log(this.state.timeLimit);
+        let context = this.refs.canvas.getContext("2d");
+
+        this.setState({context: this.refs.canvas.getContext("2d")});
+
+        this.run(context);
+
+        socket.on("Redraw positions", (players) => {
+            // if there has been a change to players' positions, then reset the state of players to new coordinates
+            //console.log("original players ", this.state.players);
+            if (this.state.players !== players) {
+                this.setState({players: players});
+            }
+        });
+
+        // console.log(this.state);
+
+        // when the server completes the winner and returns event to go back to the lobby
+        socket.on("game finished", () => {
+            // cancel the animation frames
+            if (this.requestID) window.cancelAnimationFrame(this.requestID);
+
+            this.setState({
+                game_status: "Completed"
+            })
+        });
+        socket.on("reconnect_error", (error) => {
+            // console.log("Error! Disconnected from server", error);
+            console.log("Error! Can't connect to server");
+            auth.logout(() => {
+                // reason history is avail on props is b/c we loaded it via a route, which passes
+                // in a prop called history always
+                cookies.remove("name");
+                cookies.remove("email");
+                cookies.remove("image");
+                googleAuth.signOut();
+                console.log("going to logout!");
+                this.props.history.push('/');
+            });
+        });
+    }
+
+
+    componentWillUnmount() {
+        console.log("Component unmounted ===================================");
+
+        socket.off("Redraw positions");
+        socket.off("reconnect_error");
+        socket.off("game finished");
+        socket.off("player moved");
+        socket.off("I died");
+        socket.off("game in progress");
+    }
+
     render() {
-        if(this.state.networkError){
-            console.log("Going to main menu");
-            return <Redirect to="/MainMenu" />
+        // if the game is completed, head back to lobby
+        if (this.state.game_status === "Completed") {
+            return (
+                <Redirect to={{
+                    pathname: "/Room",
+                    state: {
+                        join_code: this.state.gameID
+                    }
+                }}/>
+            );
         }
 
-        let dragon = "";
-        if (this.state.countdown == true) {
-            dragon = (
-                <React.Fragment>
-                    <h1>You are a hider</h1>
-                    <h5>Objective: Hide BITCH</h5>
-                </React.Fragment>
-            );
-        } else if (this.state.countdown == false) {
-            dragon = (
-                <React.Fragment>
-                    <h1></h1>
-                    <h5></h5>
-                </React.Fragment>
-            );
-        }
+        // console.log(this.state.playerState==='seeker' && this.state.game_status === 'not started');
+        // if client is a seeker and game has not started (15 seconds wait), then canvas should be black and waiting
+        let canvasDisplay = this.state.playerState === 'seeker' && this.state.game_status === 'not started' ? ['z-depth-5 darkness', ''] : ['', 'z-depth-5 fade-in'];
         return (
-            <React.Fragment>
-                <Timer gameDuration={this.state.timeLimit.split(" ")[0]} />
+            <>
+                <Timer gameDuration={this.state.timeLimit.split(" ")[0]}
+                       playerState={this.state.playerState}
+                       endCount={this.endCountdown}
+                />
                 <div className="gameAction">
-                    <AliveList />
-                    <canvas className="fade-in" ref="canvas" width={1024} height={620} />
-                    <div className="PlayerText">
-                        <div className="fade-out-15">{dragon}</div>
-                    </div>
+                    <AliveList/>
+                    <div className={canvasDisplay[0]}/>
+                    <canvas className={canvasDisplay[1]} ref="canvas" width={1024} height={620}/>
+                    <GameObjective
+                        countdown={this.state.countdown}
+                        playerState={this.state.playerState}
+                    />
+                    <Results playerState={this.state.playerState} userName={this.state.userName}/>
                 </div>
-            </React.Fragment>
+            </>
         );
     }
 }

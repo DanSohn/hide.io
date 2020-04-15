@@ -112,6 +112,7 @@ class ViewLobbies extends Component {
                 }} />
             } else {
                 comp = (
+
                     <div className="GameWindow">
                         <Header title="Lobby Selection" previous={this.goPrevious}/>
                         <Break/>
@@ -127,10 +128,10 @@ class ViewLobbies extends Component {
                                 }}>
                                     {/* <button
                                         type="button"
-                                        className="btn btn-danger">
+                                        className="z-depth-3 btn btn-danger">
                                         CREATE LOBBY
                                     </button> */}
-                                    <span class='start-btn-red ff-20 width-250'>CREATE LOBBY</span>
+                                    <span className='start-btn-red ff-20 width-250'>CREATE LOBBY</span>
                                 </Link>
                                 <Link to={{
                                     pathname: '/JoinByCode',
@@ -141,10 +142,10 @@ class ViewLobbies extends Component {
                                 }}>
                                     {/* <button
                                         type="button"
-                                        className="btn btn-info">
+                                        className="z-depth-3 btn btn-info">
                                         JOIN BY CODE
                                     </button> */}
-                                    <span class='start-btn-blue ff-20 width-250'>JOIN BY CODE</span>
+                                    <span className='start-btn-blue ff-20 width-250'>JOIN BY CODE</span>
                                 </Link>
                             </div>
                         </div>

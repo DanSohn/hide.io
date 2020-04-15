@@ -10,6 +10,8 @@ import ClickSound from "../sounds/click";
 import {socket} from "../assets/socket";
 import {auth} from "../assets/auth";
 import {googleAuth} from "../Login/LoginScreen";
+import ProfileLabels from "./ProfileLabels";
+import ProfileResults from "./ProfileResults";
 
 const cookies = new Cookies();
 
@@ -60,50 +62,18 @@ class PlayerProfile extends Component {
         let comp;
         if (!this.state.previous) {
             comp = (
-                <div className="GameWindow">
+                <div className="z-depth-5 GameWindow">
                     <Header
                         previous={this.goPrevious}
                         title="Profile"
                     />
                     <Break/>
                     <div className="ContentScreen">
-                        <div className="profileLabels">
-                            <h2>Name:</h2>
-                            <h2>Email:</h2>
-                            <h2>Win/Loss:</h2>
-                            <h2>Total Games:</h2>
-                        </div>
-                        <div className="profileResults">
-
-                            <input
-                                type="text"
-                                className="form-control"
-                                id="userName"
-                                placeholder={this.state.userName}
-                                readOnly
-                            />
-                            <input
-                                type="text"
-                                id="email"
-                                className="form-control"
-                                placeholder={this.state.email}
-                                readOnly
-                            />
-                            <input
-                                type="text"
-                                id="kdr"
-                                className="form-control"
-                                placeholder="200/0"
-                                readOnly
-                            />
-                            <input
-                                type="text"
-                                id="totalgames"
-                                className="form-control"
-                                placeholder="I assume wins + loss"
-                                readOnly
-                            />
-                        </div>
+                        <ProfileLabels />
+                        <ProfileResults
+                            email={this.state.email}
+                            name={this.state.userName}
+                        />
                     </div>
                 </div>
             );

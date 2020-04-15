@@ -32,6 +32,7 @@ class Room extends Component {
             roomID: this.props.location.state.join_code,
             title: "",
             header: "Join Code: " + this.props.location.state.join_code,
+            playerState: 'hider',
             game_mode: "",
             game_map: {},
             game_time: "",
@@ -39,10 +40,10 @@ class Room extends Component {
             players: {},
             playersList: [],
             time: "",
+            creator: false
         };
         this.goPrevious = this.goPrevious.bind(this);
         this.startTimer = this.startTimer.bind(this);
-        this.start = this.start.bind(this);
 
         // this lets the socket join the specific room
         socket.emit("ask for lobby info", this.state.roomID);
@@ -64,17 +65,12 @@ class Room extends Component {
         console.log("Starting timer!");
         // 3 second timer currently
         // TimerSound();
-        socket.emit("game starting");
+        socket.emit("lobby start timer", { countdowntime: 4300, room: this.state.roomID });
         this.setState({
-            header: "Game is starting in ..."
-        })
-    }
-
-    start() {
-        this.setState({
-            start: true,
+            creator: true
         });
     }
+
 
     componentDidMount() {
         // socket.emit("player joined");
@@ -100,18 +96,14 @@ class Room extends Component {
             this.setState({
                 playersList: lobby_users,
             });
-            // for (let i =0; i<this.state.playersList.length; i++) {
-            //     console.log("Player: " + this.state.playersList[i].username)
-            // }
+
         });
 
-        // this event occurs on function startTimer(), it will count down from 3 to start the game
+        /*// this event occurs on function startTimer(), it will count down from 3 to start the game
         socket.on("game starting ack", () => {
-            socket.emit("lobby start timer", { countdowntime: 4100, room: this.state.roomID });
+            socket.emit("lobby start timer", { countdowntime: 4300, room: this.state.roomID });
         });
-
-        // This event will be used to count down the start of the game and then send an event to the server to start
-        // the timer for the game while players are playing
+*/
         socket.on("lobby current timer", (countdown) => {
             console.log(countdown);
             this.setState({
@@ -121,9 +113,23 @@ class Room extends Component {
             // after i reach 0, call startGame
             if (countdown <= 0) {
                 console.log("starting game");
-                this.start();
+                this.setState({
+                    start: true
+                })
             }
         });
+        socket.on('youre the seeker', () => {
+            this.setState({
+                playerState: "seeker"
+            })
+            console.log("Congrats! Youre the seeker!")
+        });
+
+        socket.on('enough peeps', ()=>
+            this.setState({ header: "Game is starting in ..."}));
+
+        socket.on('not enough peeps', ()=>
+            this.setState({ header: "Not Enough Players to Begin the Game"}));
 
         // if the server disconnects, go to login screen, remove cookies and sign out of the google account
         socket.on("reconnect_error", (error) => {
@@ -146,14 +152,21 @@ class Room extends Component {
         socket.off("giving lobby info");
         socket.off("update lobby list");
         socket.off("game starting ack");
-        socket.off("lobby current timer");
-        socket.off("reconnect_error");
 
+        socket.off("lobby current timer");
+        socket.off("lobby start timer");
+        socket.off("not enough peeps");
+        socket.off("enough peeps")
+        socket.off("reconnect_error");
+        socket.off("may successfully leave lobby");
     }
+
+
+
 
     render() {
         let comp;
-
+        console.log("THIS IS STATE BEFORE SENDING TO GAME",this.state.playerState)
         if (this.state.previous) {
             comp = (
                 <Redirect to={{
@@ -167,20 +180,24 @@ class Room extends Component {
         } else if (this.state.start) {
             comp = (
                 <Redirect to={{
-                    pathname: '/Game',
-                    state: {
-                        gameID: this.state.roomID,
-                        players: this.state.players,
-                        map: this.state.game_map,
-                        timeLimit: this.state.game_time,
-                        mode: this.state.game_mode
-                    }
-                }} />
+                pathname: '/Game',
+                state: {
+                    gameID: this.state.roomID,
+                    players: this.state.players,
+                    playerState: this.state.playerState,
+                    map: this.state.game_map,
+                    timeLimit: this.state.game_time,
+                    mode: this.state.game_mode,
+                    playerUsername: this.state.userName,
+                    creator: this.state.creator
+                }
+            }}/>
+
             );
 
         } else {
             comp = (
-                <div className="GameWindow">
+                <div className="z-depth-5 GameWindow">
                     <Header
                         previous={this.goPrevious}
                         title={this.state.title}
