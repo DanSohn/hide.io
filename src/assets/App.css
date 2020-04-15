@@ -498,7 +498,10 @@ tr .btn-success {
     flex-direction: column;
     align-items: center;
 }
-
+.mapImg {
+    width:150px;
+    height:150px;
+}
 .roomActions,
 .chat {
     height: 95%;
