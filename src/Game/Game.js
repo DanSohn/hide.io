@@ -693,9 +693,9 @@ class Game extends Component {
             auth.logout(() => {
                 // reason history is avail on props is b/c we loaded it via a route, which passes
                 // in a prop called history always
-                /*cookies.remove("name");
+                cookies.remove("name");
                 cookies.remove("email");
-                cookies.remove("image");*/
+                cookies.remove("image");
                 googleAuth.signOut();
                 console.log("going to logout!");
                 this.props.history.push('/');

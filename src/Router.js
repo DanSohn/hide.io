@@ -1,5 +1,5 @@
 import React from "react";
-import {HashRouter, Switch, Route } from "react-router-dom";
+import {HashRouter, Switch, Route} from "react-router-dom";
 
 import ProtectedRoute from "./assets/ProtectedRoute.jsx";
 import {auth} from "./assets/auth";
@@ -18,7 +18,7 @@ import Game from "./Game/Game";
 
 
 class Router extends React.Component {
-    constructor(){
+    constructor() {
         super();
         this.state = ({
             networkError: false
@@ -53,53 +53,30 @@ class Router extends React.Component {
     }
 
     render() {
-        console.log("Rerendered!");
-        if (this.state.networkError) {
-            return (
-                <HashRouter>
-                    <div className="App">
-                        <Switch>
-                            <Route path="/" exact component={LoginScreen}/>
 
-                            <ProtectedRoute path="/UsernameSelection" component={MenuScreen}/>
-                            <ProtectedRoute path="/MainMenu" component={MenuScreen}/>
-                            <ProtectedRoute path="/LobbyScreen" component={MenuScreen}/>
-                            <ProtectedRoute path="/Profile" component={PlayerProfile}/>
-                            <ProtectedRoute path="/Instructions" component={Instructions}/>
-                            <ProtectedRoute path="/CreateLobby" component={MenuScreen}/>
-                            <ProtectedRoute path="/JoinByCode" component={MenuScreen}/>
-                            <ProtectedRoute path="/Room" component={MenuScreen}/>
-                            <ProtectedRoute path="/Game" component={MenuScreen}/>
+        return (
+            <HashRouter>
+                <div className="App">
+                    <Switch>
+                        <Route path="/" exact component={LoginScreen}/>
 
-                            <Route path="*" component={() => "404 NOT FOUND"}/>
-                        </Switch>
-                    </div>
-                </HashRouter>
-            )
-        } else {
-            return (
-                <HashRouter>
-                    <div className="App">
-                        <Switch>
-                            <Route path="/" exact component={LoginScreen}/>
+                        <ProtectedRoute path="/UsernameSelection" component={UsernameSelection}/>
+                        <ProtectedRoute path="/MainMenu" component={MenuScreen}/>
+                        <ProtectedRoute path="/LobbyScreen" component={ViewLobbies}/>
+                        <ProtectedRoute path="/Profile" component={PlayerProfile}/>
+                        <ProtectedRoute path="/Instructions" component={Instructions}/>
+                        <ProtectedRoute path="/CreateLobby" component={CreateLobby}/>
+                        <ProtectedRoute path="/JoinByCode" component={JoinCode}/>
+                        <ProtectedRoute path="/Room" component={Room}/>
+                        <ProtectedRoute path="/Game" component={Game}/>
 
-                            <ProtectedRoute path="/UsernameSelection" component={UsernameSelection}/>
-                            <ProtectedRoute path="/MainMenu" component={MenuScreen}/>
-                            <ProtectedRoute path="/LobbyScreen" component={ViewLobbies}/>
-                            <ProtectedRoute path="/Profile" component={PlayerProfile}/>
-                            <ProtectedRoute path="/Instructions" component={Instructions}/>
-                            <ProtectedRoute path="/CreateLobby" component={CreateLobby}/>
-                            <ProtectedRoute path="/JoinByCode" component={JoinCode}/>
-                            <ProtectedRoute path="/Room" component={Room}/>
-                            <ProtectedRoute path="/Game" component={Game}/>
-
-                            <Route path="*" component={() => "404 NOT FOUND"}/>
-                        </Switch>
-                    </div>
-                </HashRouter>
-            );
-        }
+                        <Route path="*" component={() => "404 NOT FOUND"}/>
+                    </Switch>
+                </div>
+            </HashRouter>
+        );
     }
+
 }
 
 export {Router, auth};
