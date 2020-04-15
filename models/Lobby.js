@@ -1,6 +1,11 @@
 const mongoose = require('mongoose');
 
 const LobbySchema = new mongoose.Schema({
+    createdAt: {
+        type: Date,
+        expires: '60m',
+        default: Date.now
+    },
     join_code: {
         type: String,
         required: true
@@ -28,12 +33,8 @@ const LobbySchema = new mongoose.Schema({
     players: {
         type: Array,
         required: true
-    },
-    createdAt: {
-        type: Date,
-        expires: '50m',
-        default: Date.now()
     }
+
 });
 
 // 86400 is 24 hours. The entry expires in 24 hours, and will delete itself then!

@@ -3,11 +3,11 @@ function returnGameMode(num) {
     let res;
 
     if (num === "1") {
-        res = "Lover's Paradise";
+        res = "Regular";
     } else if (num === "2") {
-        res = "Do you want to build a snowman?";
-    } else if (num === "3") {
-        res = "Love is an open door";
+        res = "Zombies";
+    } else {
+        res = "Unknown";
     }
 
     return res;

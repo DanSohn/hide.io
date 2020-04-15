@@ -59,6 +59,7 @@ class CreateLobby extends Component {
 
     componentWillUnmount() {
         socket.off("reconnect_error");
+        socket.off("created lobby return code");
     }
 
     goPrevious() {

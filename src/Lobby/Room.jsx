@@ -1,10 +1,10 @@
-import React, { Component } from "react";
-import { Redirect } from "react-router-dom";
+import React, {Component} from "react";
+import {Redirect} from "react-router-dom";
 import Cookies from 'universal-cookie';
 
-import { socket } from "../assets/socket";
-import { auth } from "../assets/auth";
-import { googleAuth } from "../Login/LoginScreen";
+import {socket} from "../assets/socket";
+import {auth} from "../assets/auth";
+import {googleAuth} from "../Login/LoginScreen";
 
 import Header from "../assets/Header";
 import Break from "../assets/Break";
@@ -13,7 +13,7 @@ import GameSettings from "./RoomComponents/GameSettings";
 import PlayerList from "./RoomComponents/PlayerList";
 import ButtonArea from "./RoomComponents/ButtonArea";
 
-import { returnGameMode, returnGameMap, returnGameTime } from "../assets/utils";
+import {returnGameMode, returnGameMap, returnGameTime} from "../assets/utils";
 import ClickSound from "../sounds/click";
 import "bootstrap/dist/js/bootstrap.bundle";
 import "../assets/App.css";
@@ -40,7 +40,9 @@ class Room extends Component {
             players: {},
             playersList: [],
             time: "",
-            creator: false
+            creator: false,
+            error: "",
+            errorTimeout: null
         };
         this.goPrevious = this.goPrevious.bind(this);
         this.startTimer = this.startTimer.bind(this);
@@ -50,7 +52,7 @@ class Room extends Component {
     }
 
     goPrevious() {
-        socket.emit("leave lobby", { room: this.state.roomID, email: this.state.email });
+        socket.emit("leave lobby", {room: this.state.roomID, email: this.state.email});
         // i ensure everything is first handled properly in the server, and is up to date
         // before i leave
         socket.on("may successfully leave lobby", () => {
@@ -65,7 +67,7 @@ class Room extends Component {
         console.log("Starting timer!");
         // 3 second timer currently
         // TimerSound();
-        socket.emit("lobby start timer", { countdowntime: 4300, room: this.state.roomID });
+        socket.emit("lobby start timer", {countdowntime: 4300, room: this.state.roomID});
         this.setState({
             creator: true
         });
@@ -125,27 +127,45 @@ class Room extends Component {
             console.log("Congrats! Youre the seeker!")
         });
 
-        socket.on('enough peeps', ()=>
-            this.setState({ header: "Game is starting in ..."}));
+        socket.on('check enough players', (status) => {
+            if (status) {
+                this.setState({header: "Game is starting in ..."})
+            } else {
 
-        socket.on('not enough peeps', ()=>
-            this.setState({ header: "Not Enough Players to Begin the Game"}));
+                if(this.state.errorTimeout === null) {
+                    this.setState({
+                        error: "Need at least 2 players to start the game",
+                        errorTimeout: setTimeout(() => {
+                            this.setState({error: "", errorTimeout: null})
+                        }, 3000)
+                    });
+                }else{
+                    clearTimeout(this.state.errorTimeout);
+                    this.setState({
+                        errorTimeout: setTimeout(() => {
+                            this.setState({error: "", errorTimeout: null})
+                        }, 3000)
+                    });
+                }
 
-        // if the server disconnects, go to login screen, remove cookies and sign out of the google account
-        socket.on("reconnect_error", (error) => {
-            // console.log("Error! Disconnected from server", error);
-            console.log("Error! Can't connect to server");
-            auth.logout(() => {
-                // reason history is avail on props is b/c we loaded it via a route, which passes
-                // in a prop called history always
-                cookies.remove("name");
-                cookies.remove("email");
-                cookies.remove("image");
-                googleAuth.signOut();
-                console.log("going to logout!");
-                this.props.history.push('/');
-            });
+            }
         });
+
+            // if the server disconnects, go to login screen, remove cookies and sign out of the google account
+            socket.on("reconnect_error", (error) => {
+                // console.log("Error! Disconnected from server", error);
+                console.log("Error! Can't connect to server");
+                auth.logout(() => {
+                    // reason history is avail on props is b/c we loaded it via a route, which passes
+                    // in a prop called history always
+                    cookies.remove("name");
+                    cookies.remove("email");
+                    cookies.remove("image");
+                    googleAuth.signOut();
+                    console.log("going to logout!");
+                    this.props.history.push('/');
+                });
+            });
     }
 
     componentWillUnmount() {
@@ -162,11 +182,8 @@ class Room extends Component {
     }
 
 
-
-
     render() {
         let comp;
-        console.log("THIS IS STATE BEFORE SENDING TO GAME",this.state.playerState)
         if (this.state.previous) {
             comp = (
                 <Redirect to={{
@@ -175,23 +192,23 @@ class Room extends Component {
                         name: this.state.userName,
                         email: this.state.email,
                     }*/
-                }} />
+                }}/>
             );
         } else if (this.state.start) {
             comp = (
                 <Redirect to={{
-                pathname: '/Game',
-                state: {
-                    gameID: this.state.roomID,
-                    players: this.state.players,
-                    playerState: this.state.playerState,
-                    map: this.state.game_map,
-                    timeLimit: this.state.game_time,
-                    mode: this.state.game_mode,
-                    playerUsername: this.state.userName,
-                    creator: this.state.creator
-                }
-            }}/>
+                    pathname: '/Game',
+                    state: {
+                        gameID: this.state.roomID,
+                        players: this.state.players,
+                        playerState: this.state.playerState,
+                        map: this.state.game_map,
+                        timeLimit: this.state.game_time,
+                        mode: this.state.game_mode,
+                        playerUsername: this.state.userName,
+                        creator: this.state.creator
+                    }
+                }}/>
 
             );
 
@@ -202,15 +219,16 @@ class Room extends Component {
                         previous={this.goPrevious}
                         title={this.state.title}
                     />
-                    <Break />
+                    <Break/>
                     <div className="ContentScreen">
-                        <Chat userName={this.state.userName} roomID={this.state.roomID} />
+                        <Chat userName={this.state.userName} roomID={this.state.roomID}/>
 
                         <div className="roomActions">
                             <ButtonArea
                                 timerCallback={this.startTimer}
                                 header={this.state.header}
                                 time={this.state.time}
+                                errorMsg={this.state.error}
                             />
                             <GameSettings
                                 mode={this.state.game_mode}
@@ -218,7 +236,7 @@ class Room extends Component {
                                 map={this.state.game_map.name}
                             />
                         </div>
-                        <PlayerList playersList={this.state.playersList} />
+                        <PlayerList playersList={this.state.playersList}/>
                     </div>
                 </div>
             );

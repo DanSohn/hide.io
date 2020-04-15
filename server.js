@@ -265,9 +265,9 @@ io.on("connection", (socket) => {
         console.log("everyone in room: ", roomies);
         // if there is not enough sockets(people) in the lobby, tell the lobby so
         if (roomies.length < 2) {
-            socket.emit('not enough peeps');
+            socket.emit('check enough players', false);
         } else {
-            io.to(room).emit('enough peeps');
+            io.to(room).emit('check enough players', true);
             // choose one random socket to be the seeker
             let randomSeeker = roomies[Math.floor(Math.random() * roomies.length)];
             io.to(`${randomSeeker}`).emit('youre the seeker');
@@ -290,6 +290,7 @@ io.on("connection", (socket) => {
             console.log("NUMBER OF HIDERS " + gamesInSession[room].hiders.length);
 
             let countdown = Math.floor(countdowntime / 1000);
+            io.to(room).emit("lobby current timer", countdown);
             // send to all sockets an event every second
             let timerID = setInterval(() => {
                 console.log(countdown);
@@ -347,21 +348,24 @@ io.on("connection", (socket) => {
         // console.log("COLLISION WITH:", playerID, "room: ", room);
 
         // console.log(">>>>>>>>>>>>>>>>> " + gamesInSession[room].hiders[0] + "    " + playerID);
-        if (gamesInSession.hasOwnProperty(room) && gamesInSession[room].hiders.includes(playerID)) {
-            for (let i = 0; i < gamesInSession[room].hiders.length; i++) {
-                if (gamesInSession[room].hiders[i] === playerID) {
-                    gamesInSession[room].hiders.splice(i, 1);
-                    gamesInSession[room].caught.push(playerID);
+        if (gamesInSession.hasOwnProperty(room) && gamesInSession[room].hasOwnProperty("hiders")) {
+            if(gamesInSession[room].hiders.includes(playerID)) {
+                for (let i = 0; i < gamesInSession[room].hiders.length; i++) {
+                    if (gamesInSession[room].hiders[i] === playerID) {
+                        gamesInSession[room].hiders.splice(i, 1);
+                        console.log("after catching, hiders is now", gamesInSession[room].hiders);
+                        gamesInSession[room].caught.push(playerID);
 
-                    let playerName = socket_name[playerID].name;
-                    socket.to(room).emit("I died", playerID, playerName);
-                    io.to(room).emit("display player caught", playerName);
-                    break;
+                        let playerName = socket_name[playerID].name;
+                        socket.to(room).emit("I died", playerID, playerName);
+                        io.to(room).emit("display player caught", playerName);
+                        break;
+                    }
                 }
-            }
 
-            if (gamesInSession[room].hiders.length === 0) {
-                endGame(room, gamesInSession[room].timerID);
+                if (gamesInSession[room].hiders.length === 0) {
+                    endGame(room, gamesInSession[room].timerID);
+                }
             }
         }
     });

@@ -3,7 +3,12 @@ let mongoose = require('mongoose');
 // set up db connection
 let db = 'mongodb+srv://dbUser:dbUserPassword@hideio-wic1l.mongodb.net/Game?retryWrites=true&w=majority';
 // Connect to mongo
-mongoose.connect(db, {useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true})
+mongoose.connect(db, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+    useFindAndModify: false
+})
     .then(() => console.log("MongoDB Connected"))
     .catch(err => console.log(err));
 // Database models (schema)
