@@ -34,19 +34,17 @@ class Results extends Component {
                 </>)
         }
         // If client is a seeker and he loses
-        else if (this.state.playerRole === "seeker" && this.state.winner === "hider") {
+        else if (this.state.playerRole === "seeker" && this.state.winner === "hiders") {
             comp =
                 (<>
-                    <h1>Time's up!</h1>
                     <h5>We'll get 'em next Time</h5>
                     <h5>returning to lobby now...</h5>
                 </>)
         }
         // If client is a hider and he won
-        else if (this.state.playerRole === "hider" && this.state.winner === "hider") {
+        else if (this.state.playerRole === "hider" && this.state.winner === "hiders") {
             comp =
                 (<>
-                    <h1>Time's up!</h1>
                     <h5>You and your fellow hiders have won!</h5>
                     <h5>returning to lobby now...</h5>
                 </>)
