@@ -487,6 +487,9 @@ tr .btn-success {
 .instructions::-webkit-scrollbar {
     display: none;
   }
+.instructions h2, .instructions h5 {
+    font-family: 'Press Start 2p';
+}
 .instructions {
     width: 80%;
     height: 100%;
