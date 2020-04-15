@@ -745,9 +745,8 @@ class Game extends Component {
                         countdown={this.state.countdown}
                         playerState={this.state.playerState}
                     />
-
+                    <Results playerState={this.state.playerState} userName={this.state.userName}/>
                 </div>
-                <Results playerState={this.state.playerState} userName={this.state.userName}/>
             </>
         );
     }

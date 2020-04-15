@@ -29,37 +29,39 @@ class Results extends Component {
         if (this.state.playerRole === "seeker" && this.state.winner === "seeker") {
             comp =
                 (<>
-                    <p>Congrats {this.state.userName}...you've caught them all!</p>
-                    <p>returning to lobby now...</p>
+                    <h1>Congrats, you've caught 'em all!</h1>
+                    <h5>returning to lobby now...</h5>
                 </>)
         }
         // If client is a seeker and he loses
         else if (this.state.playerRole === "seeker" && this.state.winner === "hider") {
             comp =
                 (<>
-                    <p>Hey {this.state.userName}...you are a let down!</p>
-                    <p>returning to lobby now...</p>
+                    <h1>Time's up!</h1>
+                    <h5>We'll get 'em next Time</h5>
+                    <h5>returning to lobby now...</h5>
                 </>)
         }
         // If client is a hider and he won
         else if (this.state.playerRole === "hider" && this.state.winner === "hider") {
             comp =
                 (<>
-                    <p>Okay I guess you're slick...hiders win!</p>
-                    <p>returning to lobby now...</p>
+                    <h1>Time's up!</h1>
+                    <h5>You and your fellow hiders have won!</h5>
+                    <h5>returning to lobby now...</h5>
                 </>)
         }
         // If client is a hider and he lost
         else if (this.state.playerRole === "hider" && this.state.winner === "seeker") {
             comp =
                 (<>
-                    <p>All hiders have been caught...buncha losers ¯\_(ツ)_/¯</p>
-                    <p>returning to lobby now...</p>
+                    <h1>All of you were caught</h1>
+                    <h5>returning to lobby now...</h5>
                 </>)
         } else {
             comp = (<></>)
         }
-        return <>{comp}</>
+        return (<div className="PlayerText">{comp}</div>);
     }
 }
 
