@@ -424,8 +424,8 @@ io.on("connection", (socket) => {
 
             // after 5 seconds, leave to lobby
             setTimeout(() => {
-                console.log("ROOM WAS DELETED");
-                delete gamesInSession[room];
+                gamesInSession[room] = {};
+                console.log("ROOM WAS RESET", gamesInSession[room]);
                 io.to(room).emit("game finished");
             }, 5000);
         }
