@@ -11,6 +11,7 @@ import "../assets/App.css";
 import Sound from "react-sound";
 import ClickSound from "../sounds/click.js";
 import Header from "../assets/Header";
+import getSong from "../sounds/gameMusic";
 
 const cookies = new Cookies();
 
@@ -29,7 +30,6 @@ class LoginScreen extends Component {
 
         this.playSound = this.playSound.bind(this);
         this.checkExistingCookies = this.checkExistingCookies.bind(this);
-        this.songSelection = Math.floor(Math.random() * 5);
     }
 
     // i will check for existing cookies and ask the server if the email username combination exists
@@ -107,7 +107,6 @@ class LoginScreen extends Component {
         socket.off("user database check");
         socket.off("reconnect");
         socket.off("reconnect_error");
-
     }
 
 
@@ -150,29 +149,7 @@ class LoginScreen extends Component {
                 );
             }
         }
-        let songURL = "";
-        switch (this.songSelection) {
-            case 0:
-                songURL =
-                    "https://vgmdownloads.com/soundtracks/mega-man-bass-gba/pxegwbro/04%20Robot%20Museum.mp3";
-                break;
-            case 1:
-                songURL =
-                    "https://vgmdownloads.com/soundtracks/half-life-2-episode-two-rip-ost/itjbtwqb/03.%20Eon%20Trap.mp3";
-                break;
-            case 2:
-                songURL =
-                    "https://vgmdownloads.com/soundtracks/uncharted-the-nathan-drake-collection/jpqzmvae/1-01.%20Nate%27s%20Theme.mp3";
-                break;
-            case 3:
-                songURL =
-                    "https://vgmdownloads.com/soundtracks/super-smash-bros.-for-nintendo-3ds-and-wii-u-vol-02.-donkey-kong/lsdyorvy/19.%20Swinger%20Flinger.mp3";
-                break;
-            case 4:
-                songURL =
-                    "https://vgmdownloads.com/soundtracks/uncharted-the-nathan-drake-collection/jpqzmvae/1-01.%20Nate%27s%20Theme.mp3";
-                break;
-        }
+        let songURL = getSong();
         return (
             <div className="fade-in-2">
                 <Sound
