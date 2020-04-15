@@ -331,9 +331,10 @@ io.on("connection", (socket) => {
         // stop the intervals once the full time is over
         // mins * 60 0000 (60 seconds x 1 sec per milli) + 15 seconds of count down time
         gamesInSession[room].fullTime = setTimeout(() => {
+            io.to(room).emit("game in progress", {minutes: 0, seconds: 0});
             endGame(room, timerID);
             console.log("Time's up");
-        }, mins * 60000 + 16000);
+        }, mins * 60000 + 15000);
 
         console.log("set a timeout for ", gamesInSession[room].fullTime);
     });
