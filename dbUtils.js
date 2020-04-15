@@ -216,6 +216,30 @@ async function serverStartLobbies(){
     }
 }
 
+// updates the tWins and tGames of each player in this list
+async function updateWinners(players){
+    console.log("received winners: ", players);
+    for(let i = 0; i < players.length; i++){
+        await User.findOneAndUpdate(
+            {email: players[i]},
+            {$inc: {totalWins : 1, totalGamesPlayed: 1}}
+            );
+
+    }
+}
+
+// updates the tGames of each player in this list
+async function updateLosers(players){
+    console.log("receieved losers: ", players);
+    for(let i = 0; i < players.length; i++){
+        await User.findOneAndUpdate(
+            {email: players[i]},
+            {$inc: {totalGamesPlayed: 1}}
+        );
+
+    }
+}
+
 module.exports = {
     getLobbies,
     getUsers,
@@ -228,5 +252,7 @@ module.exports = {
     createUser,
     addUserToLobby,
     removeUserFromLobby,
-    serverStartLobbies
+    serverStartLobbies,
+    updateWinners,
+    updateLosers
 };

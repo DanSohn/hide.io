@@ -45,10 +45,11 @@ io.on("connection", (socket) => {
         dbUtil.getUser(email).then((user) => {
             console.log("recieved from dbutils ", user);
             socket_info["email"] = email;
+            socket_name[socket.id] = {email: socket_info["email"]};
             if (user !== null) {
                 socket.emit("user database check", user.username);
                 socket_info["name"] = user.username;
-                socket_name[socket.id] = socket_info["name"];
+                socket_name[socket.id].name = socket_info["name"];
             } else {
                 socket.emit("user database check", null);
             }
@@ -61,10 +62,12 @@ io.on("connection", (socket) => {
                 console.log("Did not provide all information. Try again");
             } else {
                 socket_info["name"] = info.username;
+                socket_name[socket.id].name = info.username;
             }
         });
     });
 
+    // for PlayerProfile. Returns information about the email user
     socket.on("player stats req", email => {
         dbUtil
             .getUser(email)
@@ -259,7 +262,7 @@ io.on("connection", (socket) => {
 
         // get all the sockets in the room, then choose one random socket to be the hider
         let roomies = Object.keys(io.sockets.adapter.rooms[room].sockets);
-
+        console.log("everyone in room: ", roomies);
         // if there is not enough sockets(people) in the lobby, tell the lobby so
         if (roomies.length < 2) {
             socket.emit('not enough peeps');
@@ -340,7 +343,6 @@ io.on("connection", (socket) => {
     socket.on("player caught", (info) => {
 
         let {playerID, room} = info;
-        // console.log(socket_name);
         // console.log("COLLISION WITH:", playerID, "room: ", room);
 
         // console.log(">>>>>>>>>>>>>>>>> " + gamesInSession[room].hiders[0] + "    " + playerID);
@@ -350,7 +352,7 @@ io.on("connection", (socket) => {
                     gamesInSession[room].hiders.splice(i, 1);
                     gamesInSession[room].caught.push(playerID);
 
-                    let playerName = socket_name[playerID];
+                    let playerName = socket_name[playerID].name;
                     socket.to(room).emit("I died", playerID, playerName);
                     io.to(room).emit("display player caught", playerName);
                     break;
@@ -381,18 +383,43 @@ io.on("connection", (socket) => {
     function endGame(room, timerID) {
         console.log("End Game has been called");
         //TODO get information about the players that were in that game and update their stats
-        //TODO emit an event to all players about who won the game between hiders and seeker
         clearInterval(timerID);
         clearInterval(gamesInSession[room].fullTime);
         // console.log(room + " <<<<<<<< ROOM ID" );
         if (gamesInSession.hasOwnProperty(room)) {
+            // hiders are in gameses. hiders and .caught combined
+            // hidersList is an array filled with alive hiders and caught hiders
+            let hidersList = gamesInSession[room].hiders.concat(gamesInSession[room].caught);
+            let hidersEmails = hidersList.map((socketID) => {
+               return socket_name[socketID].email;
+            });
+
+            // the seekers players is an array consisting of the seeker's socketID translated to email
+            let seekers = {group: "seeker", players: [socket_name[gamesInSession[room].seeker].email]}
+            let hiders = {group: "hiders", players: hidersEmails}
+            let winner, loser;
             if (gamesInSession[room].hiders.length === 0) {
                 console.log("<<<<<<<<<<<<<<SEEKER WINS>>>>>>>>>>>.");
-                io.to(room).emit("game winner", "seeker");
+                winner = seekers;
+                loser = hiders;
             } else if (gamesInSession[room].hiders.length > 0) {
                 console.log("<<<<<<<<<<<<<<HIDER WINS>>>>>>>>>>>.");
-                io.to(room).emit("game winner", "hider");
+                winner = hiders;
+                loser = seekers;
+
             }
+            io.to(room).emit("game winner", winner.group);
+
+            dbUtil
+                .updateWinners(winner.players)
+                .then(() => console.log("Winners have been updated"))
+                .catch(err=> console.log(err));
+
+            dbUtil
+                .updateLosers(loser.players)
+                .then(() => console.log("Losers have been updated"))
+                .catch(err=> console.log(err));
+
             // after 5 seconds, leave to lobby
             setTimeout(() => {
                 console.log("ROOM WAS DELETED");
