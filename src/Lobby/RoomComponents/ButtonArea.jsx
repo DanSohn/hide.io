@@ -6,7 +6,7 @@ export default function ButtonArea(props) {
         setting = null;
 
     if (time !== "") {
-        setting = <h1 style={{ fontSize: 110 }}>{time}</h1>;
+        setting = <h1 className="ff" style={{ fontSize: 110 }}>{time}</h1>;
     } else {
         setting = (
             // <button
