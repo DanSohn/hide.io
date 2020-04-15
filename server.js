@@ -373,6 +373,7 @@ io.on("connection", (socket) => {
                 console.log("<<<<<<<<<<<<<<HIDER WINS>>>>>>>>>>>.");
                 io.to(room).emit("game winner", "hider");
             }
+            io.to(room).emit("game finished");
             delete gamesInSession[room];
             console.log("ROOM WAS DELETED");
         }
