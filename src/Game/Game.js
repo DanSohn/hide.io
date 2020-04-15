@@ -93,6 +93,8 @@ class Game extends Component {
             timeLimit: this.props.location.state.timeLimit,
             countdown: true,
 
+            gameOver: false,
+
             //This will be handling current game functions, and constants
             map: {
                 cols: this.props.location.state.map.cols,
@@ -150,8 +152,17 @@ class Game extends Component {
         }
 
         this.update_player_component = this.update_player_component.bind(this);
+<<<<<<< HEAD
+
+        socket.on("game finished" , ()=> {
+            this.setState({gameOver: true})
+
+        });
+    
+=======
         this.tick = this.tick.bind(this);
         this.endCountdown = this.endCountdown.bind(this);
+>>>>>>> 6ae8a43eeab7ed36fdaa4e8cee34169a2987b7b2
     }
 
     //init game state seppereate from did load. could be used for start restrictions.
@@ -208,7 +219,7 @@ class Game extends Component {
                         this.ctx.fillStyle = "#0c0c0c";
                         this.updateWalls(x, y);
                     }
-                    this.ctx.strokeStyle = "#FF0000";
+                    this.ctx.strokeStyle = "#A1A6B4";
 
                     this.ctx.stroke();
                     this.ctx.fill();
@@ -372,11 +383,33 @@ class Game extends Component {
         this.setState({hitpoints: sortedAngles});
     }
 
+<<<<<<< HEAD
+
+=======
     drawEnamy() {
     }
+>>>>>>> 6ae8a43eeab7ed36fdaa4e8cee34169a2987b7b2
 
     // Goes through each hitpoint to create a visibile light polygon - then a circular light emits from players x y position- first circle is more intense than second circle
     drawLight() {
+<<<<<<< HEAD
+        if(this.state.alive){
+            let playerX = this.Player.screenX - this.Player.width / 2 + 32;
+            let playerY = this.Player.screenY - this.Player.height / 2 + 32;
+    
+            let lightRadius = this.state.playerState === "seeker" ? 300 : 150;
+    
+            this.ctx.save();
+            let fill = this.ctx.createRadialGradient(playerX, playerY, 1, playerX, playerY, lightRadius);
+            fill.addColorStop(0, "rgba(255, 255, 255, 0.65)");
+            fill.addColorStop(0.9, "rgba(255, 255, 255, 0.01)");
+            fill.addColorStop(1, "rgba(255, 255, 255, 0.009)");
+    
+            this.ctx.fillStyle = fill;
+    
+    
+    
+=======
         let playerX = this.Player.screenX - this.Player.width / 2 + 32;
         let playerY = this.Player.screenY - this.Player.height / 2 + 32;
 
@@ -393,19 +426,26 @@ class Game extends Component {
 
         this.ctx.beginPath();
         if (this.state.hitpoints.length > 0) {
+>>>>>>> 6ae8a43eeab7ed36fdaa4e8cee34169a2987b7b2
             this.ctx.beginPath();
-            this.ctx.moveTo(this.state.hitpoints[0].x, this.state.hitpoints[0].y);
-            for (let i = 1; i < this.state.hitpoints.length; i++) {
-                let intersect = this.state.hitpoints[i];
-                this.ctx.lineTo(intersect.x, intersect.y);
+            if (this.state.hitpoints.length > 0) {
+                this.ctx.beginPath();
+                this.ctx.moveTo(this.state.hitpoints[0].x, this.state.hitpoints[0].y);
+                for (let i = 1; i < this.state.hitpoints.length; i++) {
+                    let intersect = this.state.hitpoints[i];
+                    this.ctx.lineTo(intersect.x, intersect.y);
+                }
+            } else {
+                console.log(playerX, this.camera.x);
+                this.ctx.rect(0, 0, this.camera.width, this.camera.height)
             }
-        } else {
-            console.log(playerX, this.camera.x);
-            this.ctx.rect(0, 0, this.camera.width, this.camera.height)
-        }
-        this.ctx.fill();
-
-        this.ctx.restore();
+            this.ctx.fill();
+    
+            this.ctx.restore();
+        }else{
+            return;
+        };
+       
     }
 
     detectEnamies(playerValues) {
@@ -478,8 +518,14 @@ class Game extends Component {
             64
         );
         // set the playerColor
-        this.ctx.fillStyle = this.state.playerColor;
-        this.ctx.fill();
+        if(this.state.alive === true){
+            this.ctx.fillStyle = this.state.playerColor;
+            this.ctx.fill();
+
+        }else{
+            this.ctx.strokeStyle = this.state.playerColor;
+            this.ctx.stroke();
+        }
     }
 
     update(delta) {
@@ -509,6 +555,13 @@ class Game extends Component {
 
     //each game frame
     tick() {
+<<<<<<< HEAD
+        if(this.state.gameOver){
+
+        }
+
+=======
+>>>>>>> 6ae8a43eeab7ed36fdaa4e8cee34169a2987b7b2
         this.ctx.clearRect(0, 0, 1024, 640);
         let delta = 0.25;
         delta = Math.min(delta, 0.25); // maximum delta of 250 ms
@@ -521,9 +574,9 @@ class Game extends Component {
         };
 
         //stops movement if they died.
-        if (this.state.alive) {
+
             this.update(delta);
-        }
+        
         this.gameRender();
 
         this.requestID = window.requestAnimationFrame(this.tick);
@@ -677,6 +730,16 @@ class Game extends Component {
     }
 
     render() {
+<<<<<<< HEAD
+        // console.log(this.state.playerState==='seeker' && this.state.game_status === 'not started');
+        let comp1;
+        let comp2;
+
+        let comp3;
+        if(this.state.networkError){
+            console.log("Going to main menu");
+            return <Redirect to="/MainMenu" />
+=======
         // if the game is completed, head back to lobby
         if (this.state.game_status === "Completed") {
             return (
@@ -687,11 +750,62 @@ class Game extends Component {
                     }
                 }}/>
             );
+>>>>>>> 6ae8a43eeab7ed36fdaa4e8cee34169a2987b7b2
         }
 
         // console.log(this.state.playerState==='seeker' && this.state.game_status === 'not started');
         // if client is a seeker and game has not started (15 seconds wait), then canvas should be black and waiting
         let canvasDisplay = this.state.playerState === 'seeker' && this.state.game_status === 'not started' ? ['z-depth-5 darkness', ''] : ['', 'z-depth-5 fade-in'];
+<<<<<<< HEAD
+        if (this.state.countdown === true) {
+            if (this.state.playerState === 'seeker') {
+                comp1 = "You're the seeker";
+                comp2 = "Objective: Hunt them down.";
+            }
+            else {
+                comp1 = "You are a hider";
+                comp2 = "Objective: Hide BITCH";
+            }
+            dragon = (
+                <React.Fragment>
+                    <h1>{comp1}</h1>
+                    <h5>{comp2}</h5>
+                </React.Fragment>
+            );
+        } else if (this.state.countdown === false) {
+            dragon = (
+                <React.Fragment>
+                    <h1></h1>
+                    <h5></h5>
+                </React.Fragment>
+            );
+        } else if( this.state.gameOver === true ){
+            comp3 = <Redirect to={{
+                pathname: '/Room',
+                state: {
+                    /*name: this.state.userName,
+                    email: this.state.email,
+                    */
+                    join_code: this.state.gameID,
+                }
+            }} />
+        }
+        return <React.Fragment>
+        <Timer gameDuration={this.state.timeLimit.split(" ")[0]}
+            playerState={this.state.playerState} />
+        <div className="gameAction">
+            <AliveList />
+            <div className={canvasDisplay[0]} />
+            <canvas className={canvasDisplay[1]} ref="canvas" width={1024} height={620} />
+            <div className="PlayerText">
+                <div className="fade-out-15">{dragon}</div>
+            </div>
+        </div>
+        <Results playerState={this.state.playerState} userName={this.state.userName}/>
+    </React.Fragment>
+
+        
+=======
         return (
             <>
                 <Timer gameDuration={this.state.timeLimit.split(" ")[0]}
@@ -711,6 +825,7 @@ class Game extends Component {
                 <Results playerState={this.state.playerState} userName={this.state.userName}/>
             </>
         );
+>>>>>>> 6ae8a43eeab7ed36fdaa4e8cee34169a2987b7b2
     }
 }
 
