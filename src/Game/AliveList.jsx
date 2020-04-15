@@ -1,14 +1,7 @@
 import React, { Component } from "react";
-
 import OtherPlayers from "./OtherPlayers";
-
 import "../assets/App.css";
-
-import Wall from "./Wall";
-import Camera from "./Camera";
 import Player from "./PlayerTest";
-import { socket } from "../assets/socket";
-import Point from "./Point";
 // import Keyboard from './Keyboard'
 let Keyboard = {};
 
@@ -43,9 +36,13 @@ class AliveList extends Component {
         document.addEventListener("keydown", this.tabFunction);
         document.addEventListener("keyup", this.tabFunctionUp);
     }
-    componentWillUnmount() {}
+    componentWillUnmount() {
+        document.removeEventListener("keydown", this.tabFunction);
+        document.removeEventListener("keyup", this.tabFunctionUp);
+    }
+
     render() {
-        let comp;
+        let comp = <></>;
         if (this.state.show === true) {
             comp = (
                 <div className="alivePlayers">
@@ -71,10 +68,9 @@ class AliveList extends Component {
                     </ul>
                 </div>
             );
-        } else {
-            comp = <div></div>;
         }
-        return <React.Fragment>{comp}</React.Fragment>;
+
+        return <>{comp}</>;
     }
 }
 export default AliveList;

@@ -1,12 +1,12 @@
-import React, {Component} from "react";
-import {Redirect} from "react-router-dom";
-import {socket} from "../assets/socket";
+import React, { Component } from "react";
+import { Redirect } from "react-router-dom";
+import { socket } from "../assets/socket";
 import Cookies from 'universal-cookie';
 
 import Header from "../assets/Header";
 import Break from "../assets/Break";
-import {auth} from "../assets/auth";
-import {googleAuth} from "./LoginScreen";
+import { auth } from "../assets/auth";
+import { googleAuth } from "./LoginScreen";
 
 const cookies = new Cookies();
 
@@ -51,7 +51,7 @@ class UsernameSelection extends Component {
     }
 
     submitUsername() {
-        cookies.set("name", this.state.typing, {path: "/", maxAge: 60 * 60 * 24});
+        cookies.set("name", this.state.typing, { path: "/", maxAge: 60 * 60 * 24 });
 
         socket.emit("create user", {
             username: this.state.typing,
@@ -67,9 +67,9 @@ class UsernameSelection extends Component {
         let component;
         if (this.state.username === "") {
             component = (
-                <div className="z-depth-5 GameWindow">
-                    <Header showBack={false} />
-                    <Break />
+                <div className="GameWindow">
+                    <Header title="Choose Username" showBack={false}/>
+                    <Break/>
                     <div className="ContentScreen">
                         <div className="usernameSelection">
                             <h2>Choose GamerTag</h2>
@@ -83,13 +83,8 @@ class UsernameSelection extends Component {
                                     onChange={this.handleKeyboard}
                                     value={this.state.typing}
                                 />
-                                <br/>
-                                <button
-                                    className="btn btn-outline-secondary"
-                                    type="button"
-                                >
-                                    Submit
-                                </button>
+                                <br />
+                                <button type="submit"><span className='start-btn-blue ff-20 width-250'>SUBMIT</span></button>
                             </form>
                         </div>
                     </div>
@@ -103,7 +98,7 @@ class UsernameSelection extends Component {
                         email: this.state.email,
                         name: this.state.username,
                     }*/
-                }}/>
+                }} />
             );
         }
         return <>{component}</>;

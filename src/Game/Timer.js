@@ -13,6 +13,13 @@ class Timer extends Component {
             gamestage1: true,
             time: { minutes: this.props.gameDuration, seconds: 15 },
         };
+
+        this.endCountdown = this.endCountdown.bind(this);
+    }
+
+    endCountdown(){
+        console.log("Countdown completed");
+        this.props.endCount();
     }
 
     updatePrompt(){
@@ -26,6 +33,12 @@ class Timer extends Component {
 
     componentDidMount() {
         this.updatePrompt();
+
+        socket.on("countdown ended", () => {
+            console.log("Received event < countdown ended >");
+            this.endCountdown();
+        })
+
         socket.on("game in progress", (game_time) => {
             if (game_time.seconds === 0 && this.state.gamestage1) {
                 this.setState({ gamestage1: false, ingame_prompt: "Time Remaining" });
@@ -38,6 +51,11 @@ class Timer extends Component {
         });
     }
 
+    componentWillUnmount() {
+        socket.off("countdown ended");
+        socket.off("game in progress");
+    }
+
     render() {
         let comp;
         if (this.state.gamestage1) {
@@ -47,6 +65,7 @@ class Timer extends Component {
                 </h1>
             );
         } else {
+            // if we reach 0 min 0 sec, display times up. Else display prompt with M:SS
             comp = (
                 <div>
                     {this.state.time.minutes === 0 && this.state.time.seconds === 0 ? (

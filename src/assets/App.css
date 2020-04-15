@@ -1,3 +1,7 @@
+@font-face {
+    font-family: 'Press Start 2p';
+}
+
 body {
     background-color: #181a1f;
     position: fixed;
@@ -11,29 +15,163 @@ body {
     font-family: "Montserrat", sans-serif;
     text-align: center;
 }
+
 .z-depth-1 {
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
-  }
-  
-  .z-depth-1-half {
+}
+
+.z-depth-1-half {
     box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.14), 0 1px 7px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -1px rgba(0, 0, 0, 0.2);
-  }
-  
-  .z-depth-2 {
+}
+
+.z-depth-2 {
     box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
-  }
-  
-  .z-depth-3 {
+}
+
+.z-depth-3 {
     box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12), 0 3px 5px -1px rgba(0, 0, 0, 0.3);
-  }
-  
-  .z-depth-4 {
+}
+
+.z-depth-4 {
     box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.3);
-  }
-  
-  .z-depth-5 {
+}
+
+.z-depth-5 {
     box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14), 0 6px 30px 5px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.3);
-  }
+}
+
+.video-game-button {
+    text-shadow: 1px 1px pink, -1px -1px maroon;
+
+    line-height: 1.5em;
+    text-align: center;
+    display: inline-block;
+    width: 1.5em;
+    -webkit-border-radius: .75em;
+    -moz-border-radius: .75em;
+    -o-border-radius: .75em;
+    border-radius: .75em;
+    background-color: red;
+    -webkit-box-shadow: 0 .2em maroon;
+    -moz-box-shadow: 0 .2em maroon;
+    -o-box-shadow: 0 .2em maroon;
+    box-shadow: 0 .2em maroon;
+    color: red;
+    margin: 5px;
+    background-color: red;
+    background-image: -o-linear-gradient(left top, pink 3%, red 22%, maroon 99%);
+    background-image: -moz-linear-gradient(left top, pink 3%, red 22%, maroon 99%);
+    background-image: -webkit-linear-gradient(left top, pink 3%, red 22%, maroon 99%);
+    background-image: linear-gradient(left top, pink 3%, red 22%, maroon 99%);
+    cursor: pointer;
+    padding-left: 5px;
+}
+
+.start-btn, .start-btn-red, .start-btn-grey, .start-btn-green, .start-btn-blue, .start-btn-black {
+    font-family: 'Press Start 2p';
+
+    text-align: center;
+    display: inline-block;
+    margin: 5px;
+    font-weight: bold;
+    padding: 10px 0 10px 5px;
+    text-shadow: -1px -1px black, 1px 1px white;
+    color: darkred;
+    -webkit-border-radius: 7px;
+    -moz-border-radius: 7px;
+    -o-border-radius: 7px;
+    border-radius: 7px;
+    cursor: pointer;
+}
+
+.ff-5 {
+    font-size: 5pt;
+}
+
+.ff-10 {
+    font-size: 10pt;
+}
+
+.ff-15 {
+    font-size: 15pt;
+}
+
+.ff-20 {
+    font-size: 20pt;
+}
+
+.height-75 {
+    height: 75px;
+}
+
+.width-75 {
+    width: 75px;
+}
+
+.width-100 {
+    width: 100px;
+}
+
+.width-150 {
+    width: 150px;
+}
+
+.width-250 {
+    width: 250px;
+}
+
+.width-350 {
+    width: 350px;
+}
+
+.start-btn {
+    display: inline-block;
+}
+
+.start-btn-red {
+    background-color: #ff6e63;
+    color: red;
+    box-shadow: 0 .5em red;
+}
+
+.start-btn-black {
+    background-color: darkgrey;
+    color: darkslategrey;
+    box-shadow: 0 .3em darkslategrey;
+}
+
+.start-btn-grey {
+    background-color: lightgrey;
+    color: grey;
+    box-shadow: 0 .5em grey;
+}
+
+.start-btn-green {
+    background-color: lightgreen;
+    color: green;
+    box-shadow: 0 .2em green;
+}
+
+.start-btn-blue {
+    background-color: lightblue;
+    color: lightseagreen;
+    box-shadow: 0 .5em lightseagreen;
+}
+
+.roomActions .start-btn-green, .menuScreen .start-btn-green {
+    box-shadow: 0 .5em green;
+}
+
+.video-game-button:active, .start-btn-red:active, .start-btn-grey:active, .start-btn-blue:active, .start-btn-green:active, .start-btn-black:active {
+    box-shadow: none;
+    position: relative;
+    top: .6em;
+}
+
+.buttonColumn {
+    width: 50px;
+}
+
 .fade-out-15 {
     animation: fadeOut ease 15s;
     -webkit-animation: fadeOut ease 15s;
@@ -41,6 +179,7 @@ body {
     -o-animation: fadeOut ease 15s;
     -ms-animation: fadeOut ease 15s;
 }
+
 @keyframes fadeOut {
     0% {
         opacity: 1;
@@ -85,6 +224,7 @@ body {
         opacity: 0;
     }
 }
+
 .fade-in {
     animation: fadeIn ease 8s;
     -webkit-animation: fadeIn ease 8s;
@@ -92,6 +232,7 @@ body {
     -o-animation: fadeIn ease 8s;
     -ms-animation: fadeIn ease 8s;
 }
+
 .fade-in-2 {
     animation: fadeIn ease 2s;
     -webkit-animation: fadeIn ease 2s;
@@ -99,6 +240,7 @@ body {
     -o-animation: fadeIn ease 2s;
     -ms-animation: fadeIn ease 2s;
 }
+
 @keyframes fadeIn {
     0% {
         opacity: 0;
@@ -143,26 +285,30 @@ body {
         opacity: 1;
     }
 }
+
 .PlayerText {
     display: flex;
     flex-direction: column;
     position: absolute;
-    margin: 50px 0px 0px 0px;
+    margin: 50px 0 0 0;
 }
+
 h1 {
     font-size: 50px;
-    margin: 10px 0px 0px 0px;
+    margin: 10px 0 0 0;
 }
 
 div {
-    margin: 0px;
+    margin: 0;
 }
+
 .gameAction {
     display: flex;
     justify-content: center;
 }
+
 .alivePlayers {
-    margin: 0px 0px 0px 550px;
+    margin: 0 0 0 550px;
     background: rgba(0, 0, 0, 0.5);
     border-radius: 50px;
     border: 2px solid #52565c;
@@ -170,18 +316,22 @@ div {
     width: 50px;
     height: 300px;
 }
+
 .aliveList {
-    padding: 10px 0px 0px 0px;
+    padding: 10px 0 0 0;
     list-style-type: none;
 }
+
 .aliveList li {
     padding: 10px;
 }
+
 .aliveList li img {
     width: 25px;
     height: 25px;
     border-radius: 50px;
 }
+
 .GameWindow {
     background-color: #282c34;
     position: relative;
@@ -190,17 +340,19 @@ div {
     justify-content: center;
     height: 750px;
     width: 1000px;
-    padding: 0px;
+    padding: 0;
     border-radius: 5%;
     /* border: 5px solid #52565c; */
     z-index: 1000;
 }
+
 .GameWindow .title {
     height: 10%;
     justify-content: start;
     order: 1;
     width: 100%;
 }
+
 .gameWindow div {
     position: relative;
     width: 100%;
@@ -215,6 +367,7 @@ div {
     height: 20%;
     width: 100%;
 }
+
 .GameWindow .header {
     position: relative;
     display: flex;
@@ -224,9 +377,11 @@ div {
     height: 20%;
     border-bottom: 3px solid #e5c100;
 }
+
 table {
     width: 100%;
 }
+
 table,
 tr,
 td {
@@ -235,23 +390,28 @@ td {
 
 .header button,
 .header img {
-    margin: 0px;
+    margin: 0;
     width: 75px;
     height: 75px;
-    border-radius: 50%;
+    border-radius: 5px;
 }
+
 .backButton {
     order: 1;
     flex: 1;
 }
+
 .logo {
+    font-family: 'Press Start 2p';
     order: 2;
     flex: 2;
 }
+
 .profile {
     order: 3;
     flex: 1;
 }
+
 .GameWindow .break {
     flex-basis: 100%;
     height: 0;
@@ -264,7 +424,7 @@ td {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0px 0px 100px 0px;
+    padding: 0 0 100px 0;
 }
 
 .lobbySelection,
@@ -286,6 +446,7 @@ tr .btn-success {
     height: 80%;
     width: 100%;
 }
+
 .createLobby,
 .createLobbyText,
 .roomActions,
@@ -299,109 +460,158 @@ tr .btn-success {
 }
 
 .instructions {
-    width:100%;
-    height:100%;
+    width: 100%;
+    height: 100%;
     overflow: auto;
-    display:flex;
+    display: flex;
     flex-direction: column;
     align-items: center;
 }
+
 .roomActions,
 .chat {
-    height: 100%;
+    height: 95%;
 }
+
 .inputBox input {
-    border-radius: 0px;
+    border-radius: 0;
     width: 75%;
 }
+
 .inputBox button {
-    border-radius: 0px;
+    border-radius: 0;
     width: 10%;
 }
 
-.input-group mb-3 {
-    margin: 0%;
+.input-group {
+    margin: 0;
 }
+
 .chat {
-    border: 5px solid navajowhite;
     text-align: left;
     overflow-y: auto;
     word-break: break-word;
 }
 
 .chatRoom {
+    border: 5px solid navajowhite;
     height: 100%;
 }
+
+
 #messages {
     margin: 5%;
 }
+
 .chatRoom,
 .online {
     margin: 2%;
     height: 100%;
 }
+
 .online {
+    justify-content: flex-start;
     border: 5px solid goldenrod;
     border-radius: 0px;
 }
 
-.createLobbyText {
-    margin: 0px 0px 0px 50px;
+.online ul {
+    margin-top: 20px;
+    padding-inline-start: 0;
+    font-size: 25px;
 }
+
+.online li {
+    padding-bottom: 10px;
+}
+
+.createLobbyText {
+    margin: 0 0 0 50px;
+}
+
+.createLobbyForm .form-control, .createLobbyForm select {
+    margin-top: 2px;
+    margin-bottom: 10px;
+}
+
 .createLobbyForm {
     display: flex;
     order: 3;
     flex: 2;
 }
+
 .createLobbyContainer0 {
     height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
 }
+
 #messages {
-    padding: 0px;
+    padding: 0;
 }
 
 .createLobbyContainer {
     order: 2;
     flex: 1;
 }
+
 select,
 .createLobbyForm input {
     margin: 5px;
 }
+
 .createLobbyForm {
     margin: 20px;
     align-items: center;
     position: relative;
     height: 75%;
 }
+
 .createLobbyText h2 {
-    text-align: left;
+    font-family: 'Press Start 2p';
+    margin-top: 2px;
+    margin-bottom: 10px;
+    text-align: right;
 }
+
+.profileLabels h2 {
+    padding-bottom: 4px;
+    padding-top: 4px;
+    font-family: 'Press Start 2p';
+    font-size: 25px;
+}
+
 .profileLabels {
     padding: 20px;
+
     text-align: right;
     order: 1;
     flex: 1;
 }
 
+.profileResults .form-control {
+    margin-top: 1px;
+    margin-bottom: 10px;
+}
+
 .profileResults {
+
     order: 2;
     flex: 2;
 }
 
 .darkness {
     position: absolute;
-    width:1024px;
-    height:620px;
+    width: 1024px;
+    height: 620px;
     background-color: black;
 }
 
 .profileResults input:read-only {
     background-color: #babbbe;
 }
+
 .profileResults input:read-only::-webkit-input-placeholder {
     color: #5e5f61;
 }
@@ -410,36 +620,49 @@ select,
     width: 50%;
     margin: 1%;
 }
-.createLobbyForm button {
-    align-self: center;
-    margin: 20px;
-    height: 30%;
-    width: 50%;
+
+.usernameSelection button, .createLobbyContainer button {
+    background-color: transparent;
+    background-repeat: no-repeat;
+    border: none;
+    cursor: pointer;
+    overflow: hidden;
+    outline: none;
+    height: 100px
 }
+
 .roomActions {
     justify-content: space-between;
+    align-items: center;
 }
+
 .roomActions button {
     width: 100%;
     height: 20%;
 }
 
 .createLobby a {
-    display:flex;
-    width:100%;
-    height:100%;
+    text-decoration: none;
+    display: flex;
+    width: 100%;
+    margin-bottom: 20px;
 }
 
 .createLobby button {
     margin: 20px;
-    width:80%;
+    width: 80%;
 }
-.menuScreen button,
-.LoginScreen button {
-    margin: 20px;
-    width: 125px;
+
+.menuScreen {
+    display: flex;
+    flex-direction: column;
+}
+
+.menuScreen span {
+    margin-bottom: 20px;
+    /*width: 125px;
     height: 125px;
-    border-radius: 50%;
+    border-radius: 50%; */
 }
 
 input {

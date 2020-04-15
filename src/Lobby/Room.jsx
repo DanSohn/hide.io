@@ -1,19 +1,22 @@
-import React, {Component} from "react";
-import {Redirect} from "react-router-dom";
-import {socket} from "../assets/socket";
+import React, { Component } from "react";
+import { Redirect } from "react-router-dom";
 import Cookies from 'universal-cookie';
+
+import { socket } from "../assets/socket";
+import { auth } from "../assets/auth";
+import { googleAuth } from "../Login/LoginScreen";
 
 import Header from "../assets/Header";
 import Break from "../assets/Break";
-import Chat from "./Chat";
-import GameSettings from "./GameSettings";
+import Chat from "./RoomComponents/Chat";
+import GameSettings from "./RoomComponents/GameSettings";
+import PlayerList from "./RoomComponents/PlayerList";
+import ButtonArea from "./RoomComponents/ButtonArea";
 
-import {returnGameMode, returnGameMap, returnGameTime} from "../assets/utils";
+import { returnGameMode, returnGameMap, returnGameTime } from "../assets/utils";
+import ClickSound from "../sounds/click";
 import "bootstrap/dist/js/bootstrap.bundle";
 import "../assets/App.css";
-import ClickSound from "../sounds/click";
-import {auth} from "../assets/auth";
-import {googleAuth} from "../Login/LoginScreen";
 
 const cookies = new Cookies();
 
@@ -37,17 +40,17 @@ class Room extends Component {
             players: {},
             playersList: [],
             time: "",
+            creator: false
         };
         this.goPrevious = this.goPrevious.bind(this);
         this.startTimer = this.startTimer.bind(this);
-        this.start = this.start.bind(this);
 
         // this lets the socket join the specific room
         socket.emit("ask for lobby info", this.state.roomID);
     }
 
     goPrevious() {
-        socket.emit("leave lobby", {room: this.state.roomID, email: this.state.email});
+        socket.emit("leave lobby", { room: this.state.roomID, email: this.state.email });
         // i ensure everything is first handled properly in the server, and is up to date
         // before i leave
         socket.on("may successfully leave lobby", () => {
@@ -59,16 +62,15 @@ class Room extends Component {
     }
 
     startTimer() {
+        console.log("Starting timer!");
         // 3 second timer currently
         // TimerSound();
         socket.emit("lobby start timer", { countdowntime: 4300, room: this.state.roomID });
-    }
-
-    start() {
         this.setState({
-            start: true,
+            creator: true
         });
     }
+
 
     componentDidMount() {
         // socket.emit("player joined");
@@ -94,8 +96,14 @@ class Room extends Component {
             this.setState({
                 playersList: lobby_users,
             });
+
         });
 
+        /*// this event occurs on function startTimer(), it will count down from 3 to start the game
+        socket.on("game starting ack", () => {
+            socket.emit("lobby start timer", { countdowntime: 4300, room: this.state.roomID });
+        });
+*/
         socket.on("lobby current timer", (countdown) => {
             console.log(countdown);
             this.setState({
@@ -105,14 +113,25 @@ class Room extends Component {
             // after i reach 0, call startGame
             if (countdown <= 0) {
                 console.log("starting game");
-                this.start();
+                this.setState({
+                    start: true
+                })
             }
         });
-        socket.on('youre the seeker', () => { this.state.playerState = 'seeker'; console.log("Congrats! Youre the seeker!") });
+        socket.on('youre the seeker', () => {
+            this.setState({
+                playerState: "seeker"
+            })
+            console.log("Congrats! Youre the seeker!")
+        });
 
-        socket.on('enough peeps', ()=>this.setState({ header: "Game is starting in ..."}));
-        socket.on('not enough peeps', ()=>this.setState({ header: "Not Enough Players to Begin the Game"}));
+        socket.on('enough peeps', ()=>
+            this.setState({ header: "Game is starting in ..."}));
 
+        socket.on('not enough peeps', ()=>
+            this.setState({ header: "Not Enough Players to Begin the Game"}));
+
+        // if the server disconnects, go to login screen, remove cookies and sign out of the google account
         socket.on("reconnect_error", (error) => {
             // console.log("Error! Disconnected from server", error);
             console.log("Error! Can't connect to server");
@@ -132,13 +151,18 @@ class Room extends Component {
     componentWillUnmount() {
         socket.off("giving lobby info");
         socket.off("update lobby list");
+        socket.off("game starting ack");
+
         socket.off("lobby current timer");
         socket.off("lobby start timer");
         socket.off("not enough peeps");
         socket.off("enough peeps")
         socket.off("reconnect_error");
-
+        socket.off("may successfully leave lobby");
     }
+
+
+
 
     render() {
         let comp;
@@ -146,12 +170,12 @@ class Room extends Component {
         if (this.state.previous) {
             comp = (
                 <Redirect to={{
-                pathname: '/LobbyScreen',
-                /*state: {
-                    name: this.state.userName,
-                    email: this.state.email,
-                }*/
-            }}/>
+                    pathname: '/LobbyScreen',
+                    /*state: {
+                        name: this.state.userName,
+                        email: this.state.email,
+                    }*/
+                }} />
             );
         } else if (this.state.start) {
             comp = (
@@ -164,9 +188,11 @@ class Room extends Component {
                     map: this.state.game_map,
                     timeLimit: this.state.game_time,
                     mode: this.state.game_mode,
-                    playerUsername: this.state.userName
+                    playerUsername: this.state.userName,
+                    creator: this.state.creator
                 }
             }}/>
+
             );
 
         } else {
@@ -176,31 +202,23 @@ class Room extends Component {
                         previous={this.goPrevious}
                         title={this.state.title}
                     />
-                    <Break/>
+                    <Break />
                     <div className="ContentScreen">
                         <Chat userName={this.state.userName} roomID={this.state.roomID} />
 
                         <div className="roomActions">
-                            <h5>{this.state.header}</h5>
-                            <h1>{this.state.time}</h1>
-                            <button
-                                className="z-depth-3 btn btn-success"
-                                onClick={this.startTimer}>
-                                Start Game
-                            </button>
+                            <ButtonArea
+                                timerCallback={this.startTimer}
+                                header={this.state.header}
+                                time={this.state.time}
+                            />
                             <GameSettings
                                 mode={this.state.game_mode}
                                 time={this.state.game_time}
                                 map={this.state.game_map.name}
                             />
                         </div>
-                        <div className="online">
-                            <ul>
-                                {this.state.playersList.map((player, index) => {
-                                    return <li style={{listStyleType: "none"}} key={index}>{player.name}</li>;
-                                })}
-                            </ul>
-                        </div>
+                        <PlayerList playersList={this.state.playersList} />
                     </div>
                 </div>
             );

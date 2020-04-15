@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import OtherPlayers from "./OtherPlayers";
 
 import "../assets/App.css";
@@ -6,7 +6,7 @@ import "../assets/App.css";
 import Wall from "./Wall";
 import Camera from "./Camera";
 import Player from "./PlayerTest";
-import { socket } from "../assets/socket";
+import {socket} from "../assets/socket";
 
 import Point from "./Point";
 import Timer from "../Game/Timer";
@@ -16,6 +16,7 @@ import {auth} from "../assets/auth";
 import {googleAuth} from "../Login/LoginScreen";
 import Cookies from "universal-cookie";
 import Results from "./Results";
+import GameObjective from "./GameObjective";
 
 const cookies = new Cookies();
 
@@ -68,18 +69,18 @@ class Game extends Component {
         super(props);
 
         document.body.style.overflow = "hidden";
-
+        // for the window animationframe
+        let requestID;
         this.state = {
             context: this.context,
             windowHeight: window.innerHeight,
             windowWidth: window.innerWidth,
             msg: "",
-            num_of_players: this.props.numPlayers,
-            players: this.props.players,
+            players: this.props.location.state.players,
             playerState: this.props.location.state.playerState,
             playerColor: "",
-            userName: this.props.userName,
-
+            userName: this.props.location.state.playerUsername,
+            creator: this.props.location.state.creator,
             gameID: this.props.location.state.gameID,
             game_status: "not started",
             walls: [],
@@ -128,10 +129,10 @@ class Game extends Component {
             },
         };
 
-        this.state.playerColor = this.props.playerState === "seeker" ? "#D5C7BC" : '#' + Math.floor(Math.random() * 16777215).toString(16);
+        this.state.playerColor = this.props.location.state.playerState === "seeker" ? "#D5C7BC" : '#' + Math.floor(Math.random() * 16777215).toString(16);
 
         console.log("AM I THE SEEKER?", this.state.playerState);
-        console.log(this.props.playerState);
+        console.log("Am i the button presser?", this.state.creator);
         // TODO: do stuff when getting the location information
         socket.on('player moved', (playerinfo) => {
 
@@ -142,24 +143,26 @@ class Game extends Component {
         });
         socket.on("I died", (playerID, playerName) => {
             if (playerID === socket.id) {
-                this.setState({ alive: false })
+                this.setState({alive: false})
             }
 
         });
+        if(this.state.creator){
+            socket.emit("start game timer", this.state.gameID, this.state.timeLimit);
+        }
 
-        // if the game is initiated, let the seeker move
-        socket.on('game in progress', (game_time) => {
-            if (game_time.seconds === 0) {
-                this.state.game_status = 'started';
-            }
-        });
         this.update_player_component = this.update_player_component.bind(this);
+<<<<<<< HEAD
 
         socket.on("game finished" , ()=> {
             this.setState({gameOver: true})
 
         });
     
+=======
+        this.tick = this.tick.bind(this);
+        this.endCountdown = this.endCountdown.bind(this);
+>>>>>>> 6ae8a43eeab7ed36fdaa4e8cee34169a2987b7b2
     }
 
     //init game state seppereate from did load. could be used for start restrictions.
@@ -176,7 +179,7 @@ class Game extends Component {
     }
 
     drawLayer() {
-        this.setState({ walls: [] });
+        this.setState({walls: []});
 
         let tileSize = this.state.map.tsize;
         //calculate camera view space and attains apropriate start and end of the render space.
@@ -224,6 +227,7 @@ class Game extends Component {
             }
         }
     }
+
     //Add walls each frame to calculate the rays
     updateWalls(x, y) {
         //Top side of a square
@@ -337,7 +341,7 @@ class Game extends Component {
         }
 
         // RAYS IN ALL DIRECTIONS
-        this.setState({ hitpoints: [] });
+        this.setState({hitpoints: []});
         for (let j = 0; j < uniqueAngles.length; j++) {
             let angle = uniqueAngles[j];
 
@@ -347,8 +351,8 @@ class Game extends Component {
 
             // Ray from center of screen to mouse
             let ray = {
-                a: { x: playerX, y: playerY },
-                b: { x: playerX + dx, y: playerY + dy },
+                a: {x: playerX, y: playerY},
+                b: {x: playerX + dx, y: playerY + dy},
             };
 
             // Find CLOSEST intersection
@@ -370,15 +374,21 @@ class Game extends Component {
             this.state.hitpoints.push(closestIntersect);
         }
     }
+
     //sort angles so the polygon can be drawn from  0th hitpoint to 360 degrees.
     sortAngles() {
         let sortedAngles = this.state.hitpoints.sort(function (a, b) {
             return a.angle - b.angle;
         });
-        this.setState({ hitpoints: sortedAngles });
+        this.setState({hitpoints: sortedAngles});
     }
 
+<<<<<<< HEAD
 
+=======
+    drawEnamy() {
+    }
+>>>>>>> 6ae8a43eeab7ed36fdaa4e8cee34169a2987b7b2
 
     //Draws the rays from each point from this.state.hitpoints -- DISABLED -- used to Debug
     drawLightLines() {
@@ -399,6 +409,7 @@ class Game extends Component {
 
     // Goes through each hitpoint to create a visibile light polygon - then a circular light emits from players x y position- first circle is more intense than second circle
     drawLight() {
+<<<<<<< HEAD
         if(this.state.alive){
             let playerX = this.Player.screenX - this.Player.width / 2 + 32;
             let playerY = this.Player.screenY - this.Player.height / 2 + 32;
@@ -415,6 +426,24 @@ class Game extends Component {
     
     
     
+=======
+        let playerX = this.Player.screenX - this.Player.width / 2 + 32;
+        let playerY = this.Player.screenY - this.Player.height / 2 + 32;
+
+        let lightRadius = this.state.playerState === "seeker" ? 300 : 150;
+
+        this.ctx.save();
+        let fill = this.ctx.createRadialGradient(playerX, playerY, 1, playerX, playerY, lightRadius);
+        fill.addColorStop(0, "rgba(255, 255, 255, 0.65)");
+        fill.addColorStop(0.9, "rgba(255, 255, 255, 0.01)");
+        fill.addColorStop(1, "rgba(255, 255, 255, 0.009)");
+
+        this.ctx.fillStyle = fill;
+
+
+        this.ctx.beginPath();
+        if (this.state.hitpoints.length > 0) {
+>>>>>>> 6ae8a43eeab7ed36fdaa4e8cee34169a2987b7b2
             this.ctx.beginPath();
             if (this.state.hitpoints.length > 0) {
                 this.ctx.beginPath();
@@ -440,7 +469,6 @@ class Game extends Component {
 
         let enamyScreenX = (playerValues.x - this.camera.x);
         let enamyScreenY = (playerValues.y - this.camera.y);
-
 
 
         if (this.Player.screenX < enamyScreenX + this.state.map.tsize &&
@@ -481,6 +509,7 @@ class Game extends Component {
             return;
         }
     }
+
     drawEnamies(enamyX, enamyY) {
         let enamyScreenX = (enamyX - this.camera.x) - this.Player.width / 2;
         let enamyScreenY = (enamyY - this.camera.y) - this.Player.height / 2;
@@ -491,7 +520,6 @@ class Game extends Component {
         this.ctx.fill();
 
         this.ctx.restore();
-
 
 
     }
@@ -566,10 +594,13 @@ class Game extends Component {
 
     //each game frame
     tick() {
+<<<<<<< HEAD
         if(this.state.gameOver){
 
         }
 
+=======
+>>>>>>> 6ae8a43eeab7ed36fdaa4e8cee34169a2987b7b2
         this.ctx.clearRect(0, 0, 1024, 640);
         let delta = 0.25;
         delta = Math.min(delta, 0.25); // maximum delta of 250 ms
@@ -587,7 +618,7 @@ class Game extends Component {
         
         this.gameRender();
 
-        window.requestAnimationFrame(this.tick.bind(this));
+        this.requestID = window.requestAnimationFrame(this.tick);
 
         let info = {
             roomID: this.state.gameID,
@@ -599,13 +630,10 @@ class Game extends Component {
         if (JSON.stringify(info) !== JSON.stringify(pastInfo) && this.state.alive) {
             // console.log("I emitted:", info.x, info.y);
             // console.log('this.player.x=  ' + this.Player.x + '  this.Player.screenX=  ' + this.Player.screenX + '  camera x= ' + this.camera.x)
-
-
             socket.emit("player movement", info);
         }
 
     }
-
 
 
     gameRender() {
@@ -635,56 +663,6 @@ class Game extends Component {
 
         this.drawShadow();
         // this.drawPillarLight();
-    }
-
-    componentDidMount() {
-        // this will only happen the first time, and will set the ball rolling to handle any updates!
-        // this.state.context = this.refs.canvas.getContext('2d');
-        socket.emit("start game timer", this.state.gameID, this.state.timeLimit);
-        console.log(this.state.timeLimit);
-        let context = this.refs.canvas.getContext("2d");
-
-        this.setState({ context: this.refs.canvas.getContext("2d") });
-
-        this.run(context);
-
-        socket.on("Redraw positions", (players) => {
-            // if there has been a change to players' positions, then reset the state of players to new coordinates
-            //console.log("original players ", this.state.players);
-            if (this.state.players !== players) {
-                this.setState({ players: players });
-            }
-        });
-
-        socket.on("countdown", (seconds) => {
-            if (seconds - 1 === 0) {
-                this.setState({ countdown: false });
-            }
-        });
-        // console.log(this.state);
-
-        socket.on("reconnect_error", (error) => {
-            // console.log("Error! Disconnected from server", error);
-            console.log("Error! Can't connect to server");
-            auth.logout(() => {
-                // reason history is avail on props is b/c we loaded it via a route, which passes
-                // in a prop called history always
-                cookies.remove("name");
-                cookies.remove("email");
-                cookies.remove("image");
-                googleAuth.signOut();
-                console.log("going to logout!");
-                this.props.history.push('/');
-            });
-        });
-    }
-
-
-    componentWillUnmount() {
-        socket.off("Redraw positions");
-        socket.off("countdown");
-        socket.off("reconnect_error");
-
     }
 
     // this function creates multiple player components
@@ -719,12 +697,79 @@ class Game extends Component {
             }
         }
 
-        for (let i = 0; i < players_arr.length; i++) { }
+        for (let i = 0; i < players_arr.length; i++) {
+        }
 
         return <div>{component_insides}</div>;
     }
 
+    // callback for Timer component
+    endCountdown(){
+        console.log("Countdown completed. GAME ON");
+        this.setState({
+            countdown: false,
+            game_status: 'started'
+        });
+    }
+
+    componentDidMount() {
+        // this.state.context = this.refs.canvas.getContext('2d');
+        console.log(this.state.timeLimit);
+        let context = this.refs.canvas.getContext("2d");
+
+        this.setState({context: this.refs.canvas.getContext("2d")});
+
+        this.run(context);
+
+        socket.on("Redraw positions", (players) => {
+            // if there has been a change to players' positions, then reset the state of players to new coordinates
+            //console.log("original players ", this.state.players);
+            if (this.state.players !== players) {
+                this.setState({players: players});
+            }
+        });
+
+        // console.log(this.state);
+
+        // when the server completes the winner and returns event to go back to the lobby
+        socket.on("game finished", () => {
+            // cancel the animation frames
+            if (this.requestID) window.cancelAnimationFrame(this.requestID);
+
+            this.setState({
+                game_status: "Completed"
+            })
+        })
+        socket.on("reconnect_error", (error) => {
+            // console.log("Error! Disconnected from server", error);
+            console.log("Error! Can't connect to server");
+            auth.logout(() => {
+                // reason history is avail on props is b/c we loaded it via a route, which passes
+                // in a prop called history always
+                cookies.remove("name");
+                cookies.remove("email");
+                cookies.remove("image");
+                googleAuth.signOut();
+                console.log("going to logout!");
+                this.props.history.push('/');
+            });
+        });
+    }
+
+
+    componentWillUnmount() {
+        console.log("Component unmounted ===================================");
+
+        socket.off("Redraw positions");
+        socket.off("reconnect_error");
+        socket.off("game finished");
+        socket.off("player moved");
+        socket.off("I died");
+        socket.off("game in progress");
+    }
+
     render() {
+<<<<<<< HEAD
         // console.log(this.state.playerState==='seeker' && this.state.game_status === 'not started');
         let comp1;
         let comp2;
@@ -733,10 +778,24 @@ class Game extends Component {
         if(this.state.networkError){
             console.log("Going to main menu");
             return <Redirect to="/MainMenu" />
+=======
+        // if the game is completed, head back to lobby
+        if (this.state.game_status === "Completed") {
+            return (
+                <Redirect to={{
+                    pathname: "/Room",
+                    state: {
+                        join_code: this.state.gameID
+                    }
+                }}/>
+            );
+>>>>>>> 6ae8a43eeab7ed36fdaa4e8cee34169a2987b7b2
         }
 
-        let dragon = "";
+        // console.log(this.state.playerState==='seeker' && this.state.game_status === 'not started');
+        // if client is a seeker and game has not started (15 seconds wait), then canvas should be black and waiting
         let canvasDisplay = this.state.playerState === 'seeker' && this.state.game_status === 'not started' ? ['z-depth-5 darkness', ''] : ['', 'z-depth-5 fade-in'];
+<<<<<<< HEAD
         if (this.state.countdown === true) {
             if (this.state.playerState === 'seeker') {
                 comp1 = "You're the seeker";
@@ -785,6 +844,27 @@ class Game extends Component {
     </React.Fragment>
 
         
+=======
+        return (
+            <>
+                <Timer gameDuration={this.state.timeLimit.split(" ")[0]}
+                       playerState={this.state.playerState}
+                       endCount={this.endCountdown}
+                />
+                <div className="gameAction">
+                    <AliveList/>
+                    <div className={canvasDisplay[0]}/>
+                    <canvas className={canvasDisplay[1]} ref="canvas" width={1024} height={620}/>
+                    <GameObjective
+                        countdown={this.state.countdown}
+                        playerState={this.state.playerState}
+                    />
+
+                </div>
+                <Results playerState={this.state.playerState} userName={this.state.userName}/>
+            </>
+        );
+>>>>>>> 6ae8a43eeab7ed36fdaa4e8cee34169a2987b7b2
     }
 }
 
