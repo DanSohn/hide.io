@@ -33,24 +33,6 @@ class Player extends Component {
         }
     }
 
-    // onKeyDown(e) {
-    //     switch (e.which) {
-    //         case 37: // Left
-    //             this.playerMove(this.state.playerX - this.state.playerSpeed, this.state.playerY);
-    //             break;
-    //         case 38: // Up
-    //             this.playerMove(this.state.playerX, this.state.playerY - this.state.playerSpeed);
-    //             break;
-    //         case 39: // Right
-    //             this.playerMove(this.state.playerX + this.state.playerSpeed, this.state.playerY);
-    //             break;
-    //         case 40: // Down
-    //             this.playerMove(this.state.playerX, this.state.playerY + this.state.playerSpeed);
-    //             break;
-    //         default:
-    //             break;
-    //     }
-    // }
 
     playerMove(x, y) {
         console.log("Sending player movement event to server");

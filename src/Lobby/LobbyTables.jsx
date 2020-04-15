@@ -76,7 +76,7 @@ class LobbyTables extends Component {
     render() {
         console.log("render table");
         return (
-            <div className="lobbySelection">
+            <div className="z-depth-3 lobbySelection">
                 <table className="lobbyTable">
                     <tbody>
                         <tr>{this.renderTableHeader()}</tr>

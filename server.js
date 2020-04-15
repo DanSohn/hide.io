@@ -15,6 +15,12 @@ const dbUtil = require("./dbUtils");
 const starting_pos_module = require(__dirname + "/starting_positions");
 let starting_pos = starting_pos_module.starting_positions;
 
+//Maintain a list of all the games that in progress
+let gamesInSession = {};
+
+//Maintains a list of all the players that are currently online
+let socket_name = {};
+
 // this occurs upon server start, or more importantly, server restart.
 // the lobbies that exist should have NO ONE IN THEIR PLAYER LISTS
 dbUtil
@@ -39,9 +45,11 @@ io.on("connection", (socket) => {
         dbUtil.getUser(email).then((user) => {
             console.log("recieved from dbutils ", user);
             socket_info["email"] = email;
+            socket_name[socket.id] = {email: socket_info["email"]};
             if (user !== null) {
                 socket.emit("user database check", user.username);
                 socket_info["name"] = user.username;
+                socket_name[socket.id].name = socket_info["name"];
             } else {
                 socket.emit("user database check", null);
             }
@@ -54,9 +62,21 @@ io.on("connection", (socket) => {
                 console.log("Did not provide all information. Try again");
             } else {
                 socket_info["name"] = info.username;
+                socket_name[socket.id].name = info.username;
             }
         });
     });
+
+    // for PlayerProfile. Returns information about the email user
+    socket.on("player stats req", email => {
+        dbUtil
+            .getUser(email)
+            .then(user => {
+                socket.emit("player stats res", user);
+            })
+            .catch(err => console.log("player stats req", err));
+    });
+
 
     //Send the rooms that are available when the user clicks play to see the available lobbies
     // it will find all the lobbies in database, and once its done, it will send the collection to the socket
@@ -84,7 +104,7 @@ io.on("connection", (socket) => {
             if (!lobby) {
                 dbUtil.createLobby(roomID, info).then(() => {
                     dbUtil
-                        .addUserToLobby({ roomID: roomID, email: info.email, username: info.name })
+                        .addUserToLobby({roomID: roomID, email: info.email, username: info.name})
                         .then(() => {
                             // create a socket room, in which from now on, all your communications
                             // socketwise will stay within the room
@@ -166,7 +186,7 @@ io.on("connection", (socket) => {
         console.log("SOCKET EVENT JOIN CERTAIN LOBBY");
 
         dbUtil
-            .addUserToLobby({ roomID: info.room, email: info.email, username: info.username })
+            .addUserToLobby({roomID: info.room, email: info.email, username: info.username})
             .then(() => {
                 socket.join(info.room);
                 socket.emit("joining certain lobby success");
@@ -228,46 +248,77 @@ io.on("connection", (socket) => {
 
     // upon a player movement event, i will update the players array object with their new positions, and
     // emit a event to redraw the new positions
-    socket.on("player movement", (info) => {
-        // console.log("received player movement across socket: ",info);
-        io.to(info.room).emit("player moved", { X: info.X, Y: info.Y });
-    });
+    socket.on('player movement', (info) => {
 
-    // In the lobby, when finalized that the game is starting, send the map to client
-    socket.on("game starting", () => {
-        socket.emit("game starting ack");
+        // console.log("This is what I got from player: ", info);
+        // console.log("This is what im sending the player: ", {x: info.x, y: info.y, id: info.id});
+
+        io.to(info.roomID).emit('player moved', {x: info.x, y: info.y, id: info.id, room: info.roomID})
     });
 
     socket.on("lobby start timer", (info) => {
         console.log("SOCKET EVENT LOBBY START TIMER");
-        let { countdowntime, room } = info;
-        console.log("TIMER, ROOM: ", countdowntime, room);
-        let countdown = Math.floor(countdowntime / 1000);
-        // send to all sockets an event every second
-        let timerID = setInterval(() => {
-            console.log(countdown);
-            countdown--;
-            io.to(room).emit("lobby current timer", countdown);
-        }, 1000);
+        let {countdowntime, room} = info;
 
-        // after the timer amount of seconds (default 3), stop emitting
-        setTimeout(() => {
-            clearInterval(timerID);
-        }, countdowntime);
+        // get all the sockets in the room, then choose one random socket to be the hider
+        let roomies = Object.keys(io.sockets.adapter.rooms[room].sockets);
+        console.log("everyone in room: ", roomies);
+        // if there is not enough sockets(people) in the lobby, tell the lobby so
+        if (roomies.length < 2) {
+            socket.emit('not enough peeps');
+        } else {
+            io.to(room).emit('enough peeps');
+            // choose one random socket to be the seeker
+            let randomSeeker = roomies[Math.floor(Math.random() * roomies.length)];
+            io.to(`${randomSeeker}`).emit('youre the seeker');
+
+            // remove the seeker from the list of roomies
+            for (let i = 0; i < roomies.length; i++) {
+                if (roomies[i] === randomSeeker) {
+                    roomies.splice(i, 1);
+                }
+            }
+            // set the gamesInSession object for this game
+            gamesInSession[room] = {
+                'roomID': room,
+                'timerID': "",
+                'seeker': randomSeeker,
+                'hiders': roomies,
+                'caught': []
+            };
+            console.log("RANDOM SEEKER IS: " + gamesInSession[room].seeker);
+            console.log("NUMBER OF HIDERS " + gamesInSession[room].hiders.length);
+
+            let countdown = Math.floor(countdowntime / 1000);
+            // send to all sockets an event every second
+            let timerID = setInterval(() => {
+                console.log(countdown);
+                countdown--;
+                io.to(room).emit("lobby current timer", countdown);
+            }, 1000);
+
+            // after the timer amount of seconds (default 3), stop emitting
+            setTimeout(() => {
+                clearInterval(timerID);
+            }, countdowntime);
+        }
     });
 
     socket.on("start game timer", (room, game_time) => {
         console.log("game started " + game_time);
         let mins = game_time.split(" ")[0];
-        let time = { minutes: mins, seconds: 15 };
+        let time = {minutes: mins, seconds: 15};
         console.log(time, room);
         let timerID = setInterval(() => {
-            if (mins === time.minutes) {
-                io.to(room).emit("countdown", time.seconds);
+            // during the hider's running time when seeker can't move, send countdown event to the game
+            if (mins === time.minutes && time.seconds === 0) {
+                io.to(room).emit("countdown ended");
             }
+            // normal decrement of seconds, unless seconds is at 0
             if (time.seconds > 0) {
-                time.seconds = time.seconds - 1;
+                time.seconds--;
             } else if (time.seconds === 0) {
+                // if more than 1 mins left, decrement minute by 1 and restart seconds at 59
                 if (time.minutes > 0) {
                     time.seconds = 59;
                     time.minutes = time.minutes - 1;
@@ -275,25 +326,112 @@ io.on("connection", (socket) => {
             }
             io.to(room).emit("game in progress", time);
         }, 1000);
+        gamesInSession[room].timerID = timerID;
 
-        setTimeout(() => {
-            clearInterval(timerID);
+        // stop the intervals once the full time is over
+        // mins * 60 0000 (60 seconds x 1 sec per milli) + 15 seconds of count down time
+        gamesInSession[room].fullTime = setTimeout(() => {
+            io.to(room).emit("game in progress", {minutes: 0, seconds: 0});
+            endGame(room, timerID);
             console.log("Time's up");
-        }, time.minutes * 60000 + 16100);
+        }, mins * 60000 + 15000);
+
+        console.log("set a timeout for ", gamesInSession[room].fullTime);
     });
+
+    //When a hider is caught, they emit an event to the server to update the list of players who are still hiding and
+    //haven't been caught by the seeker. Incase all the players are caught, endGame() is called before time expires.
+    socket.on("player caught", (info) => {
+
+        let {playerID, room} = info;
+        // console.log("COLLISION WITH:", playerID, "room: ", room);
+
+        // console.log(">>>>>>>>>>>>>>>>> " + gamesInSession[room].hiders[0] + "    " + playerID);
+        if (gamesInSession.hasOwnProperty(room) && gamesInSession[room].hiders.includes(playerID)) {
+            for (let i = 0; i < gamesInSession[room].hiders.length; i++) {
+                if (gamesInSession[room].hiders[i] === playerID) {
+                    gamesInSession[room].hiders.splice(i, 1);
+                    gamesInSession[room].caught.push(playerID);
+
+                    let playerName = socket_name[playerID].name;
+                    socket.to(room).emit("I died", playerID, playerName);
+                    io.to(room).emit("display player caught", playerName);
+                    break;
+                }
+            }
+
+            if (gamesInSession[room].hiders.length === 0) {
+                endGame(room, gamesInSession[room].timerID);
+            }
+        }
+    });
+
     // when a user disconnects from the tab, either by closing or refreshing, we remove them from any lobbies they
     // might've been a part of
     socket.on("disconnect", () => {
         console.log("SOCKET EVENT DISCONNECT");
         if (socket_info.email && socket_info.lobby) {
             dbUtil
-                .removeUserFromLobby({ room: socket_info.lobby, email: socket_info.email })
+                .removeUserFromLobby({room: socket_info.lobby, email: socket_info.email})
                 .then()
                 .catch((err) => console.log(err));
+            delete socket_name[socket.id];
         }
     });
+
+    //When the game finishes, statistics about the players is updated and the room is deleted from gamesInSession
+    //also emit a message to the different players about who won between hiders and seeker
+    function endGame(room, timerID) {
+        console.log("End Game has been called");
+        //TODO get information about the players that were in that game and update their stats
+        clearInterval(timerID);
+        clearInterval(gamesInSession[room].fullTime);
+        // console.log(room + " <<<<<<<< ROOM ID" );
+        if (gamesInSession.hasOwnProperty(room)) {
+            // hiders are in gameses. hiders and .caught combined
+            // hidersList is an array filled with alive hiders and caught hiders
+            let hidersList = gamesInSession[room].hiders.concat(gamesInSession[room].caught);
+            let hidersEmails = hidersList.map((socketID) => {
+                return socket_name[socketID].email;
+            });
+
+            // the seekers players is an array consisting of the seeker's socketID translated to email
+            let seekers = {group: "seeker", players: [socket_name[gamesInSession[room].seeker].email]}
+            let hiders = {group: "hiders", players: hidersEmails}
+            let winner, loser;
+            if (gamesInSession[room].hiders.length === 0) {
+                console.log("<<<<<<<<<<<<<<SEEKER WINS>>>>>>>>>>>.");
+                winner = seekers;
+                loser = hiders;
+            } else if (gamesInSession[room].hiders.length > 0) {
+                console.log("<<<<<<<<<<<<<<HIDER WINS>>>>>>>>>>>.");
+                winner = hiders;
+                loser = seekers;
+
+            }
+
+            io.to(room).emit("game winner", winner.group);
+
+            dbUtil
+                .updateWinners(winner.players)
+                .then(() => console.log("Winners have been updated"))
+                .catch(err => console.log(err));
+
+            dbUtil
+                .updateLosers(loser.players)
+                .then(() => console.log("Losers have been updated"))
+                .catch(err => console.log(err));
+
+            // after 5 seconds, leave to lobby
+            setTimeout(() => {
+                gamesInSession[room] = {};
+                console.log("ROOM WAS RESET", gamesInSession[room]);
+                io.to(room).emit("game finished");
+            }, 5000);
+        }
+    }
 });
 
-server.listen(PORT, function(){
+server.listen(PORT, function () {
     console.log("Server listening on *: " + PORT);
 });
