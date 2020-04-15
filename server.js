@@ -65,6 +65,16 @@ io.on("connection", (socket) => {
         });
     });
 
+    socket.on("player stats req", email => {
+        dbUtil
+            .getUser(email)
+            .then(user => {
+                socket.emit("player stats res", user);
+            })
+            .catch(err => console.log("player stats req", err));
+    });
+
+
     //Send the rooms that are available when the user clicks play to see the available lobbies
     // it will find all the lobbies in database, and once its done, it will send the collection to the socket
     // from LobbyTables

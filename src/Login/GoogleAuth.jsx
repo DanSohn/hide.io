@@ -50,7 +50,6 @@ class googleAuth {
             element,
             {},
             (googleUser) => {
-                // console.log("BUTTON PRESSED");
                 let profile = googleUser.getBasicProfile();
                 /*
                 ID: profile.getId()

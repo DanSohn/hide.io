@@ -86,10 +86,6 @@ class LoginScreen extends Component {
 
         });
 
-        socket.on("connect_timeout", (timeout) => {
-            console.log("Timeouted after a timeout of ", timeout);
-        })
-
         socket.on("reconnect", attemptNumber => {
             console.log("Reconnected to server on try", attemptNumber);
             this.setState({
