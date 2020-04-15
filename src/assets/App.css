@@ -96,9 +96,6 @@ body {
     color: red;
     box-shadow: 0 .5em red; 
   }
-  .start-btn-window {
-    
-  }
   .start-btn-black {
     background-color: darkgrey;
     color: darkslategrey;
@@ -335,7 +332,8 @@ td {
 .header button,
 .header img {
     margin: 0;
-    width: 75px;
+    padding:0;
+    width: 100px;
     height: 75px;
     border-radius: 5px;
 }
