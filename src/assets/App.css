@@ -42,7 +42,7 @@ body {
       cursor: pointer;
     padding-left: 5px;
   }
-  .start-btn, .start-btn-red, .start-btn-grey, .start-btn-green, .start-btn-blue, .start-btn-black .gameWindow{
+  .start-btn, .start-btn-red, .start-btn-grey, .start-btn-green, .start-btn-blue, .start-btn-black, .start-btn-profile, .gameWindow{
     font-family: 'Press Start 2p';
     
       text-align: center;
@@ -91,6 +91,9 @@ body {
   .start-btn {
       display: inline-block;
   }
+  .start-btn-profile {
+    box-shadow: 0 .5em #08080a; 
+  }
   .start-btn-red{
     background-color: #ff6e63;
     color: red;
@@ -120,7 +123,13 @@ body {
   .roomActions .start-btn-green, .menuScreen .start-btn-green {
     box-shadow: 0 .5em green;  
   }
-  .video-game-button:active, .start-btn-red:active, .start-btn-grey:active, .start-btn-blue:active, .start-btn-green:active, .start-btn-black:active {
+  .video-game-button:active, 
+  .start-btn-red:active, 
+  .start-btn-grey:active, 
+  .start-btn-blue:active, 
+  .start-btn-green:active, 
+  .start-btn-profile:active, 
+  .start-btn-black:active {
       box-shadow: none;
       position: relative;
       top: .6em;
