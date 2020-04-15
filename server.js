@@ -328,8 +328,8 @@ io.on("connection", (socket) => {
     socket.on("player caught", (info) => {
 
         let {playerID,  room} = info;
-        console.log(socket_name);
-        console.log("COLLISION WITH:", playerID, "room: ", room);
+        // console.log(socket_name);
+        // console.log("COLLISION WITH:", playerID, "room: ", room);
 
         // console.log(">>>>>>>>>>>>>>>>> " + gamesInSession[room].hiders[0] + "    " + playerID);
         if(gamesInSession.hasOwnProperty(room) && gamesInSession[room].hiders.includes(playerID)){

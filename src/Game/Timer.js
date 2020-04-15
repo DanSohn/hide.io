@@ -51,6 +51,11 @@ class Timer extends Component {
         });
     }
 
+    componentWillUnmount() {
+        socket.off("countdown ended");
+        socket.off("game in progress");
+    }
+
     render() {
         let comp;
         if (this.state.gamestage1) {
