@@ -42,7 +42,7 @@ body {
       cursor: pointer;
     padding-left: 5px;
   }
-  .start-btn, .start-btn-red, .start-btn-grey, .start-btn-green, .start-btn-blue, .start-btn-black{
+  .start-btn, .start-btn-red, .start-btn-grey, .start-btn-green, .start-btn-blue, .start-btn-black .gameWindow{
     font-family: 'Press Start 2p';
     
       text-align: center;
@@ -277,7 +277,7 @@ div {
     border-radius: 50px;
 }
 .GameWindow {
-    background-color: #282c34;
+    background-color: #282c34 ;
     position: relative;
     display: flex;
     flex-wrap: wrap;
@@ -286,7 +286,10 @@ div {
     width: 1000px;
     padding: 0;
     border-radius: 5%;
-    border: 5px solid #52565c;
+    /* background-color: #686b70;
+    color: white; */
+    box-shadow: 0 2em #08080a; 
+    /* border: 5px solid #52565c; */
 }
 .GameWindow .title {
     height: 10%;
@@ -329,7 +332,8 @@ td {
 .header button,
 .header img {
     margin: 0;
-    width: 75px;
+    padding:0;
+    width: 100px;
     height: 75px;
     border-radius: 5px;
 }
