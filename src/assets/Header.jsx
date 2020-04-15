@@ -54,7 +54,7 @@ class Header extends Component {
                 // <button className="btn btn-dark" onClick={this.goProfile}>
                 //     Profile
                 // </button>
-                <img className="z-depth-5" src={this.state.image} alt="Google or facebook's profile" />
+                <img className="start-btn-profile z-depth-5" src={this.state.image} alt="Google or facebook's profile" />
             );
         }
         comp = (
