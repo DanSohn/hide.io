@@ -391,7 +391,7 @@ io.on("connection", (socket) => {
             // hidersList is an array filled with alive hiders and caught hiders
             let hidersList = gamesInSession[room].hiders.concat(gamesInSession[room].caught);
             let hidersEmails = hidersList.map((socketID) => {
-               return socket_name[socketID].email;
+                return socket_name[socketID].email;
             });
 
             // the seekers players is an array consisting of the seeker's socketID translated to email
@@ -414,12 +414,12 @@ io.on("connection", (socket) => {
             dbUtil
                 .updateWinners(winner.players)
                 .then(() => console.log("Winners have been updated"))
-                .catch(err=> console.log(err));
+                .catch(err => console.log(err));
 
             dbUtil
                 .updateLosers(loser.players)
                 .then(() => console.log("Losers have been updated"))
-                .catch(err=> console.log(err));
+                .catch(err => console.log(err));
 
             // after 5 seconds, leave to lobby
             setTimeout(() => {
@@ -427,7 +427,6 @@ io.on("connection", (socket) => {
                 delete gamesInSession[room];
                 io.to(room).emit("game finished");
             }, 5000);
-
         }
     }
 });

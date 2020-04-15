@@ -65,9 +65,8 @@ body {
     background-image: linear-gradient(left top, pink 3%, red 22%, maroon 99%);
     cursor: pointer;
     padding-left: 5px;
-}
-
-.start-btn, .start-btn-red, .start-btn-grey, .start-btn-green, .start-btn-blue, .start-btn-black {
+  }
+  .start-btn, .start-btn-red, .start-btn-grey, .start-btn-green, .start-btn-blue, .start-btn-black, .start-btn-profile, .gameWindow{
     font-family: 'Press Start 2p';
 
     text-align: center;
@@ -98,37 +97,32 @@ body {
 
 .ff-20 {
     font-size: 20pt;
+  }
+  .height-75 {
+      height:75px;
+  }
+  .width-75 {
+      width:75px;
+  }
+  .width-100 {
+    width:100px;
 }
-
-.height-75 {
-    height: 75px;
-}
-
-.width-75 {
-    width: 75px;
-}
-
-.width-100 {
-    width: 100px;
-}
-
-.width-150 {
-    width: 150px;
-}
-
-.width-250 {
-    width: 250px;
-}
-
-.width-350 {
-    width: 350px;
-}
-
-.start-btn {
-    display: inline-block;
-}
-
-.start-btn-red {
+  .width-150{
+    width:150px;
+  }
+  .width-250 {
+      width:250px;
+  }
+  .width-350{
+    width:350px;
+  }
+  .start-btn {
+      display: inline-block;
+  }
+  .start-btn-profile {
+    box-shadow: 0 .5em #08080a; 
+  }
+  .start-btn-red{
     background-color: #ff6e63;
     color: red;
     box-shadow: 0 .5em red;
@@ -155,23 +149,25 @@ body {
 .start-btn-blue {
     background-color: lightblue;
     color: lightseagreen;
-    box-shadow: 0 .5em lightseagreen;
-}
-
-.roomActions .start-btn-green, .menuScreen .start-btn-green {
-    box-shadow: 0 .5em green;
-}
-
-.video-game-button:active, .start-btn-red:active, .start-btn-grey:active, .start-btn-blue:active, .start-btn-green:active, .start-btn-black:active {
-    box-shadow: none;
-    position: relative;
-    top: .6em;
-}
-
-.buttonColumn {
-    width: 50px;
-}
-
+    box-shadow: 0 .5em lightseagreen;  
+  }
+  .roomActions .start-btn-green, .menuScreen .start-btn-green {
+    box-shadow: 0 .5em green;  
+  }
+  .video-game-button:active, 
+  .start-btn-red:active, 
+  .start-btn-grey:active, 
+  .start-btn-blue:active, 
+  .start-btn-green:active, 
+  .start-btn-profile:active, 
+  .start-btn-black:active {
+      box-shadow: none;
+      position: relative;
+      top: .6em;
+  }
+  .buttonColumn {
+      width:50px;
+  }
 .fade-out-15 {
     animation: fadeOut ease 15s;
     -webkit-animation: fadeOut ease 15s;
@@ -333,7 +329,7 @@ div {
 }
 
 .GameWindow {
-    background-color: #282c34;
+    background-color: #282c34 ;
     position: relative;
     display: flex;
     flex-wrap: wrap;
@@ -342,8 +338,10 @@ div {
     width: 1000px;
     padding: 0;
     border-radius: 5%;
+    /* background-color: #686b70;
+    color: white; */
+    box-shadow: 0 2em #08080a; 
     /* border: 5px solid #52565c; */
-    z-index: 1000;
 }
 
 .GameWindow .title {
@@ -391,7 +389,8 @@ td {
 .header button,
 .header img {
     margin: 0;
-    width: 75px;
+    padding:0;
+    width: 100px;
     height: 75px;
     border-radius: 5px;
 }
