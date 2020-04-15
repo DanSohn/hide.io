@@ -80,7 +80,7 @@ class Game extends Component {
             playerState: this.props.location.state.playerState,
             playerColor: "",
             userName: this.props.location.state.playerUsername,
-
+            creator: this.props.location.state.creator,
             gameID: this.props.location.state.gameID,
             game_status: "not started",
             walls: [],
@@ -130,7 +130,7 @@ class Game extends Component {
         this.state.playerColor = this.props.location.state.playerState === "seeker" ? "#D5C7BC" : '#' + Math.floor(Math.random() * 16777215).toString(16);
 
         console.log("AM I THE SEEKER?", this.state.playerState);
-
+        console.log("Am i the button presser?", this.state.creator);
         // TODO: do stuff when getting the location information
         socket.on('player moved', (playerinfo) => {
 
@@ -145,8 +145,9 @@ class Game extends Component {
             }
 
         });
-
-        socket.emit("start game timer", this.state.gameID, this.state.timeLimit);
+        if(this.state.creator){
+            socket.emit("start game timer", this.state.gameID, this.state.timeLimit);
+        }
 
         this.update_player_component = this.update_player_component.bind(this);
         this.tick = this.tick.bind(this);

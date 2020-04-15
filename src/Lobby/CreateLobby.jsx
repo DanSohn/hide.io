@@ -184,6 +184,7 @@ class CreateLobby extends Component {
                                             className="browser-default custom-select"
                                             required>
                                             <option defaultValue />
+                                            <option value="0">1 mins</option>
                                             <option value="1">3 mins</option>
                                             <option value="2">4 mins</option>
                                             <option value="3">5 mins</option>
@@ -200,7 +201,7 @@ class CreateLobby extends Component {
                                         </select>
                                     </div>
                                     <div className="createLobbyContainer">
-                                        <button type="submit"><span class='start-btn-blue ff-20 width-250'>SUBMIT</span></button>
+                                        <button type="submit"><span className='start-btn-blue ff-20 width-250'>SUBMIT</span></button>
                                     </div>
                                 </div>
                             </form>

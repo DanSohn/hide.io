@@ -40,6 +40,7 @@ class Room extends Component {
             players: {},
             playersList: [],
             time: "",
+            creator: false
         };
         this.goPrevious = this.goPrevious.bind(this);
         this.startTimer = this.startTimer.bind(this);
@@ -65,6 +66,9 @@ class Room extends Component {
         // 3 second timer currently
         // TimerSound();
         socket.emit("lobby start timer", { countdowntime: 4300, room: this.state.roomID });
+        this.setState({
+            creator: true
+        });
     }
 
 
@@ -95,11 +99,11 @@ class Room extends Component {
 
         });
 
-        // this event occurs on function startTimer(), it will count down from 3 to start the game
+        /*// this event occurs on function startTimer(), it will count down from 3 to start the game
         socket.on("game starting ack", () => {
-            socket.emit("lobby start timer", { countdowntime: 4100, room: this.state.roomID });
+            socket.emit("lobby start timer", { countdowntime: 4300, room: this.state.roomID });
         });
-
+*/
         socket.on("lobby current timer", (countdown) => {
             console.log(countdown);
             this.setState({
@@ -147,13 +151,18 @@ class Room extends Component {
     componentWillUnmount() {
         socket.off("giving lobby info");
         socket.off("update lobby list");
+        socket.off("game starting ack");
+
         socket.off("lobby current timer");
         socket.off("lobby start timer");
         socket.off("not enough peeps");
         socket.off("enough peeps")
         socket.off("reconnect_error");
-
+        socket.off("may successfully leave lobby");
     }
+
+
+
 
     render() {
         let comp;
@@ -179,7 +188,8 @@ class Room extends Component {
                     map: this.state.game_map,
                     timeLimit: this.state.game_time,
                     mode: this.state.game_mode,
-                    playerUsername: this.state.userName
+                    playerUsername: this.state.userName,
+                    creator: this.state.creator
                 }
             }}/>
 

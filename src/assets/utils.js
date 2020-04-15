@@ -22,6 +22,8 @@ function returnGameTime(num) {
         res = "4 mins";
     } else if (num === "3") {
         res = "5 mins";
+    } else if (num === "0") {
+        res = "1 mins";
     }
 
     return res;
