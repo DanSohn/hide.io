@@ -42,15 +42,23 @@ body {
       cursor: pointer;
     padding-left: 5px;
   }
-  .start-btn, .start-btn-red, .start-btn-grey, .start-btn-green, .start-btn-blue, .start-btn-black, .start-btn-profile, .gameWindow{
-    font-family: 'Press Start 2p';
+  .start-btn,
+  .start-btn-red,
+  .start-btn-grey,
+  .start-btn-green,
+  .start-btn-blue,
+  .start-btn-black,
+  .start-btn-profile,
+  .start-btn-windows,
+  .gameWindow{
+    
     
       text-align: center;
       display: inline-block;
       margin:5px;
       font-weight: bold;
       padding: 10px 0 10px 5px ;
-      text-shadow: -1px -1px black, 1px 1px white;
+      
       color: darkred;
       -webkit-border-radius: 7px;
       -moz-border-radius: 7px;
@@ -58,13 +66,31 @@ body {
       border-radius: 7px;
       cursor: pointer;
   }
+  .start-btn,
+  .start-btn-red,
+  .start-btn-grey,
+  .start-btn-green,
+  .start-btn-blue,
+  .start-btn-black,
+  .start-btn-profile
+  .gameWindow {
+    text-shadow: -1px -1px black, 1px 1px white;
+  }
+  .ff {
+    font-family: 'Press Start 2p';
+    color:lightgrey;
+    text-shadow: -1px -1px black, 1px 1px white;
+  }
   .ff-5 {
+    font-family: 'Press Start 2p';
     font-size: 5pt;
   }
   .ff-10 {
+    font-family: 'Press Start 2p';
     font-size: 10pt;
   }
   .ff-15 {
+    font-family: 'Press Start 2p';
     font-size: 15pt;
   }
   .ff-20 {
@@ -91,36 +117,48 @@ body {
   .start-btn {
       display: inline-block;
   }
+  .start-btn-windows {
+    padding:5px;
+    color: white;
+    background-color: #52565c;
+    box-shadow: 0 .5em #393c40 ; 
+  }
   .start-btn-profile {
     box-shadow: 0 .5em #08080a; 
   }
   .start-btn-red{
+    font-family: 'Press Start 2p';
     background-color: #ff6e63;
     color: red;
     box-shadow: 0 .5em red; 
   }
   .start-btn-black {
+    font-family: 'Press Start 2p';
     background-color: darkgrey;
     color: darkslategrey;
     box-shadow: 0 .3em darkslategrey; 
   }
   .start-btn-grey {
+    font-family: 'Press Start 2p';
     background-color: lightgrey;
     color: grey;
     box-shadow: 0 .5em grey; 
   }
   .start-btn-green {
+    font-family: 'Press Start 2p';
     background-color: lightgreen;
     color: green;
     box-shadow: 0 .2em green;  
   }
   
   .start-btn-blue {
+    font-family: 'Press Start 2p';
     background-color: lightblue;
     color: lightseagreen;
     box-shadow: 0 .5em lightseagreen;  
   }
   .roomActions .start-btn-green, .menuScreen .start-btn-green {
+    font-family: 'Press Start 2p';
     box-shadow: 0 .5em green;  
   }
   .video-game-button:active, 
@@ -332,10 +370,26 @@ div {
 table {
     width: 100%;
 }
-table,
+/* table,
 tr,
 td {
-    border: 1px solid black;
+    border: 0px solid black;
+} */
+tr, td {
+    /* border: 2pt solid darkgray; */
+    border-bottom:2pt solid darkgray;
+}
+
+.smallColumn {
+    width:10%;
+}
+
+.mediumColumn {
+    width:25%;
+}
+
+.largeColumn {
+    width:65%;
 }
 
 .header button,
@@ -384,7 +438,8 @@ td {
 .GameWindow .lobbySelection {
     order: 1;
     flex: 3;
-    border: 5px solid blue;
+    /* border: 5px solid blue; */
+    padding: 5px;
     height: 80%;
     overflow: auto;
 }
@@ -436,7 +491,7 @@ tr .btn-success {
 }
 
 .chatRoom {
-    border: 5px solid navajowhite;
+    /* border: 5px solid navajowhite; */
     height: 100%;
 }
 
@@ -451,8 +506,7 @@ tr .btn-success {
 }
 .online {
     justify-content: flex-start;
-    border: 5px solid goldenrod;
-    border-radius: 0px;
+    /* border: 5px solid goldenrod; */
 }
 
 .online ul {
@@ -560,7 +614,6 @@ select,
     width: 100%;
     height: 20%;
 }
-
 .createLobby a {
     text-decoration: none;
     display:flex;

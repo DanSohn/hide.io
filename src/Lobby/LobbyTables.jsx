@@ -53,10 +53,22 @@ class LobbyTables extends Component {
     }
 
     renderTableHeader() {
-        let headers = ["Lobby Name", "Players", "Action"];
-        return headers.map((key, index) => {
-            return <th key={index}>{key}</th>
-        });
+        return (
+            <>
+                <th className="largeColumn">Lobby Name</th>
+                <th className="smallColumn">Players</th>
+                <th className="mediumColumn">Action</th>
+            </>);
+        // let headers = ["Lobby Name", "Players", "Action"];
+        // return headers.map((key, index) => {
+        //     if (key === "Players") {
+        //         return <th className="smallColumn" key={index}>{key}</th>
+        //     } else if (key === "Lobby Name") {
+        //         return <th className="largeColumn" key={index}>{key}</th>
+        //     } else if (key === "Action") {
+        //         return <th className="buttonColumn" key={index}>{key}</th>
+        //     }
+        // });
     }
 
     componentDidMount() {
@@ -76,7 +88,7 @@ class LobbyTables extends Component {
     render() {
         console.log("render table");
         return (
-            <div className="lobbySelection">
+            <div className="start-btn-windows lobbySelection">
                 <table className="lobbyTable">
                     <tbody>
                         <tr>{this.renderTableHeader()}</tr>
