@@ -175,6 +175,24 @@ body {
     color: green;
     box-shadow: 0 .2em green;  
   }
+
+  .btn-winner {
+    font-family: 'Press Start 2p';
+    background-color: rgb(255, 236, 61);
+    color: rgba(0, 0, 0, 0.541);
+    box-shadow: 0 .5em rgba(0, 0, 0, 0.432);
+    margin: 0 auto;
+    padding: 5px;
+  }
+
+  .btn-loser {
+    font-family: 'Press Start 2p';
+    background-color: rgb(255, 88, 88);
+    color: rgba(0, 0, 0, 0.541);
+    box-shadow: 0 .5em rgba(0, 0, 0, 0.432);
+    margin: 0 auto;
+    padding: 5px;      
+  }
   
   .start-btn-blue {
     font-family: 'Press Start 2p';
