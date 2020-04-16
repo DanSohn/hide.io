@@ -11,7 +11,10 @@ export default function ButtonArea(props) {
     } else {
         setting = (
             <span
-                onClick={() => props.timerCallback()}
+                onClick={() => {
+                    props.timerCallback();
+                    props.actionCallback();
+                }}
                 className='start-btn-green ff-20 width-250'
             >
                 START GAME

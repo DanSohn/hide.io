@@ -217,6 +217,27 @@ io.on("connection", (socket) => {
         });
     });
 
+    // in room.js, if there is an action, then update the lobby's createdAt to reset the TTL timer
+    socket.on("reset lobby timer", (room) => {
+        dbUtil
+            .updateLobbyTimer(room)
+            .then(() => {
+                console.log("lobby ", room, " has been updated");
+            });
+    })
+
+    // check for if the lobby still in the DB
+    socket.on("does the lobby still exist", (room) => {
+        dbUtil.getLobby(room)
+            .then((lobby)=>{
+                let status = true;
+                if(!lobby){
+                    status = false;
+                }
+
+                socket.emit("lobby existence", status);
+            })
+    });
     // method for a player to leave a lobby (room.js)
     socket.on("leave lobby", (info) => {
         console.log("SOCKET EVENT LEAVE LOBBY");

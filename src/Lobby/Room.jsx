@@ -42,25 +42,45 @@ class Room extends Component {
             time: "",
             creator: false,
             error: "",
-            errorTimeout: null
+            errorTimeout: null,
+            roomTTL: setInterval(() => {
+                console.log("Check if lobby still exists!");
+                socket.emit("does the lobby still exist", this.props.location.state.join_code);
+            }, 30000) // keep checking if the lobby still exists in db every 5 mins, otherwise leave
         };
         this.goPrevious = this.goPrevious.bind(this);
         this.startTimer = this.startTimer.bind(this);
+        this.resetLobbyTimer = this.resetLobbyTimer.bind(this);
 
         // this lets the socket join the specific room
         socket.emit("ask for lobby info", this.state.roomID);
+
+        console.log("check if lobby still exists");
+        socket.emit("does the lobby still exist", this.props.location.state.join_code);
+
+        this.resetLobbyTimer();
     }
 
     goPrevious() {
-        socket.emit("leave lobby", {room: this.state.roomID, email: this.state.email});
         // i ensure everything is first handled properly in the server, and is up to date
         // before i leave
+        clearInterval(this.state.roomTTL);
+
         socket.on("may successfully leave lobby", () => {
             ClickSound();
             this.setState({
                 previous: true
             });
         })
+
+        socket.emit("leave lobby", {room: this.state.roomID, email: this.state.email});
+
+    }
+
+    // reset the TTL for the lobby
+    resetLobbyTimer(){
+        console.log("Action detected. Updating lobby timer");
+        socket.emit("reset lobby timer", this.state.roomID);
     }
 
     startTimer() {
@@ -101,11 +121,18 @@ class Room extends Component {
 
         });
 
-        /*// this event occurs on function startTimer(), it will count down from 3 to start the game
-        socket.on("game starting ack", () => {
-            socket.emit("lobby start timer", { countdowntime: 4300, room: this.state.roomID });
-        });
-*/
+        // if the lobby no longer exists (due to inactivity), then leave the lobby
+        socket.on("lobby existence", (status) => {
+            // if it doesn't exist
+            if(!status){
+                console.log("Lobby no longer exists in DB");
+                this.goPrevious();
+            }else{
+                console.log("Lobby still exists!");
+            }
+        })
+
+        // i receive the start game timer from server and display it
         socket.on("lobby current timer", (countdown) => {
             console.log(countdown);
             this.setState({
@@ -130,8 +157,8 @@ class Room extends Component {
         socket.on('check enough players', (status) => {
             if (status) {
                 this.setState({header: "Game is starting in ..."})
+                clearInterval(this.state.roomTTL);
             } else {
-
                 if(this.state.errorTimeout === null) {
                     this.setState({
                         error: "Need at least 2 players to start the game",
@@ -172,11 +199,12 @@ class Room extends Component {
         socket.off("giving lobby info");
         socket.off("update lobby list");
         socket.off("game starting ack");
-
+        socket.off("may successfully leave lobby");
+        socket.off("lobby existence");
         socket.off("lobby current timer");
         socket.off("lobby start timer");
-        socket.off("not enough peeps");
-        socket.off("enough peeps")
+        socket.off("youre the seeker");
+        socket.off("check enough players");
         socket.off("reconnect_error");
         socket.off("may successfully leave lobby");
     }
@@ -221,11 +249,16 @@ class Room extends Component {
                     />
                     <Break/>
                     <div className="ContentScreen">
-                        <Chat userName={this.state.userName} roomID={this.state.roomID}/>
+                        <Chat
+                            actionCallback={this.resetLobbyTimer}
+                            userName={this.state.userName}
+                            roomID={this.state.roomID}
+                        />
 
                         <div className="roomActions">
                             <ButtonArea
                                 timerCallback={this.startTimer}
+                                actionCallback={this.resetLobbyTimer}
                                 header={this.state.header}
                                 time={this.state.time}
                                 errorMsg={this.state.error}
