@@ -103,11 +103,11 @@ class Instructions extends Component {
                             left on the clock.</p>
                             <h2>Maps:</h2>
                             <h5>Small</h5>
-                            <img src={SmallMap}></img><br />
+                            <img src={SmallMap} alt="Small Map"></img><br />
                             <h5>Medium</h5>
-                            <img src={MediumMap}></img><br />
+                            <img src={MediumMap} alt="Medium Map"></img><br />
                             <h5>Large</h5>
-                            <img src={LargeMap}></img><br />
+                            <img src={LargeMap} alt="Large Map"></img><br />
                         </div>
                     </div>
                 </div>
