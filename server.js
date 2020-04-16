@@ -1,11 +1,15 @@
+const path = require('path');
 const express = require("express");
 const app = express();
-const server = require('http').createServer(app);
+const server = require('http').Server(app);
 const io = require('socket.io')(server);
 const PORT = process.env.PORT || 3001;
 
 const cors = require("cors");
 app.use(cors());
+
+app.use(express.static(path.join(__dirname, './build')));
+
 app.get("/", (req, res) => {
     res.send("API working properly!");
 });
