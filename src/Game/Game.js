@@ -698,7 +698,6 @@ class Game extends Component {
             );
         }
 
-        // console.log(this.state.playerState==='seeker' && this.state.game_status === 'not started');
         // if client is a seeker and game has not started (15 seconds wait), then canvas should be black and waiting
         let canvasDisplay = this.state.playerState === 'seeker' && this.state.game_status === 'not started' ? ['z-depth-5 darkness', ''] : ['', 'z-depth-5 fade-in'];
         return (

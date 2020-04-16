@@ -15,14 +15,24 @@ import CreateLobby from "./Lobby/CreateLobby";
 import JoinCode from "./Lobby/JoinCode";
 import Room from "./Lobby/Room";
 import Game from "./Game/Game";
+import Sound from "react-sound";
+import Music from "./sounds/Music"
+import getSong from "./sounds/gameMusic";
 
 
 class Router extends React.Component {
     constructor() {
         super();
         this.state = ({
-            networkError: false
-        })
+            networkError: false,
+            soundState: Sound.status.STOPPED,
+        });
+        this.waitForClicks = this.waitForClicks.bind(this);
+    }
+
+    waitForClicks() {
+        if (!(this.state.soundState === Sound.status.PLAYING))
+            setTimeout(() => {this.setState({soundState: Sound.status.PLAYING}) }, 5000)
     }
 
     componentDidMount() {
@@ -53,7 +63,7 @@ class Router extends React.Component {
     }
 
     render() {
-
+        // get a song to play
         return (
             <HashRouter>
                 <div className="App">
@@ -72,11 +82,19 @@ class Router extends React.Component {
 
                         <Route path="*" component={() => "404 NOT FOUND"}/>
                     </Switch>
+                    <Sound
+                        volume={60}
+                        url={getSong()}
+                        autoload={false}
+                        playStatus= {this.state.soundState}
+                        muted={"muted"}
+                        loop={true}
+                        onLoad={this.waitForClicks()}
+                    />
                 </div>
             </HashRouter>
         );
     }
-
 }
 
 export {Router, auth};

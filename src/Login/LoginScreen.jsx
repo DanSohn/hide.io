@@ -149,17 +149,8 @@ class LoginScreen extends Component {
                 );
             }
         }
-        let songURL = getSong();
         return (
             <div className="fade-in-2">
-                <Sound
-                    volume="60"
-                    url={songURL}
-                    autoload="true"
-                    playStatus={Sound.status.PLAYING}
-                    muted="muted"
-                    loop="true"
-                />
                 {component}
             </div>
         );
