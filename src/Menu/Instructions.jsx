@@ -59,7 +59,7 @@ class Instructions extends Component {
         let comp;
         if (!this.state.previous) {
             comp = (
-                <div className="z-depth-5 GameWindow">
+                <div className="GameWindow">
                     <Header
                         previous={this.goPrevious}
                         title="Instructions"

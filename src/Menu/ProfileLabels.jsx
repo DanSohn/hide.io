@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function ProfileLabels(){
+export default function ProfileLabels() {
     return (
         <div className="profileLabels">
             <h2>Name:</h2>

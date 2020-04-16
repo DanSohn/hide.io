@@ -1,7 +1,7 @@
-import React, {Component} from "react";
-import {socket} from "../assets/socket";
+import React, { Component } from "react";
+import { socket } from "../assets/socket";
 
-class ProfileResults extends Component{
+class ProfileResults extends Component {
     constructor(props) {
         super(props);
         this.state = {

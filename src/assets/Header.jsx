@@ -54,15 +54,15 @@ class Header extends Component {
                 // <button className="btn btn-dark" onClick={this.goProfile}>
                 //     Profile
                 // </button>
-                <img className="start-btn-profile z-depth-5" src={this.state.image} alt="Google or facebook's profile" />
+                <img className="start-btn-profile" src={this.state.image} alt="Google or facebook's profile" />
             );
         }
         comp = (
             <>
                 <div className="backButton">{back}</div>
                 <div className="logo">
-                    <h1>Hide.IO</h1>
-                    <h2>{this.state.title}</h2>
+                    <span className="ff-header">Hide.IO</span>
+                    <span className="ff-title">{this.state.title}</span>
                 </div>
                 <div className="profile">{profile}</div>
             </>
