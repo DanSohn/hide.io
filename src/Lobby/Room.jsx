@@ -176,6 +176,7 @@ class Room extends Component {
                 }
 
             }
+
         });
 
             // if the server disconnects, go to login screen, remove cookies and sign out of the google account
@@ -214,6 +215,7 @@ class Room extends Component {
 
     render() {
         let comp;
+
         if (this.state.previous) {
             comp = (
                 <Redirect to={{
@@ -238,13 +240,13 @@ class Room extends Component {
                         playerUsername: this.state.userName,
                         creator: this.state.creator
                     }
-                }}/>
+                }} />
 
             );
 
         } else {
             comp = (
-                <div className="z-depth-5 GameWindow">
+                <div className="GameWindow">
                     <Header
                         previous={this.goPrevious}
                         title={this.state.title}

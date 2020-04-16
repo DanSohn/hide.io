@@ -23,6 +23,7 @@
     "react-facebook-login": "^4.1.1",
     "react-github-login": "^1.0.3",
     "react-google-login": "^5.1.2",
+    "react-image": "^2.4.0",
     "react-key-index": "^0.1.1",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.0",

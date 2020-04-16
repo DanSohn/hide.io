@@ -144,7 +144,7 @@ class CreateLobby extends Component {
             }} />
         } else {
             comp = (
-                <div className="z-depth-5 GameWindow">
+                <div className="GameWindow">
                     <Header
                         previous={this.goPrevious}
                         title="Create a Lobby"
