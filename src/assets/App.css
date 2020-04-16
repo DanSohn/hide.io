@@ -178,7 +178,7 @@ body {
 
   .btn-winner {
     font-family: 'Press Start 2p';
-    background-color: rgb(255, 236, 61);
+    background-color: #ffcf40;
     color: rgba(0, 0, 0, 0.541);
     box-shadow: 0 .5em rgba(0, 0, 0, 0.432);
     margin: 0 auto;
