@@ -161,14 +161,15 @@ class Game extends Component {
     //init game state seppereate from did load. could be used for start restrictions.
     init() {
         Keyboard.listenForEvents([Keyboard.LEFT, Keyboard.RIGHT, Keyboard.UP, Keyboard.DOWN]);
-        console.log("hey this is starting positoon"+this.state.startingPosition);
-        let  hiderX = ((this.state.map.cols/2) * this.state.map.tsize) + (128 *  this.state.startingPosition[0]);
-        let  hiderY = ((this.state.map.rows/2)* this.state.map.tsize) + (128 *  this.state.startingPosition[1]);
-        console.log("HIDER STARTING POSITON " + hiderX + "Hider Starting Y" + hiderY);
+
         // this.tileAtlas = Loader.getImage('tiles');
         if (this.state.playerState === "seeker") {
-            this.Player = new Player(this.state.map, 1600, 1600);
+            let  seekerX = (this.state.map.cols/2) * this.state.map.tsize;
+            let  seekerY = (this.state.map.rows/2)* this.state.map.tsize;
+            this.Player = new Player(this.state.map, seekerX, seekerY);
         } else {
+            let  hiderX = ((this.state.map.cols/2) * this.state.map.tsize) + (96 *  this.state.startingPosition[0]);
+            let  hiderY = ((this.state.map.rows/2)* this.state.map.tsize) + (96 *  this.state.startingPosition[1]);
             this.Player = new Player(this.state.map, hiderX, hiderY);
         }
         this.camera = new Camera(this.state.map, 1024, 640);
