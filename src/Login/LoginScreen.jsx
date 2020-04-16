@@ -115,15 +115,14 @@ class LoginScreen extends Component {
         let component = null;
         if (!auth.isAuthenticated) {
             component = (
-                <div className="GameWindow">
-                    <Header title="Login" showProfile={false} showBack={false}/>
+                <div className="GameWindow fade-in-2">
+                    <Header title="Login" showProfile={false} showBack={false} />
 
                     <Break />
                     <div className="ContentScreen">
                         <div className="LoginScreen">
                             <p className="errorMsg">{this.state.errorMsg}</p>
                             <span id="googleLogin" className='start-btn-red ff-20 width-250'>GOOGLE</span>
-
                         </div>
                     </div>
                 </div>
@@ -174,7 +173,7 @@ class LoginScreen extends Component {
                 break;
         }
         return (
-            <div className="fade-in-2">
+            <>
                 <Sound
                     volume="60"
                     url={songURL}
@@ -184,7 +183,7 @@ class LoginScreen extends Component {
                     loop="true"
                 />
                 {component}
-            </div>
+            </>
         );
     }
 }
