@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import Cookies from "universal-cookie";
+import Img from "react-image";
 import { googleAuth } from "../Login/LoginScreen";
 
 import Header from "../assets/Header";
@@ -10,7 +11,6 @@ import "../assets/App.css";
 import ClickSound from "../sounds/click";
 import { socket } from "../assets/socket";
 import { auth } from "../assets/auth";
-
 import SmallMap from "../assets/images/SmallMap.png";
 import MediumMap from "../assets/images/MediumMap.png";
 import LargeMap from "../assets/images/LargeMap.png";
@@ -103,11 +103,11 @@ class Instructions extends Component {
                             left on the clock.</p>
                             <h2>Maps:</h2>
                             <h5>Small</h5>
-                            <img src={SmallMap} alt="Small Map"></img><br />
+                            <Img src={SmallMap} alt="Small Map" /><br />
                             <h5>Medium</h5>
-                            <img src={MediumMap} alt="Medium Map"></img><br />
+                            <Img src={MediumMap} alt="Medium Map" /><br />
                             <h5>Large</h5>
-                            <img src={LargeMap} alt="Large Map"></img><br />
+                            <Img src={LargeMap} alt="Large Map" /><br />
                         </div>
                     </div>
                 </div>
