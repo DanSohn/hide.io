@@ -475,6 +475,11 @@ tr .btn-success {
     flex-direction: column;
     align-items: center;
 }
+
+.instructions img {
+    width:400px;
+    height:400px;
+}
 .mapImg {
     width:150px;
     height:150px;
@@ -745,6 +750,10 @@ input {
         visibility:hidden;
         width: 0px;
         height: 0px;
+    }
+    .instructions img {
+        width:250px;
+        height:250px;
     }
 
 }

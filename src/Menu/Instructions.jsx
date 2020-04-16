@@ -11,6 +11,10 @@ import ClickSound from "../sounds/click";
 import { socket } from "../assets/socket";
 import { auth } from "../assets/auth";
 
+import SmallMap from "../assets/images/SmallMap.png";
+import MediumMap from "../assets/images/MediumMap.png";
+import LargeMap from "../assets/images/LargeMap.png";
+
 const cookies = new Cookies();
 
 class Instructions extends Component {
@@ -97,6 +101,13 @@ class Instructions extends Component {
                             <p>The win condition for the hiders is to have at least a single hider stay alive before the time runs out.
                             The loss condition for the hiders is when all the hiders have been caught by the seeker and there is still time
                             left on the clock.</p>
+                            <h2>Maps:</h2>
+                            <h5>Small</h5>
+                            <img src={SmallMap}></img><br />
+                            <h5>Medium</h5>
+                            <img src={MediumMap}></img><br />
+                            <h5>Large</h5>
+                            <img src={LargeMap}></img><br />
                         </div>
                     </div>
                 </div>
