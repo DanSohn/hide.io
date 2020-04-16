@@ -36,6 +36,11 @@ const LobbySchema = new mongoose.Schema({
     players: {
         type: Array,
         required: true
+    },
+    in_game: {
+        type: Boolean,
+        default: false,
+        required: true
     }
 
 });
