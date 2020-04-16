@@ -79,14 +79,15 @@ async function getUsers(){
 
 // returns the specified lobby if it exists. Otherwise, return null
 async function getLobby(roomID){
-    // console.log("--------- GETLOBBY IN DBUTILS ----------");
+    console.log("--------- GETLOBBY IN DBUTILS ----------", roomID);
     let res = null;
     await Lobby.findOne({join_code: roomID})
         .then(lobby => {
+            console.log("Found in getLobby()", lobby);
             if(lobby){
                 res = lobby;
             }
-        });
+        }).catch(err => console.log(err));
     return res;
 }
 

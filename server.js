@@ -228,13 +228,14 @@ io.on("connection", (socket) => {
 
     // check for if the lobby still in the DB
     socket.on("does the lobby still exist", (room) => {
+        console.log("socket event does lobby still exist, given", room);
         dbUtil.getLobby(room)
             .then((lobby)=>{
                 let status = true;
                 if(!lobby){
                     status = false;
                 }
-
+                console.log("does lobby exist? ", lobby, status);
                 socket.emit("lobby existence", status);
             })
     });

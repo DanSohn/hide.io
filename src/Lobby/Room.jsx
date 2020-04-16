@@ -64,9 +64,9 @@ class Room extends Component {
     goPrevious() {
         // i ensure everything is first handled properly in the server, and is up to date
         // before i leave
-        clearInterval(this.state.roomTTL);
 
         socket.on("may successfully leave lobby", () => {
+            clearInterval(this.state.roomTTL);
             ClickSound();
             this.setState({
                 previous: true
@@ -196,6 +196,8 @@ class Room extends Component {
     }
 
     componentWillUnmount() {
+        clearInterval(this.state.roomTTL);
+        
         socket.off("giving lobby info");
         socket.off("update lobby list");
         socket.off("game starting ack");
