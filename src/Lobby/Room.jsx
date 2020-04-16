@@ -33,6 +33,7 @@ class Room extends Component {
             title: "",
             header: "Join Code: " + this.props.location.state.join_code,
             playerState: 'hider',
+            startingPosition: [],
             game_mode: "",
             game_map: {},
             game_time: "",
@@ -125,6 +126,10 @@ class Room extends Component {
             console.log("Congrats! Youre the seeker!")
         });
 
+        socket.on('starting position', (startingX, startingY) => {
+            this.setState({startingPosition: [startingX, startingY]});
+        });
+
         socket.on('enough peeps', ()=>
             this.setState({ header: "Game is starting in ..."}));
 
@@ -185,6 +190,7 @@ class Room extends Component {
                     gameID: this.state.roomID,
                     players: this.state.players,
                     playerState: this.state.playerState,
+                    startingPosition: this.state.startingPosition,
                     map: this.state.game_map,
                     timeLimit: this.state.game_time,
                     mode: this.state.game_mode,
