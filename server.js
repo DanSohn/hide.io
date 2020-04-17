@@ -230,7 +230,7 @@ io.on("connection", (socket) => {
                 if(!lobby){
                     status = false;
                 }
-                console.log("does lobby exist? ", lobby, status);
+                // console.log("does lobby exist? ", lobby, status);
                 socket.emit("lobby existence", status);
             })
     });
@@ -285,6 +285,10 @@ io.on("connection", (socket) => {
             socket.emit('check enough players', false);
         } else {
             io.to(room).emit('check enough players', true);
+            // set the lobby to be in game status for database. Lobby no longer shows up in the lobby tables
+            dbUtil.enterGame(room)
+                .then(()=>sendLobbies())
+                .catch(err=>console.log(err));
             // choose one random socket to be the seeker
             let randomSeeker = roomies[Math.floor(Math.random() * roomies.length)];
             io.to(`${randomSeeker}`).emit('youre the seeker');

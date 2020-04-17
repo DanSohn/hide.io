@@ -83,7 +83,7 @@ async function getLobby(roomID){
     let res = null;
     await Lobby.findOne({join_code: roomID})
         .then(lobby => {
-            console.log("Found in getLobby()", lobby);
+            // console.log("Found in getLobby()", lobby);
             if(lobby){
                 res = lobby;
             }
@@ -266,7 +266,7 @@ async function enterGame(roomID){
     if(!doc){
         return;
     }
-
+    console.log("Setting lobby to be in game!");
     // update the document
     const update = {in_game: true};
     await doc.updateOne(update);
@@ -281,6 +281,7 @@ async function leaveGame(roomID){
     if(!doc){
         return;
     }
+    console.log("Setting lobby to be not in game!");
 
     // update the document
     const update = {in_game: false};

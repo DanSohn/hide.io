@@ -98,7 +98,7 @@ class Room extends Component {
         // socket.emit("player joined");
         socket.on("giving lobby info", (lobby) => {
             if (!lobby) {
-                console.log("Received not a lobby! Check room.js line 54, and server.js line 119");
+                console.log("Received not a lobby! Check room.js line 101, and server.js line 126");
             } else {
                 console.log("Received lobby info", lobby);
                 this.setState({
