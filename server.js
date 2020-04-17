@@ -454,6 +454,8 @@ io.on("connection", (socket) => {
                 // console.log("ROOM WAS RESET", gamesInSession[room]);
                 delete gamesInSession[room];
                 io.to(room).emit("game finished");
+                // update the lobbies list once again
+                // TODO: send to event "receive lobby list" all lobbies again, and change this room to be in game false
             }, 5000);
         }
     }
