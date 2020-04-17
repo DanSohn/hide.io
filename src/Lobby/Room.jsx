@@ -33,6 +33,7 @@ class Room extends Component {
             title: "",
             header: "Join Code: " + this.props.location.state.join_code,
             playerState: 'hider',
+            startingPosition: [],
             game_mode: "",
             game_map: {},
             game_time: "",
@@ -125,8 +126,14 @@ class Room extends Component {
             console.log("Congrats! Youre the seeker!")
         });
 
-        socket.on('enough peeps', () =>
-            this.setState({ header: "Game is starting in ..." }));
+
+        socket.on('starting position', (startingX, startingY) => {
+            this.setState({startingPosition: [startingX, startingY]});
+        });
+
+        socket.on('enough peeps', ()=>
+            this.setState({ header: "Game is starting in ..."}));
+
 
         socket.on('not enough peeps', () =>
             this.setState({ header: "Not Enough Players to Begin the Game" }));
@@ -180,18 +187,21 @@ class Room extends Component {
         } else if (this.state.start) {
             comp = (
                 <Redirect to={{
-                    pathname: '/Game',
-                    state: {
-                        gameID: this.state.roomID,
-                        players: this.state.players,
-                        playerState: this.state.playerState,
-                        map: this.state.game_map,
-                        timeLimit: this.state.game_time,
-                        mode: this.state.game_mode,
-                        playerUsername: this.state.userName,
-                        creator: this.state.creator
-                    }
-                }} />
+
+                pathname: '/Game',
+                state: {
+                    gameID: this.state.roomID,
+                    players: this.state.players,
+                    playerState: this.state.playerState,
+                    startingPosition: this.state.startingPosition,
+                    map: this.state.game_map,
+                    timeLimit: this.state.game_time,
+                    mode: this.state.game_mode,
+                    playerUsername: this.state.userName,
+                    creator: this.state.creator
+                }
+            }}/>
+
 
             );
 
