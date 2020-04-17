@@ -89,6 +89,8 @@ class Game extends Component {
             walls: [],
             hitpoints: [],
             enamies: new Map(),
+            startingPosition :  this.props.location.state.startingPosition,
+
 
             alive: true,
 
@@ -134,8 +136,6 @@ class Game extends Component {
 
         this.state.playerColor = this.props.location.state.playerState === "seeker" ? "#D5C7BC" : '#' + Math.floor(Math.random() * 16777215).toString(16);
 
-        console.log("AM I THE SEEKER?", this.state.playerState);
-        console.log("Am i the button presser?", this.state.creator);
         // TODO: do stuff when getting the location information
         socket.on('player moved', (playerinfo) => {
 
@@ -162,14 +162,31 @@ class Game extends Component {
     //init game state seppereate from did load. could be used for start restrictions.
     init() {
         Keyboard.listenForEvents([Keyboard.LEFT, Keyboard.RIGHT, Keyboard.UP, Keyboard.DOWN]);
+
         // this.tileAtlas = Loader.getImage('tiles');
         if (this.state.playerState === "seeker") {
-            this.Player = new Player(this.state.map, 160, 160);
+            let  seekerX = (this.state.map.cols/2) * this.state.map.tsize;
+            let  seekerY = (this.state.map.rows/2)* this.state.map.tsize;
+            this.Player = new Player(this.state.map, seekerX, seekerY);
+            console.log("SEEKER POSITION" + seekerX, seekerY)
         } else {
-            this.Player = new Player(this.state.map, 288, 160);
+            let  hiderX = ((this.state.map.cols/2) * this.state.map.tsize) + (96 *  this.state.startingPosition[0]);
+            let  hiderY = ((this.state.map.rows/2)* this.state.map.tsize) + (96 *  this.state.startingPosition[1]);
+            this.Player = new Player(this.state.map, hiderX, hiderY);
+            console.log("HIDER POSITION" + hiderX, hiderY)
         }
         this.camera = new Camera(this.state.map, 1024, 640);
         this.camera.follow(this.Player);
+
+        let info = {
+            roomID: this.state.gameID,
+            x: this.Player.x,
+            y: this.Player.y,
+            id: socket.id,
+        };
+        socket.emit("player movement", info);
+
+        
     }
 
     drawLayer() {
@@ -402,7 +419,6 @@ class Game extends Component {
                     this.ctx.lineTo(intersect.x, intersect.y);
                 }
             } else {
-                console.log(playerX, this.camera.x);
                 this.ctx.rect(0, 0, this.camera.width, this.camera.height)
             }
             this.ctx.fill();
@@ -429,6 +445,7 @@ class Game extends Component {
                 caughtSound();
                 alertCounter++;
             }
+
             let info = {
                 playerID: playerValues.id,
                 room: this.state.gameID
@@ -628,7 +645,6 @@ class Game extends Component {
 
     // callback for Timer component
     endCountdown(){
-        console.log("Countdown completed. GAME ON");
         this.setState({
             countdown: false,
             game_status: 'started'
@@ -637,7 +653,6 @@ class Game extends Component {
 
     componentDidMount() {
         // this.state.context = this.refs.canvas.getContext('2d');
-        console.log(this.state.timeLimit);
         let context = this.refs.canvas.getContext("2d");
 
         this.setState({context: this.refs.canvas.getContext("2d")});
@@ -665,7 +680,6 @@ class Game extends Component {
         });
         socket.on("reconnect_error", (error) => {
             // console.log("Error! Disconnected from server", error);
-            console.log("Error! Can't connect to server");
             auth.logout(() => {
                 // reason history is avail on props is b/c we loaded it via a route, which passes
                 // in a prop called history always
@@ -673,7 +687,6 @@ class Game extends Component {
                 cookies.remove("email");
                 cookies.remove("image");
                 googleAuth.signOut();
-                console.log("going to logout!");
                 this.props.history.push('/');
             });
         });
@@ -681,7 +694,6 @@ class Game extends Component {
 
 
     componentWillUnmount() {
-        console.log("Component unmounted ===================================");
 
         socket.off("Redraw positions");
         socket.off("reconnect_error");
