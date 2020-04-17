@@ -175,6 +175,7 @@ class CreateLobby extends Component {
                                             onChange={this.handleChangeGameMode}
                                             className="browser-default custom-select"
                                             required>
+                                            <option defaultValue />
                                             <option value="1">Regular</option>
                                         </select>
                                         <select
