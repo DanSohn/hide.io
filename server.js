@@ -148,24 +148,31 @@ io.on("connection", (socket) => {
         console.log("SOCKET EVENT VALIDATE JOIN CODE REQ");
 
         dbUtil.getLobby(info.room).then((lobby) => {
-            let lobbyFound = false;
+            let lobbyStatus = 0;
             if (lobby) {
-                lobbyFound = true;
-                // add the user to the lobby, join the socket room and emit that the lobby is found
-                // to the join_code.js
-                dbUtil
-                    .addUserToLobby({
-                        roomID: info.room,
-                        email: info.email,
-                        username: info.username,
-                    })
-                    .then(() => {
-                        socket.join(info.room);
-                        socket.emit("validate join code res", lobbyFound);
-                    })
-                    .catch((err) => console.log(err));
+                // if the lobby is currently in game, can't join!
+                if(lobby.in_game){
+                    lobbyStatus = 2
+                    socket.emit("validate join code res", lobbyStatus)
+                }else{
+                    lobbyStatus = 1;
+                    // add the user to the lobby, join the socket room and emit that the lobby is found
+                    // to the join_code.js
+                    dbUtil
+                        .addUserToLobby({
+                            roomID: info.room,
+                            email: info.email,
+                            username: info.username,
+                        })
+                        .then(() => {
+                            socket.join(info.room);
+                            socket.emit("validate join code res", lobbyStatus);
+                        })
+                        .catch((err) => console.log(err));
+                }
+
             } else {
-                socket.emit("validate join code res", lobbyFound);
+                socket.emit("validate join code res", lobbyStatus);
             }
         });
     });
