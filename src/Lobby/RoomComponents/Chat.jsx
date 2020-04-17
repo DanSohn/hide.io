@@ -26,6 +26,10 @@ class Chat extends Component {
         });
     }
 
+    componentWillUnmount() {
+        socket.off("message from server");
+    }
+
     handleKeyboard(e) {
         this.setState({
             onKeyboard: e.target.value
