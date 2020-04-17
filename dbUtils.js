@@ -257,6 +257,36 @@ async function updateLobbyTimer(lobby){
     );
 }
 
+// whenever a lobby changes to a game, set in game to true
+async function enterGame(roomID){
+    // load the document
+    const doc = await Lobby.findOne({join_code: roomID});
+    console.log("found lobby: ", doc);
+    // if lobby was not found
+    if(!doc){
+        return;
+    }
+
+    // update the document
+    const update = {in_game: true};
+    await doc.updateOne(update);
+}
+
+// whenever a lobby leaves game and back into room, set in game to false
+async function leaveGame(roomID){
+    // load the document
+    const doc = await Lobby.findOne({join_code: roomID});
+    console.log("found lobby: ", doc);
+    // if lobby was not found
+    if(!doc){
+        return;
+    }
+
+    // update the document
+    const update = {in_game: false};
+    await doc.updateOne(update);
+}
+
 module.exports = {
     getLobbies,
     getUsers,
@@ -272,5 +302,7 @@ module.exports = {
     serverStartLobbies,
     updateWinners,
     updateLosers,
-    updateLobbyTimer
+    updateLobbyTimer,
+    enterGame,
+    leaveGame
 };

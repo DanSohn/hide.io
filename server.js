@@ -83,12 +83,7 @@ io.on("connection", (socket) => {
     // from LobbyTables
     socket.on("please give lobbies", () => {
         console.log("socket event please give lobbies");
-        dbUtil
-            .getLobbies()
-            .then((lobbies) => {
-                io.emit("receive lobby list", lobbies);
-            })
-            .catch((err) => console.log("addUserToLobby", err));
+        sendLobbies();
     });
 
     //When player creates a new lobby to play with their friends (createLobby.js)
@@ -405,6 +400,16 @@ io.on("connection", (socket) => {
         }
     });
 
+    // funtion to send all the current lobbies. Placed into its own function since several socket events need to use
+    async function sendLobbies(){
+        await dbUtil
+            .getLobbies()
+            .then((lobbies) => {
+                io.emit("receive lobby list", lobbies);
+            })
+            .catch((err) => console.log("addUserToLobby", err));
+    }
+
     //When the game finishes, statistics about the players is updated and the room is deleted from gamesInSession
     //also emit a message to the different players about who won between hiders and seeker
     function endGame(room, timerID) {
@@ -456,6 +461,15 @@ io.on("connection", (socket) => {
                 io.to(room).emit("game finished");
                 // update the lobbies list once again
                 // TODO: send to event "receive lobby list" all lobbies again, and change this room to be in game false
+                dbUtil
+                    .leaveGame(room)
+                    .then(()=>{
+                        sendLobbies()
+                            .then(()=>{
+                                console.log("I set room back to in game false, and sent out the lobby list");
+                            })
+                            .catch(err => console.log(err));
+                    })
             }, 5000);
         }
     }
