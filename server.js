@@ -364,7 +364,6 @@ io.on("connection", (socket) => {
             console.log("Time's up");
         }, mins * 60000 + 15000);
 
-        console.log("set a timeout for ", gamesInSession[room].fullTime);
     });
 
     //When a hider is caught, they emit an event to the server to update the list of players who are still hiding and
