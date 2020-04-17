@@ -26,7 +26,6 @@ class LobbyTables extends Component {
 
 
     renderTableData() {
-        console.log("re render table data");
         if (this.state.lobbies === null) {
             return;
         }
@@ -73,11 +72,16 @@ class LobbyTables extends Component {
 
     componentDidMount() {
         socket.on("receive lobby list", (lobbies) => {
-            console.log("Recieved list of lobbies", lobbies);
+            // only show lobbies that aren't in game right now
+            let available_lobbies = [];
+            for(let i = 0; i < lobbies.length; i++){
+                if(!lobbies[i].in_game){
+                    available_lobbies.push(lobbies[i])
+                }
+            }
             this.setState({
-                lobbies: lobbies
+                lobbies: available_lobbies
             });
-            console.log(this.state.lobbies);
         })
     }
 

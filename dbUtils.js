@@ -1,9 +1,14 @@
 let mongoose = require('mongoose');
-
+const moment = require('moment');
 // set up db connection
 let db = 'mongodb+srv://dbUser:dbUserPassword@hideio-wic1l.mongodb.net/Game?retryWrites=true&w=majority';
 // Connect to mongo
-mongoose.connect(db, {useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true})
+mongoose.connect(db, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+    useFindAndModify: false
+})
     .then(() => console.log("MongoDB Connected"))
     .catch(err => console.log(err));
 // Database models (schema)
@@ -74,16 +79,15 @@ async function getUsers(){
 
 // returns the specified lobby if it exists. Otherwise, return null
 async function getLobby(roomID){
-    // console.log("--------- GETLOBBY IN DBUTILS ----------");
-    let res;
+    console.log("--------- GETLOBBY IN DBUTILS ----------", roomID);
+    let res = null;
     await Lobby.findOne({join_code: roomID})
         .then(lobby => {
+            // console.log("Found in getLobby()", lobby);
             if(lobby){
                 res = lobby;
-            }else{
-                res = null;
             }
-        });
+        }).catch(err => console.log(err));
     return res;
 }
 
@@ -181,6 +185,10 @@ async function removeUserFromLobby(info){
     // load the document
     const doc = await Lobby.findOne({join_code: room});
     console.log("found lobby: ", doc);
+    // if lobby was not found
+    if(!doc){
+        return;
+    }
     let players = doc.players;
 
     let index = -1;
@@ -240,6 +248,46 @@ async function updateLosers(players){
     }
 }
 
+// updates the timer to start the TTL again
+async function updateLobbyTimer(lobby){
+    console.log("Received lobby ", lobby, " to update its timer");
+    await Lobby.findOneAndUpdate(
+        {join_code: lobby.roomID},
+        {createdAt: moment().add("3", "m")}
+    );
+}
+
+// whenever a lobby changes to a game, set in game to true
+async function enterGame(roomID){
+    // load the document
+    const doc = await Lobby.findOne({join_code: roomID});
+    console.log("found lobby: ", doc);
+    // if lobby was not found
+    if(!doc){
+        return;
+    }
+    console.log("Setting lobby to be in game!");
+    // update the document
+    const update = {in_game: true};
+    await doc.updateOne(update);
+}
+
+// whenever a lobby leaves game and back into room, set in game to false
+async function leaveGame(roomID){
+    // load the document
+    const doc = await Lobby.findOne({join_code: roomID});
+    console.log("found lobby: ", doc);
+    // if lobby was not found
+    if(!doc){
+        return;
+    }
+    console.log("Setting lobby to be not in game!");
+
+    // update the document
+    const update = {in_game: false};
+    await doc.updateOne(update);
+}
+
 module.exports = {
     getLobbies,
     getUsers,
@@ -254,5 +302,8 @@ module.exports = {
     removeUserFromLobby,
     serverStartLobbies,
     updateWinners,
-    updateLosers
+    updateLosers,
+    updateLobbyTimer,
+    enterGame,
+    leaveGame
 };

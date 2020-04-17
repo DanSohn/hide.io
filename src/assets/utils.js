@@ -3,11 +3,9 @@ function returnGameMode(num) {
     let res;
 
     if (num === "1") {
-        res = "Lover's Paradise";
-    } else if (num === "2") {
-        res = "Do you want to build a snowman?";
-    } else if (num === "3") {
-        res = "Love is an open door";
+        res = "Regular";
+    } else {
+        res = "Unknown";
     }
 
     return res;
@@ -35,8 +33,8 @@ function returnGameMap(num) {
     if (num === "1") {
         res = {
             name: 'Small',
-            cols: 24,
-            rows: 27,
+            cols: 25,
+            rows: 25,
             tsize: 64,
             tiles: [
                 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
