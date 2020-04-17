@@ -17,6 +17,10 @@ import { returnGameMode, returnGameMap, returnGameTime } from "../assets/utils";
 import ClickSound from "../sounds/click";
 import "bootstrap/dist/js/bootstrap.bundle";
 import "../assets/App.css";
+import Sound from "react-sound";
+import getSong from "../sounds/gameMusic";
+import getGameSound from "../sounds/gameMusic";
+
 
 const cookies = new Cookies();
 
@@ -98,12 +102,6 @@ class Room extends Component {
             });
 
         });
-
-        /*// this event occurs on function startTimer(), it will count down from 3 to start the game
-        socket.on("game starting ack", () => {
-            socket.emit("lobby start timer", { countdowntime: 4300, room: this.state.roomID });
-        });
-*/
         socket.on("lobby current timer", (countdown) => {
             console.log(countdown);
             this.setState({
@@ -151,12 +149,11 @@ class Room extends Component {
     componentWillUnmount() {
         socket.off("giving lobby info");
         socket.off("update lobby list");
-        socket.off("game starting ack");
 
         socket.off("lobby current timer");
         socket.off("lobby start timer");
         socket.off("not enough peeps");
-        socket.off("enough peeps")
+        socket.off("enough peeps");
         socket.off("reconnect_error");
         socket.off("may successfully leave lobby");
     }
@@ -179,6 +176,7 @@ class Room extends Component {
             );
         } else if (this.state.start) {
             comp = (
+                <>
                 <Redirect to={{
                 pathname: '/Game',
                 state: {
@@ -192,7 +190,15 @@ class Room extends Component {
                     creator: this.state.creator
                 }
             }}/>
-
+                    <Sound
+                        volume={40}
+                        url={getGameSound()}
+                        autoload={false}
+                        playStatus= {this.state.PLAYING}
+                        muted={"muted"}
+                        loop={true}
+                    />
+            </>
             );
 
         } else {

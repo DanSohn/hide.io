@@ -16,8 +16,7 @@ import JoinCode from "./Lobby/JoinCode";
 import Room from "./Lobby/Room";
 import Game from "./Game/Game";
 import Sound from "react-sound";
-import Music from "./sounds/Music"
-import getSong from "./sounds/gameMusic";
+import getSong from "./sounds/randomMusic";
 
 
 class Router extends React.Component {
@@ -26,12 +25,13 @@ class Router extends React.Component {
         this.state = ({
             networkError: false,
             soundState: Sound.status.STOPPED,
+            purposefulStop: false,
         });
         this.waitForClicks = this.waitForClicks.bind(this);
     }
 
     waitForClicks() {
-        if (!(this.state.soundState === Sound.status.PLAYING))
+        if (!(this.state.soundState === Sound.status.PLAYING) && !(this.state.purposefulStop))
             setTimeout(() => {this.setState({soundState: Sound.status.PLAYING}) }, 5000)
     }
 
@@ -56,6 +56,16 @@ class Router extends React.Component {
                 networkError: true
             })
         });
+
+        socket.on("lobby current timer", (countdown) =>{
+        if (countdown <= 0) {
+            this.setState({
+                soundState: Sound.status.STOPPED,
+                purposefulStop: true
+            })
+        }});
+
+
     }
 
     componentWillUnmount() {
@@ -63,7 +73,6 @@ class Router extends React.Component {
     }
 
     render() {
-        // get a song to play
         return (
             <HashRouter>
                 <div className="App">
@@ -83,14 +92,14 @@ class Router extends React.Component {
                         <Route path="*" component={() => "404 NOT FOUND"}/>
                     </Switch>
                     <Sound
-                        volume={60}
+                        volume={15}
                         url={getSong()}
                         autoload={false}
                         playStatus= {this.state.soundState}
                         muted={"muted"}
                         loop={true}
                         onLoad={this.waitForClicks()}
-                    />
+                        />
                 </div>
             </HashRouter>
         );

@@ -67,7 +67,6 @@ Keyboard.isDown = function (keyCode) {
 class Game extends Component {
     constructor(props) {
         super(props);
-
         document.body.style.overflow = "hidden";
         // for the window animationframe
         let requestID;
@@ -128,7 +127,6 @@ class Game extends Component {
                 },
             },
         };
-
         this.state.playerColor = this.props.location.state.playerState === "seeker" ? "#D5C7BC" : '#' + Math.floor(Math.random() * 16777215).toString(16);
 
         console.log("AM I THE SEEKER?", this.state.playerState);
