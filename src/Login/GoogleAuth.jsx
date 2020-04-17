@@ -24,7 +24,7 @@ class googleAuth {
             window.gapi.load("auth2", () => {
                 this.auth2 = window.gapi.auth2.init({
                     client_id:
-                        "410864203712-n3mhg50v6r4d4lu3c0ansmmim5vesana.apps.googleusercontent.com",
+                        "855332695584-bdpq7iidn0g11ehf2l3h5r3s61cs922m.apps.googleusercontent.com",
                     cookiepolicy: "single_host_origin",
                     scope: "profile email",
                 });
