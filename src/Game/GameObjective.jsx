@@ -15,16 +15,19 @@ export default function GameObjective(props) {
         }
 
         description = (
-            <>
+            <div className="PlayerText fade-out-15">
                 <h1>{title}</h1>
                 <h5>{subtitle}</h5>
-            </>
+            </div>
         );
+    }
+    else {
+        description = (<></>);
     }
 
     return (
-        <div className="PlayerText">
-            <div className="fade-out-15">{description}</div>
-        </div>
+        <>
+            {description}
+        </>
     )
 }
