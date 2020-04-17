@@ -1,71 +1,21 @@
-@font-face {
-    font-family: 'Press Start 2p';
+body, #root {
+    height: 100%;
+    width: 100%;
 }
 
 body {
     background-color: #181a1f;
     position: fixed;
-    height: 100%;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     color: white;
-    padding: 40px;
     font-family: "Montserrat", sans-serif;
     text-align: center;
 }
-
-.z-depth-1 {
-    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+#root {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
-
-.z-depth-1-half {
-    box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.14), 0 1px 7px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -1px rgba(0, 0, 0, 0.2);
-}
-
-.z-depth-2 {
-    box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
-}
-
-.z-depth-3 {
-    box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12), 0 3px 5px -1px rgba(0, 0, 0, 0.3);
-}
-
-.z-depth-4 {
-    box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.3);
-}
-
-.z-depth-5 {
-    box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14), 0 6px 30px 5px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.3);
-}
-
-.video-game-button {
-    text-shadow: 1px 1px pink, -1px -1px maroon;
-
-    line-height: 1.5em;
-    text-align: center;
-    display: inline-block;
-    width: 1.5em;
-    -webkit-border-radius: .75em;
-    -moz-border-radius: .75em;
-    -o-border-radius: .75em;
-    border-radius: .75em;
-    background-color: red;
-    -webkit-box-shadow: 0 .2em maroon;
-    -moz-box-shadow: 0 .2em maroon;
-    -o-box-shadow: 0 .2em maroon;
-    box-shadow: 0 .2em maroon;
-    color: red;
-    margin: 5px;
-    background-color: red;
-    background-image: -o-linear-gradient(left top, pink 3%, red 22%, maroon 99%);
-    background-image: -moz-linear-gradient(left top, pink 3%, red 22%, maroon 99%);
-    background-image: -webkit-linear-gradient(left top, pink 3%, red 22%, maroon 99%);
-    background-image: linear-gradient(left top, pink 3%, red 22%, maroon 99%);
-    cursor: pointer;
-    padding-left: 5px;
-  }
   .start-btn,
   .start-btn-red,
   .start-btn-grey,
@@ -75,15 +25,10 @@ body {
   .start-btn-profile,
   .start-btn-windows,
   .gameWindow{
-    
-    
-      text-align: center;
       display: inline-block;
       margin:5px;
       font-weight: bold;
       padding: 10px 0 10px 5px ;
-      
-      color: darkred;
       -webkit-border-radius: 7px;
       -moz-border-radius: 7px;
       -o-border-radius: 7px;
@@ -119,13 +64,22 @@ body {
 }
 
 .ff-20 {
+    font-family: 'Press Start 2p';
     font-size: 20pt;
   }
+.ff-header {
+    font-family: 'Press Start 2p';
+    font-size: 3em;
+}
+.ff-title {
+    font-family: 'Press Start 2p';
+    font-size: 2em;
+}
   .height-75 {
-      height:75px;
+    height:75px;
   }
   .width-75 {
-      width:75px;
+    width:75px;
   }
   .width-100 {
     width:100px;
@@ -142,15 +96,18 @@ body {
   .start-btn {
       display: inline-block;
   }
+
   .start-btn-windows {
     padding:5px;
     color: white;
     background-color: #52565c;
     box-shadow: 0 .5em #393c40 ; 
   }
+
   .start-btn-profile {
     box-shadow: 0 .5em #08080a; 
   }
+
   .start-btn-red{
     font-family: 'Press Start 2p';
     background-color: #ff6e63;
@@ -186,6 +143,7 @@ body {
     font-family: 'Press Start 2p';
     box-shadow: 0 .5em green;  
   }
+
   .video-game-button:active, 
   .start-btn-red:active, 
   .start-btn-grey:active, 
@@ -197,6 +155,7 @@ body {
       position: relative;
       top: .6em;
   }
+
   .buttonColumn {
       width:50px;
   }
@@ -361,6 +320,7 @@ div {
 }
 
 .GameWindow {
+    overflow: hidden;
     background-color: #282c34 ;
     position: relative;
     display: flex;
@@ -411,11 +371,6 @@ div {
 table {
     width: 100%;
 }
-/* table,
-tr,
-td {
-    border: 0px solid black;
-} */
 tr, td {
     /* border: 2pt solid darkgray; */
     border-bottom:2pt solid darkgray;
@@ -451,6 +406,8 @@ tr, td {
     font-family: 'Press Start 2p';
     order: 2;
     flex: 2;
+    display:flex;
+    flex-direction: column;
 }
 
 .profile {
@@ -505,16 +462,29 @@ tr .btn-success {
     flex-direction: column;
     justify-content: center;
 }
-
+.instructions::-webkit-scrollbar {
+    display: none;
+  }
+.instructions h2, .instructions h5 {
+    font-family: 'Press Start 2p';
+}
 .instructions {
-    width: 100%;
+    width: 80%;
     height: 100%;
-    overflow: auto;
+    overflow-y: scroll;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
+.instructions img {
+    width:400px;
+    height:400px;
+}
+.mapImg {
+    width:150px;
+    height:150px;
+}
 .roomActions,
 .chat {
     height: 95%;
@@ -662,9 +632,17 @@ select,
     color: #5e5f61;
 }
 
-.profileResults input {
-    width: 50%;
+.profileData input {
+    width: 40%;
     margin: 1%;
+    margin-right:20%;
+}
+
+.profilePair {
+    display:flex;
+    flex-direction: row;
+    width:850px;
+    justify-content: flex-end;
 }
 
 .usernameSelection button, .createLobbyContainer button {
@@ -717,4 +695,66 @@ input {
 .errorMsg {
     font-size: 15px;
     color: #ff0000;
+}
+.profileData {
+    display:flex;
+    flex-direction: column;
+    width:850px;
+    height: 250px;
+}
+
+@media only screen and (max-width: 800px) {
+    .GameWindow {
+        width:90%;
+        height:90%;
+        margin:20px;
+    }
+    .profile, .start-btn-profile, .backButton, .header img,.width-100 {
+        width:75px;
+        height:75px;
+    }
+    .start-btn-grey {
+        padding:0px;
+        padding-top: 15px;
+        margin: 0px;
+    }
+    a {
+        width:50%;
+    }
+    .width-350 {
+        width:250px;
+    }
+    .ff-15 {
+        font-size: small;
+    }
+    .ff-20 {
+        font-size: large;
+    }
+    .ff-header {
+        font-size: Large;
+    }
+    .ff-title {
+        font-size: small;
+    }
+    .profileLabels h2, .instructions h2 {
+        font-size: 25px;
+    }
+    .profilePair {
+        flex-direction: column;
+        align-items: center;
+    }
+    .profilePair input {
+        margin:1%;
+    }
+
+    .playButton {
+        visibility:hidden;
+        width: 0px;
+        height: 0px;
+    }
+    .instructions img {
+        width:250px;
+        height:250px;
+    }
+
 }

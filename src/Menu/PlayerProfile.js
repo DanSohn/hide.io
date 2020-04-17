@@ -1,5 +1,5 @@
-import React, {Component} from "react";
-import {Redirect} from "react-router-dom";
+import React, { Component } from "react";
+import { Redirect } from "react-router-dom";
 import Cookies from "universal-cookie";
 
 import Header from "../assets/Header";
@@ -7,10 +7,9 @@ import Break from "../assets/Break";
 
 import "../assets/App.css";
 import ClickSound from "../sounds/click";
-import {socket} from "../assets/socket";
-import {auth} from "../assets/auth";
-import {googleAuth} from "../Login/LoginScreen";
-import ProfileLabels from "./ProfileLabels";
+import { socket } from "../assets/socket";
+import { auth } from "../assets/auth";
+import { googleAuth } from "../Login/LoginScreen";
 import ProfileResults from "./ProfileResults";
 
 const cookies = new Cookies();
@@ -45,6 +44,7 @@ class PlayerProfile extends Component {
                 this.props.history.push('/');
             });
         });
+
     }
 
     componentWillUnmount() {
@@ -62,18 +62,15 @@ class PlayerProfile extends Component {
         let comp;
         if (!this.state.previous) {
             comp = (
-                <div className="z-depth-5 GameWindow">
+                <div className="GameWindow">
                     <Header
                         previous={this.goPrevious}
                         title="Profile"
                     />
-                    <Break/>
+                    <Break />
                     <div className="ContentScreen">
-                        <ProfileLabels />
-                        <ProfileResults
-                            email={this.state.email}
-                            name={this.state.userName}
-                        />
+                        <ProfileResults name={this.state.userName} email={this.state.email} />
+
                     </div>
                 </div>
             );
@@ -85,7 +82,7 @@ class PlayerProfile extends Component {
                         name: this.state.userName,
                         email: this.state.email,
                     }*/
-                }}/>
+                }} />
             );
 
         }

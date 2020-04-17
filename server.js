@@ -277,11 +277,17 @@ io.on("connection", (socket) => {
             let randomSeeker = roomies[Math.floor(Math.random() * roomies.length)];
             io.to(`${randomSeeker}`).emit('youre the seeker');
 
+            let startingPositonArray = [[-1,-1], [0,-1], [1, -1], [-1, 1], [ 0, 1], [1 , 1]];
+
             // remove the seeker from the list of roomies
             for (let i = 0; i < roomies.length; i++) {
                 if (roomies[i] === randomSeeker) {
                     roomies.splice(i, 1);
                 }
+                let startingX = startingPositonArray[i][0];
+                let startingY = startingPositonArray[i][1];
+                console.log(startingX, startingY);
+                io.to(`${roomies[i]}`).emit('starting position', startingX, startingY);
             }
             // set the gamesInSession object for this game
             gamesInSession[room] = {
