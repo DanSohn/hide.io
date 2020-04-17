@@ -642,6 +642,7 @@ select,
     flex-direction: row;
     width:850px;
     justify-content: flex-end;
+    align-items: center;
 }
 
 .usernameSelection button, .createLobbyContainer button {
