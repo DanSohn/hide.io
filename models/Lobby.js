@@ -41,7 +41,7 @@ const LobbySchema = new mongoose.Schema({
 
 });
 
-LobbySchema.index({"expireAt": 1}, {expireAfterSeconds: 60})
+LobbySchema.index({"expireAt": 1}, {expireAfterSeconds: 600})
 // 86400 is 24 hours. The entry expires in 24 hours, and will delete itself then!
 const Lobby = mongoose.model('Lobby', LobbySchema);
 
