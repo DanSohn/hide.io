@@ -4,8 +4,6 @@ function returnGameMode(num) {
 
     if (num === "1") {
         res = "Regular";
-    } else if (num === "2") {
-        res = "Zombies";
     } else {
         res = "Unknown";
     }
