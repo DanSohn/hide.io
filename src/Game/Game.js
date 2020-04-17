@@ -17,11 +17,14 @@ import { googleAuth } from "../Login/LoginScreen";
 import Cookies from "universal-cookie";
 import Results from "./Results";
 import GameObjective from "./GameObjective";
+import DisplayEvent from "./DisplayEvent";
+import caughtSound from "../sounds/caught";
 
 const cookies = new Cookies();
 
 // import Keyboard from './Keyboard'
 let Keyboard = {};
+let alertCounter = 0;
 
 Keyboard.LEFT = 37;
 Keyboard.RIGHT = 39;
@@ -437,6 +440,11 @@ class Game extends Component {
             this.Player.screenX + this.state.map.tsize > enamyScreenX &&
             this.Player.screenY < enamyScreenY + this.state.map.tsize &&
             this.Player.screenY + this.state.map.tsize > enamyScreenY) {
+            console.log("collision detected");
+            if (alertCounter < 1) {
+                caughtSound();
+                alertCounter++;
+            }
 
             let info = {
                 playerID: playerValues.id,

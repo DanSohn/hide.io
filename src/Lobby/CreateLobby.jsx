@@ -59,11 +59,11 @@ class CreateLobby extends Component {
 
     componentWillUnmount() {
         socket.off("reconnect_error");
+        ClickSound();
         socket.off("created lobby return code");
     }
 
     goPrevious() {
-        ClickSound();
         this.setState({
             previous: true,
         });
@@ -71,7 +71,6 @@ class CreateLobby extends Component {
 
     handleSubmit(event) {
         event.preventDefault();
-        ClickSound();
         console.log("i will be providing to the server this information:");
         console.log("lobby name: ", this.state.lobbyName);
         console.log("game mode: ", this.state.gameMode);

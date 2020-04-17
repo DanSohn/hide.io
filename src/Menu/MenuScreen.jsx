@@ -47,6 +47,7 @@ class MenuScreen extends Component {
 
     componentWillUnmount() {
         socket.off("reconnect_error");
+        ClickSound();
     }
 
     render() {

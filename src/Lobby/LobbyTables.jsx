@@ -19,7 +19,6 @@ class LobbyTables extends Component {
     }
 
     sendLobbyCode(join_code) {
-        ClickSound();
         console.log("Sending back information to viewLobbies", join_code);
         this.props.lobbyCallback(join_code);
     }
@@ -87,6 +86,7 @@ class LobbyTables extends Component {
 
     componentWillUnmount() {
         socket.off("receive lobby list");
+        ClickSound();
     }
 
     render() {

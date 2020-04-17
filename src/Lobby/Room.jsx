@@ -15,6 +15,8 @@ import ButtonArea from "./RoomComponents/ButtonArea";
 
 import {returnGameMode, returnGameMap, returnGameTime} from "../assets/utils";
 import ClickSound from "../sounds/click";
+import Timer from "../sounds/timer";
+
 import "bootstrap/dist/js/bootstrap.bundle";
 import "../assets/App.css";
 
@@ -141,6 +143,7 @@ class Room extends Component {
             });
             // TimerSound();
             // after i reach 0, call startGame
+            Timer();
             if (countdown <= 0) {
                 console.log("starting game");
                 this.setState({

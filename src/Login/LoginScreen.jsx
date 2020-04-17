@@ -27,7 +27,6 @@ class LoginScreen extends Component {
 
         };
 
-        this.playSound = this.playSound.bind(this);
         this.checkExistingCookies = this.checkExistingCookies.bind(this);
         this.songSelection = Math.floor(Math.random() * 5);
     }
@@ -40,10 +39,6 @@ class LoginScreen extends Component {
             this.setState({ cookieCheck: true })
         }
 
-    }
-
-    playSound() {
-        ClickSound();
     }
 
     componentDidMount() {
