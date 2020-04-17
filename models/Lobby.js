@@ -1,13 +1,9 @@
 const mongoose = require('mongoose');
 
 const LobbySchema = new mongoose.Schema({
-    createdAt: {
-        type: Date,
-        default: Date.now
-    },
     expireAt: {
         type: Date,
-        default: undefined
+        default: Date.now
     },
     join_code: {
         type: String,

@@ -253,7 +253,7 @@ async function updateLobbyTimer(lobby){
     console.log("Received lobby ", lobby, " to update its timer");
     await Lobby.findOneAndUpdate(
         {join_code: lobby.roomID},
-        {createdAt: moment().add("3", "m")}
+        {expireAt: moment().format()}
     );
 }
 
