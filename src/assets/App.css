@@ -225,6 +225,13 @@ body {
     -o-animation: fadeOut ease 15s;
     -ms-animation: fadeOut ease 15s;
 }
+.fade-out-3 {
+    animation: fadeOut ease 3s;
+    -webkit-animation: fadeOut ease 3s;
+    -moz-animation: fadeOut ease 3s;
+    -o-animation: fadeOut ease 3s;
+    -ms-animation: fadeOut ease 3s;
+}
 
 @keyframes fadeOut {
     0% {
