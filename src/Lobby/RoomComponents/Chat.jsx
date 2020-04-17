@@ -49,6 +49,8 @@ class Chat extends Component {
             message: this.state.onKeyboard,
             onKeyboard: ""
         });
+
+        this.props.actionCallback();
     }
 
     render() {

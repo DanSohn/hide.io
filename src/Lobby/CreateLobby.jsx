@@ -59,6 +59,7 @@ class CreateLobby extends Component {
 
     componentWillUnmount() {
         socket.off("reconnect_error");
+        socket.off("created lobby return code");
     }
 
     goPrevious() {
@@ -174,9 +175,7 @@ class CreateLobby extends Component {
                                             onChange={this.handleChangeGameMode}
                                             className="browser-default custom-select"
                                             required>
-                                            <option defaultValue />
                                             <option value="1">Regular</option>
-                                            <option value="2">Zombies</option>
                                         </select>
                                         <select
                                             value={this.state.gameTime}
