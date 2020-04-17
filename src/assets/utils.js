@@ -35,8 +35,8 @@ function returnGameMap(num) {
     if (num === "1") {
         res = {
             name: 'Small',
-            cols: 24,
-            rows: 27,
+            cols: 25,
+            rows: 25,
             tsize: 64,
             tiles: [
                 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
