@@ -502,7 +502,9 @@ io.on("connection", (socket) => {
         let alivelist = [];
         for(let i = 0; i < gamesInSession[room].hiders.length; i++){
             let playerID = gamesInSession[room].hiders[i];
-            alivelist.push(socket_name[playerID].image);
+            if(socket_name.hasOwnProperty(playerID)){
+                alivelist.push(socket_name[playerID].image);
+            }
         }
         return alivelist;
     }
