@@ -112,8 +112,6 @@ class Router extends React.Component {
             <ProtectedRoute path="/Game" component={Game} />
 
             <Route path="*" component={() => "404 NOT FOUND"} />
-
-            <Route path="*" component={() => "404 NOT FOUND"} />
           </Switch>
           <Sound
             volume={15}
