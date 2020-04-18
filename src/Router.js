@@ -116,7 +116,7 @@ class Router extends React.Component {
           <Sound
             volume={15}
             url={this.state.songURL}
-            autoload={false}
+            autoload={true}
             playStatus={this.state.soundState}
             muted={"muted"}
             loop={true}
@@ -125,7 +125,7 @@ class Router extends React.Component {
           <Sound
             volume={55}
             url={this.state.gameSoundURL}
-            autoload={false}
+            autoload={true}
             playStatus={this.state.gameSoundState}
             muted={"muted"}
             loop={true}
