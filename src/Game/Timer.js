@@ -24,10 +24,10 @@ class Timer extends Component {
 
     updatePrompt(){
         if(this.state.playerState === "seeker" && this.state.gamestage1){
-            this.setState({ingame_prompt:"Let the pigs hide... We'll get them soon"});
+            this.setState({ingame_prompt:"They can't hide for long... We'll get them soon"});
         }
         else if(this.state.playerState === "hider" && this.state.gamestage1){
-            this.setState({ingame_prompt:"Hurry! Run away before they find you"});
+            this.setState({ingame_prompt:"Hurry! Run away before the seeker finds you!"});
         }
     }
 
