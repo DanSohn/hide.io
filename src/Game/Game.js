@@ -136,7 +136,7 @@ class Game extends Component {
         socket.on('player moved', (playerinfo) => {
 
             if (socket.id !== playerinfo.id && playerinfo.room === this.state.gameID) {
-                this.state.enamies.set(playerinfo.id, {playerInfo: playerinfo, color: playerinfo.color});
+                this.state.enamies.set(playerinfo.id, {playerInfo: playerinfo, color: playerinfo.color, isAlive: true});
             }
         });
         socket.on("I died", (playerID, playerName) => {
@@ -426,14 +426,14 @@ class Game extends Component {
             this.ctx.restore();
         } else {
             return;
-        };
+        }
 
     }
 
     detectEnamies(playerValues) {
 
-        let enamyScreenX = (playerValues.x - this.camera.x);
-        let enamyScreenY = (playerValues.y - this.camera.y);
+        let enamyScreenX = (playerValues.playerInfo.x - this.camera.x);
+        let enamyScreenY = (playerValues.playerInfo.y - this.camera.y);
 
         if (this.Player.screenX < enamyScreenX + this.state.map.tsize &&
             this.Player.screenX + this.state.map.tsize > enamyScreenX &&
@@ -445,9 +445,11 @@ class Game extends Component {
                 alertCounter++;
             }
             let info = {
-                playerID: playerValues.id,
+                playerID: playerValues.playerInfo.id,
                 room: this.state.gameID
             };
+
+            playerValues.isAlive = false;
             socket.emit("player caught", info);
             return;
         }
@@ -470,20 +472,25 @@ class Game extends Component {
             this.ctx.rect(1024, 0, -1024, 620);
             this.ctx.fill();
             this.ctx.restore();
-
         } else {
             return;
         }
     }
 
-    drawEnamies(enamyX, enamyY, enamyColor) {
+    drawEnamies(enamyX, enamyY, enamyColor, isAlive) {
         let enamyScreenX = (enamyX - this.camera.x) - this.Player.width / 2;
         let enamyScreenY = (enamyY - this.camera.y) - this.Player.height / 2;
 
         this.ctx.beginPath();
         this.ctx.rect(enamyScreenX, enamyScreenY, this.state.map.tsize, this.state.map.tsize);
-        this.ctx.fillStyle = enamyColor;
-        this.ctx.fill();
+        if (isAlive) {
+            this.ctx.fillStyle = enamyColor;
+            this.ctx.fill();
+        }
+        else {
+            this.ctx.strokeStyle = enamyColor;
+            this.ctx.stroke();
+        }
         this.ctx.restore();
     }
 
@@ -499,7 +506,7 @@ class Game extends Component {
             64
         );
         // set the playerColor
-        if (this.state.alive === true) {
+        if (this.state.alive) {
             this.ctx.fillStyle = this.state.playerColor;
             this.ctx.fill();
         } else {
@@ -585,9 +592,10 @@ class Game extends Component {
                 break;
             } else {
                 if (this.state.playerState === "seeker" && this.state.game_status === 'started') {
-                    this.detectEnamies(playerValue.playerInfo);
+                    this.detectEnamies(playerValue);
                 }
-                this.drawEnamies(playerValue.playerInfo.x, playerValue.playerInfo.y, playerValue.color);
+                console.log("Calling function with:  "+playerValue);
+                this.drawEnamies(playerValue.playerInfo.x, playerValue.playerInfo.y, playerValue.color, playerValue.isAlive);
             }
         }
         this.drawLight(playerX, playerY);
