@@ -70,7 +70,6 @@ Keyboard.isDown = function (keyCode) {
 class Game extends Component {
     constructor(props) {
         super(props);
-
         document.body.style.overflow = "hidden";
         // for the window animationframe
         let requestID;
@@ -133,7 +132,6 @@ class Game extends Component {
                 },
             },
         };
-
         this.state.playerColor = this.props.location.state.playerState === "seeker" ? "#D5C7BC" : '#' + Math.floor(Math.random() * 16777215).toString(16);
 
         // TODO: do stuff when getting the location information
@@ -716,7 +714,6 @@ class Game extends Component {
             );
         }
 
-        // console.log(this.state.playerState==='seeker' && this.state.game_status === 'not started');
         // if client is a seeker and game has not started (15 seconds wait), then canvas should be black and waiting
         let canvasDisplay = this.state.playerState === 'seeker' && this.state.game_status === 'not started' ? ['z-depth-5 darkness', ''] : ['', 'z-depth-5 fade-in'];
         return (
