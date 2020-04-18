@@ -28,7 +28,6 @@ class LoginScreen extends Component {
 
         };
 
-        this.playSound = this.playSound.bind(this);
         this.checkExistingCookies = this.checkExistingCookies.bind(this);
     }
 
@@ -40,10 +39,6 @@ class LoginScreen extends Component {
             this.setState({ cookieCheck: true })
         }
 
-    }
-
-    playSound() {
-        ClickSound();
     }
 
     componentDidMount() {
@@ -114,15 +109,14 @@ class LoginScreen extends Component {
         let component = null;
         if (!auth.isAuthenticated) {
             component = (
-                <div className="GameWindow">
-                    <Header title="Login" showProfile={false} showBack={false}/>
+                <div className="GameWindow fade-in-2">
+                    <Header title="Login" showProfile={false} showBack={false} />
 
                     <Break />
                     <div className="ContentScreen">
                         <div className="LoginScreen">
                             <p className="errorMsg">{this.state.errorMsg}</p>
                             <span id="googleLogin" className='start-btn-red ff-20 width-250'>GOOGLE</span>
-
                         </div>
                     </div>
                 </div>

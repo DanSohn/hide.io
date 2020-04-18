@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 import OtherPlayers from "./OtherPlayers";
 
 import "../assets/App.css";
@@ -6,22 +6,25 @@ import "../assets/App.css";
 import Wall from "./Wall";
 import Camera from "./Camera";
 import Player from "./PlayerTest";
-import {socket} from "../assets/socket";
+import { socket } from "../assets/socket";
 
 import Point from "./Point";
 import Timer from "../Game/Timer";
 import AliveList from "./AliveList";
-import {Redirect} from "react-router-dom";
-import {auth} from "../assets/auth";
-import {googleAuth} from "../Login/LoginScreen";
+import { Redirect } from "react-router-dom";
+import { auth } from "../assets/auth";
+import { googleAuth } from "../Login/LoginScreen";
 import Cookies from "universal-cookie";
 import Results from "./Results";
 import GameObjective from "./GameObjective";
+import DisplayEvent from "./DisplayEvent";
+import caughtSound from "../sounds/caught";
 
 const cookies = new Cookies();
 
 // import Keyboard from './Keyboard'
 let Keyboard = {};
+let alertCounter = 0;
 
 Keyboard.LEFT = 37;
 Keyboard.RIGHT = 39;
@@ -85,6 +88,8 @@ class Game extends Component {
             walls: [],
             hitpoints: [],
             enamies: new Map(),
+            startingPosition: this.props.location.state.startingPosition,
+
 
             alive: true,
 
@@ -129,8 +134,6 @@ class Game extends Component {
         };
         this.state.playerColor = this.props.location.state.playerState === "seeker" ? "#D5C7BC" : '#' + Math.floor(Math.random() * 16777215).toString(16);
 
-        console.log("AM I THE SEEKER?", this.state.playerState);
-        console.log("Am i the button presser?", this.state.creator);
         // TODO: do stuff when getting the location information
         socket.on('player moved', (playerinfo) => {
 
@@ -141,11 +144,11 @@ class Game extends Component {
         });
         socket.on("I died", (playerID, playerName) => {
             if (playerID === socket.id) {
-                this.setState({alive: false})
+                this.setState({ alive: false })
             }
 
         });
-        if(this.state.creator){
+        if (this.state.creator) {
             socket.emit("start game timer", this.state.gameID, this.state.timeLimit);
         }
 
@@ -157,18 +160,35 @@ class Game extends Component {
     //init game state seppereate from did load. could be used for start restrictions.
     init() {
         Keyboard.listenForEvents([Keyboard.LEFT, Keyboard.RIGHT, Keyboard.UP, Keyboard.DOWN]);
+
         // this.tileAtlas = Loader.getImage('tiles');
         if (this.state.playerState === "seeker") {
-            this.Player = new Player(this.state.map, 160, 160);
+            let seekerX = (this.state.map.cols / 2) * this.state.map.tsize;
+            let seekerY = (this.state.map.rows / 2) * this.state.map.tsize;
+            this.Player = new Player(this.state.map, seekerX, seekerY);
+            console.log("SEEKER POSITION" + seekerX, seekerY)
         } else {
-            this.Player = new Player(this.state.map, 288, 160);
+            let hiderX = ((this.state.map.cols / 2) * this.state.map.tsize) + (96 * this.state.startingPosition[0]);
+            let hiderY = ((this.state.map.rows / 2) * this.state.map.tsize) + (96 * this.state.startingPosition[1]);
+            this.Player = new Player(this.state.map, hiderX, hiderY);
+            console.log("HIDER POSITION" + hiderX, hiderY)
         }
         this.camera = new Camera(this.state.map, 1024, 640);
         this.camera.follow(this.Player);
+
+        let info = {
+            roomID: this.state.gameID,
+            x: this.Player.x,
+            y: this.Player.y,
+            id: socket.id,
+        };
+        socket.emit("player movement", info);
+
+
     }
 
     drawLayer() {
-        this.setState({walls: []});
+        this.setState({ walls: [] });
 
         let tileSize = this.state.map.tsize;
         //calculate camera view space and attains apropriate start and end of the render space.
@@ -330,7 +350,7 @@ class Game extends Component {
         }
 
         // RAYS IN ALL DIRECTIONS
-        this.setState({hitpoints: []});
+        this.setState({ hitpoints: [] });
         for (let j = 0; j < uniqueAngles.length; j++) {
             let angle = uniqueAngles[j];
 
@@ -340,8 +360,8 @@ class Game extends Component {
 
             // Ray from center of screen to mouse
             let ray = {
-                a: {x: playerX, y: playerY},
-                b: {x: playerX + dx, y: playerY + dy},
+                a: { x: playerX, y: playerY },
+                b: { x: playerX + dx, y: playerY + dy },
             };
 
             // Find CLOSEST intersection
@@ -369,24 +389,24 @@ class Game extends Component {
         let sortedAngles = this.state.hitpoints.sort(function (a, b) {
             return a.angle - b.angle;
         });
-        this.setState({hitpoints: sortedAngles});
+        this.setState({ hitpoints: sortedAngles });
     }
 
 
     // Goes through each hitpoint to create a visibile light polygon - then a circular light emits from players x y position- first circle is more intense than second circle
     drawLight() {
-        if(this.state.alive){
+        if (this.state.alive) {
             let playerX = this.Player.screenX - this.Player.width / 2 + 32;
             let playerY = this.Player.screenY - this.Player.height / 2 + 32;
-    
+
             let lightRadius = this.state.playerState === "seeker" ? 300 : 150;
-    
+
             this.ctx.save();
             let fill = this.ctx.createRadialGradient(playerX, playerY, 1, playerX, playerY, lightRadius);
             fill.addColorStop(0, "rgba(255, 255, 255, 0.65)");
             fill.addColorStop(0.9, "rgba(255, 255, 255, 0.01)");
             fill.addColorStop(1, "rgba(255, 255, 255, 0.009)");
-    
+
             this.ctx.fillStyle = fill;
             this.ctx.beginPath();
             if (this.state.hitpoints.length > 0) {
@@ -397,16 +417,15 @@ class Game extends Component {
                     this.ctx.lineTo(intersect.x, intersect.y);
                 }
             } else {
-                console.log(playerX, this.camera.x);
                 this.ctx.rect(0, 0, this.camera.width, this.camera.height)
             }
             this.ctx.fill();
-    
+
             this.ctx.restore();
-        }else{
+        } else {
             return;
         };
-       
+
     }
 
     detectEnamies(playerValues) {
@@ -420,6 +439,10 @@ class Game extends Component {
             this.Player.screenY < enamyScreenY + this.state.map.tsize &&
             this.Player.screenY + this.state.map.tsize > enamyScreenY) {
             console.log("collision detected");
+            if (alertCounter < 1) {
+                caughtSound();
+                alertCounter++;
+            }
 
             let info = {
                 playerID: playerValues.id,
@@ -479,11 +502,11 @@ class Game extends Component {
             64
         );
         // set the playerColor
-        if(this.state.alive === true){
+        if (this.state.alive === true) {
             this.ctx.fillStyle = this.state.playerColor;
             this.ctx.fill();
 
-        }else{
+        } else {
             this.ctx.strokeStyle = this.state.playerColor;
             this.ctx.stroke();
         }
@@ -529,8 +552,8 @@ class Game extends Component {
 
         //stops movement if they died.
 
-            this.update(delta);
-        
+        this.update(delta);
+
         this.gameRender();
 
         this.requestID = window.requestAnimationFrame(this.tick);
@@ -619,8 +642,7 @@ class Game extends Component {
     }
 
     // callback for Timer component
-    endCountdown(){
-        console.log("Countdown completed. GAME ON");
+    endCountdown() {
         this.setState({
             countdown: false,
             game_status: 'started'
@@ -629,10 +651,9 @@ class Game extends Component {
 
     componentDidMount() {
         // this.state.context = this.refs.canvas.getContext('2d');
-        console.log(this.state.timeLimit);
         let context = this.refs.canvas.getContext("2d");
 
-        this.setState({context: this.refs.canvas.getContext("2d")});
+        this.setState({ context: this.refs.canvas.getContext("2d") });
 
         this.run(context);
 
@@ -640,7 +661,7 @@ class Game extends Component {
             // if there has been a change to players' positions, then reset the state of players to new coordinates
             //console.log("original players ", this.state.players);
             if (this.state.players !== players) {
-                this.setState({players: players});
+                this.setState({ players: players });
             }
         });
 
@@ -657,7 +678,6 @@ class Game extends Component {
         });
         socket.on("reconnect_error", (error) => {
             // console.log("Error! Disconnected from server", error);
-            console.log("Error! Can't connect to server");
             auth.logout(() => {
                 // reason history is avail on props is b/c we loaded it via a route, which passes
                 // in a prop called history always
@@ -665,7 +685,6 @@ class Game extends Component {
                 cookies.remove("email");
                 cookies.remove("image");
                 googleAuth.signOut();
-                console.log("going to logout!");
                 this.props.history.push('/');
             });
         });
@@ -673,7 +692,6 @@ class Game extends Component {
 
 
     componentWillUnmount() {
-        console.log("Component unmounted ===================================");
 
         socket.off("Redraw positions");
         socket.off("reconnect_error");
@@ -692,7 +710,7 @@ class Game extends Component {
                     state: {
                         join_code: this.state.gameID
                     }
-                }}/>
+                }} />
             );
         }
 
@@ -701,19 +719,23 @@ class Game extends Component {
         return (
             <>
                 <Timer gameDuration={this.state.timeLimit.split(" ")[0]}
-                       playerState={this.state.playerState}
-                       endCount={this.endCountdown}
+                    playerState={this.state.playerState}
+                    endCount={this.endCountdown}
                 />
-                <div className="gameAction">
-                    <AliveList/>
-                    <div className={canvasDisplay[0]}/>
-                    <canvas className={canvasDisplay[1]} ref="canvas" width={1024} height={620}/>
-                    <GameObjective
-                        countdown={this.state.countdown}
-                        playerState={this.state.playerState}
-                    />
-                    <Results playerState={this.state.playerState} userName={this.state.userName}/>
+                <div className="horizontalFlex">
+                    <div className="gameAction">
+
+                        <div className={canvasDisplay[0]} />
+                        <canvas className={canvasDisplay[1]} ref="canvas" width={1024} height={620} />
+                        <GameObjective
+                            countdown={this.state.countdown}
+                            playerState={this.state.playerState}
+                        />
+                        <Results playerState={this.state.playerState} userName={this.state.userName} />
+                    </div>
+                    <AliveList />
                 </div>
+
             </>
         );
     }

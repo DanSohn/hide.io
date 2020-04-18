@@ -27,8 +27,8 @@ class Router extends React.Component {
       gameSoundURL:
         "https://freesound.org/data/previews/34/34338_215874-lq.mp3",
       networkError: false,
-      soundState: "Sound.status.STOPPED",
-      gameSoundState: "Sound.status.STOPPED",
+      soundState: Sound.status.PLAYING,
+      gameSoundState: Sound.status.STOPPED,
       purposefulStop: false
     };
     this.waitForClicks = this.waitForClicks.bind(this);
@@ -94,7 +94,7 @@ class Router extends React.Component {
   render() {
     return (
       <HashRouter>
-        <div className="App">
+        <>
           <Switch>
             <Route path="/" exact component={LoginScreen} />
 
@@ -110,6 +110,8 @@ class Router extends React.Component {
             <ProtectedRoute path="/JoinByCode" component={JoinCode} />
             <ProtectedRoute path="/Room" component={Room} />
             <ProtectedRoute path="/Game" component={Game} />
+
+            <Route path="*" component={() => "404 NOT FOUND"} />
 
             <Route path="*" component={() => "404 NOT FOUND"} />
           </Switch>
@@ -130,7 +132,7 @@ class Router extends React.Component {
             muted={"muted"}
             loop={true}
           />
-        </div>
+        </>
       </HashRouter>
     );
   }

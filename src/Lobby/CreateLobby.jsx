@@ -59,10 +59,11 @@ class CreateLobby extends Component {
 
     componentWillUnmount() {
         socket.off("reconnect_error");
+        ClickSound();
+        socket.off("created lobby return code");
     }
 
     goPrevious() {
-        ClickSound();
         this.setState({
             previous: true,
         });
@@ -70,7 +71,6 @@ class CreateLobby extends Component {
 
     handleSubmit(event) {
         event.preventDefault();
-        ClickSound();
         console.log("i will be providing to the server this information:");
         console.log("lobby name: ", this.state.lobbyName);
         console.log("game mode: ", this.state.gameMode);
@@ -143,7 +143,7 @@ class CreateLobby extends Component {
             }} />
         } else {
             comp = (
-                <div className="z-depth-5 GameWindow">
+                <div className="GameWindow">
                     <Header
                         previous={this.goPrevious}
                         title="Create a Lobby"
@@ -176,7 +176,6 @@ class CreateLobby extends Component {
                                             required>
                                             <option defaultValue />
                                             <option value="1">Regular</option>
-                                            <option value="2">Zombies</option>
                                         </select>
                                         <select
                                             value={this.state.gameTime}

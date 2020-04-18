@@ -11,20 +11,23 @@ export default function GameObjective(props) {
             subtitle = "Objective: Hunt them down.";
         } else {
             title = "You are a hider";
-            subtitle = "Objective: Hide BITCH";
+            subtitle = "Objective: Don't get caught!";
         }
 
         description = (
-            <>
+            <div className="PlayerText fade-out-15">
                 <h1>{title}</h1>
                 <h5>{subtitle}</h5>
-            </>
+            </div>
         );
+    }
+    else {
+        description = (<></>);
     }
 
     return (
-        <div className="PlayerText">
-            <div className="fade-out-15">{description}</div>
-        </div>
+        <>
+            {description}
+        </>
     )
 }

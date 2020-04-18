@@ -47,17 +47,18 @@ class MenuScreen extends Component {
 
     componentWillUnmount() {
         socket.off("reconnect_error");
+        ClickSound();
     }
 
     render() {
 
         return <div className="GameWindow">
-            <Header title="Main Menu" showBack={false}/>
-            <Break/>
+            <Header title="Main Menu" showBack={false} />
+            <Break />
             <div className="ContentScreen">
                 <div className="menuScreen">
 
-                    <Link to={{
+                    <Link className="playButton" to={{
                         pathname: '/LobbyScreen',
                         /*state: {
                             name: this.state.userName,

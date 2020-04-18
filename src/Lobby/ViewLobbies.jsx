@@ -54,6 +54,7 @@ class ViewLobbies extends Component {
 
     componentWillUnmount() {
         socket.off("reconnect_error");
+        socket.off("joining certain lobby success");
     }
 
     goPrevious() {

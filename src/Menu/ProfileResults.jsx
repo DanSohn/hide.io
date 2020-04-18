@@ -1,7 +1,7 @@
-import React, {Component} from "react";
-import {socket} from "../assets/socket";
+import React, { Component } from "react";
+import { socket } from "../assets/socket";
 
-class ProfileResults extends Component{
+class ProfileResults extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -35,44 +35,58 @@ class ProfileResults extends Component{
 
     componentWillUnmount() {
         socket.off("player stats res");
+
     }
 
 
     render() {
         let ratio = this.state.tWins.toString() + " / " + this.state.tLosses.toString();
         return (
-            <div className="profileResults">
-                <input
-                    type="text"
-                    className="form-control"
-                    id="userName"
-                    placeholder={this.state.name}
-                    readOnly
-                />
-                <input
-                    type="text"
-                    id="email"
-                    className="form-control"
-                    placeholder={this.state.email}
-                    readOnly
-                />
-                <input
-                    type="text"
-                    id="kdr"
-                    className="form-control"
-                    placeholder={ratio}
-                    readOnly
-                />
-                <input
-                    type="text"
-                    id="totalgames"
-                    className="form-control"
-                    placeholder={this.state.tGames}
-                    readOnly
-                />
+            <div className="profileData">
+                <div className="profilePair">
+                    <span className="ff-20">Name:</span>
+                    <input
+                        type="text"
+                        className="form-control"
+                        id="userName"
+                        placeholder={this.state.name}
+                        readOnly
+                    />
+                </div>
+                <div className="profilePair">
+                    <span className="ff-20">Email:</span>
+                    <input
+                        type="text"
+                        id="email"
+                        className="form-control"
+                        placeholder={this.state.email}
+                        readOnly
+                    />
+                </div>
+                <div className="profilePair">
+                    <span className="ff-20">Win/Loss:</span>
+                    <input
+                        type="text"
+                        id="kdr"
+                        className="form-control"
+                        placeholder={ratio}
+                        readOnly
+                    />
+                </div>
+                <div className="profilePair">
+                    <span className="ff-20">Total Games:</span>
+                    <input
+                        type="text"
+                        id="totalgames"
+                        className="form-control"
+                        placeholder={this.state.tGames}
+                        readOnly
+                    />
+                </div>
             </div>
         )
     }
+
 }
 
 export default ProfileResults;
