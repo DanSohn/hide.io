@@ -11,7 +11,7 @@ export default function GameObjective(props) {
             subtitle = "Objective: Hunt them down.";
         } else {
             title = "You are a hider";
-            subtitle = "Objective: Hide BITCH";
+            subtitle = "Objective: Don't get caught!";
         }
 
         description = (

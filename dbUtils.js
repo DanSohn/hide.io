@@ -251,9 +251,11 @@ async function updateLosers(players){
 // updates the timer to start the TTL again
 async function updateLobbyTimer(lobby){
     console.log("Received lobby ", lobby, " to update its timer");
+    // load the doc
+    // const doc = await Lobby.findOne({join_code: lobby})
     await Lobby.findOneAndUpdate(
-        {join_code: lobby.roomID},
-        {createdAt: moment().add("3", "m")}
+        {join_code: lobby},
+        {expireAt: moment().format()}
     );
 }
 
