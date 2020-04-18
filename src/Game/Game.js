@@ -138,8 +138,7 @@ class Game extends Component {
         socket.on('player moved', (playerinfo) => {
 
             if (socket.id !== playerinfo.id && playerinfo.room === this.state.gameID) {
-                // console.log(playerinfo);
-                this.state.enamies.set(playerinfo.id, playerinfo);
+                this.state.enamies.set(playerinfo.id, {playerInfo: playerinfo, color: playerinfo.color, isAlive: true});
             }
         });
         socket.on("I died", (playerID, playerName) => {
@@ -448,7 +447,7 @@ class Game extends Component {
                 playerID: playerValues.id,
                 room: this.state.gameID
             };
-
+            playerValues.isAlive = false;
             socket.emit("player caught", info);
             return;
         }
@@ -469,7 +468,6 @@ class Game extends Component {
                 this.ctx.lineTo(intersect.x, intersect.y);
             }
             this.ctx.rect(1024, 0, -1024, 620);
-
             this.ctx.fill();
             this.ctx.restore();
         } else {
@@ -477,15 +475,21 @@ class Game extends Component {
         }
     }
 
-    drawEnamies(enamyX, enamyY) {
+    drawEnamies(enamyX, enamyY, enamyColor, isAlive) {
         let enamyScreenX = (enamyX - this.camera.x) - this.Player.width / 2;
         let enamyScreenY = (enamyY - this.camera.y) - this.Player.height / 2;
 
         this.ctx.beginPath();
         this.ctx.rect(enamyScreenX, enamyScreenY, this.state.map.tsize, this.state.map.tsize);
-        this.ctx.fillStyle = '#525252';
-        this.ctx.fill();
 
+        if (isAlive) {
+            this.ctx.fillStyle = enamyColor;
+            this.ctx.fill();
+        }
+        else {
+            this.ctx.strokeStyle = enamyColor;
+            this.ctx.stroke();
+        }
         this.ctx.restore();
 
 
