@@ -68,14 +68,15 @@ class UsernameSelection extends Component {
         if (this.state.username === "") {
             component = (
                 <div className="GameWindow">
-                    <Header title="Choose Username" showBack={false}/>
-                    <Break/>
+                    <Header title="Choose Username" showBack={false} />
+                    <Break />
                     <div className="ContentScreen">
                         <div className="usernameSelection">
                             <h2>Choose GamerTag</h2>
                             <form onSubmit={this.submitUsername}>
                                 <input
                                     type="text"
+                                    maxLength="20"
                                     className="form-control"
                                     placeholder="GamerTag"
                                     aria-label="Gamer Tag"
