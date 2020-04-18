@@ -273,6 +273,11 @@ io.on("connection", (socket) => {
         io.to(info.roomID).emit('player moved', {x: info.x, y: info.y, id: info.id, room: info.roomID})
     });
 
+    //Attach the profile image for each user that connects to the server when they are playing a game
+    socket.on('profile image url', (image) => {
+        socket_name[socket.id].image = image;
+    });
+
     socket.on("lobby start timer", (info) => {
         console.log("SOCKET EVENT LOBBY START TIMER");
         let {countdowntime, room} = info;
@@ -352,6 +357,7 @@ io.on("connection", (socket) => {
                     time.minutes = time.minutes - 1;
                 }
             }
+            io.to(room).emit("alive player list", getAliveList(room));
             io.to(room).emit("game in progress", time);
         }, 1000);
         gamesInSession[room].timerID = timerID;
@@ -384,6 +390,7 @@ io.on("connection", (socket) => {
 
                         let playerName = socket_name[playerID].name;
                         socket.to(room).emit("I died", playerID, playerName);
+                        io.to(room).emit("alive player list", getAliveList(room));
                         io.to(room).emit("display player caught", playerName);
                         break;
                     }
@@ -481,6 +488,16 @@ io.on("connection", (socket) => {
                     })
             }, 5000);
         }
+    }
+
+    //Returns a list of URLs for icons for all the players that are still alive in a game (they are still hiding)
+    function getAliveList(room) {
+        let alivelist = [];
+        for(let i = 0; i < gamesInSession[room].hiders.length; i++){
+            let playerID = gamesInSession[room].hiders[i];
+            alivelist.push(socket_name[playerID].image);
+        }
+        return alivelist;
     }
 });
 

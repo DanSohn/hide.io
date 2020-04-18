@@ -99,6 +99,7 @@ class Room extends Component {
 
     componentDidMount() {
         // socket.emit("player joined");
+        socket.emit('profile image url', cookies.get("image"));
         socket.on("giving lobby info", (lobby) => {
             if (!lobby) {
                 console.log("Received not a lobby! Check room.js line 101, and server.js line 126");
