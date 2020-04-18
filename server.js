@@ -376,7 +376,7 @@ io.on("connection", (socket) => {
 
         gamesInSession[room].timerID = timerID;
         let seekerID = gamesInSession[room].seeker;
-        socket_name[seekerID].roomInfo[timerID] = timerID;
+        socket_name[seekerID].roomInfo.timerID = timerID;
 
         // stop the intervals once the full time is over
         // mins * 60 0000 (60 seconds x 1 sec per milli) + 15 seconds of count down time
