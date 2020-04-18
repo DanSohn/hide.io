@@ -413,14 +413,14 @@ class Game extends Component {
             this.ctx.restore();
         } else {
             return;
-        };
+        }
 
     }
 
     detectEnamies(playerValues) {
 
-        let enamyScreenX = (playerValues.x - this.camera.x);
-        let enamyScreenY = (playerValues.y - this.camera.y);
+        let enamyScreenX = (playerValues.playerInfo.x - this.camera.x);
+        let enamyScreenY = (playerValues.playerInfo.y - this.camera.y);
 
         if (this.Player.screenX < enamyScreenX + this.state.map.tsize &&
             this.Player.screenX + this.state.map.tsize > enamyScreenX &&
@@ -432,9 +432,10 @@ class Game extends Component {
                 alertCounter++;
             }
             let info = {
-                playerID: playerValues.id,
+                playerID: playerValues.playerInfo.id,
                 room: this.state.gameID
             };
+
             playerValues.isAlive = false;
             socket.emit("player caught", info);
             return;
@@ -458,7 +459,6 @@ class Game extends Component {
             this.ctx.rect(1024, 0, -1024, 620);
             this.ctx.fill();
             this.ctx.restore();
-
         } else {
             return;
         }
@@ -470,7 +470,6 @@ class Game extends Component {
 
         this.ctx.beginPath();
         this.ctx.rect(enamyScreenX, enamyScreenY, this.state.map.tsize, this.state.map.tsize);
-
         if (isAlive) {
             this.ctx.fillStyle = enamyColor;
             this.ctx.fill();
@@ -494,7 +493,7 @@ class Game extends Component {
             64
         );
         // set the playerColor
-        if (this.state.alive === true) {
+        if (this.state.alive) {
             this.ctx.fillStyle = this.state.playerColor;
             this.ctx.fill();
         } else {
@@ -580,9 +579,10 @@ class Game extends Component {
                 break;
             } else {
                 if (this.state.playerState === "seeker" && this.state.game_status === 'started') {
-                    this.detectEnamies(playerValue.playerInfo);
+                    this.detectEnamies(playerValue);
                 }
-                this.drawEnamies(playerValue.playerInfo.x, playerValue.playerInfo.y, playerValue.color);
+                console.log("Calling function with:  "+playerValue);
+                this.drawEnamies(playerValue.playerInfo.x, playerValue.playerInfo.y, playerValue.color, playerValue.isAlive);
             }
         }
         this.drawLight(playerX, playerY);
