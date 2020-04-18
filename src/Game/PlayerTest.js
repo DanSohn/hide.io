@@ -7,6 +7,7 @@ export default class PlayerTest {
         this.y = y;
         this.width = map.tsize;
         this.height = map.tsize;
+        this.deltaSpeed = 0;
 
         this.SPEED = 256;
     }
@@ -14,8 +15,8 @@ export default class PlayerTest {
 
     move(delta, dirx, diry, enamyMap) {
         // move hero
-        this.x += dirx * 5.0;
-        this.y += diry * 5.0;
+        this.x += dirx * (5.0 + this.deltaSpeed);
+        this.y += diry * (5.0 + this.deltaSpeed);
 
         // check if we walked into a non-walkable tile
         this._collide(dirx, diry);

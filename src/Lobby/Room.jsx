@@ -156,7 +156,7 @@ class Room extends Component {
         time: countdown.toString()
       });
       // TimerSound();
-      // after i reach 0, call startGame
+      // after i reach 0, call startGametime lim
       Timer();
       if (countdown <= 0) {
         console.log("starting game");
