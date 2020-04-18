@@ -72,7 +72,6 @@ class Game extends Component {
         super(props);
         document.body.style.overflow = "hidden";
         // for the window animationframe
-        let requestID;
         this.state = {
             context: this.context,
             windowHeight: window.innerHeight,
@@ -148,6 +147,20 @@ class Game extends Component {
         if (this.state.creator) {
             socket.emit("start game timer", this.state.gameID, this.state.timeLimit);
         }
+<<<<<<< HEAD
+=======
+        socket.on("game in progress", (time) => {
+            let timelimit = (this.state.timeLimit.split("")[0]);
+            if(this.state.playerState === "seeker" && this.state.countdown === false){
+                // this.Player.deltaSpeed = (timelimit - time.minutes) + (time.seconds/60);
+                this.Player.deltaSpeed  = (timelimit - time.minutes) + ((60 - time.seconds)/60);
+                // console.log("DELTA"+deltaSpeed);
+            }
+
+            // console.log("TIMELIMIT=" + this.state.timeLimit + ". Current time =" + time.minutes + ":" + time.seconds+". Final output"+ this.state.timeLimit - (time.minutes*60) + time.seconds );
+        });
+
+>>>>>>> seekerSpeed
         this.update_player_component = this.update_player_component.bind(this);
         this.tick = this.tick.bind(this);
         this.endCountdown = this.endCountdown.bind(this);
