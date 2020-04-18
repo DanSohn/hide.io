@@ -76,15 +76,20 @@ class JoinCode extends Component {
         ClickSound();
         socket.emit("validate join code req", { room: this.state.roomID, email: this.state.email, username: this.state.userName });
 
-        socket.on("validate join code res", properRoom => {
-            if (properRoom) {
+        socket.on("validate join code res", lobbyStatus => {
+            if (lobbyStatus === 0) {
+                // error message saying not a valid room
+                this.setState({
+                    errorMsg: "Incorrect join code. Please try again."
+                })
+
+            } else if(lobbyStatus === 1){
                 this.setState({
                     enter_room: true,
                 });
             } else {
-                // error message saying not a valid room
                 this.setState({
-                    errorMsg: "Incorrect join code. Please try again."
+                    errorMsg: "The lobby you are trying to join is currently in game. Please try later, or join another lobby."
                 })
             }
         });
