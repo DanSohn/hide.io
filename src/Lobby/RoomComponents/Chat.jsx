@@ -77,11 +77,9 @@ class Chat extends Component {
                             onChange={this.handleKeyboard}
                             value={this.state.onKeyboard}
                         />
-                        <div className="input-group-append">
-                            <button type="submit" className="btn btn-outline-secondary">
-                                Submit
-              </button>
-                        </div>
+
+                        <button type="submit" className="btn btn-dark"> Submit
+                        </button>
                     </div>
                 </form>
             </div>

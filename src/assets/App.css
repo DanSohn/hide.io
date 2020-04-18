@@ -499,7 +499,7 @@ tr .btn-success {
 
 .inputBox input {
     border-radius: 0;
-    width: 75%;
+    width: 65%;
 }
 
 .inputBox button {
@@ -508,7 +508,7 @@ tr .btn-success {
 }
 
 .input-group {
-    margin: 0;
+    margin: 0px;
 }
 
 .chat {
