@@ -35,26 +35,53 @@ io.on("connection", (socket) => {
 
     /*
     Socket info will maintain for each socket all their individual information for ease of access for the needs of
-    individual client. I keep track of email, username, and latest lobby they're in
+    individual client. I keep track of email, username, and latest lobby they're in.
      */
     let socket_info = {};
+    socket_name[socket.id] = {};
     // when a player is logging in through oauth, i cross-check the given info with the database to see
     // if the user already exists (email). If he does, I emit a message to go straight to main menu, otherwise to
     // go to user selection first
     socket.on("user exists check", (email) => {
-        dbUtil.getUser(email).then((user) => {
-            console.log("recieved from dbutils ", user);
-            socket_info["email"] = email;
-            socket_name[socket.id] = {email: socket_info["email"]};
-            if (user !== null) {
-                socket.emit("user database check", user.username);
-                socket_info["name"] = user.username;
-                socket_name[socket.id].name = socket_info["name"];
-            } else {
-                socket.emit("user database check", null);
-            }
-        });
+        dbUtil.getUser(email)
+            .then((user) => {
+                console.log("checked ", email, "received username: ", user);
+                // check all socket_name properties to see if the email is currently past the login screen already
+                let emailUsed = false;
+                Object.keys(socket_name).forEach(function (key, index) {
+                    // iterating through all sockets IDS
+                    if (socket_name[key].email === email) {
+                        // the email is already being logged in
+                        emailUsed = true;
+                    }
+                });
+                console.log("Is the email used currently?", emailUsed);
+                // if the email is in use, then i don't update the socket information, and tell the
+                // client that the email is in use and shouldn't progress
+                if (emailUsed) {
+                    socket.emit("user database check", -1);
+                } else { // if the email is not in use
+                    socket_info["email"] = email;
+                    socket_name[socket.id] = {email: socket_info["email"]};
+                    // check if the user exists in DB
+                    if (user !== null) {
+                        socket.emit("user database check", user.username);
+                        socket_info["name"] = user.username;
+                        socket_name[socket.id].name = user.username;
+                    } else {
+                        socket.emit("user database check", null);
+                    }
+                }
+
+            });
     });
+
+    // reset all tracked information stored in the server about the user to be empty once more
+    socket.on("logout", () => {
+        console.log("User is logging out, setting info and socket name id to be empty objects");
+        socket_name[socket.id] = {};
+        socket_info = {};
+    })
 
     socket.on("create user", (info) => {
         dbUtil.createUser(info).then((res) => {
@@ -151,10 +178,10 @@ io.on("connection", (socket) => {
             let lobbyStatus = 0;
             if (lobby) {
                 // if the lobby is currently in game, can't join!
-                if(lobby.in_game){
+                if (lobby.in_game) {
                     lobbyStatus = 2
                     socket.emit("validate join code res", lobbyStatus)
-                }else{
+                } else {
                     lobbyStatus = 1;
                     // add the user to the lobby, join the socket room and emit that the lobby is found
                     // to the join_code.js
@@ -232,9 +259,9 @@ io.on("connection", (socket) => {
     socket.on("does the lobby still exist", (room) => {
         console.log("socket event does lobby still exist, given", room);
         dbUtil.getLobby(room)
-            .then((lobby)=>{
+            .then((lobby) => {
                 let status = true;
-                if(!lobby){
+                if (!lobby) {
                     status = false;
                 }
                 // console.log("does lobby exist? ", lobby, status);
@@ -277,7 +304,13 @@ io.on("connection", (socket) => {
         // console.log("This is what I got from player: ", info);
         // console.log("This is what im sending the player: ", {x: info.x, y: info.y, id: info.id});
 
-        io.to(info.roomID).emit('player moved', {x: info.x, y: info.y, id: info.id, room: info.roomID, color: info.color})
+        io.to(info.roomID).emit('player moved', {
+            x: info.x,
+            y: info.y,
+            id: info.id,
+            room: info.roomID,
+            color: info.color
+        })
     });
 
     socket.on("lobby start timer", (info) => {
@@ -294,13 +327,13 @@ io.on("connection", (socket) => {
             io.to(room).emit('check enough players', true);
             // set the lobby to be in game status for database. Lobby no longer shows up in the lobby tables
             dbUtil.enterGame(room)
-                .then(()=>sendLobbies())
-                .catch(err=>console.log(err));
+                .then(() => sendLobbies())
+                .catch(err => console.log(err));
             // choose one random socket to be the seeker
             let randomSeeker = roomies[Math.floor(Math.random() * roomies.length)];
             io.to(`${randomSeeker}`).emit('youre the seeker');
 
-            let startingPositonArray = [[-1,-1], [0,-1], [1, -1], [-1, 1], [ 0, 1], [1 , 1]];
+            let startingPositonArray = [[-1, -1], [0, -1], [1, -1], [-1, 1], [0, 1], [1, 1]];
 
             // remove the seeker from the list of roomies
             for (let i = 0; i < roomies.length; i++) {
@@ -382,7 +415,7 @@ io.on("connection", (socket) => {
 
         // console.log(">>>>>>>>>>>>>>>>> " + gamesInSession[room].hiders[0] + "    " + playerID);
         if (gamesInSession.hasOwnProperty(room) && gamesInSession[room].hasOwnProperty("hiders")) {
-            if(gamesInSession[room].hiders.includes(playerID)) {
+            if (gamesInSession[room].hiders.includes(playerID)) {
                 for (let i = 0; i < gamesInSession[room].hiders.length; i++) {
                     if (gamesInSession[room].hiders[i] === playerID) {
                         gamesInSession[room].hiders.splice(i, 1);
@@ -412,12 +445,14 @@ io.on("connection", (socket) => {
                 .removeUserFromLobby({room: socket_info.lobby, email: socket_info.email})
                 .then()
                 .catch((err) => console.log(err));
-            delete socket_name[socket.id];
         }
+        // reset this sockets information just in case
+        socket_name[socket.id] = {};
+        socket_info = {};
     });
 
     // funtion to send all the current lobbies. Placed into its own function since several socket events need to use
-    async function sendLobbies(){
+    async function sendLobbies() {
         await dbUtil
             .getLobbies()
             .then((lobbies) => {
@@ -479,9 +514,9 @@ io.on("connection", (socket) => {
                 // TODO: send to event "receive lobby list" all lobbies again, and change this room to be in game false
                 dbUtil
                     .leaveGame(room)
-                    .then(()=>{
+                    .then(() => {
                         sendLobbies()
-                            .then(()=>{
+                            .then(() => {
                                 console.log("I set room back to in game false, and sent out the lobby list");
                             })
                             .catch(err => console.log(err));
