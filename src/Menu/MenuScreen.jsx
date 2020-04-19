@@ -31,6 +31,22 @@ class MenuScreen extends Component {
             userName: cookies.get("name"),
             email: cookies.get("email"),
         };
+        this.logOut = this.logOut.bind(this);
+    }
+
+    logOut(){
+        console.log("Logging out in menu screen");
+        socket.emit("logout");
+        auth.logout(() => {
+            // reason history is avail on props is b/c we loaded it via a route, which passes
+            // in a prop called history always
+            cookies.remove("name");
+            cookies.remove("email");
+            cookies.remove("image");
+            googleAuth.signOut();
+            console.log("going to logout!");
+            this.props.history.push('/');
+        });
     }
 
     componentDidMount() {
@@ -83,18 +99,13 @@ class MenuScreen extends Component {
                         <span className='start-btn-green ff-20 width-350'>PROFILE</span>
                     </Link>
 
-                    <span className='start-btn-green ff-20 width-350' onClick={() => {
-                        auth.logout(() => {
-                            // reason history is avail on props is b/c we loaded it via a route, which passes
-                            // in a prop called history always
-                            cookies.remove("name");
-                            cookies.remove("email");
-                            cookies.remove("image");
-                            googleAuth.signOut();
-                            console.log("going to logout!");
-                            this.props.history.push('/');
-                        });
-                    }}>LOGOUT</span>
+                    <span
+                        className='start-btn-green ff-20 width-350'
+                        onClick={() => this.logOut()}
+                    >
+                        LOGOUT
+                    </span>
+                    
                 </div>
             </div>
         </div>

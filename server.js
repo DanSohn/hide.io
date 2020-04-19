@@ -43,24 +43,43 @@ io.on("connection", (socket) => {
     individual client. I keep track of email, username, and latest lobby they're in
      */
     let socket_info = {};
-
+    socket_name[socket.id] = {};
     // when a player is logging in through oauth, i cross-check the given info with the database to see
     // if the user already exists (email). If he does, I emit a message to go straight to main menu, otherwise to
     // go to user selection first
     socket.on("user exists check", (email, imageURL) => {
-        dbUtil.getUser(email).then((user) => {
-            console.log("recieved from dbutils ", user);
-            socket_info["email"] = email;
-            socket_name[socket.id] = {email: socket_info["email"]};
-            if (user !== null) {
-                socket.emit("user database check", user.username);
-                socket_info["name"] = user.username;
-                socket_name[socket.id].name = socket_info["name"];
-                socket_name[socket.id].image = imageURL;
-            } else {
-                socket.emit("user database check", null);
-            }
-        });
+        dbUtil.getUser(email)
+            .then((user) => {
+                console.log("checked ", email, "received username: ", user);
+                // check all socket_name properties to see if the email is currently past the login screen already
+                let emailUsed = false;
+                Object.keys(socket_name).forEach(function (key, index) {
+                    // iterating through all sockets IDS
+                    if (socket_name[key].email === email) {
+                        // the email is already being logged in
+                        emailUsed = true;
+                    }
+                });
+                console.log("Is the email used currently?", emailUsed);
+                // if the email is in use, then i don't update the socket information, and tell the
+                // client that the email is in use and shouldn't progress
+                if (emailUsed) {
+                    socket.emit("user database check", -1);
+                } else { // if the email is not in use
+                    socket_info["email"] = email;
+                    socket_name[socket.id] = {email: socket_info["email"]};
+                    socket_name[socket.id].image = imageURL;
+                    // check if the user exists in DB
+                    if (user !== null) {
+                        socket.emit("user database check", user.username);
+                        socket_info["name"] = user.username;
+                        socket_name[socket.id].name = user.username;
+                    } else {
+                        socket.emit("user database check", null);
+                    }
+                }
+
+            });
     });
 
     socket.on("create user", (info) => {
@@ -74,7 +93,14 @@ io.on("connection", (socket) => {
         });
     });
 
-    // For PlayerProfile. Returns information about the email user
+    // reset all tracked information stored in the server about the user to be empty once more
+    socket.on("logout", () => {
+        console.log("User is logging out, setting info and socket name id to be empty objects");
+        socket_name[socket.id] = {};
+        socket_info = {};
+    })
+
+    // for PlayerProfile. Returns information about the email user
     socket.on("player stats req", email => {
         dbUtil
             .getUser(email)
@@ -105,7 +131,7 @@ io.on("connection", (socket) => {
             if (!lobby) {
                 dbUtil.createLobby(roomID, info).then(() => {
                     dbUtil
-                        .addUserToLobby({roomID: roomID, email: info.email, username: info.name})
+                        .addUserToLobby({ roomID: roomID, email: info.email, username: info.name })
                         .then(() => {
                             // create a socket room, in which from now on, all your communications
                             // socketwise will stay within the room
@@ -194,7 +220,7 @@ io.on("connection", (socket) => {
         console.log("SOCKET EVENT JOIN CERTAIN LOBBY");
 
         dbUtil
-            .addUserToLobby({roomID: info.room, email: info.email, username: info.username})
+            .addUserToLobby({ roomID: info.room, email: info.email, username: info.username })
             .then(() => {
                 socket.join(info.room);
                 socket.emit("joining certain lobby success");
@@ -289,7 +315,7 @@ io.on("connection", (socket) => {
 
     socket.on("lobby start timer", (info) => {
         console.log("SOCKET EVENT LOBBY START TIMER");
-        let {countdowntime, room} = info;
+        let { countdowntime, room } = info;
 
         // get all the sockets in the room, then choose one random socket to be the hider
         let roomies = Object.keys(io.sockets.adapter.rooms[room].sockets);
@@ -309,6 +335,7 @@ io.on("connection", (socket) => {
             socket_name[randomSeeker].roomInfo = {playerRole: 'seeker', room: room};
 
             let startingPositonArray = [[-1, -1], [0, -1], [1, -1], [-1, 1], [0, 1], [1, 1]];
+
             // remove the seeker from the list of roomies
             for (let i = 0; i < roomies.length; i++) {
                 if (roomies[i] === randomSeeker) {
@@ -357,7 +384,7 @@ io.on("connection", (socket) => {
     socket.on("start game timer", (room, game_time) => {
         console.log("game started " + game_time);
         let mins = game_time.split(" ")[0];
-        let time = {minutes: mins, seconds: 15};
+        let time = { minutes: mins, seconds: 15 };
         console.log(time, room);
         io.to(room).emit("alive player list", getAliveList(room, "start game timer"));
         let timerID = setInterval(() => {
@@ -383,7 +410,7 @@ io.on("connection", (socket) => {
         // stop the intervals once the full time is over
         // mins * 60 0000 (60 seconds x 1 sec per milli) + 15 seconds of count down time
         gamesInSession[room].fullTime = setTimeout(() => {
-            io.to(room).emit("game in progress", {minutes: 0, seconds: 0});
+            io.to(room).emit("game in progress", { minutes: 0, seconds: 0 });
             endGame(room, timerID);
             console.log("Time's up");
         }, mins * 60000 + 15000);
@@ -405,7 +432,7 @@ io.on("connection", (socket) => {
         console.log("SOCKET EVENT DISCONNECT");
         if (socket_info.email && socket_info.lobby) {
             dbUtil
-                .removeUserFromLobby({room: socket_info.lobby, email: socket_info.email})
+                .removeUserFromLobby({ room: socket_info.lobby, email: socket_info.email })
                 .then()
                 .catch((err) => console.log(err));
 
@@ -418,8 +445,11 @@ io.on("connection", (socket) => {
                     console.log("Player caught called");
                 }
             }
-            delete socket_name[socket.id];
+            // delete socket_name[socket.id];
         }
+        // reset this sockets information just in case
+        socket_name[socket.id] = {};
+        socket_info = {};
     });
 
     // funtion to send all the current lobbies. Placed into its own function since several socket events need to use
@@ -449,8 +479,8 @@ io.on("connection", (socket) => {
             });
 
             // the seekers players is an array consisting of the seeker's socketID translated to email
-            let seekers = {group: "seeker", players: [socket_name[gamesInSession[room].seeker].email]};
-            let hiders = {group: "hiders", players: hidersEmails};
+            let seekers = { group: "seeker", players: [socket_name[gamesInSession[room].seeker].email] }
+            let hiders = { group: "hiders", players: hidersEmails }
             let winner, loser;
             if (gamesInSession[room].hiders.length === 0) {
                 console.log("<<<<<<<<<<<<<<SEEKER WINS>>>>>>>>>>>.");
