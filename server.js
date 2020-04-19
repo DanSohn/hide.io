@@ -31,7 +31,6 @@ dbUtil
     .catch((err) => console.log(err));
 
 io.on("connection", (socket) => {
-    // console.log("A User has connected");
 
     /*
     Socket info will maintain for each socket all their individual information for ease of access for the needs of
