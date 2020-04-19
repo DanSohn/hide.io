@@ -1,10 +1,18 @@
+/**
+ * Menu Screen component.
+ *
+ * This page is a container for the different choices that the user may make about their pages.
+ * It provides routes to:
+ *      Instructions, Lobbys, Profile, Logout
+ *
+ */
+
 import React, { Component } from "react";
 import { Link } from 'react-router-dom';
 import Cookies from "universal-cookie";
 
 import { auth } from "../Router";
 import { googleAuth } from "../Login/LoginScreen";
-
 
 import "../assets/App.css";
 
@@ -20,9 +28,6 @@ class MenuScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            /*userName: this.props.location.state.name,
-            email: this.props.location.state.email,
-            */
             userName: cookies.get("name"),
             email: cookies.get("email"),
         };
@@ -46,7 +51,6 @@ class MenuScreen extends Component {
 
     componentDidMount() {
         socket.on("reconnect_error", (error) => {
-            // console.log("Error! Disconnected from server", error);
             console.log("Error! Can't connect to server");
             auth.logout(() => {
                 // reason history is avail on props is b/c we loaded it via a route, which passes
@@ -76,71 +80,32 @@ class MenuScreen extends Component {
 
                     <Link className="playButton" to={{
                         pathname: '/LobbyScreen',
-                        /*state: {
-                            name: this.state.userName,
-                            email: this.state.email,
-                        }*/
                     }}>
-                        {/* <button
-                            type="button"
-                            className="z-depth-3 btn btn-success">
-                            Play
-                        </button> */}
+
                         <span className='start-btn-green ff-20 width-350'>PLAY</span>
                     </Link>
                     <Link to={{
                         pathname: '/Instructions',
-                        state: {
-                            /*name: this.state.userName,
-                            email: this.state.email
-                            */
-                        }
+                        state: {}
                     }}>
-                        {/* <button
-                            type="button"
-                            className="z-depth-3 btn btn-success">
-                            Instructions
-                        </button> */}
+
                         <span className='start-btn-green ff-20 width-350'>INSTRUCTIONS</span>
                     </Link>
                     <Link to={{
                         pathname: '/Profile',
-                        state: {
-                            /*name: this.state.userName,
-                            email: this.state.email
-                            */
-                        }
+                        state: {}
                     }}>
-                        {/* <button
-                            type="button"
-                            className="z-depth-3 btn btn-success">
-                            Profile
-                        </button> */}
+
                         <span className='start-btn-green ff-20 width-350'>PROFILE</span>
                     </Link>
-                    {/* <button
-                        type="button"
-                        className="z-depth-3 btn btn-success"
-                        onClick={() => {
-                            auth.logout(() => {
-                                // reason history is avail on props is b/c we loaded it via a route, which passes
-                                // in a prop called history always
-                                cookies.remove("name");
-                                cookies.remove("email");
-                                cookies.remove("image");
-                                googleAuth.signOut();
-                                console.log("going to logout!");
-                                this.props.history.push('/');
-                            });
-                        }}>
-                        Logout
-                    </button> */}
+
                     <span
                         className='start-btn-green ff-20 width-350'
                         onClick={() => this.logOut()}
                     >
                         LOGOUT
                     </span>
+                    
                 </div>
             </div>
         </div>

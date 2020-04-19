@@ -1,10 +1,6 @@
 import React, { Component } from "react";
-import OtherPlayers from "./OtherPlayers";
-import {socket} from "../assets/socket";
-import "../assets/App.css";
-import Player from "./PlayerTest";
-// import Keyboard from './Keyboard'
-let Keyboard = {};
+import "../../assets/App.css";
+import { socket } from "../../assets/socket";
 
 class AliveList extends Component {
     constructor(props) {
@@ -60,12 +56,10 @@ class AliveList extends Component {
                                 <img src={value}/>
                             </li>
                         );
-                    })
-                    }
+                    })}
                     </ul>
             </div>
         );
-        // }
 
         return <>{comp}</>;
     }

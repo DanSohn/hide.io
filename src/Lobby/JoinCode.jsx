@@ -19,9 +19,6 @@ class JoinCode extends Component {
         super(props);
 
         this.state = {
-            /*userName: this.props.location.state.name,
-            email: this.props.location.state.email,
-            */
             userName: cookies.get("name"),
             email: cookies.get("email"),
             previous: false,
@@ -37,7 +34,6 @@ class JoinCode extends Component {
 
     componentDidMount() {
         socket.on("reconnect_error", (error) => {
-            // console.log("Error! Disconnected from server", error);
             console.log("Error! Can't connect to server");
             auth.logout(() => {
                 // reason history is avail on props is b/c we loaded it via a route, which passes
@@ -101,19 +97,12 @@ class JoinCode extends Component {
         if (this.state.previous) {
             comp = <Redirect to={{
                 pathname: '/LobbyScreen',
-                /*state: {
-                    name: this.state.userName,
-                    email: this.state.email,
-                }*/
             }} />
 
         } else if (this.state.enter_room === true) {
             comp = <Redirect to={{
                 pathname: '/Room',
                 state: {
-                    /*name: this.state.userName,
-                    email: this.state.email,
-                    */
                     join_code: this.state.roomID
                 }
             }} />
@@ -136,11 +125,6 @@ class JoinCode extends Component {
                                     required
                                 />
                                 <br />
-                                {/* <button
-                                    className="btn btn-outline-secondary"
-                                    type="submit">
-                                    Submit
-                                </button> */}
                                 <button type="submit"><span className='start-btn-blue ff-20 width-250'>SUBMIT</span></button>
                             </form>
                         </div>

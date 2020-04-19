@@ -1,3 +1,14 @@
+/**
+ *  Lobby Room Component.
+ *
+ *   Acts as a container for all components that are shown in the lobby room.
+ *  This class is in charge of keeping track of how much time is left on the timer before the game begins.
+ *  In charge of instantiating the game and passing all necessary states.
+ *  In charge of assigning the seeker based on message from server socket.
+ *  In charge of assigning starting positions to players.
+ *
+ */
+
 import React, {Component} from "react";
 import {Redirect} from "react-router-dom";
 import Cookies from "universal-cookie";
@@ -19,9 +30,6 @@ import Timer from "../sounds/timer";
 
 import "bootstrap/dist/js/bootstrap.bundle";
 import "../assets/App.css";
-import Sound from "react-sound";
-import getSong from "../sounds/gameMusic";
-import getGameSound from "../sounds/gameMusic";
 
 const cookies = new Cookies();
 
@@ -29,9 +37,6 @@ class Room extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            /*userName: this.props.location.state.name,
-                  email: this.props.location.state.email,
-                  */
             userName: cookies.get("name"),
             email: cookies.get("email"),
             roomID: this.props.location.state.join_code,
@@ -248,10 +253,6 @@ class Room extends Component {
                 <Redirect
                     to={{
                         pathname: "/LobbyScreen"
-                        /*state: {
-                                    name: this.state.userName,
-                                    email: this.state.email,
-                                }*/
                     }}
                 />
             );

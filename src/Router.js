@@ -1,3 +1,11 @@
+/**
+ * Route handler component.
+ *
+ * In charge of starting the game music upon the website entry as well.
+ * Also changes the display with attempts to reconnect to server
+ *
+ */
+
 import React from "react";
 import { HashRouter, Switch, Route } from "react-router-dom";
 
@@ -50,7 +58,6 @@ class Router extends React.Component {
         });
 
         socket.on("reconnect_error", error => {
-            // console.log("Error! Disconnected from server", error);
             console.log("Error! Can't connect to server :(");
             this.setState({
                 networkError: true
@@ -78,7 +85,6 @@ class Router extends React.Component {
 
 
     componentWillUnmount() {
-        console.log("UNMOUNTED ROUTER OH NOOOOO ==============");
         socket.off("game finished");
         socket.off("lobby current timer");
         socket.off("reconnect_error");

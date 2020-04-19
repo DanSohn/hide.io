@@ -1,3 +1,12 @@
+/**
+ * Camera that follows around the player.
+ *
+ * Used to ensure we only draw objects that are within field of view. Players kept in center of camera position
+ * until they approach one of the game corners where the camera does not continue movement with the player
+ * unless they leave from the corner.
+ *
+ */
+
 export default class Camera {
     constructor(map, width, height) {
         this.x = 0;
@@ -16,8 +25,7 @@ export default class Camera {
     };
     
     update() {
-        // assume followed sprite should be placed at the center of the screen
-        // whenever possible
+        // assume sprite is at the center of the screen
         this.following.screenX = this.width / 2;
         this.following.screenY = this.height / 2;
     
@@ -27,10 +35,11 @@ export default class Camera {
         // clamp values
         this.x = Math.max(0, Math.min(this.x, this.maxX));
         this.y = Math.max(0, Math.min(this.y, this.maxY));
-    
+
+
         // in map corners, the sprite cannot be placed in the center of the screen
         // and we have to change its screen coordinates
-    
+
         // left and right sides
         if (this.following.x < this.width / 2 ||
             this.following.x > this.maxX + this.width / 2) {

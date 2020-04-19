@@ -1,3 +1,13 @@
+/**
+ *   Hide.IO API server.
+ *
+ *   Used to handle all socket connections, lobbies, and game status
+ *   All game based interactions are handled client side, then outputs are sent to the server to
+ *   distribute to all other game members.
+ *
+ */
+
+
 const express = require("express");
 const app = express();
 const server = require('http').createServer(app);
@@ -9,16 +19,13 @@ app.get("/", (req, res) => {
     res.send("API working properly!");
 });
 
-
+// Database link
 const dbUtil = require("./dbUtils");
-
-const starting_pos_module = require(__dirname + "/starting_positions");
-let starting_pos = starting_pos_module.starting_positions;
 
 //Maintain a list of all the games that in progress
 let gamesInSession = {};
 
-//Maintains a list of all the players that are currently online
+//Maintains a list of all the players that are currently online, keeps track of users and their name
 let socket_name = {};
 
 // this occurs upon server start, or more importantly, server restart.
@@ -31,8 +38,6 @@ dbUtil
     .catch((err) => console.log(err));
 
 io.on("connection", (socket) => {
-    // console.log("A User has connected");
-
     /*
     Socket info will maintain for each socket all their individual information for ease of access for the needs of
     individual client. I keep track of email, username, and latest lobby they're in
@@ -120,7 +125,6 @@ io.on("connection", (socket) => {
     //          info: an object containing: email, name, lobbyName, gameMode, gameTime, gameMap
     socket.on("create lobby", (info) => {
         console.log("SOCKET EVENT CREATE LOBBY", info);
-        // console.log("Creating lobby with info ", info);
         let roomID = Math.random().toString(36).slice(2, 8);
 
         dbUtil.getLobby(roomID).then((lobby) => {
@@ -179,8 +183,8 @@ io.on("connection", (socket) => {
             let lobbyStatus = 0;
             if (lobby) {
                 // if the lobby is currently in game, can't join!
-                if (lobby.in_game) {
-                    lobbyStatus = 2
+                if(lobby.in_game){
+                    lobbyStatus = 2;
                     socket.emit("validate join code res", lobbyStatus)
                 } else {
                     lobbyStatus = 1;
@@ -265,7 +269,6 @@ io.on("connection", (socket) => {
                 if (!lobby) {
                     status = false;
                 }
-                // console.log("does lobby exist? ", lobby, status);
                 socket.emit("lobby existence", status);
             })
     });
@@ -302,10 +305,7 @@ io.on("connection", (socket) => {
     // emit a event to redraw the new positions
     socket.on('player movement', (info) => {
 
-        // console.log("This is what I got from player: ", info);
-        // console.log("This is what im sending the player: ", {x: info.x, y: info.y, id: info.id});
-
-        io.to(info.roomID).emit('player moved', { x: info.x, y: info.y, id: info.id, room: info.roomID, color: info.color })
+        io.to(info.roomID).emit('player moved', {x: info.x, y: info.y, id: info.id, room: info.roomID, color: info.color})
     });
 
     //Attach the profile image for each user that connects to the server when they are playing a game
@@ -349,7 +349,6 @@ io.on("connection", (socket) => {
                 let startingX = startingPositonArray[i][0];
                 let startingY = startingPositonArray[i][1];
                 console.log(startingX, startingY);
-                // console.log("Y U GIVE ME ERROR. SocketID: " + roomies[i]);
                 io.to(`${roomies[i]}`).emit('starting position', startingX, startingY);
                 socket_name[roomies[i]].roomInfo = {playerRole: 'hider', room: room};
             }
@@ -407,8 +406,6 @@ io.on("connection", (socket) => {
         }, 1000);
 
         gamesInSession[room].timerID = timerID;
-        // let seekerID = gamesInSession[room].seeker;
-        // socket_name[seekerID].roomInfo.timerID = timerID;
 
         // stop the intervals once the full time is over
         // mins * 60 0000 (60 seconds x 1 sec per milli) + 15 seconds of count down time
@@ -424,10 +421,9 @@ io.on("connection", (socket) => {
     //haven't been caught by the seeker. Incase all the players are caught, endGame() is called before time expires.
     socket.on("player caught", (info) => {
 
-        let { playerID, room } = info;
-        // console.log("COLLISION WITH:", playerID, "room: ", room);
+        let {playerID, room} = info;
         playerCaught(playerID, room);
-        // console.log(">>>>>>>>>>>>>>>>> " + gamesInSession[room].hiders[0] + "    " + playerID);
+
     });
 
     // when a user disconnects from the tab, either by closing or refreshing, we remove them from any lobbies they
@@ -443,8 +439,6 @@ io.on("connection", (socket) => {
             if (socket_name[socket.id].hasOwnProperty("roomInfo")) {
                 let room = socket_name[socket.id].roomInfo.room;
                 if (socket_name[socket.id].roomInfo.playerRole === "seeker") {
-                    // let timerid = socket_name[socket.id].roomInfo.timerID;
-                    // endGame(room, timerid);
                     endGame(room);
                 } else {
                     playerCaught(socket.id, room);
@@ -514,7 +508,6 @@ io.on("connection", (socket) => {
             // after 5 seconds, leave to lobby
             setTimeout(() => {
                 // gamesInSession[room] = {};
-                // console.log("ROOM WAS RESET", gamesInSession[room]);
                 delete gamesInSession[room];
                 io.to(room).emit("game finished");
                 // update the lobbies list once again
@@ -533,7 +526,6 @@ io.on("connection", (socket) => {
 
     //Returns a list of URLs for icons for all the players that are still alive in a game (they are still hiding)
     function getAliveList(room) {
-        // console.log(room + "called from " + method + "<<<<<<<<<<<<<<<<<");
         let alivelist = [];
         for (let i = 0; i < gamesInSession[room].hiders.length; i++) {
             let playerID = gamesInSession[room].hiders[i];

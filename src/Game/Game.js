@@ -1,78 +1,52 @@
+/**
+ *  Game file for Hide.io
+ *  This is instantiated once the lobby timer runs out. Games are run on a timelimit and all movement/drawing is handled
+ *  client side with messages sent to the server via sockets. Game canvases are updated in reaction to messages
+ *  received from the server.
+ *
+ *  Features include:
+ *  ------------------
+ *  HTML Canvas game rendering
+ *  Collision handling
+ *  Different speed for different playerTypes ( hider vs seeker )
+ *  Speed of seeker increasing as time runs out
+ *
+ *
+ */
 import React, { Component } from "react";
 import OtherPlayers from "./OtherPlayers";
 
 import "../assets/App.css";
 
-import Wall from "./Wall";
-import Camera from "./Camera";
-import Player from "./PlayerTest";
-import { socket } from "../assets/socket";
+import Wall from "./GameObjects/Wall";
+import Camera from "./GameObjects/Camera";
+import Player from "./Player";
+import Point from "./GameObjects/Point";
+import Timer from "./GameObjects/Timer";
+import Keyboard from "./GameObjects/Keyboard";
 
-import Point from "./Point";
-import Timer from "../Game/Timer";
-import AliveList from "./AliveList";
+import { socket } from "../assets/socket";
+import AliveList from "./GameView/AliveList";
 import { Redirect } from "react-router-dom";
 import { auth } from "../assets/auth";
 import { googleAuth } from "../Login/LoginScreen";
 import Cookies from "universal-cookie";
-import Results from "./Results";
-import GameObjective from "./GameObjective";
-import DisplayEvent from "./DisplayEvent";
+import Results from "./GameView/Results";
+import GameObjective from "./GameView/GameObjective";
+import DisplayEvent from "./GameView/DisplayEvent";
 import caughtSound from "../sounds/caught";
 
 const cookies = new Cookies();
 
-// import Keyboard from './Keyboard'
-let Keyboard = {};
+Keyboard = new Keyboard();
 let alertCounter = 0;
-
-Keyboard.LEFT = 37;
-Keyboard.RIGHT = 39;
-Keyboard.UP = 38;
-Keyboard.DOWN = 40;
-
-Keyboard._keys = {};
-
-Keyboard.listenForEvents = function (keys) {
-    window.addEventListener("keydown", this._onKeyDown.bind(this));
-    window.addEventListener("keyup", this._onKeyUp.bind(this));
-
-    keys.forEach(
-        function (key) {
-            this._keys[key] = false;
-        }.bind(this)
-    );
-};
-
-Keyboard._onKeyDown = function (event) {
-    let keyCode = event.keyCode;
-    if (keyCode in this._keys) {
-        event.preventDefault();
-        this._keys[keyCode] = true;
-    }
-};
-
-Keyboard._onKeyUp = function (event) {
-    let keyCode = event.keyCode;
-    if (keyCode in this._keys) {
-        event.preventDefault();
-        this._keys[keyCode] = false;
-    }
-};
-
-Keyboard.isDown = function (keyCode) {
-    if (!keyCode in this._keys) {
-        throw new Error("Keycode " + keyCode + " is not being listened to");
-    }
-    return this._keys[keyCode];
-};
 
 class Game extends Component {
     constructor(props) {
         super(props);
         document.body.style.overflow = "hidden";
+
         // for the window animationframe
-        let requestID;
         this.state = {
             context: this.context,
             windowHeight: window.innerHeight,
@@ -140,23 +114,24 @@ class Game extends Component {
                 this.state.enamies.set(playerinfo.id, {playerInfo: playerinfo, color: playerinfo.color, isAlive: true});
             }
         });
+
+        // socket tells you your dead
         socket.on("I died", (playerID, playerName) => {
             if (playerID === socket.id) {
                 this.setState({ alive: false })
             }
         });
+
+        // if youre the host, tell the server to start counting down
         if (this.state.creator) {
             socket.emit("start game timer", this.state.gameID, this.state.timeLimit);
         }
+
         socket.on("game in progress", (time) => {
             let timelimit = (this.state.timeLimit.split("")[0]);
             if(this.state.playerState === "seeker" && this.state.countdown === false){
-                // this.Player.deltaSpeed = (timelimit - time.minutes) + (time.seconds/60);
                 this.Player.deltaSpeed  = (timelimit - time.minutes) + ((60 - time.seconds)/60);
-                // console.log("DELTA"+deltaSpeed);
             }
-
-            // console.log("TIMELIMIT=" + this.state.timeLimit + ". Current time =" + time.minutes + ":" + time.seconds+". Final output"+ this.state.timeLimit - (time.minutes*60) + time.seconds );
         });
 
         this.update_player_component = this.update_player_component.bind(this);
@@ -401,10 +376,10 @@ class Game extends Component {
         if (this.state.alive) {
             let playerX = this.Player.screenX - this.Player.width / 2 + 32;
             let playerY = this.Player.screenY - this.Player.height / 2 + 32;
-
             let lightRadius = this.state.playerState === "seeker" ? 300 : 150;
 
             this.ctx.save();
+
             let fill = this.ctx.createRadialGradient(playerX, playerY, 1, playerX, playerY, lightRadius);
             fill.addColorStop(0, "rgba(255, 255, 255, 0.65)");
             fill.addColorStop(0.9, "rgba(255, 255, 255, 0.01)");
@@ -412,6 +387,7 @@ class Game extends Component {
 
             this.ctx.fillStyle = fill;
             this.ctx.beginPath();
+
             if (this.state.hitpoints.length > 0) {
                 this.ctx.beginPath();
                 this.ctx.moveTo(this.state.hitpoints[0].x, this.state.hitpoints[0].y);
@@ -423,8 +399,8 @@ class Game extends Component {
                 this.ctx.rect(0, 0, this.camera.width, this.camera.height)
             }
             this.ctx.fill();
-
             this.ctx.restore();
+
         } else {
             return;
         }
@@ -439,7 +415,6 @@ class Game extends Component {
             this.Player.screenX + this.state.map.tsize > enamyScreenX &&
             this.Player.screenY < enamyScreenY + this.state.map.tsize &&
             this.Player.screenY + this.state.map.tsize > enamyScreenY) {
-            console.log("collision detected");
             if (alertCounter < 1) {
                 caughtSound();
                 alertCounter++;
@@ -477,7 +452,6 @@ class Game extends Component {
         }
         this.ctx.restore();
     }
-
     drawEnamies(enamyX, enamyY, enamyColor, isAlive) {
 
         this.ctx.save();
@@ -498,7 +472,6 @@ class Game extends Component {
     }
 
     //Draws a player in the center of the screen.
-    // The camera will follow the player unless they are close to the edge of the map. -- Map in starting_positions.js
     drawPlayer() {
         // draw main character
         this.ctx.save();
@@ -519,7 +492,6 @@ class Game extends Component {
         }
         this.ctx.restore();
     }
-
     update(delta) {
         // handle Player movement with arrow keys
         let dirx = 0;
@@ -540,7 +512,6 @@ class Game extends Component {
 
     run(context) {
         this.ctx = context;
-        this._previousElapsed = 0;
         this.init();
         this.tick();
     }
@@ -572,11 +543,9 @@ class Game extends Component {
         };
         // Only send across socket if there's an update in position
         if (JSON.stringify(info) !== JSON.stringify(pastInfo) && this.state.alive) {
-            // console.log("I emitted:", info.x, info.y);
-            // console.log('this.player.x=  ' + this.Player.x + '  this.Player.screenX=  ' + this.Player.screenX + '  camera x= ' + this.camera.x)
+
             socket.emit("player movement", info);
         }
-
     }
 
 
@@ -585,7 +554,6 @@ class Game extends Component {
         let playerY = this.Player.screenY - this.Player.height / 2 + 32;
 
         this.drawLayer();
-        // this.drawHiders();
         this.updateLightTrace();
         this.sortAngles();
 
@@ -615,10 +583,8 @@ class Game extends Component {
         let component_insides = [];
 
         for (let i = 0; i < players_arr.length; i++) {
-            // console.log("iterating through list");
             if (players_arr[i][0] === socket.id) {
                 // if its MY player then i can handle movements and such. otherwise, its just a sprite on my screen
-                //console.log("inside updating x and y are: ", players_arr[i][1].x, players_arr[i][1].y);
                 component_insides.push(
                     <Player
                         key={players_arr[i][0]}
@@ -626,9 +592,8 @@ class Game extends Component {
                         xPos={players_arr[i][1].x}
                         yPos={players_arr[i][1].y}
                     />
-                );
-                //console.log(component_insides[0].props);
-            } else {
+                );}
+            else {
                 component_insides.push(
                     <OtherPlayers
                         key={players_arr[i][0]}
@@ -658,7 +623,6 @@ class Game extends Component {
 
         socket.on("Redraw positions", (players) => {
             // if there has been a change to players' positions, then reset the state of players to new coordinates
-            //console.log("original players ", this.state.players);
             if (this.state.players !== players) {
                 this.setState({ players: players });
             }
@@ -673,7 +637,6 @@ class Game extends Component {
             })
         });
         socket.on("reconnect_error", (error) => {
-            // console.log("Error! Disconnected from server", error);
             auth.logout(() => {
                 // reason history is avail on props is b/c we loaded it via a route, which passes
                 // in a prop called history always

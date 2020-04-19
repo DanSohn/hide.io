@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { socket } from "../assets/socket";
+import { socket } from "../../assets/socket";
 
 class DisplayEvent extends Component {
   constructor(props) {
