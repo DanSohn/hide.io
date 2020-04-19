@@ -23,7 +23,7 @@ import Camera from "./GameObjects/Camera";
 import Player from "./Player";
 import Point from "./GameObjects/Point";
 import Timer from "./GameObjects/Timer";
-import Keyboard from "./GameObjects/Keyboard";
+import keyboard from "./GameObjects/Keyboard";
 
 import { socket } from "../assets/socket";
 import AliveList from "./GameView/AliveList";
@@ -38,7 +38,7 @@ import caughtSound from "../sounds/caught";
 
 const cookies = new Cookies();
 
-Keyboard = new Keyboard();
+let Keyboard = new keyboard();
 let alertCounter = 0;
 
 class Game extends Component {
@@ -111,7 +111,7 @@ class Game extends Component {
         socket.on('player moved', (playerinfo) => {
 
             if (socket.id !== playerinfo.id && playerinfo.room === this.state.gameID) {
-                this.state.enamies.set(playerinfo.id, {playerInfo: playerinfo, color: playerinfo.color, isAlive: true});
+                this.state.enamies.set(playerinfo.id, { playerInfo: playerinfo, color: playerinfo.color, isAlive: true });
             }
         });
 
@@ -129,8 +129,8 @@ class Game extends Component {
 
         socket.on("game in progress", (time) => {
             let timelimit = (this.state.timeLimit.split("")[0]);
-            if(this.state.playerState === "seeker" && this.state.countdown === false){
-                this.Player.deltaSpeed  = (timelimit - time.minutes) + ((60 - time.seconds)/60);
+            if (this.state.playerState === "seeker" && this.state.countdown === false) {
+                this.Player.deltaSpeed = (timelimit - time.minutes) + ((60 - time.seconds) / 60);
             }
         });
 
@@ -592,7 +592,8 @@ class Game extends Component {
                         xPos={players_arr[i][1].x}
                         yPos={players_arr[i][1].y}
                     />
-                );}
+                );
+            }
             else {
                 component_insides.push(
                     <OtherPlayers
