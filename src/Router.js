@@ -17,26 +17,37 @@ import Room from "./Lobby/Room";
 import Game from "./Game/Game";
 import Sound from "react-sound";
 import getSong from "./sounds/randomMusic";
+import GameMusic from "./sounds/gameMusic";
 
 class Router extends React.Component {
   constructor() {
     super();
     this.state = {
+      songURL: getSong(),
       gameSoundURL:
         "https://freesound.org/data/previews/34/34338_215874-lq.mp3",
       networkError: false,
 <<<<<<< HEAD
+<<<<<<< HEAD
       soundState: Sound.status.STOPPED,
 =======
 >>>>>>> master
+=======
+      soundState: Sound.status.STOPPED,
+>>>>>>> master
       gameSoundState: Sound.status.STOPPED,
+      purposefulStop: false
     };
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> master
     this.waitForClicks = this.waitForClicks.bind(this);
   }
 
   waitForClicks() {
     if (
+<<<<<<< HEAD
         this.state.soundState === Sound.status.STOPPED && !this.state.purposefulStop)
       setTimeout(() => {
         this.setState({ soundState: Sound.status.PLAYING });
@@ -44,12 +55,17 @@ class Router extends React.Component {
 =======
     this.soundButton = new Audio(getSong());
 >>>>>>> master
+=======
+      !(this.state.soundState === Sound.status.PLAYING) &&
+      !this.state.purposefulStop
+    )
+      setTimeout(() => {
+        this.setState({ soundState: Sound.status.PLAYING });
+      }, 5000);
+>>>>>>> master
   }
 
   componentDidMount() {
-    document.addEventListener("mousemove", e => {
-      this.soundButton.play();
-    });
     console.log("Router component did mount!!!!===================");
     /*
         these are placecd in router so that now the other paths will not exist if one attempts to go into them
@@ -73,17 +89,17 @@ class Router extends React.Component {
 
     socket.on("lobby current timer", countdown => {
       if (countdown <= 0) {
-        this.soundButton.pause();
-        this.soundButton.currentTime = 0;
         this.setState({
-          gameSoundState: Sound.status.PLAYING
+          soundState: Sound.status.STOPPED,
+          gameSoundState: Sound.status.PLAYING,
+          purposefulStop: true
         });
       }
     });
 
     socket.on("game finished", () => {
-      this.soundButton.play();
       this.setState({
+        soundState: Sound.status.PLAYING,
         gameSoundState: Sound.status.STOPPED
       });
     });
@@ -94,8 +110,6 @@ class Router extends React.Component {
     socket.off("game finished");
     socket.off("lobby current timer");
     socket.off("reconnect_error");
-    this.soundButton.pause();
-    this.soundButton.currentTime = 0;
   }
 
   render() {
@@ -120,6 +134,15 @@ class Router extends React.Component {
 
             <Route path="*" component={() => "404 NOT FOUND"} />
           </Switch>
+          <Sound
+            volume={15}
+            url={this.state.songURL}
+            autoload={true}
+            playStatus={this.state.soundState}
+            muted={"muted"}
+            loop={true}
+            onLoad={this.waitForClicks()}
+          />
           <Sound
             volume={55}
             url={this.state.gameSoundURL}
