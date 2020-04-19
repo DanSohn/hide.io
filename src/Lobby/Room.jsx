@@ -102,7 +102,7 @@ class Room extends Component {
         // 3 second timer currently
         // TimerSound();
         socket.emit("lobby start timer", {
-            countdowntime: 4300,
+            countdowntime: 3300,
             room: this.state.roomID
         });
         this.setState({

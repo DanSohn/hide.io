@@ -306,6 +306,7 @@ io.on("connection", (socket) => {
             let randomSeeker = roomies[Math.floor(Math.random() * roomies.length)];
             io.to(`${randomSeeker}`).emit('youre the seeker');
             socket_name[randomSeeker].roomInfo = {playerRole: 'seeker', room: room};
+
             let startingPositonArray = [[-1, -1], [0, -1], [1, -1], [-1, 1], [0, 1], [1, 1]];
             // remove the seeker from the list of roomies
             for (let i = 0; i < roomies.length; i++) {
@@ -378,8 +379,8 @@ io.on("connection", (socket) => {
         }, 1000);
 
         gamesInSession[room].timerID = timerID;
-        let seekerID = gamesInSession[room].seeker;
-        socket_name[seekerID].roomInfo.timerID = timerID;
+        // let seekerID = gamesInSession[room].seeker;
+        // socket_name[seekerID].roomInfo.timerID = timerID;
 
         // stop the intervals once the full time is over
         // mins * 60 0000 (60 seconds x 1 sec per milli) + 15 seconds of count down time
@@ -415,8 +416,9 @@ io.on("connection", (socket) => {
             if (socket_name[socket.id].hasOwnProperty("roomInfo")) {
                 let room = socket_name[socket.id].roomInfo.room;
                 if (socket_name[socket.id].roomInfo.playerRole === "seeker") {
-                    let timerid = socket_name[socket.id].roomInfo.timerID;
-                    endGame(room, timerid);
+                    // let timerid = socket_name[socket.id].roomInfo.timerID;
+                    // endGame(room, timerid);
+                    endGame(room);
                 } else {
                     playerCaught(socket.id, room);
                     console.log("Player caught called");
@@ -444,14 +446,12 @@ io.on("connection", (socket) => {
 
     //When the game finishes, statistics about the players is updated and the room is deleted from gamesInSession
     //also emit a message to the different players about who won between hiders and seeker
-    function endGame(room, timerID) {
+    function endGame(room) {
         console.log("End Game has been called");
-        //TODO get information about the players that were in that game and update their stats
-        clearInterval(timerID);
-        clearInterval(gamesInSession[room].fullTime);
-        // console.log(room + " <<<<<<<< ROOM ID" );
         if (gamesInSession.hasOwnProperty(room)) {
-            // hiders are in gameses. hiders and .caught combined
+            clearInterval(gamesInSession[room].timerID);
+            clearTimeout(gamesInSession[room].fullTime);
+            // hiders are in games. hiders and .caught combined
             // hidersList is an array filled with alive hiders and caught hiders
             let hidersList = gamesInSession[room].hiders.concat(gamesInSession[room].caught);
             let hidersEmails = hidersList.map((socketID) => {
@@ -492,7 +492,6 @@ io.on("connection", (socket) => {
                 delete gamesInSession[room];
                 io.to(room).emit("game finished");
                 // update the lobbies list once again
-                // TODO: send to event "receive lobby list" all lobbies again, and change this room to be in game false
                 dbUtil
                     .leaveGame(room)
                     .then(() => {
