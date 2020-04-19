@@ -1,9 +1,7 @@
 import React, { Component } from "react";
 import OtherPlayers from "../OtherPlayers";
 import "../../assets/App.css";
-import Player from "./Player";
-// import Keyboard from './Keyboard'
-let Keyboard = {};
+import Player from "../Player";
 
 class AliveList extends Component {
     constructor(props) {
