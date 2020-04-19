@@ -60,7 +60,7 @@ class googleAuth {
 
                 // send event to server to check whether the user exists in our database
                 // console.log("emitting check to server");
-                socket.emit("user exists check", profile.getEmail(), profile.getImageUrl());
+                socket.emit("user exists check", profile.getEmail());
 
                 this.info = {
                     userName: profile.getName(),

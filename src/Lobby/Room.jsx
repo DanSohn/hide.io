@@ -102,7 +102,7 @@ class Room extends Component {
         // 3 second timer currently
         // TimerSound();
         socket.emit("lobby start timer", {
-            countdowntime: 3300,
+            countdowntime: 4300,
             room: this.state.roomID
         });
         this.setState({
@@ -112,7 +112,6 @@ class Room extends Component {
 
     componentDidMount() {
         // socket.emit("player joined");
-        socket.emit('profile image url', cookies.get("image"));
         socket.on("giving lobby info", lobby => {
             if (!lobby) {
                 console.log(
@@ -157,7 +156,7 @@ class Room extends Component {
                 time: countdown.toString()
             });
             // TimerSound();
-            // after i reach 0, call startGametime
+            // after i reach 0, call startGametime lim
             Timer();
             if (countdown <= 0) {
                 console.log("starting game");
@@ -199,13 +198,6 @@ class Room extends Component {
                 this.setState({startingPosition: [startingX, startingY]});
             });
 
-            socket.on("enough peeps", () =>
-                this.setState({header: "Game is starting in ..."})
-            );
-
-            socket.on("not enough peeps", () =>
-                this.setState({header: "Not Enough Players to Begin the Game"})
-            );
         });
 
         // if the server disconnects, go to login screen, remove cookies and sign out of the google account
