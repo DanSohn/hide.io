@@ -17,6 +17,7 @@ import Room from "./Lobby/Room";
 import Game from "./Game/Game";
 import Sound from "react-sound";
 import getSong from "./sounds/randomMusic";
+import GameMusic from "./sounds/gameMusic";
 
 class Router extends React.Component {
 
@@ -32,6 +33,7 @@ class Router extends React.Component {
         this.soundButton = new Audio(getSong());
         this.soundButton.play();
     }
+
 
     componentDidMount() {
         console.log("Router component did mount!!!!===================");
@@ -53,6 +55,7 @@ class Router extends React.Component {
             this.setState({
                 networkError: true
             });
+
         });
 
         socket.on("lobby current timer", countdown => {
@@ -72,6 +75,7 @@ class Router extends React.Component {
             });
         });
     }
+
 
     componentWillUnmount() {
         console.log("UNMOUNTED ROUTER OH NOOOOO ==============");
@@ -116,6 +120,7 @@ class Router extends React.Component {
             </HashRouter>
         );
     }
+
 }
 
 
