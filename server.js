@@ -1,3 +1,14 @@
+
+/**
+ *   Hide.IO API server.
+ *
+ *   Used to handle all socket connections, lobbies, and game status
+ *   All game based interactions are handled client side, then outputs are sent to the server to
+ *   distribute to all other game members.
+ *
+ */
+
+
 const express = require("express");
 const app = express();
 const server = require('http').createServer(app);
@@ -34,6 +45,7 @@ io.on("connection", (socket) => {
     individual client. I keep track of email, username, and latest lobby they're in
      */
     let socket_info = {};
+
     // when a player is logging in through oauth, i cross-check the given info with the database to see
     // if the user already exists (email). If he does, I emit a message to go straight to main menu, otherwise to
     // go to user selection first
@@ -63,7 +75,7 @@ io.on("connection", (socket) => {
         });
     });
 
-    // for PlayerProfile. Returns information about the email user
+    // For PlayerProfile. Returns information about the email user
     socket.on("player stats req", email => {
         dbUtil
             .getUser(email)
@@ -147,7 +159,7 @@ io.on("connection", (socket) => {
             if (lobby) {
                 // if the lobby is currently in game, can't join!
                 if(lobby.in_game){
-                    lobbyStatus = 2
+                    lobbyStatus = 2;
                     socket.emit("validate join code res", lobbyStatus)
                 }else{
                     lobbyStatus = 1;

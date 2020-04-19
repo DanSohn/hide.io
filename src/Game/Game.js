@@ -1,3 +1,4 @@
+
 import React, { Component } from "react";
 import OtherPlayers from "./OtherPlayers";
 
@@ -398,10 +399,10 @@ class Game extends Component {
         if (this.state.alive) {
             let playerX = this.Player.screenX - this.Player.width / 2 + 32;
             let playerY = this.Player.screenY - this.Player.height / 2 + 32;
-
             let lightRadius = this.state.playerState === "seeker" ? 300 : 150;
 
             this.ctx.save();
+
             let fill = this.ctx.createRadialGradient(playerX, playerY, 1, playerX, playerY, lightRadius);
             fill.addColorStop(0, "rgba(255, 255, 255, 0.65)");
             fill.addColorStop(0.9, "rgba(255, 255, 255, 0.01)");
@@ -409,6 +410,7 @@ class Game extends Component {
 
             this.ctx.fillStyle = fill;
             this.ctx.beginPath();
+
             if (this.state.hitpoints.length > 0) {
                 this.ctx.beginPath();
                 this.ctx.moveTo(this.state.hitpoints[0].x, this.state.hitpoints[0].y);
@@ -420,12 +422,11 @@ class Game extends Component {
                 this.ctx.rect(0, 0, this.camera.width, this.camera.height)
             }
             this.ctx.fill();
-
             this.ctx.restore();
+
         } else {
             return;
         }
-
     }
 
     detectEnamies(playerValues) {
@@ -491,7 +492,6 @@ class Game extends Component {
     }
 
     //Draws a player in the center of the screen.
-    // The camera will follow the player unless they are close to the edge of the map. -- Map in starting_positions.js
     drawPlayer() {
         // draw main character
         this.ctx.beginPath();
