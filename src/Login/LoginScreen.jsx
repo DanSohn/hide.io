@@ -24,7 +24,8 @@ class LoginScreen extends Component {
             userName: "",
             email: "",
             cookieCheck: false,
-            errorMsg: ""
+            errorMsg: "",
+            errorTimeout: null
 
         };
 
@@ -47,6 +48,22 @@ class LoginScreen extends Component {
         googleAuth.load();
 
         socket.on("user database check", (username) => {
+            console.log("received username", username);
+            if(username === -1){
+                // email is already in use, don't go through
+                console.log("Email already in use!!!");
+                cookies.remove("name");
+                cookies.remove("email");
+                cookies.remove("image");
+                this.setState({
+                    errorMsg: "Email is currently in game. Try a different email or talk to your friends and smack em",
+                    cookieCheck: false,
+                    errorTimeout: setTimeout(()=>{
+                        this.setState({errorMsg: "", errorTimeout: null})
+                    }, 3000)
+                })
+                return;
+            }
             // i go through this if statement if checkExistingCookies was called
             // if cookies and username does match, i will log right in
             if (this.state.cookieCheck) {

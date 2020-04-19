@@ -38,23 +38,43 @@ io.on("connection", (socket) => {
     individual client. I keep track of email, username, and latest lobby they're in
      */
     let socket_info = {};
+    socket_name[socket.id] = {};
     // when a player is logging in through oauth, i cross-check the given info with the database to see
     // if the user already exists (email). If he does, I emit a message to go straight to main menu, otherwise to
     // go to user selection first
     socket.on("user exists check", (email, imageURL) => {
-        dbUtil.getUser(email).then((user) => {
-            console.log("recieved from dbutils ", user);
-            socket_info["email"] = email;
-            socket_name[socket.id] = {email: socket_info["email"]};
-            if (user !== null) {
-                socket.emit("user database check", user.username);
-                socket_info["name"] = user.username;
-                socket_name[socket.id].name = socket_info["name"];
-                socket_name[socket.id].image = imageURL;
-            } else {
-                socket.emit("user database check", null);
-            }
-        });
+        dbUtil.getUser(email)
+            .then((user) => {
+                console.log("checked ", email, "received username: ", user);
+                // check all socket_name properties to see if the email is currently past the login screen already
+                let emailUsed = false;
+                Object.keys(socket_name).forEach(function (key, index) {
+                    // iterating through all sockets IDS
+                    if (socket_name[key].email === email) {
+                        // the email is already being logged in
+                        emailUsed = true;
+                    }
+                });
+                console.log("Is the email used currently?", emailUsed);
+                // if the email is in use, then i don't update the socket information, and tell the
+                // client that the email is in use and shouldn't progress
+                if (emailUsed) {
+                    socket.emit("user database check", -1);
+                } else { // if the email is not in use
+                    socket_info["email"] = email;
+                    socket_name[socket.id] = {email: socket_info["email"]};
+                    socket_name[socket.id].image = imageURL;
+                    // check if the user exists in DB
+                    if (user !== null) {
+                        socket.emit("user database check", user.username);
+                        socket_info["name"] = user.username;
+                        socket_name[socket.id].name = user.username;
+                    } else {
+                        socket.emit("user database check", null);
+                    }
+                }
+
+            });
     });
 
     socket.on("create user", (info) => {
@@ -67,6 +87,13 @@ io.on("connection", (socket) => {
             }
         });
     });
+
+    // reset all tracked information stored in the server about the user to be empty once more
+    socket.on("logout", () => {
+        console.log("User is logging out, setting info and socket name id to be empty objects");
+        socket_name[socket.id] = {};
+        socket_info = {};
+    })
 
     // for PlayerProfile. Returns information about the email user
     socket.on("player stats req", email => {
@@ -422,16 +449,13 @@ io.on("connection", (socket) => {
                 } else {
                     playerCaught(socket.id, room);
                     console.log("Player caught called");
-                    // for(let i = 0; i < gamesInSession[room].hiders.length; i++){
-                    //     if(gamesInSession[room].hiders[i] === socket.id) {
-                    //         gamesInSession[room].hiders.splice(i,1);
-                    //         break;
-                    //     }
-                    // }
                 }
             }
-            delete socket_name[socket.id];
+            // delete socket_name[socket.id];
         }
+        // reset this sockets information just in case
+        socket_name[socket.id] = {};
+        socket_info = {};
     });
 
     // funtion to send all the current lobbies. Placed into its own function since several socket events need to use
