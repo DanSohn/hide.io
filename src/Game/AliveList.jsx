@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import OtherPlayers from "./OtherPlayers";
+import {socket} from "../assets/socket";
 import "../assets/App.css";
 import Player from "./PlayerTest";
 // import Keyboard from './Keyboard'
@@ -9,6 +10,7 @@ class AliveList extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            aliveList: [],
             show: false,
         };
 
@@ -35,6 +37,11 @@ class AliveList extends Component {
     componentDidMount() {
         document.addEventListener("keydown", this.tabFunction);
         document.addEventListener("keyup", this.tabFunctionUp);
+        socket.on("alive player list", (alivePlayers) => {
+            this.setState({
+                aliveList: alivePlayers
+            })
+        })
     }
     componentWillUnmount() {
         document.removeEventListener("keydown", this.tabFunction);
@@ -47,25 +54,15 @@ class AliveList extends Component {
         comp = (
             <div className="alivePlayers">
                 <ul className="aliveList">
-                    <li>
-                        <img src="https://scontent.fyyc5-1.fna.fbcdn.net/v/t31.0-8/21743593_2110943032265084_6203761706521445673_o.jpg?_nc_cat=101&_nc_sid=09cbfe&_nc_oc=AQlDJBhH_6U0KA1xQ-EqEn8oH3PVboShBOYtAlCNGUMMibi5lGFE02Q8aISjPD6HdhzaZpz6xjxPYgIeI2jzxTrq&_nc_ht=scontent.fyyc5-1.fna&oh=abde33669f8da29cfe3a140b08b570b0&oe=5EB25D58" />
-                    </li>
-                    <li>
-                        <img src="https://scontent.fyyc5-1.fna.fbcdn.net/v/t31.0-8/21743593_2110943032265084_6203761706521445673_o.jpg?_nc_cat=101&_nc_sid=09cbfe&_nc_oc=AQlDJBhH_6U0KA1xQ-EqEn8oH3PVboShBOYtAlCNGUMMibi5lGFE02Q8aISjPD6HdhzaZpz6xjxPYgIeI2jzxTrq&_nc_ht=scontent.fyyc5-1.fna&oh=abde33669f8da29cfe3a140b08b570b0&oe=5EB25D58" />
-                    </li>
-                    <li>
-                        <img src="https://scontent.fyyc5-1.fna.fbcdn.net/v/t31.0-8/21743593_2110943032265084_6203761706521445673_o.jpg?_nc_cat=101&_nc_sid=09cbfe&_nc_oc=AQlDJBhH_6U0KA1xQ-EqEn8oH3PVboShBOYtAlCNGUMMibi5lGFE02Q8aISjPD6HdhzaZpz6xjxPYgIeI2jzxTrq&_nc_ht=scontent.fyyc5-1.fna&oh=abde33669f8da29cfe3a140b08b570b0&oe=5EB25D58" />
-                    </li>
-                    <li>
-                        <img src="https://scontent.fyyc5-1.fna.fbcdn.net/v/t31.0-8/21743593_2110943032265084_6203761706521445673_o.jpg?_nc_cat=101&_nc_sid=09cbfe&_nc_oc=AQlDJBhH_6U0KA1xQ-EqEn8oH3PVboShBOYtAlCNGUMMibi5lGFE02Q8aISjPD6HdhzaZpz6xjxPYgIeI2jzxTrq&_nc_ht=scontent.fyyc5-1.fna&oh=abde33669f8da29cfe3a140b08b570b0&oe=5EB25D58" />
-                    </li>
-                    <li>
-                        <img src="https://scontent.fyyc5-1.fna.fbcdn.net/v/t31.0-8/21743593_2110943032265084_6203761706521445673_o.jpg?_nc_cat=101&_nc_sid=09cbfe&_nc_oc=AQlDJBhH_6U0KA1xQ-EqEn8oH3PVboShBOYtAlCNGUMMibi5lGFE02Q8aISjPD6HdhzaZpz6xjxPYgIeI2jzxTrq&_nc_ht=scontent.fyyc5-1.fna&oh=abde33669f8da29cfe3a140b08b570b0&oe=5EB25D58" />
-                    </li>
-                    <li>
-                        <img src="https://scontent.fyyc5-1.fna.fbcdn.net/v/t31.0-8/21743593_2110943032265084_6203761706521445673_o.jpg?_nc_cat=101&_nc_sid=09cbfe&_nc_oc=AQlDJBhH_6U0KA1xQ-EqEn8oH3PVboShBOYtAlCNGUMMibi5lGFE02Q8aISjPD6HdhzaZpz6xjxPYgIeI2jzxTrq&_nc_ht=scontent.fyyc5-1.fna&oh=abde33669f8da29cfe3a140b08b570b0&oe=5EB25D58" />
-                    </li>
-                </ul>
+                    {this.state.aliveList.map((value,index) => {
+                        return (
+                            <li key={index}>
+                                <img src={value}/>
+                            </li>
+                        );
+                    })
+                    }
+                    </ul>
             </div>
         );
         // }
