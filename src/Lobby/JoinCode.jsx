@@ -120,7 +120,7 @@ class JoinCode extends Component {
         } else {
             comp = (
                 <div className="GameWindow">
-                    <Header title="Join Lobby" previous={this.goPrevious}/>
+                    <Header previous={this.goPrevious} />
                     <Break />
                     <div className="ContentScreen">
                         <div className="usernameSelection">

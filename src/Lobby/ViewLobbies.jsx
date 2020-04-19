@@ -115,8 +115,8 @@ class ViewLobbies extends Component {
                 comp = (
 
                     <div className="GameWindow">
-                        <Header title="Lobby Selection" previous={this.goPrevious}/>
-                        <Break/>
+                        <Header previous={this.goPrevious} />
+                        <Break />
                         <div className="ContentScreen">
                             <LobbyTables lobbyCallback={this.goToJoinLobby} />
                             <div className="createLobby">

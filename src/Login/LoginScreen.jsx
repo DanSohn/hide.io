@@ -10,8 +10,6 @@ import Break from "../assets/Break";
 import "../assets/App.css";
 import Sound from "react-sound";
 import ClickSound from "../sounds/click.js";
-import Header from "../assets/Header";
-import getSong from "../sounds/gameMusic";
 
 const cookies = new Cookies();
 
@@ -109,9 +107,12 @@ class LoginScreen extends Component {
         let component = null;
         if (!auth.isAuthenticated) {
             component = (
-                <div className="GameWindow fade-in-2">
-                    <Header title="Login" showProfile={false} showBack={false} />
-
+                <div className="GameWindow">
+                    <div className="header">
+                        <div className="logo">
+                            <h1>Hide.IO</h1>
+                        </div>
+                    </div>
                     <Break />
                     <div className="ContentScreen">
                         <div className="LoginScreen">
