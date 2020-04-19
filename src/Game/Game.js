@@ -13,10 +13,11 @@ import "../assets/App.css";
 import Wall from "./GameObjects/Wall";
 import Camera from "./GameObjects/Camera";
 import Player from "./Player";
-import { socket } from "../assets/socket";
-
 import Point from "./GameObjects/Point";
 import Timer from "./GameObjects/Timer";
+import Keyboard from "./GameObjects/Keyboard";
+
+import { socket } from "../assets/socket";
 import AliveList from "./GameView/AliveList";
 import { Redirect } from "react-router-dom";
 import { auth } from "../assets/auth";
@@ -29,49 +30,49 @@ import caughtSound from "../sounds/caught";
 
 const cookies = new Cookies();
 
-let Keyboard = {};
+Keyboard = new Keyboard();
 let alertCounter = 0;
 
-Keyboard.LEFT = 37;
-Keyboard.RIGHT = 39;
-Keyboard.UP = 38;
-Keyboard.DOWN = 40;
-
-Keyboard._keys = {};
-
-Keyboard.listenForEvents = function (keys) {
-    window.addEventListener("keydown", this._onKeyDown.bind(this));
-    window.addEventListener("keyup", this._onKeyUp.bind(this));
-
-    keys.forEach(
-        function (key) {
-            this._keys[key] = false;
-        }.bind(this)
-    );
-};
-
-Keyboard._onKeyDown = function (event) {
-    let keyCode = event.keyCode;
-    if (keyCode in this._keys) {
-        event.preventDefault();
-        this._keys[keyCode] = true;
-    }
-};
-
-Keyboard._onKeyUp = function (event) {
-    let keyCode = event.keyCode;
-    if (keyCode in this._keys) {
-        event.preventDefault();
-        this._keys[keyCode] = false;
-    }
-};
-
-Keyboard.isDown = function (keyCode) {
-    if (!keyCode in this._keys) {
-        throw new Error("Keycode " + keyCode + " is not being listened to");
-    }
-    return this._keys[keyCode];
-};
+// Keyboard.LEFT = 37;
+// Keyboard.RIGHT = 39;
+// Keyboard.UP = 38;
+// Keyboard.DOWN = 40;
+//
+// Keyboard._keys = {};
+//
+// Keyboard.listenForEvents = function (keys) {
+//     window.addEventListener("keydown", this._onKeyDown.bind(this));
+//     window.addEventListener("keyup", this._onKeyUp.bind(this));
+//
+//     keys.forEach(
+//         function (key) {
+//             this._keys[key] = false;
+//         }.bind(this)
+//     );
+// };
+//
+// Keyboard._onKeyDown = function (event) {
+//     let keyCode = event.keyCode;
+//     if (keyCode in this._keys) {
+//         event.preventDefault();
+//         this._keys[keyCode] = true;
+//     }
+// };
+//
+// Keyboard._onKeyUp = function (event) {
+//     let keyCode = event.keyCode;
+//     if (keyCode in this._keys) {
+//         event.preventDefault();
+//         this._keys[keyCode] = false;
+//     }
+// };
+//
+// Keyboard.isDown = function (keyCode) {
+//     if (!keyCode in this._keys) {
+//         throw new Error("Keycode " + keyCode + " is not being listened to");
+//     }
+//     return this._keys[keyCode];
+// };
 
 class Game extends Component {
     constructor(props) {
