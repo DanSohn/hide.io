@@ -9,16 +9,13 @@ app.get("/", (req, res) => {
     res.send("API working properly!");
 });
 
-
+// Database link
 const dbUtil = require("./dbUtils");
-
-const starting_pos_module = require(__dirname + "/starting_positions");
-let starting_pos = starting_pos_module.starting_positions;
 
 //Maintain a list of all the games that in progress
 let gamesInSession = {};
 
-//Maintains a list of all the players that are currently online
+//Maintains a list of all the players that are currently online, keeps track of users and their name
 let socket_name = {};
 
 // this occurs upon server start, or more importantly, server restart.
@@ -31,7 +28,6 @@ dbUtil
     .catch((err) => console.log(err));
 
 io.on("connection", (socket) => {
-    // console.log("A User has connected");
 
     /*
     Socket info will maintain for each socket all their individual information for ease of access for the needs of
@@ -92,7 +88,6 @@ io.on("connection", (socket) => {
     //          info: an object containing: email, name, lobbyName, gameMode, gameTime, gameMap
     socket.on("create lobby", (info) => {
         console.log("SOCKET EVENT CREATE LOBBY", info);
-        // console.log("Creating lobby with info ", info);
         let roomID = Math.random().toString(36).slice(2, 8);
 
         dbUtil.getLobby(roomID).then((lobby) => {
@@ -274,9 +269,6 @@ io.on("connection", (socket) => {
     // emit a event to redraw the new positions
     socket.on('player movement', (info) => {
 
-        // console.log("This is what I got from player: ", info);
-        // console.log("This is what im sending the player: ", {x: info.x, y: info.y, id: info.id});
-
         io.to(info.roomID).emit('player moved', {x: info.x, y: info.y, id: info.id, room: info.roomID, color: info.color})
     });
 
@@ -378,9 +370,6 @@ io.on("connection", (socket) => {
     socket.on("player caught", (info) => {
 
         let {playerID, room} = info;
-        // console.log("COLLISION WITH:", playerID, "room: ", room);
-
-        // console.log(">>>>>>>>>>>>>>>>> " + gamesInSession[room].hiders[0] + "    " + playerID);
         if (gamesInSession.hasOwnProperty(room) && gamesInSession[room].hasOwnProperty("hiders")) {
             if(gamesInSession[room].hiders.includes(playerID)) {
                 for (let i = 0; i < gamesInSession[room].hiders.length; i++) {
@@ -433,9 +422,8 @@ io.on("connection", (socket) => {
         //TODO get information about the players that were in that game and update their stats
         clearInterval(timerID);
         clearInterval(gamesInSession[room].fullTime);
-        // console.log(room + " <<<<<<<< ROOM ID" );
         if (gamesInSession.hasOwnProperty(room)) {
-            // hiders are in gameses. hiders and .caught combined
+            // hiders are in games. hiders and .caught combined
             // hidersList is an array filled with alive hiders and caught hiders
             let hidersList = gamesInSession[room].hiders.concat(gamesInSession[room].caught);
             let hidersEmails = hidersList.map((socketID) => {
@@ -472,7 +460,6 @@ io.on("connection", (socket) => {
             // after 5 seconds, leave to lobby
             setTimeout(() => {
                 // gamesInSession[room] = {};
-                // console.log("ROOM WAS RESET", gamesInSession[room]);
                 delete gamesInSession[room];
                 io.to(room).emit("game finished");
                 // update the lobbies list once again
