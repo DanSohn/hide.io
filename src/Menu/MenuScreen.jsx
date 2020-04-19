@@ -30,7 +30,6 @@ class MenuScreen extends Component {
     }
 
     logOut(){
-        console.log("Logging out in menu screen");
         socket.emit("logout");
         auth.logout(() => {
             // reason history is avail on props is b/c we loaded it via a route, which passes
@@ -39,7 +38,6 @@ class MenuScreen extends Component {
             cookies.remove("email");
             cookies.remove("image");
             googleAuth.signOut();
-            console.log("going to logout!");
             this.props.history.push('/');
         });
     }

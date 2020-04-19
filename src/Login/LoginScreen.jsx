@@ -48,10 +48,8 @@ class LoginScreen extends Component {
         googleAuth.load();
 
         socket.on("user database check", (username) => {
-            console.log("received username", username);
             if(username === -1){
                 // email is already in use, don't go through
-                console.log("Email already in use!!!");
                 cookies.remove("name");
                 cookies.remove("email");
                 cookies.remove("image");
@@ -67,15 +65,12 @@ class LoginScreen extends Component {
             // i go through this if statement if checkExistingCookies was called
             // if cookies and username does match, i will log right in
             if (this.state.cookieCheck) {
-                console.log("checking existing cookies");
                 this.setState({ cookieCheck: false });
                 if (username === cookies.get("name")) {
-                    console.log("Using cookies to log in ");
                     auth.login();
                     this.setState({ newUser: false })
                 }
             } else {
-                console.log("Authenticating and letting in");
                 // user is now authenticated
                 auth.login();
                 let googleUser = googleAuth.loginInfo();
@@ -85,7 +80,6 @@ class LoginScreen extends Component {
                 cookies.set("image", googleUser.image, { path: "/", maxAge: 60 * 60 * 24 });
 
                 if (username !== null) {
-                    console.log("Username wasn't null, so setting name and new user false");
                     cookies.set("name", username, { path: "/", maxAge: 60 * 60 * 24 });
                     this.setState({
                         newUser: false,
@@ -93,7 +87,6 @@ class LoginScreen extends Component {
                         email: googleUser.email,
                     });
                 } else {
-                    console.log("Last possibility");
                     this.setState({
                         email: googleUser.email,
                     });
