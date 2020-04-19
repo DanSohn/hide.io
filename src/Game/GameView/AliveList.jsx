@@ -1,14 +1,6 @@
 import React, { Component } from "react";
-<<<<<<< HEAD:src/Game/GameView/AliveList.jsx
 import "../../assets/App.css";
-=======
-import OtherPlayers from "./OtherPlayers";
-import {socket} from "../assets/socket";
-import "../assets/App.css";
-import Player from "./PlayerTest";
-// import Keyboard from './Keyboard'
-let Keyboard = {};
->>>>>>> master:src/Game/AliveList.jsx
+import { socket } from "../../assets/socket";
 
 class AliveList extends Component {
     constructor(props) {
@@ -64,12 +56,10 @@ class AliveList extends Component {
                                 <img src={value}/>
                             </li>
                         );
-                    })
-                    }
+                    })}
                     </ul>
             </div>
         );
-        // }
 
         return <>{comp}</>;
     }

@@ -27,42 +27,21 @@ class Router extends React.Component {
       gameSoundURL:
         "https://freesound.org/data/previews/34/34338_215874-lq.mp3",
       networkError: false,
-<<<<<<< HEAD
-<<<<<<< HEAD
       soundState: Sound.status.STOPPED,
-=======
->>>>>>> master
-=======
-      soundState: Sound.status.STOPPED,
->>>>>>> master
       gameSoundState: Sound.status.STOPPED,
       purposefulStop: false
     };
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> master
     this.waitForClicks = this.waitForClicks.bind(this);
   }
 
   waitForClicks() {
     if (
-<<<<<<< HEAD
-        this.state.soundState === Sound.status.STOPPED && !this.state.purposefulStop)
-      setTimeout(() => {
-        this.setState({ soundState: Sound.status.PLAYING });
-      }, 5000);
-=======
-    this.soundButton = new Audio(getSong());
->>>>>>> master
-=======
       !(this.state.soundState === Sound.status.PLAYING) &&
       !this.state.purposefulStop
     )
       setTimeout(() => {
         this.setState({ soundState: Sound.status.PLAYING });
       }, 5000);
->>>>>>> master
   }
 
   componentDidMount() {
