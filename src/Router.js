@@ -38,8 +38,12 @@ class Router extends React.Component {
             gameSoundState: Sound.status.STOPPED,
             musicStarted: true
         };
-        this.soundButton = new Audio(getSong());
-        this.soundButton.play();
+
+        setTimeout(() => {
+            this.soundButton = new Audio(getSong());
+            this.soundButton.play();
+            
+          }, 5000)
     }
 
 
