@@ -20,9 +20,6 @@ class ViewLobbies extends Component {
 
         // note: enter lobby is what the lobbytable child fills, when the user clicks a lobby to join. ROOMID
         this.state = {
-            /*userName: this.props.location.state.name,
-            email: this.props.location.state.email
-            */
             userName: cookies.get("name"),
             email: cookies.get("email"),
             previous: false,
@@ -95,19 +92,12 @@ class ViewLobbies extends Component {
         if (this.state.previous) {
             comp = <Redirect to={{
                 pathname: '/MainMenu',
-                /*state: {
-                    name: this.state.userName,
-                    email: this.state.email,
-                }*/
             }} />
         } else {
             if (this.state.goToRoom === true) {
                 comp = <Redirect to={{
                     pathname: '/Room',
                     state: {
-                        /*name: this.state.userName,
-                        email: this.state.email,
-                        */
                         join_code: this.state.enter_lobby
                     }
                 }} />
@@ -117,39 +107,23 @@ class ViewLobbies extends Component {
                     <div className="GameWindow">
                         <Header title="Lobby Selection" previous={this.goPrevious}/>
                         <Break/>
+
                         <div className="ContentScreen">
                             <LobbyTables lobbyCallback={this.goToJoinLobby} />
+
                             <div className="createLobby">
                                 <Link to={{
                                     pathname: '/CreateLobby',
-                                    /*state: {
-                                        name: this.state.userName,
-                                        email: this.state.email,
-                                    }*/
                                 }}>
-                                    {/* <button
-                                        type="button"
-                                        className="z-depth-3 btn btn-danger">
-                                        CREATE LOBBY
-                                    </button> */}
                                     <span className='start-btn-red ff-20 width-250'>CREATE LOBBY</span>
                                 </Link>
-                                <Link to={{
-                                    pathname: '/JoinByCode',
-                                    /*state: {
-                                        name: this.state.userName,
-                                        email: this.state.email,
-                                    }*/
-                                }}>
-                                    {/* <button
-                                        type="button"
-                                        className="z-depth-3 btn btn-info">
-                                        JOIN BY CODE
-                                    </button> */}
+                                <Link to={{pathname: '/JoinByCode',}}>
                                     <span className='start-btn-blue ff-20 width-250'>JOIN BY CODE</span>
                                 </Link>
                             </div>
+
                         </div>
+
                     </div>
                 );
             }

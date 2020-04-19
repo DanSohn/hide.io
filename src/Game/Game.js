@@ -1,7 +1,15 @@
 /**
  *  Game file for Hide.io
- *  This is instantiated once the lobby timer runs out. Games are run on a timelimit and all movement is handled
- *  client side with
+ *  This is instantiated once the lobby timer runs out. Games are run on a timelimit and all movement/drawing is handled
+ *  client side with messages sent to the server via sockets. Game canvases are updated in reaction to messages
+ *  received from the server.
+ *
+ *  Features include:
+ *  ------------------
+ *  HTML Canvas game rendering
+ *  Collision handling
+ *  Different speed for different playerTypes ( hider vs seeker )
+ *  Speed of seeker increasing as time runs out
  *
  *
  */
@@ -32,47 +40,6 @@ const cookies = new Cookies();
 
 Keyboard = new Keyboard();
 let alertCounter = 0;
-
-// Keyboard.LEFT = 37;
-// Keyboard.RIGHT = 39;
-// Keyboard.UP = 38;
-// Keyboard.DOWN = 40;
-//
-// Keyboard._keys = {};
-//
-// Keyboard.listenForEvents = function (keys) {
-//     window.addEventListener("keydown", this._onKeyDown.bind(this));
-//     window.addEventListener("keyup", this._onKeyUp.bind(this));
-//
-//     keys.forEach(
-//         function (key) {
-//             this._keys[key] = false;
-//         }.bind(this)
-//     );
-// };
-//
-// Keyboard._onKeyDown = function (event) {
-//     let keyCode = event.keyCode;
-//     if (keyCode in this._keys) {
-//         event.preventDefault();
-//         this._keys[keyCode] = true;
-//     }
-// };
-//
-// Keyboard._onKeyUp = function (event) {
-//     let keyCode = event.keyCode;
-//     if (keyCode in this._keys) {
-//         event.preventDefault();
-//         this._keys[keyCode] = false;
-//     }
-// };
-//
-// Keyboard.isDown = function (keyCode) {
-//     if (!keyCode in this._keys) {
-//         throw new Error("Keycode " + keyCode + " is not being listened to");
-//     }
-//     return this._keys[keyCode];
-// };
 
 class Game extends Component {
     constructor(props) {
@@ -616,10 +583,8 @@ class Game extends Component {
         let component_insides = [];
 
         for (let i = 0; i < players_arr.length; i++) {
-            // console.log("iterating through list");
             if (players_arr[i][0] === socket.id) {
                 // if its MY player then i can handle movements and such. otherwise, its just a sprite on my screen
-                //console.log("inside updating x and y are: ", players_arr[i][1].x, players_arr[i][1].y);
                 component_insides.push(
                     <Player
                         key={players_arr[i][0]}
