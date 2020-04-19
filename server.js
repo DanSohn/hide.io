@@ -41,7 +41,7 @@ io.on("connection", (socket) => {
     // when a player is logging in through oauth, i cross-check the given info with the database to see
     // if the user already exists (email). If he does, I emit a message to go straight to main menu, otherwise to
     // go to user selection first
-    socket.on("user exists check", (email) => {
+    socket.on("user exists check", (email, imageURL) => {
         dbUtil.getUser(email).then((user) => {
             console.log("recieved from dbutils ", user);
             socket_info["email"] = email;
@@ -50,6 +50,7 @@ io.on("connection", (socket) => {
                 socket.emit("user database check", user.username);
                 socket_info["name"] = user.username;
                 socket_name[socket.id].name = socket_info["name"];
+                socket_name[socket.id].image = imageURL;
             } else {
                 socket.emit("user database check", null);
             }
@@ -311,17 +312,19 @@ io.on("connection", (socket) => {
                 if (roomies[i] === randomSeeker) {
                     console.log("Seeker  " + roomies[i]);
                     roomies.splice(i, 1);
-                    continue;
+                    break;
                 }
+            }
 
+            for(let i = 0; i < roomies.length; i++){
                 let startingX = startingPositonArray[i][0];
                 let startingY = startingPositonArray[i][1];
                 console.log(startingX, startingY);
-                console.log("Y U GIVE ME ERROR. SocketID: " + roomies[i]);
+                // console.log("Y U GIVE ME ERROR. SocketID: " + roomies[i]);
                 io.to(`${roomies[i]}`).emit('starting position', startingX, startingY);
                 socket_name[roomies[i]].roomInfo = {playerRole: 'hider', room: room};
-
             }
+
             // set the gamesInSession object for this game
             gamesInSession[room] = {
                 'roomID': room,
