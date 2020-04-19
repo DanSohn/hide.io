@@ -1,3 +1,7 @@
+/**
+ *  Instructions Screen Component.
+ */
+
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import Cookies from "universal-cookie";

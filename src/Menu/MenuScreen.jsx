@@ -1,3 +1,12 @@
+/**
+ * Menu Screen component.
+ *
+ * This page is a container for the different choices that the user may make about their pages.
+ * It provides routes to:
+ *      Instructions, Lobbys, Profile, Logout
+ *
+ */
+
 import React, { Component } from "react";
 import { Link } from 'react-router-dom';
 import Cookies from "universal-cookie";

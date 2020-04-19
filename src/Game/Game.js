@@ -574,10 +574,8 @@ class Game extends Component {
         let component_insides = [];
 
         for (let i = 0; i < players_arr.length; i++) {
-            // console.log("iterating through list");
             if (players_arr[i][0] === socket.id) {
                 // if its MY player then i can handle movements and such. otherwise, its just a sprite on my screen
-                //console.log("inside updating x and y are: ", players_arr[i][1].x, players_arr[i][1].y);
                 component_insides.push(
                     <Player
                         key={players_arr[i][0]}
