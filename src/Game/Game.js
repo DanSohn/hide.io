@@ -90,7 +90,6 @@ class Game extends Component {
             enamies: new Map(),
             startingPosition: this.props.location.state.startingPosition,
 
-
             alive: true,
 
             //Game window size, it is used in the calculation of what portion of the map is viewed.
@@ -132,32 +131,40 @@ class Game extends Component {
                 },
             },
         };
-        this.state.playerColor = this.props.location.state.playerState === "seeker" ? "#D5C7BC" : '#' + Math.floor(Math.random() * 16777215).toString(16);
+        this.state.playerColor = this.props.location.state.playerState === "seeker" ? "#D5C7BC" : '#' +
+            Math.floor(Math.random() * 16777215).toString(16);
 
-        // TODO: do stuff when getting the location information
         socket.on('player moved', (playerinfo) => {
 
             if (socket.id !== playerinfo.id && playerinfo.room === this.state.gameID) {
-                // console.log(playerinfo);
-                this.state.enamies.set(playerinfo.id, playerinfo);
+                this.state.enamies.set(playerinfo.id, {playerInfo: playerinfo, color: playerinfo.color, isAlive: true});
             }
         });
         socket.on("I died", (playerID, playerName) => {
             if (playerID === socket.id) {
                 this.setState({ alive: false })
             }
-
         });
         if (this.state.creator) {
             socket.emit("start game timer", this.state.gameID, this.state.timeLimit);
         }
+        socket.on("game in progress", (time) => {
+            let timelimit = (this.state.timeLimit.split("")[0]);
+            if(this.state.playerState === "seeker" && this.state.countdown === false){
+                // this.Player.deltaSpeed = (timelimit - time.minutes) + (time.seconds/60);
+                this.Player.deltaSpeed  = (timelimit - time.minutes) + ((60 - time.seconds)/60);
+                // console.log("DELTA"+deltaSpeed);
+            }
+
+            // console.log("TIMELIMIT=" + this.state.timeLimit + ". Current time =" + time.minutes + ":" + time.seconds+". Final output"+ this.state.timeLimit - (time.minutes*60) + time.seconds );
+        });
 
         this.update_player_component = this.update_player_component.bind(this);
         this.tick = this.tick.bind(this);
         this.endCountdown = this.endCountdown.bind(this);
     }
 
-    //init game state seppereate from did load. could be used for start restrictions.
+    //init game state separate from did load. could be used for start restrictions.
     init() {
         Keyboard.listenForEvents([Keyboard.LEFT, Keyboard.RIGHT, Keyboard.UP, Keyboard.DOWN]);
 
@@ -181,10 +188,9 @@ class Game extends Component {
             x: this.Player.x,
             y: this.Player.y,
             id: socket.id,
+            color: this.state.playerColor
         };
         socket.emit("player movement", info);
-
-
     }
 
     drawLayer() {
@@ -198,15 +204,12 @@ class Game extends Component {
         let endRow = startRow + this.camera.height / tileSize;
         let offsetX = -this.camera.x + startCol * tileSize;
         let offsetY = -this.camera.y + startRow * tileSize;
-        // console.log('combined ' + startCol * this.state.map.tsize + offsetX);
-        // console.log('offset'+offsetX);
-        // console.log('camera'+this.camera.x);
+
         for (let c = startCol; c <= endCol; c++) {
             for (let r = startRow; r <= endRow; r++) {
                 let tile = this.state.map.getTile(c, r);
                 let x = (c - startCol) * tileSize + offsetX;
                 let y = (r - startRow) * tileSize + offsetY;
-                // console.log('draw'+x)
 
                 if (tile !== 0) {
                     // 0 => empty tile
@@ -229,7 +232,6 @@ class Game extends Component {
                         this.updateWalls(x, y);
                     }
                     this.ctx.strokeStyle = "#A1A6B4";
-
                     this.ctx.stroke();
                     this.ctx.fill();
                 }
@@ -297,7 +299,6 @@ class Game extends Component {
         }
 
         // SOLVE FOR T1 & T2
-
         let T2 = (r_dx * (s_py - r_py) + r_dy * (r_px - s_px)) / (s_dx * r_dy - s_dy * r_dx);
         let T1 = (s_px + s_dx * T2 - r_px) / r_dx;
 
@@ -383,7 +384,6 @@ class Game extends Component {
             this.state.hitpoints.push(closestIntersect);
         }
     }
-
     //sort angles so the polygon can be drawn from  0th hitpoint to 360 degrees.
     sortAngles() {
         let sortedAngles = this.state.hitpoints.sort(function (a, b) {
@@ -424,15 +424,14 @@ class Game extends Component {
             this.ctx.restore();
         } else {
             return;
-        };
+        }
 
     }
 
     detectEnamies(playerValues) {
 
-        let enamyScreenX = (playerValues.x - this.camera.x);
-        let enamyScreenY = (playerValues.y - this.camera.y);
-
+        let enamyScreenX = (playerValues.playerInfo.x - this.camera.x);
+        let enamyScreenY = (playerValues.playerInfo.y - this.camera.y);
 
         if (this.Player.screenX < enamyScreenX + this.state.map.tsize &&
             this.Player.screenX + this.state.map.tsize > enamyScreenX &&
@@ -443,12 +442,12 @@ class Game extends Component {
                 caughtSound();
                 alertCounter++;
             }
-
             let info = {
-                playerID: playerValues.id,
+                playerID: playerValues.playerInfo.id,
                 room: this.state.gameID
             };
 
+            playerValues.isAlive = false;
             socket.emit("player caught", info);
             return;
         }
@@ -469,7 +468,6 @@ class Game extends Component {
                 this.ctx.lineTo(intersect.x, intersect.y);
             }
             this.ctx.rect(1024, 0, -1024, 620);
-
             this.ctx.fill();
             this.ctx.restore();
         } else {
@@ -477,21 +475,25 @@ class Game extends Component {
         }
     }
 
-    drawEnamies(enamyX, enamyY) {
+    drawEnamies(enamyX, enamyY, enamyColor, isAlive) {
         let enamyScreenX = (enamyX - this.camera.x) - this.Player.width / 2;
         let enamyScreenY = (enamyY - this.camera.y) - this.Player.height / 2;
 
         this.ctx.beginPath();
         this.ctx.rect(enamyScreenX, enamyScreenY, this.state.map.tsize, this.state.map.tsize);
-        this.ctx.fillStyle = '#525252';
-        this.ctx.fill();
-
+        if (isAlive) {
+            this.ctx.fillStyle = enamyColor;
+            this.ctx.fill();
+        }
+        else {
+            this.ctx.strokeStyle = enamyColor;
+            this.ctx.stroke();
+        }
         this.ctx.restore();
-
-
     }
 
-    //Draws a player in the center of the screen. The camera will follow the player unless they are close to the edge of the map. -- Map in starting_positions.js
+    //Draws a player in the center of the screen.
+    // The camera will follow the player unless they are close to the edge of the map. -- Map in starting_positions.js
     drawPlayer() {
         // draw main character
         this.ctx.beginPath();
@@ -502,10 +504,9 @@ class Game extends Component {
             64
         );
         // set the playerColor
-        if (this.state.alive === true) {
+        if (this.state.alive) {
             this.ctx.fillStyle = this.state.playerColor;
             this.ctx.fill();
-
         } else {
             this.ctx.strokeStyle = this.state.playerColor;
             this.ctx.stroke();
@@ -548,14 +549,11 @@ class Game extends Component {
             x: this.Player.x,
             y: this.Player.y,
             id: socket.id,
+            color: this.state.playerColor
         };
 
-        //stops movement if they died.
-
         this.update(delta);
-
         this.gameRender();
-
         this.requestID = window.requestAnimationFrame(this.tick);
 
         let info = {
@@ -563,6 +561,7 @@ class Game extends Component {
             x: this.Player.x,
             y: this.Player.y,
             id: socket.id,
+            color: this.state.playerColor
         };
         // Only send across socket if there's an update in position
         if (JSON.stringify(info) !== JSON.stringify(pastInfo) && this.state.alive) {
@@ -583,22 +582,22 @@ class Game extends Component {
         this.updateLightTrace();
         this.sortAngles();
 
-
         for (let playerValue of this.state.enamies.values()) {
-            if (playerValue.x < this.camera.x || playerValue.y < this.camera.y || playerValue.x > this.camera.x + this.camera.width || playerValue.y > this.camera.y + this.camera.height) {
+            if (playerValue.playerInfo.x < this.camera.x
+                || playerValue.playerInfo.y < this.camera.y
+                || playerValue.playerInfo.x > this.camera.x + this.camera.width
+                || playerValue.playerInfo.y > this.camera.y + this.camera.height) {
                 break;
             } else {
                 if (this.state.playerState === "seeker" && this.state.game_status === 'started') {
                     this.detectEnamies(playerValue);
                 }
-                this.drawEnamies(playerValue.x, playerValue.y);
+                console.log("Calling function with:  "+playerValue);
+                this.drawEnamies(playerValue.playerInfo.x, playerValue.playerInfo.y, playerValue.color, playerValue.isAlive);
             }
         }
-
-
         this.drawLight(playerX, playerY);
         this.drawPlayer();
-
         this.drawShadow();
         // this.drawPillarLight();
     }
@@ -634,10 +633,6 @@ class Game extends Component {
                 );
             }
         }
-
-        for (let i = 0; i < players_arr.length; i++) {
-        }
-
         return <div>{component_insides}</div>;
     }
 
@@ -652,9 +647,7 @@ class Game extends Component {
     componentDidMount() {
         // this.state.context = this.refs.canvas.getContext('2d');
         let context = this.refs.canvas.getContext("2d");
-
         this.setState({ context: this.refs.canvas.getContext("2d") });
-
         this.run(context);
 
         socket.on("Redraw positions", (players) => {
@@ -665,13 +658,10 @@ class Game extends Component {
             }
         });
 
-        // console.log(this.state);
-
         // when the server completes the winner and returns event to go back to the lobby
         socket.on("game finished", () => {
             // cancel the animation frames
             if (this.requestID) window.cancelAnimationFrame(this.requestID);
-
             this.setState({
                 game_status: "Completed"
             })
@@ -689,7 +679,6 @@ class Game extends Component {
             });
         });
     }
-
 
     componentWillUnmount() {
 

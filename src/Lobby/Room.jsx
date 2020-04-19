@@ -157,7 +157,7 @@ class Room extends Component {
                 time: countdown.toString()
             });
             // TimerSound();
-            // after i reach 0, call startGame
+            // after i reach 0, call startGametime
             Timer();
             if (countdown <= 0) {
                 console.log("starting game");
@@ -230,7 +230,6 @@ class Room extends Component {
 
         socket.off("giving lobby info");
         socket.off("update lobby list");
-        socket.off("game starting ack");
         socket.off("may successfully leave lobby");
         socket.off("lobby existence");
         socket.off("lobby current timer");

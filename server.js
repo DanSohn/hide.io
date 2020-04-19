@@ -278,7 +278,7 @@ io.on("connection", (socket) => {
         // console.log("This is what I got from player: ", info);
         // console.log("This is what im sending the player: ", {x: info.x, y: info.y, id: info.id});
 
-        io.to(info.roomID).emit('player moved', {x: info.x, y: info.y, id: info.id, room: info.roomID})
+        io.to(info.roomID).emit('player moved', {x: info.x, y: info.y, id: info.id, room: info.roomID, color: info.color})
     });
 
     //Attach the profile image for each user that connects to the server when they are playing a game
