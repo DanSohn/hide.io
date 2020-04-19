@@ -38,8 +38,6 @@ dbUtil
     .catch((err) => console.log(err));
 
 io.on("connection", (socket) => {
-    // console.log("A User has connected");
-
     /*
     Socket info will maintain for each socket all their individual information for ease of access for the needs of
     individual client. I keep track of email, username, and latest lobby they're in
@@ -159,13 +157,8 @@ io.on("connection", (socket) => {
             let lobbyStatus = 0;
             if (lobby) {
                 // if the lobby is currently in game, can't join!
-<<<<<<< HEAD
                 if(lobby.in_game){
                     lobbyStatus = 2;
-=======
-                if (lobby.in_game) {
-                    lobbyStatus = 2
->>>>>>> master
                     socket.emit("validate join code res", lobbyStatus)
                 } else {
                     lobbyStatus = 1;
@@ -250,7 +243,6 @@ io.on("connection", (socket) => {
                 if (!lobby) {
                     status = false;
                 }
-                // console.log("does lobby exist? ", lobby, status);
                 socket.emit("lobby existence", status);
             })
     });
@@ -330,7 +322,6 @@ io.on("connection", (socket) => {
                 let startingX = startingPositonArray[i][0];
                 let startingY = startingPositonArray[i][1];
                 console.log(startingX, startingY);
-                // console.log("Y U GIVE ME ERROR. SocketID: " + roomies[i]);
                 io.to(`${roomies[i]}`).emit('starting position', startingX, startingY);
                 socket_name[roomies[i]].roomInfo = {playerRole: 'hider', room: room};
             }
@@ -388,8 +379,6 @@ io.on("connection", (socket) => {
         }, 1000);
 
         gamesInSession[room].timerID = timerID;
-        // let seekerID = gamesInSession[room].seeker;
-        // socket_name[seekerID].roomInfo.timerID = timerID;
 
         // stop the intervals once the full time is over
         // mins * 60 0000 (60 seconds x 1 sec per milli) + 15 seconds of count down time
@@ -406,26 +395,7 @@ io.on("connection", (socket) => {
     socket.on("player caught", (info) => {
 
         let {playerID, room} = info;
-<<<<<<< HEAD
-        if (gamesInSession.hasOwnProperty(room) && gamesInSession[room].hasOwnProperty("hiders")) {
-            if(gamesInSession[room].hiders.includes(playerID)) {
-                for (let i = 0; i < gamesInSession[room].hiders.length; i++) {
-                    if (gamesInSession[room].hiders[i] === playerID) {
-                        gamesInSession[room].hiders.splice(i, 1);
-                        console.log("after catching, hiders is now", gamesInSession[room].hiders);
-                        gamesInSession[room].caught.push(playerID);
-
-                        let playerName = socket_name[playerID].name;
-                        socket.to(room).emit("I died", playerID, playerName);
-                        io.to(room).emit("display player caught", playerName);
-                        break;
-                    }
-                }
-=======
-        // console.log("COLLISION WITH:", playerID, "room: ", room);
         playerCaught(playerID, room);
-        // console.log(">>>>>>>>>>>>>>>>> " + gamesInSession[room].hiders[0] + "    " + playerID);
->>>>>>> master
 
     });
 
@@ -442,18 +412,10 @@ io.on("connection", (socket) => {
             if (socket_name[socket.id].hasOwnProperty("roomInfo")) {
                 let room = socket_name[socket.id].roomInfo.room;
                 if (socket_name[socket.id].roomInfo.playerRole === "seeker") {
-                    // let timerid = socket_name[socket.id].roomInfo.timerID;
-                    // endGame(room, timerid);
                     endGame(room);
                 } else {
                     playerCaught(socket.id, room);
                     console.log("Player caught called");
-                    // for(let i = 0; i < gamesInSession[room].hiders.length; i++){
-                    //     if(gamesInSession[room].hiders[i] === socket.id) {
-                    //         gamesInSession[room].hiders.splice(i,1);
-                    //         break;
-                    //     }
-                    // }
                 }
             }
             delete socket_name[socket.id];
@@ -474,16 +436,9 @@ io.on("connection", (socket) => {
     //also emit a message to the different players about who won between hiders and seeker
     function endGame(room) {
         console.log("End Game has been called");
-<<<<<<< HEAD
-        //TODO get information about the players that were in that game and update their stats
-        clearInterval(timerID);
-        clearInterval(gamesInSession[room].fullTime);
-        if (gamesInSession.hasOwnProperty(room)) {
-=======
         if (gamesInSession.hasOwnProperty(room)) {
             clearInterval(gamesInSession[room].timerID);
             clearTimeout(gamesInSession[room].fullTime);
->>>>>>> master
             // hiders are in games. hiders and .caught combined
             // hidersList is an array filled with alive hiders and caught hiders
             let hidersList = gamesInSession[room].hiders.concat(gamesInSession[room].caught);
@@ -494,8 +449,8 @@ io.on("connection", (socket) => {
             });
 
             // the seekers players is an array consisting of the seeker's socketID translated to email
-            let seekers = {group: "seeker", players: [socket_name[gamesInSession[room].seeker].email]}
-            let hiders = {group: "hiders", players: hidersEmails}
+            let seekers = {group: "seeker", players: [socket_name[gamesInSession[room].seeker].email]};
+            let hiders = {group: "hiders", players: hidersEmails};
             let winner, loser;
             if (gamesInSession[room].hiders.length === 0) {
                 console.log("<<<<<<<<<<<<<<SEEKER WINS>>>>>>>>>>>.");
@@ -541,7 +496,6 @@ io.on("connection", (socket) => {
 
     //Returns a list of URLs for icons for all the players that are still alive in a game (they are still hiding)
     function getAliveList(room) {
-        // console.log(room + "called from " + method + "<<<<<<<<<<<<<<<<<");
         let alivelist = [];
         for (let i = 0; i < gamesInSession[room].hiders.length; i++) {
             let playerID = gamesInSession[room].hiders[i];
