@@ -22,28 +22,18 @@ class Router extends React.Component {
   constructor() {
     super();
     this.state = {
-      songURL: "./sounds/uncharted.mp3",
       gameSoundURL:
         "https://freesound.org/data/previews/34/34338_215874-lq.mp3",
       networkError: false,
-      soundState: Sound.status.STOPPED,
       gameSoundState: Sound.status.STOPPED,
-      purposefulStop: false
     };
-    this.waitForClicks = this.waitForClicks.bind(this);
     this.soundButton = new Audio(getSong());
-    this.soundButton.play();
-  }
-
-  waitForClicks() {
-    if (!this.state.purposefulStop)
-      setTimeout(() => {
-        this.setState({ soundState: Sound.status.PLAYING });
-        this.soundButton.play();
-      }, 5000);
   }
 
   componentDidMount() {
+    document.addEventListener("mousemove", e => {
+      this.soundButton.play();
+    });
     console.log("Router component did mount!!!!===================");
     /*
         these are placecd in router so that now the other paths will not exist if one attempts to go into them
@@ -70,9 +60,7 @@ class Router extends React.Component {
         this.soundButton.pause();
         this.soundButton.currentTime = 0;
         this.setState({
-          soundState: Sound.status.STOPPED,
-          gameSoundState: Sound.status.PLAYING,
-          purposefulStop: true
+          gameSoundState: Sound.status.PLAYING
         });
       }
     });
@@ -80,7 +68,6 @@ class Router extends React.Component {
     socket.on("game finished", () => {
       this.soundButton.play();
       this.setState({
-        soundState: Sound.status.PLAYING,
         gameSoundState: Sound.status.STOPPED
       });
     });
