@@ -1,24 +1,30 @@
-
+/**
+ *  Game file for Hide.io
+ *  This is instantiated once the lobby timer runs out. Games are run on a timelimit and all movement is handled
+ *  client side with
+ *
+ *
+ */
 import React, { Component } from "react";
 import OtherPlayers from "./OtherPlayers";
 
 import "../assets/App.css";
 
-import Wall from "./Wall";
-import Camera from "./Camera";
+import Wall from "./GameObjects/Wall";
+import Camera from "./GameObjects/Camera";
 import Player from "./Player";
 import { socket } from "../assets/socket";
 
-import Point from "./Point";
-import Timer from "../Game/Timer";
-import AliveList from "./AliveList";
+import Point from "./GameObjects/Point";
+import Timer from "./GameObjects/Timer";
+import AliveList from "./GameView/AliveList";
 import { Redirect } from "react-router-dom";
 import { auth } from "../assets/auth";
 import { googleAuth } from "../Login/LoginScreen";
 import Cookies from "universal-cookie";
-import Results from "./Results";
-import GameObjective from "./GameObjective";
-import DisplayEvent from "./DisplayEvent";
+import Results from "./GameView/Results";
+import GameObjective from "./GameView/GameObjective";
+import DisplayEvent from "./GameView/DisplayEvent";
 import caughtSound from "../sounds/caught";
 
 const cookies = new Cookies();

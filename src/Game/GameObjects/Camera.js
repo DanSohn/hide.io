@@ -1,3 +1,12 @@
+/**
+ * Camera that follows around the player.
+ *
+ * Used to ensure we only draw objects that are within field of view. Players kept in center of camera position
+ * until they approach one of the game corners where the camera does not continue movement with the player
+ * unless they leave from the corner.
+ *
+ */
+
 export default class Camera {
     constructor(map, width, height) {
         this.x = 0;

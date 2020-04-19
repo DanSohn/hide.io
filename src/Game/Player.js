@@ -8,10 +8,7 @@ export default class Player {
         this.width = map.tsize;
         this.height = map.tsize;
         this.deltaSpeed = 0;
-
-        this.SPEED = 256;
     }
-
 
     move(delta, dirx, diry) {
         // move hero
@@ -20,7 +17,6 @@ export default class Player {
 
         // check if we walked into a non-walkable tile
         this._collide(dirx, diry);
-        // this._enamyCollide(dirx, diry, enamyMap);
 
         // clamp values
         let maxX = this.map.cols * this.map.tsize;
@@ -64,30 +60,4 @@ export default class Player {
         }
     };
 
-    _enamyCollide(dirx, diry, enamyMap) {
-        // -1 in right and bottom is because image ranges from 0..63
-        // and not up to 64
-        let left = this.x - this.width / 2;
-        let right = this.x + this.width / 2 - 1;
-        let top = this.y - this.height / 2;
-        let bottom = this.y + this.height / 2 - 1;
-
-
-        // if (diry > 0) {
-        //     row = this.map.getRow(bottom);
-        //     this.y = -this.height / 2 + this.map.getY(row);
-        // }
-        // else if (diry < 0) {
-        //     row = this.map.getRow(top);
-        //     this.y = this.height / 2 + this.map.getY(row + 1);
-        // }
-        // else if (dirx > 0) {
-        //     col = this.map.getCol(right);
-        //     this.x = -this.width / 2 + this.map.getX(col);
-        // }
-        // else if (dirx < 0) {
-        //     col = this.map.getCol(left);
-        //     this.x = this.width / 2 + this.map.getX(col + 1);
-        // }
-    };
 }

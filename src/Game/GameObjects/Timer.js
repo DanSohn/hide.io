@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { socket } from "../assets/socket";
+import { socket } from "../../assets/socket";
 
 //Code that helped in building the timer from https://medium.com/better-programming/building-a-simple-countdown-timer-with-react-4ca32763dda7
 class Timer extends Component {
