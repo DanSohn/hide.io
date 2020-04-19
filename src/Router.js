@@ -30,8 +30,17 @@ class Router extends React.Component {
       gameSoundState: Sound.status.STOPPED,
       purposefulStop: false
     };
+    this.waitForClicks = this.waitForClicks.bind(this);
     this.soundButton = new Audio(getSong());
     this.soundButton.play();
+  }
+
+  waitForClicks() {
+    if (!this.state.purposefulStop)
+      setTimeout(() => {
+        this.setState({ soundState: Sound.status.PLAYING });
+        this.soundButton.play();
+      }, 5000);
   }
 
   componentDidMount() {
@@ -82,6 +91,8 @@ class Router extends React.Component {
     socket.off("game finished");
     socket.off("lobby current timer");
     socket.off("reconnect_error");
+    this.soundButton.pause();
+    this.soundButton.currentTime = 0;
   }
 
   render() {
