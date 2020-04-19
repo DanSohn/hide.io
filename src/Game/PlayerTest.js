@@ -13,7 +13,7 @@ export default class PlayerTest {
     }
 
 
-    move(delta, dirx, diry, enamyMap) {
+    move(delta, dirx, diry) {
         // move hero
         this.x += dirx * (5.0 + this.deltaSpeed);
         this.y += diry * (5.0 + this.deltaSpeed);

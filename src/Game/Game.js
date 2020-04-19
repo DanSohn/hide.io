@@ -22,7 +22,6 @@ import caughtSound from "../sounds/caught";
 
 const cookies = new Cookies();
 
-// import Keyboard from './Keyboard'
 let Keyboard = {};
 let alertCounter = 0;
 
@@ -71,8 +70,8 @@ class Game extends Component {
     constructor(props) {
         super(props);
         document.body.style.overflow = "hidden";
+
         // for the window animationframe
-        let requestID;
         this.state = {
             context: this.context,
             windowHeight: window.innerHeight,
@@ -140,23 +139,24 @@ class Game extends Component {
                 this.state.enamies.set(playerinfo.id, {playerInfo: playerinfo, color: playerinfo.color, isAlive: true});
             }
         });
+
+        // socket tells you your dead
         socket.on("I died", (playerID, playerName) => {
             if (playerID === socket.id) {
                 this.setState({ alive: false })
             }
         });
+
+        // if youre the host, tell the server to start counting down
         if (this.state.creator) {
             socket.emit("start game timer", this.state.gameID, this.state.timeLimit);
         }
+
         socket.on("game in progress", (time) => {
             let timelimit = (this.state.timeLimit.split("")[0]);
             if(this.state.playerState === "seeker" && this.state.countdown === false){
-                // this.Player.deltaSpeed = (timelimit - time.minutes) + (time.seconds/60);
                 this.Player.deltaSpeed  = (timelimit - time.minutes) + ((60 - time.seconds)/60);
-                // console.log("DELTA"+deltaSpeed);
             }
-
-            // console.log("TIMELIMIT=" + this.state.timeLimit + ". Current time =" + time.minutes + ":" + time.seconds+". Final output"+ this.state.timeLimit - (time.minutes*60) + time.seconds );
         });
 
         this.update_player_component = this.update_player_component.bind(this);
@@ -437,7 +437,6 @@ class Game extends Component {
             this.Player.screenX + this.state.map.tsize > enamyScreenX &&
             this.Player.screenY < enamyScreenY + this.state.map.tsize &&
             this.Player.screenY + this.state.map.tsize > enamyScreenY) {
-            console.log("collision detected");
             if (alertCounter < 1) {
                 caughtSound();
                 alertCounter++;
@@ -474,7 +473,6 @@ class Game extends Component {
             return;
         }
     }
-
     drawEnamies(enamyX, enamyY, enamyColor, isAlive) {
         let enamyScreenX = (enamyX - this.camera.x) - this.Player.width / 2;
         let enamyScreenY = (enamyY - this.camera.y) - this.Player.height / 2;
@@ -512,7 +510,6 @@ class Game extends Component {
             this.ctx.stroke();
         }
     }
-
     update(delta) {
         // handle Player movement with arrow keys
         let dirx = 0;
@@ -533,7 +530,6 @@ class Game extends Component {
 
     run(context) {
         this.ctx = context;
-        this._previousElapsed = 0;
         this.init();
         this.tick();
     }
@@ -565,11 +561,9 @@ class Game extends Component {
         };
         // Only send across socket if there's an update in position
         if (JSON.stringify(info) !== JSON.stringify(pastInfo) && this.state.alive) {
-            // console.log("I emitted:", info.x, info.y);
-            // console.log('this.player.x=  ' + this.Player.x + '  this.Player.screenX=  ' + this.Player.screenX + '  camera x= ' + this.camera.x)
+
             socket.emit("player movement", info);
         }
-
     }
 
 
@@ -578,7 +572,6 @@ class Game extends Component {
         let playerY = this.Player.screenY - this.Player.height / 2 + 32;
 
         this.drawLayer();
-        // this.drawHiders();
         this.updateLightTrace();
         this.sortAngles();
 
@@ -591,7 +584,6 @@ class Game extends Component {
                 if (this.state.playerState === "seeker" && this.state.game_status === 'started') {
                     this.detectEnamies(playerValue);
                 }
-                console.log("Calling function with:  "+playerValue);
                 this.drawEnamies(playerValue.playerInfo.x, playerValue.playerInfo.y, playerValue.color, playerValue.isAlive);
             }
         }
@@ -619,9 +611,8 @@ class Game extends Component {
                         xPos={players_arr[i][1].x}
                         yPos={players_arr[i][1].y}
                     />
-                );
-                //console.log(component_insides[0].props);
-            } else {
+                );}
+            else {
                 component_insides.push(
                     <OtherPlayers
                         key={players_arr[i][0]}
@@ -651,7 +642,6 @@ class Game extends Component {
 
         socket.on("Redraw positions", (players) => {
             // if there has been a change to players' positions, then reset the state of players to new coordinates
-            //console.log("original players ", this.state.players);
             if (this.state.players !== players) {
                 this.setState({ players: players });
             }
@@ -666,7 +656,6 @@ class Game extends Component {
             })
         });
         socket.on("reconnect_error", (error) => {
-            // console.log("Error! Disconnected from server", error);
             auth.logout(() => {
                 // reason history is avail on props is b/c we loaded it via a route, which passes
                 // in a prop called history always
