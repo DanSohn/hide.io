@@ -27,7 +27,7 @@ class Router extends React.Component {
       gameSoundURL:
         "https://freesound.org/data/previews/34/34338_215874-lq.mp3",
       networkError: false,
-      soundState: Sound.status.PLAYING,
+      soundState: Sound.status.STOPPED,
       gameSoundState: Sound.status.STOPPED,
       purposefulStop: false
     };
