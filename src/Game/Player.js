@@ -1,4 +1,10 @@
-
+/**
+ *  Player.js
+ *
+ *  Player object, helper class for Game.js.
+ *  In charge of the logic behind player movements.
+ *
+ */
 
 export default class Player {
     constructor(map, x, y) {

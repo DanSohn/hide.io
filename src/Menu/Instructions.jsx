@@ -21,9 +21,6 @@ class Instructions extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            /*userName: this.props.location.state.name,
-            email: this.props.location.state.email
-            */
             signedIn: true,
             previous: false,
         };
@@ -116,10 +113,6 @@ class Instructions extends Component {
             comp = (
                 <Redirect to={{
                     pathname: '/MainMenu',
-                    /*state: {
-                        name: this.state.userName,
-                        email: this.state.email,
-                    }*/
                 }} />
             )
         }

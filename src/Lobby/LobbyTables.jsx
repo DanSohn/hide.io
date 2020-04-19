@@ -1,9 +1,18 @@
+/**
+ * Lobby Tables Component.
+ *
+ * In charge of containing all lobbies and their current number of players and displaying them all in a single
+ * component.
+ *
+ */
+
 import React, { Component } from "react";
 import { socket } from "../assets/socket";
 import "../assets/App.css";
 import ClickSound from "../sounds/click";
 
 class LobbyTables extends Component {
+
     constructor(props) {
         super(props);
         console.log("Loading lobbyTables");
@@ -15,14 +24,12 @@ class LobbyTables extends Component {
         this.sendLobbyCode = this.sendLobbyCode.bind(this);
 
         socket.emit("please give lobbies");
-
     }
 
     sendLobbyCode(join_code) {
         console.log("Sending back information to viewLobbies", join_code);
         this.props.lobbyCallback(join_code);
     }
-
 
     renderTableData() {
         if (this.state.lobbies === null) {
@@ -41,7 +48,6 @@ class LobbyTables extends Component {
                 </tr>
             )
         })
-
     }
 
     renderTableHeader() {
@@ -51,16 +57,6 @@ class LobbyTables extends Component {
                 <th className="smallColumn">Players</th>
                 <th className="mediumColumn">Action</th>
             </>);
-        // let headers = ["Lobby Name", "Players", "Action"];
-        // return headers.map((key, index) => {
-        //     if (key === "Players") {
-        //         return <th className="smallColumn" key={index}>{key}</th>
-        //     } else if (key === "Lobby Name") {
-        //         return <th className="largeColumn" key={index}>{key}</th>
-        //     } else if (key === "Action") {
-        //         return <th className="buttonColumn" key={index}>{key}</th>
-        //     }
-        // });
     }
 
     componentDidMount() {
