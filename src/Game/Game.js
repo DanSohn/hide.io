@@ -594,7 +594,10 @@ class Game extends Component {
                 || playerValue.playerInfo.y < this.camera.y
                 || playerValue.playerInfo.x > this.camera.x + this.camera.width
                 || playerValue.playerInfo.y > this.camera.y + this.camera.height) {
+<<<<<<< HEAD
                 continue;
+=======
+>>>>>>> master
             } else {
                 if (this.state.playerState === "seeker" && this.state.game_status === 'started') {
                     this.detectEnamies(playerValue);
