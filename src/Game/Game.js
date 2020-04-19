@@ -202,6 +202,7 @@ class Game extends Component {
     }
 
     drawLayer() {
+        this.ctx.save();
         this.setState({ walls: [] });
 
         let tileSize = this.state.map.tsize;
@@ -245,6 +246,7 @@ class Game extends Component {
                 }
             }
         }
+        this.ctx.restore();
     }
 
     //Add walls each frame to calculate the rays
@@ -403,6 +405,7 @@ class Game extends Component {
 
     // Goes through each hitpoint to create a visibile light polygon - then a circular light emits from players x y position- first circle is more intense than second circle
     drawLight() {
+        this.ctx.save();
         if (this.state.alive) {
             let playerX = this.Player.screenX - this.Player.width / 2 + 32;
             let playerY = this.Player.screenY - this.Player.height / 2 + 32;
@@ -480,8 +483,11 @@ class Game extends Component {
         } else {
             return;
         }
+        this.ctx.restore();
     }
     drawEnamies(enamyX, enamyY, enamyColor, isAlive) {
+
+        this.ctx.save();
         let enamyScreenX = (enamyX - this.camera.x) - this.Player.width / 2;
         let enamyScreenY = (enamyY - this.camera.y) - this.Player.height / 2;
 
@@ -501,6 +507,7 @@ class Game extends Component {
     //Draws a player in the center of the screen.
     drawPlayer() {
         // draw main character
+        this.ctx.save();
         this.ctx.beginPath();
         this.ctx.rect(
             this.Player.screenX - this.Player.width / 2,
@@ -516,6 +523,7 @@ class Game extends Component {
             this.ctx.strokeStyle = this.state.playerColor;
             this.ctx.stroke();
         }
+        this.ctx.restore();
     }
     update(delta) {
         // handle Player movement with arrow keys
@@ -587,6 +595,7 @@ class Game extends Component {
                 || playerValue.playerInfo.y < this.camera.y
                 || playerValue.playerInfo.x > this.camera.x + this.camera.width
                 || playerValue.playerInfo.y > this.camera.y + this.camera.height) {
+                continue;
             } else {
                 if (this.state.playerState === "seeker" && this.state.game_status === 'started') {
                     this.detectEnamies(playerValue);
