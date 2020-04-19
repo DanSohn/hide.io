@@ -6,7 +6,7 @@ import "../assets/App.css";
 
 import Wall from "./Wall";
 import Camera from "./Camera";
-import Player from "./PlayerTest";
+import Player from "./Player";
 import { socket } from "../assets/socket";
 
 import Point from "./Point";

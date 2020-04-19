@@ -1,3 +1,7 @@
+/**
+ *  In-game chat class
+ */
+
 import React, { Component } from "react";
 import "bootstrap/dist/js/bootstrap.bundle";
 import "../../assets/App.css";

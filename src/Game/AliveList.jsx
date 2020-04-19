@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import OtherPlayers from "./OtherPlayers";
 import "../assets/App.css";
-import Player from "./PlayerTest";
+import Player from "./Player";
 // import Keyboard from './Keyboard'
 let Keyboard = {};
 

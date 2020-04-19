@@ -10,11 +10,4 @@ export default class Wall{
     length() {
 		return Math.sqrt(Math.pow(this.p2.x-this.p1.x, 2)+Math.pow(this.p2.y-this.p1.y, 2));
     }
-
-    direction(){
-        let vLength = this.length();
-		return new Point((this.p2.x-this.p1.x)/vLength, (this.p2.y-this.p1.y)/vLength)
-    }
-
-
 }

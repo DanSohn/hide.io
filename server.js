@@ -1,4 +1,3 @@
-
 /**
  *   Hide.IO API server.
  *
