@@ -127,7 +127,7 @@ io.on("connection", (socket) => {
             if (!lobby) {
                 dbUtil.createLobby(roomID, info).then(() => {
                     dbUtil
-                        .addUserToLobby({roomID: roomID, email: info.email, username: info.name})
+                        .addUserToLobby({ roomID: roomID, email: info.email, username: info.name })
                         .then(() => {
                             // create a socket room, in which from now on, all your communications
                             // socketwise will stay within the room
@@ -216,7 +216,7 @@ io.on("connection", (socket) => {
         console.log("SOCKET EVENT JOIN CERTAIN LOBBY");
 
         dbUtil
-            .addUserToLobby({roomID: info.room, email: info.email, username: info.username})
+            .addUserToLobby({ roomID: info.room, email: info.email, username: info.username })
             .then(() => {
                 socket.join(info.room);
                 socket.emit("joining certain lobby success");
@@ -305,7 +305,7 @@ io.on("connection", (socket) => {
         // console.log("This is what I got from player: ", info);
         // console.log("This is what im sending the player: ", {x: info.x, y: info.y, id: info.id});
 
-        io.to(info.roomID).emit('player moved', {x: info.x, y: info.y, id: info.id, room: info.roomID, color: info.color})
+        io.to(info.roomID).emit('player moved', { x: info.x, y: info.y, id: info.id, room: info.roomID, color: info.color })
     });
 
     //Attach the profile image for each user that connects to the server when they are playing a game
@@ -315,7 +315,7 @@ io.on("connection", (socket) => {
 
     socket.on("lobby start timer", (info) => {
         console.log("SOCKET EVENT LOBBY START TIMER");
-        let {countdowntime, room} = info;
+        let { countdowntime, room } = info;
 
         // get all the sockets in the room, then choose one random socket to be the hider
         let roomies = Object.keys(io.sockets.adapter.rooms[room].sockets);
@@ -335,6 +335,7 @@ io.on("connection", (socket) => {
             socket_name[randomSeeker].roomInfo = {playerRole: 'seeker', room: room};
 
             let startingPositonArray = [[-1, -1], [0, -1], [1, -1], [-1, 1], [0, 1], [1, 1]];
+
             // remove the seeker from the list of roomies
             for (let i = 0; i < roomies.length; i++) {
                 if (roomies[i] === randomSeeker) {
@@ -384,7 +385,7 @@ io.on("connection", (socket) => {
     socket.on("start game timer", (room, game_time) => {
         console.log("game started " + game_time);
         let mins = game_time.split(" ")[0];
-        let time = {minutes: mins, seconds: 15};
+        let time = { minutes: mins, seconds: 15 };
         console.log(time, room);
         io.to(room).emit("alive player list", getAliveList(room, "start game timer"));
         let timerID = setInterval(() => {
@@ -412,7 +413,7 @@ io.on("connection", (socket) => {
         // stop the intervals once the full time is over
         // mins * 60 0000 (60 seconds x 1 sec per milli) + 15 seconds of count down time
         gamesInSession[room].fullTime = setTimeout(() => {
-            io.to(room).emit("game in progress", {minutes: 0, seconds: 0});
+            io.to(room).emit("game in progress", { minutes: 0, seconds: 0 });
             endGame(room, timerID);
             console.log("Time's up");
         }, mins * 60000 + 15000);
@@ -423,11 +424,10 @@ io.on("connection", (socket) => {
     //haven't been caught by the seeker. Incase all the players are caught, endGame() is called before time expires.
     socket.on("player caught", (info) => {
 
-        let {playerID, room} = info;
+        let { playerID, room } = info;
         // console.log("COLLISION WITH:", playerID, "room: ", room);
         playerCaught(playerID, room);
         // console.log(">>>>>>>>>>>>>>>>> " + gamesInSession[room].hiders[0] + "    " + playerID);
-
     });
 
     // when a user disconnects from the tab, either by closing or refreshing, we remove them from any lobbies they
@@ -436,7 +436,7 @@ io.on("connection", (socket) => {
         console.log("SOCKET EVENT DISCONNECT");
         if (socket_info.email && socket_info.lobby) {
             dbUtil
-                .removeUserFromLobby({room: socket_info.lobby, email: socket_info.email})
+                .removeUserFromLobby({ room: socket_info.lobby, email: socket_info.email })
                 .then()
                 .catch((err) => console.log(err));
 
@@ -485,8 +485,8 @@ io.on("connection", (socket) => {
             });
 
             // the seekers players is an array consisting of the seeker's socketID translated to email
-            let seekers = {group: "seeker", players: [socket_name[gamesInSession[room].seeker].email]}
-            let hiders = {group: "hiders", players: hidersEmails}
+            let seekers = { group: "seeker", players: [socket_name[gamesInSession[room].seeker].email] }
+            let hiders = { group: "hiders", players: hidersEmails }
             let winner, loser;
             if (gamesInSession[room].hiders.length === 0) {
                 console.log("<<<<<<<<<<<<<<SEEKER WINS>>>>>>>>>>>.");
