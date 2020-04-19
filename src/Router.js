@@ -27,7 +27,7 @@ class Router extends React.Component {
       gameSoundURL:
         "https://freesound.org/data/previews/34/34338_215874-lq.mp3",
       networkError: false,
-      soundState: Sound.status.PLAYING,
+      soundState: Sound.status.STOPPED,
       gameSoundState: Sound.status.STOPPED,
       purposefulStop: false
     };
@@ -36,9 +36,7 @@ class Router extends React.Component {
 
   waitForClicks() {
     if (
-      !(this.state.soundState === Sound.status.PLAYING) &&
-      !this.state.purposefulStop
-    )
+        this.state.soundState === Sound.status.STOPPED && !this.state.purposefulStop)
       setTimeout(() => {
         this.setState({ soundState: Sound.status.PLAYING });
       }, 5000);
