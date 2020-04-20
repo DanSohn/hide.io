@@ -49,7 +49,7 @@ class LoginScreen extends Component {
 
         socket.on("user database check", (username) => {
             console.log("received username", username);
-            if(username === -1){
+            if (username === -1) {
                 // email is already in use, don't go through
                 console.log("Email already in use!!!");
                 cookies.remove("name");
@@ -58,8 +58,8 @@ class LoginScreen extends Component {
                 this.setState({
                     errorMsg: "Email is currently in game. Try a different email or talk to your friends and smack em",
                     cookieCheck: false,
-                    errorTimeout: setTimeout(()=>{
-                        this.setState({errorMsg: "", errorTimeout: null})
+                    errorTimeout: setTimeout(() => {
+                        this.setState({ errorMsg: "", errorTimeout: null })
                     }, 3000)
                 })
                 return;
@@ -162,9 +162,9 @@ class LoginScreen extends Component {
             }
         }
         return (
-            <div className="fade-in-2">
+            <>
                 {component}
-            </div>
+            </>
         );
     }
 }
