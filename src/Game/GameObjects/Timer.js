@@ -44,8 +44,12 @@ class Timer extends Component {
                 this.setState({ gamestage1: false, ingame_prompt: "Time Remaining" });
             }
 
-            if (game_time.minutes === 0 && game_time.seconds === 15) {
+            if (game_time.minutes === 0 && game_time.seconds === 15 && this.state.playerState === "seeker") {
                 this.setState({ ingame_prompt: "Hurry you don't have much time left!" });
+            }
+
+            if (game_time.minutes === 0 && game_time.seconds === 15 && this.state.playerState === "hider") {
+                this.setState({ ingame_prompt: "You've almost made it!" });
             }
             this.setState({ time: game_time });
         });
