@@ -1,5 +1,7 @@
 # HIDE.IO
-Come play at hideio.herokuapp.com
+
+Come play at https://hideio.herokuapp.com
+
 SENG 513 Project to end them all
 
 To run:
