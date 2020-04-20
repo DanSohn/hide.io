@@ -178,11 +178,11 @@ body {
       width:50px;
   }
 .fade-out-15 {
-    animation: fadeOut ease 16s;
-    -webkit-animation: fadeOut ease 16s;
-    -moz-animation: fadeOut ease 16s;
-    -o-animation: fadeOut ease 16s;
-    -ms-animation: fadeOut ease 16s;
+    animation: fadeOut ease 13s;
+    -webkit-animation: fadeOut ease 13s;
+    -moz-animation: fadeOut ease 13s;
+    -o-animation: fadeOut ease 13s;
+    -ms-animation: fadeOut ease 13s;
 }
 .fade-out-3 {
     animation: fadeOut ease 3s;
