@@ -115,6 +115,7 @@ class LoginScreen extends Component {
     }
 
     componentWillUnmount() {
+        ClickSound();
         console.log("Unmounting login screen!");
         socket.off("user database check");
         socket.off("reconnect");
