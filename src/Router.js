@@ -41,6 +41,7 @@ class Router extends React.Component {
 
         setTimeout(() => {
             this.soundButton = new Audio(getSong());
+            this.soundButton.volume = 0.4;
             this.soundButton.play();
             this.soundButton.loop = true;
             
