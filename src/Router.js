@@ -26,6 +26,7 @@ import Game from "./Game/Game";
 import Sound from "react-sound";
 import getSong from "./sounds/randomMusic";
 import GameMusic from "./sounds/gameMusic";
+import Leaderboard from "./Leaderboard/Leaderboard";
 
 class Router extends React.Component {
 
@@ -113,6 +114,7 @@ class Router extends React.Component {
                         <ProtectedRoute path="/LobbyScreen" component={ViewLobbies} />
                         <ProtectedRoute path="/Profile" component={PlayerProfile} />
                         <ProtectedRoute path="/Instructions" component={Instructions} />
+                        <ProtectedRoute path="/Leaderboard" component={Leaderboard} />
                         <ProtectedRoute path="/CreateLobby" component={CreateLobby} />
                         <ProtectedRoute path="/JoinByCode" component={JoinCode} />
                         <ProtectedRoute path="/Room" component={Room} />

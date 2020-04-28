@@ -99,6 +99,14 @@ class MenuScreen extends Component {
                         <span className='start-btn-green ff-20 width-350'>PROFILE</span>
                     </Link>
 
+                    <Link to={{
+                        pathname: '/Leaderboard',
+                        state: {}
+                    }}>
+
+                        <span className='start-btn-green ff-20 width-350'>LEADERBOARD</span>
+                    </Link>
+
                     <span
                         className='start-btn-green ff-20 width-350'
                         onClick={() => this.logOut()}
