@@ -1,3 +1,5 @@
+import Cookies from "universal-cookie";
+const cookies = new Cookies();
 
 function returnGameMode(num) {
     let res;
@@ -238,14 +240,22 @@ function returnGameMap(num) {
 }
 
 
-// function that takes in a string and checks if it is a valid username
-// valid means it consists only of numbers, letters and spaces
-function validUsername(name) {
-    if (!name || name.trim().length === 0) {
-        return false;
-    }
+// removes cookies
+function removeCookies(){
+    cookies.remove("name");
+    cookies.remove("email");
+    cookies.remove("image");
+}
 
+// adds a cookie depending on its type ( name, email, image) and its value
+function addCookies(type, value){
 
 }
 
-export { returnGameMode, returnGameMap, returnGameTime };
+function getCookiesInfo(){
+    const name = cookies.get("name");
+    const email = cookies.get("email");
+    const image = cookies.get("image");
+    return {name: name, email: email, image: image};
+}
+export { returnGameMode, returnGameMap, returnGameTime, removeCookies, addCookies, getCookiesInfo };

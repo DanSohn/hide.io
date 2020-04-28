@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
-import Cookies from "universal-cookie";
 
 import Header from "../assets/Header";
 import Break from "../assets/Break";
@@ -11,18 +10,16 @@ import { socket } from "../assets/socket";
 import { auth } from "../assets/auth";
 import { googleAuth } from "../Login/LoginScreen";
 import ProfileResults from "./ProfileResults";
+import {getCookiesInfo, removeCookies} from "../assets/utils";
 
-const cookies = new Cookies();
 
 class PlayerProfile extends Component {
     constructor(props) {
         super(props);
+        const cookiesInfo = getCookiesInfo();
         this.state = {
-            /*userName: this.props.location.state.name,
-            email: this.props.location.state.email
-            */
-            userName: cookies.get("name"),
-            email: cookies.get("email"),
+            userName: cookiesInfo.name,
+            email: cookiesInfo.email,
             signedIn: true,
             previous: false,
         };
@@ -36,9 +33,7 @@ class PlayerProfile extends Component {
             auth.logout(() => {
                 // reason history is avail on props is b/c we loaded it via a route, which passes
                 // in a prop called history always
-                cookies.remove("name");
-                cookies.remove("email");
-                cookies.remove("image");
+                removeCookies();
                 googleAuth.signOut();
                 console.log("going to logout!");
                 this.props.history.push('/');
@@ -76,13 +71,7 @@ class PlayerProfile extends Component {
             );
         } else {
             comp = (
-                <Redirect to={{
-                    pathname: '/MainMenu',
-                    /*state: {
-                        name: this.state.userName,
-                        email: this.state.email,
-                    }*/
-                }} />
+                <Redirect to="/MainMenu" />
             );
 
         }
