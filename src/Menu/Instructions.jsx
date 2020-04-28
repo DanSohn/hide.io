@@ -4,7 +4,6 @@
 
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
-import Cookies from "universal-cookie";
 import Img from "react-image";
 import { googleAuth } from "../Login/LoginScreen";
 
@@ -18,8 +17,8 @@ import { auth } from "../assets/auth";
 import SmallMap from "../assets/images/SmallMap.png";
 import MediumMap from "../assets/images/MediumMap.png";
 import LargeMap from "../assets/images/LargeMap.png";
+import {removeCookies} from "../assets/utils";
 
-const cookies = new Cookies();
 
 class Instructions extends Component {
     constructor(props) {
@@ -32,15 +31,13 @@ class Instructions extends Component {
     }
 
     componentDidMount() {
-        socket.on("reconnect_error", (error) => {
+        socket.on("reconnect_error", () => {
             // console.log("Error! Disconnected from server", error);
             console.log("Error! Can't connect to server");
             auth.logout(() => {
                 // reason history is avail on props is b/c we loaded it via a route, which passes
                 // in a prop called history always
-                cookies.remove("name");
-                cookies.remove("email");
-                cookies.remove("image");
+                removeCookies();
                 googleAuth.signOut();
                 console.log("going to logout!");
                 this.props.history.push('/');
@@ -115,9 +112,7 @@ class Instructions extends Component {
             );
         } else {
             comp = (
-                <Redirect to={{
-                    pathname: '/MainMenu',
-                }} />
+                <Redirect to='/MainMenu' />
             )
         }
         return <>{comp}</>

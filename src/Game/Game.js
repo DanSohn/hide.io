@@ -30,13 +30,12 @@ import AliveList from "./GameView/AliveList";
 import { Redirect } from "react-router-dom";
 import { auth } from "../assets/auth";
 import { googleAuth } from "../Login/LoginScreen";
-import Cookies from "universal-cookie";
 import Results from "./GameView/Results";
 import GameObjective from "./GameView/GameObjective";
-import DisplayEvent from "./GameView/DisplayEvent";
+// import DisplayEvent from "./GameView/DisplayEvent";
 import caughtSound from "../sounds/caught";
+import {removeCookies} from "../assets/utils";
 
-const cookies = new Cookies();
 
 let Keyboard = new keyboard();
 let alertCounter = 0;
@@ -641,9 +640,7 @@ class Game extends Component {
             auth.logout(() => {
                 // reason history is avail on props is b/c we loaded it via a route, which passes
                 // in a prop called history always
-                cookies.remove("name");
-                cookies.remove("email");
-                cookies.remove("image");
+                removeCookies();
                 googleAuth.signOut();
                 this.props.history.push('/');
             });

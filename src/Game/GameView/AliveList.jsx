@@ -53,7 +53,7 @@ class AliveList extends Component {
                     {this.state.aliveList.map((value,index) => {
                         return (
                             <li key={index}>
-                                <img src={value}/>
+                                <img src={value} alt=''/>
                             </li>
                         );
                     })}

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Redirect } from "react-router-dom";
 import { socket } from '../assets/socket';
-import Cookies from "universal-cookie";
 
 import Header from '../assets/Header';
 import Break from '../assets/Break';
@@ -11,16 +10,16 @@ import '../assets/App.css';
 import ClickSound from '../sounds/click';
 import { auth } from "../assets/auth";
 import { googleAuth } from "../Login/LoginScreen";
+import {getCookiesInfo, removeCookies} from "../assets/utils";
 
-const cookies = new Cookies();
 
 class JoinCode extends Component {
     constructor(props) {
         super(props);
-
+        const cookiesInfo = getCookiesInfo();
         this.state = {
-            userName: cookies.get("name"),
-            email: cookies.get("email"),
+            userName: cookiesInfo.name,
+            email: cookiesInfo.email,
             previous: false,
             roomID: '',
             enter_room: false,
@@ -33,14 +32,12 @@ class JoinCode extends Component {
     }
 
     componentDidMount() {
-        socket.on("reconnect_error", (error) => {
+        socket.on("reconnect_error", () => {
             console.log("Error! Can't connect to server");
             auth.logout(() => {
                 // reason history is avail on props is b/c we loaded it via a route, which passes
                 // in a prop called history always
-                cookies.remove("name");
-                cookies.remove("email");
-                cookies.remove("image");
+                removeCookies();
                 googleAuth.signOut();
                 console.log("going to logout!");
                 this.props.history.push('/');
@@ -95,10 +92,7 @@ class JoinCode extends Component {
     render() {
         let comp;
         if (this.state.previous) {
-            comp = <Redirect to={{
-                pathname: '/LobbyScreen',
-            }} />
-
+            comp = <Redirect to='/LobbyScreen' />
         } else if (this.state.enter_room === true) {
             comp = <Redirect to={{
                 pathname: '/Room',

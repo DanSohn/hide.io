@@ -1,5 +1,3 @@
-import Point from './Point';
-
 export default class Wall{
     constructor(p1, p2) {
         this.p1 = p1;

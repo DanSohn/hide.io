@@ -11,7 +11,6 @@
 
 import React, {Component} from "react";
 import {Redirect} from "react-router-dom";
-import Cookies from "universal-cookie";
 
 import {socket} from "../assets/socket";
 import {auth} from "../assets/auth";
@@ -24,21 +23,22 @@ import GameSettings from "./RoomComponents/GameSettings";
 import PlayerList from "./RoomComponents/PlayerList";
 import ButtonArea from "./RoomComponents/ButtonArea";
 
-import {returnGameMode, returnGameMap, returnGameTime} from "../assets/utils";
+import {returnGameMode, returnGameMap, returnGameTime, getCookiesInfo, removeCookies} from "../assets/utils";
 import ClickSound from "../sounds/click";
 import Timer from "../sounds/timer";
 
 import "bootstrap/dist/js/bootstrap.bundle";
 import "../assets/App.css";
 
-const cookies = new Cookies();
 
 class Room extends Component {
     constructor(props) {
         super(props);
+        const cookiesInfo = getCookiesInfo();
         this.state = {
-            userName: cookies.get("name"),
-            email: cookies.get("email"),
+            userName: cookiesInfo.name,
+            email: cookiesInfo.email,
+            image: cookiesInfo.image,
             roomID: this.props.location.state.join_code,
             title: "",
             header: "Join Code: " + this.props.location.state.join_code,
@@ -117,7 +117,7 @@ class Room extends Component {
 
     componentDidMount() {
         // socket.emit("player joined");
-        socket.emit('profile image url', cookies.get("image"));
+        socket.emit('profile image url', this.state.image);
         socket.on("giving lobby info", lobby => {
             if (!lobby) {
                 console.log(
@@ -220,9 +220,7 @@ class Room extends Component {
             auth.logout(() => {
                 // reason history is avail on props is b/c we loaded it via a route, which passes
                 // in a prop called history always
-                cookies.remove("name");
-                cookies.remove("email");
-                cookies.remove("image");
+                removeCookies();
                 googleAuth.signOut();
                 console.log("going to logout!");
                 this.props.history.push("/");

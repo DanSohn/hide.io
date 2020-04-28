@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { socket } from '../assets/socket';
-import Cookies from 'universal-cookie';
 
 import Header from '../assets/Header';
 import Break from '../assets/Break';
@@ -11,17 +10,18 @@ import '../assets/App.css';
 import ClickSound from '../sounds/click';
 import { auth } from "../assets/auth";
 import { googleAuth } from "../Login/LoginScreen";
+import {getCookiesInfo, removeCookies} from "../assets/utils";
 
-const cookies = new Cookies();
 
 class ViewLobbies extends Component {
     constructor(props) {
         super(props);
 
+        const cookiesInfo = getCookiesInfo();
         // note: enter lobby is what the lobbytable child fills, when the user clicks a lobby to join. ROOMID
         this.state = {
-            userName: cookies.get("name"),
-            email: cookies.get("email"),
+            userName: cookiesInfo.name,
+            email: cookiesInfo.email,
             previous: false,
             goToRoom: false,
             enter_lobby: '',
@@ -33,15 +33,13 @@ class ViewLobbies extends Component {
     }
 
     componentDidMount() {
-        socket.on("reconnect_error", (error) => {
+        socket.on("reconnect_error", () => {
             // console.log("Error! Disconnected from server", error);
             console.log("Error! Can't connect to server");
             auth.logout(() => {
                 // reason history is avail on props is b/c we loaded it via a route, which passes
                 // in a prop called history always
-                cookies.remove("name");
-                cookies.remove("email");
-                cookies.remove("image");
+                removeCookies();
                 googleAuth.signOut();
                 console.log("going to logout!");
                 this.props.history.push('/');
@@ -90,9 +88,7 @@ class ViewLobbies extends Component {
         //the idea is, for each record in the lobby database, a new div or list will appear.
         let comp;
         if (this.state.previous) {
-            comp = <Redirect to={{
-                pathname: '/MainMenu',
-            }} />
+            comp = <Redirect to='/MainMenu' />
         } else {
             if (this.state.goToRoom === true) {
                 comp = <Redirect to={{
@@ -103,7 +99,6 @@ class ViewLobbies extends Component {
                 }} />
             } else {
                 comp = (
-
                     <div className="GameWindow">
                         <Header title="Lobby Selection" previous={this.goPrevious}/>
                         <Break/>
@@ -112,12 +107,10 @@ class ViewLobbies extends Component {
                             <LobbyTables lobbyCallback={this.goToJoinLobby} />
 
                             <div className="createLobby">
-                                <Link to={{
-                                    pathname: '/CreateLobby',
-                                }}>
+                                <Link to='/CreateLobby'>
                                     <span className='start-btn-red ff-20 width-250'>CREATE LOBBY</span>
                                 </Link>
-                                <Link to={{pathname: '/JoinByCode',}}>
+                                <Link to='/JoinByCode'>
                                     <span className='start-btn-blue ff-20 width-250'>JOIN BY CODE</span>
                                 </Link>
                             </div>

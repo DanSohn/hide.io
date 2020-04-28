@@ -52,7 +52,6 @@ class Chat extends Component {
             message: this.state.onKeyboard
         });
 
-        let obj = { username: this.props.userName, message: this.state.onKeyboard };
         this.setState({
             message: this.state.onKeyboard,
             onKeyboard: ""
