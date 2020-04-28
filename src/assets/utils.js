@@ -1,4 +1,5 @@
 import Cookies from "universal-cookie";
+
 const cookies = new Cookies();
 
 function returnGameMode(num) {
@@ -241,21 +242,42 @@ function returnGameMap(num) {
 
 
 // removes cookies
-function removeCookies(){
+function removeCookies() {
     cookies.remove("name");
     cookies.remove("email");
     cookies.remove("image");
 }
 
-// adds a cookie depending on its type ( name, email, image) and its value
-function addCookies(type, value){
+// the cookies last for a maximum time of 1 day
+
+// adds a cookie for users name
+function addCookiesName(name) {
+    cookies.set("name", name, {path: "/", maxAge: 60 * 60 * 24});
+}
+
+// adds a cookie for users email
+function addCookiesEmail(email) {
+    cookies.set("email", email, {path: "/", maxAge: 60 * 60 * 24});
 
 }
 
-function getCookiesInfo(){
+// adds a cookie for users profile image
+function addCookiesImage(image) {
+    cookies.set("image", image, {path: "/", maxAge: 60 * 60 * 24});
+
+}
+
+function getCookiesInfo() {
     const name = cookies.get("name");
     const email = cookies.get("email");
     const image = cookies.get("image");
     return {name: name, email: email, image: image};
 }
-export { returnGameMode, returnGameMap, returnGameTime, removeCookies, addCookies, getCookiesInfo };
+
+// if there exists email, name and image cookies, then return true, else false
+function checkCookiesExist(){
+    return !!(cookies.get("email") && cookies.get("name") && cookies.get("image"));
+
+}
+export {returnGameMode, returnGameMap, returnGameTime, removeCookies, addCookiesName,
+    addCookiesEmail, addCookiesImage, getCookiesInfo, checkCookiesExist};

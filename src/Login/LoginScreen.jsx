@@ -3,17 +3,21 @@ import { Redirect } from 'react-router-dom';
 import googleAuth from './GoogleAuth';
 import { auth } from "../Router";
 import { socket } from "../assets/socket";
-import Cookies from 'universal-cookie';
 
 import Break from "../assets/Break";
 
 import "../assets/App.css";
-import Sound from "react-sound";
 import ClickSound from "../sounds/click.js";
 import Header from "../assets/Header";
-import getSong from "../sounds/gameMusic";
+import {
+    addCookiesEmail,
+    addCookiesImage,
+    addCookiesName,
+    checkCookiesExist,
+    getCookiesInfo,
+    removeCookies
+} from "../assets/utils";
 
-const cookies = new Cookies();
 
 class LoginScreen extends Component {
     constructor(props) {
@@ -25,7 +29,8 @@ class LoginScreen extends Component {
             email: "",
             cookieCheck: false,
             errorMsg: "",
-            errorTimeout: null
+            errorTimeout: null,
+            cookiesInfo: null
 
         };
 
@@ -35,9 +40,9 @@ class LoginScreen extends Component {
     // i will check for existing cookies and ask the server if the email username combination exists
     checkExistingCookies() {
         // if cookies show authentication, then set auth to be true
-        if (cookies.get("email") && cookies.get("name") && cookies.get("image")) {
-            socket.emit("user exists check", cookies.get("email"));
-            this.setState({ cookieCheck: true })
+        if (checkCookiesExist()){
+            socket.emit("user exists check", getCookiesInfo().email);
+            this.setState({ cookieCheck: true, cookiesInfo: getCookiesInfo() })
         }
 
     }
@@ -52,9 +57,7 @@ class LoginScreen extends Component {
             if (username === -1) {
                 // email is already in use, don't go through
                 console.log("Email already in use!!!");
-                cookies.remove("name");
-                cookies.remove("email");
-                cookies.remove("image");
+                removeCookies();
                 this.setState({
                     errorMsg: "Email is currently in game. Try a different email or talk to your friends and smack em",
                     cookieCheck: false,
@@ -68,7 +71,7 @@ class LoginScreen extends Component {
             // if cookies and username does match, i will log right in
             if (this.state.cookieCheck) {
                 this.setState({ cookieCheck: false });
-                if (username === cookies.get("name")) {
+                if (username === this.state.cookiesInfo.name) {
                     console.log("Using cookies to log in ");
                     auth.login();
                     this.setState({ newUser: false })
@@ -78,12 +81,11 @@ class LoginScreen extends Component {
                 auth.login();
                 let googleUser = googleAuth.loginInfo();
 
-                // the cookies last for a maximum time of 1 day
-                cookies.set("email", googleUser.email, { path: "/", maxAge: 60 * 60 * 24 });
-                cookies.set("image", googleUser.image, { path: "/", maxAge: 60 * 60 * 24 });
+                addCookiesEmail(googleUser.email);
+                addCookiesImage(googleUser.image);
 
                 if (username !== null) {
-                    cookies.set("name", username, { path: "/", maxAge: 60 * 60 * 24 });
+                    addCookiesName(username);
                     this.setState({
                         newUser: false,
                         userName: username,
@@ -105,7 +107,7 @@ class LoginScreen extends Component {
             })
         });
 
-        socket.on("reconnect_error", (error) => {
+        socket.on("reconnect_error", () => {
             // console.log("Error! Disconnected from server", error);
             console.log("Error! Can't connect to server");
             this.setState({
@@ -142,22 +144,11 @@ class LoginScreen extends Component {
         } else {
             if (this.state.newUser) {
                 component = (
-                    <Redirect to={{
-                        pathname: '/UsernameSelection',
-                        /*state: {
-                            email: this.state.email,
-                        }*/
-                    }} />
+                    <Redirect to='/UsernameSelection' />
                 );
             } else {
                 component = (
-                    <Redirect to={{
-                        pathname: '/MainMenu',
-                        /*state: {
-                            name: this.state.userName,
-                            email: this.state.email,
-                        }*/
-                    }} />
+                    <Redirect to='/MainMenu' />
                 );
             }
         }

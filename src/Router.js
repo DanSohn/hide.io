@@ -25,7 +25,6 @@ import Room from "./Lobby/Room";
 import Game from "./Game/Game";
 import Sound from "react-sound";
 import getSong from "./sounds/randomMusic";
-import GameMusic from "./sounds/gameMusic";
 import Leaderboard from "./Leaderboard/Leaderboard";
 
 class Router extends React.Component {
