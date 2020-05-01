@@ -28,7 +28,19 @@ class Leaderboard extends Component {
         if (!this.state.players){
             return;
         }
-        return this.state.players.map((user, index) => {
+
+        const players = this.state.players;
+        let sortedPlayers = [...players];
+        sortedPlayers.sort((a,b) => {
+            if(a.totalWins > b.totalWins){
+                return -1;
+            }
+            if(a.totalWins < b.totalWins){
+                return 1;
+            }
+            return 0;
+        });
+        return sortedPlayers.map((user, index) => {
             const { username, totalWins, totalGamesPlayed, email } = user;
             let WinLossRatio = (totalGamesPlayed === 0) ? 0 : Math.round(totalWins / totalGamesPlayed * 100);
             return (
