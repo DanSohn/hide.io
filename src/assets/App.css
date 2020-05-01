@@ -420,6 +420,10 @@ tr, td {
     width:65%;
 }
 
+.leaderboardSmall {
+    width: 20%;
+}
+
 .header button,
 .header img {
     margin: 0;
@@ -463,12 +467,16 @@ tr, td {
 }
 
 .lobbySelection,
-.createLobby {
+.createLobby,
+.leaderboard {
     position: relative;
     height: 75%;
     margin: 3%;
 }
 
+.leaderboard {
+    overflow: auto;
+}
 .GameWindow .lobbySelection {
     order: 1;
     flex: 3;
@@ -734,6 +742,15 @@ input {
     flex-direction: column;
     width:850px;
     height: 250px;
+}
+
+.leaderboardTable {
+    border: none;
+}
+
+.leaderboardTable td {
+    border: none;
+    padding-top: 20px;
 }
 
 @media only screen and (max-width: 800px) {

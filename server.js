@@ -110,6 +110,14 @@ io.on("connection", (socket) => {
             .catch(err => console.log("player stats req", err));
     });
 
+    // for Leaderboard. Returns all users
+    socket.on("leaderboard req", () => {
+        dbUtil.getUsers()
+            .then(users => {
+                socket.emit("leaderboard res", users);
+            })
+            .catch(err => console.log("leaderboard req", err));
+    })
 
     //Send the rooms that are available when the user clicks play to see the available lobbies
     // it will find all the lobbies in database, and once its done, it will send the collection to the socket
