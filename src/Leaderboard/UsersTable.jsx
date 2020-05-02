@@ -54,8 +54,8 @@ export default function UsersTable(props) {
         <table className="leaderboardTable">
             <thead>
             <tr>
-                <th className="leaderboardSmall">Rank</th>
-                <th className="leaderboardSmall">Player</th>
+                <th className="leaderboardRank">Rank</th>
+                <th className="leaderboardName">Player</th>
                 <th className="leaderboardSmall">
                     <span type="button"
                           onClick={() => requestSort('winLossRatio')}

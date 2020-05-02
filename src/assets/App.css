@@ -403,7 +403,7 @@ div {
 table {
     width: 100%;
 }
-tr, td {
+.lobbyTable tr, td {
     /* border: 2pt solid darkgray; */
     border-bottom:2pt solid darkgray;
 }
@@ -420,9 +420,6 @@ tr, td {
     width:65%;
 }
 
-.leaderboardSmall {
-    width: 20%;
-}
 
 .header button,
 .header img {
@@ -744,13 +741,26 @@ input {
     height: 250px;
 }
 
-.leaderboardTable {
-    border: none;
+.leaderboardSmall {
+    width: 20%;
 }
 
-.leaderboardTable td {
-    border: none;
-    padding-top: 20px;
+.leaderboardName {
+    width: 30%;
+}
+.leaderboardRank {
+    width: 10%;
+}
+.leaderboard thead {
+    font-size: smaller;
+    font-weight: bolder;
+    text-transform: uppercase;
+}
+
+.leaderboard tr, td {
+    border-bottom-color: #2e333e;
+    padding: 15px 0;
+    text-align: left;
 }
 
 @media only screen and (max-width: 800px) {
