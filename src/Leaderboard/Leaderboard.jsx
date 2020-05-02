@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {socket} from "../assets/socket";
 import {auth} from "../assets/auth";
 import {googleAuth} from "../Login/LoginScreen";
@@ -7,7 +7,7 @@ import {removeCookies} from "../assets/utils";
 import Header from "../assets/Header";
 import Break from "../assets/Break";
 import {Redirect} from "react-router-dom";
-
+import UsersTable from "./UsersTable";
 import ClickSound from "../sounds/click";
 import "../assets/App.css";
 
@@ -24,54 +24,19 @@ class Leaderboard extends Component {
         socket.emit("leaderboard req");
     }
 
-    renderTableData(){
-        if (!this.state.players){
-            return;
-        }
-
-        const players = this.state.players;
-        let sortedPlayers = [...players];
-        sortedPlayers.sort((a,b) => {
-            if(a.totalWins > b.totalWins){
-                return -1;
-            }
-            if(a.totalWins < b.totalWins){
-                return 1;
-            }
-            return 0;
-        });
-        return sortedPlayers.map((user, index) => {
-            const { username, totalWins, totalGamesPlayed, email } = user;
-            let WinLossRatio = (totalGamesPlayed === 0) ? 0 : Math.round(totalWins / totalGamesPlayed * 100);
-            return (
-                <tr key={email} className="leaderboardTable">
-                    <td>{index+1}</td>
-                    <td>{username}</td>
-                    <td>{WinLossRatio}</td>
-                    <td>{totalWins}</td>
-                    <td>{totalGamesPlayed}</td>
-                </tr>
-            )
-        })
-
-    }
-    renderTableHeader() {
-        return (
-            <>
-                <th className="leaderboardSmall">Rank</th>
-                <th className="leaderboardSmall">Player</th>
-                <th className="leaderboardSmall">Win Percentage</th>
-                <th className="leaderboardSmall">Total Wins</th>
-                <th className="leaderboardSmall">Total Games</th>
-            </>);
-    }
-
     componentDidMount() {
         // server will pass in all players to me
         socket.on("leaderboard res", (players) => {
-           this.setState({
-               players: players
-           });
+            // add entry into each player object their win loss ratio
+            for (let i = 0; i < players.length; i++) {
+                players[i].winLossRatio = (players[i].totalGamesPlayed === 0) ? 0 : Math.round(players[i].totalWins / players[i].totalGamesPlayed * 100);
+            }
+
+            console.log("received player list", players);
+
+            this.setState({
+                players: players
+            });
         });
 
         socket.on("reconnect_error", (error) => {
@@ -109,21 +74,15 @@ class Leaderboard extends Component {
                         previous={this.goPrevious}
                         title="Profile"
                     />
-                    <Break />
+                    <Break/>
                     <div className="ContentScreen leaderboard" style={{alignItems: "flex-start"}}>
-                        <table className="leaderboardTable">
-                            <tbody>
-                            <tr>{this.renderTableHeader()}</tr>
-                            {this.renderTableData()}
-                            </tbody>
-                        </table>
-
+                        <UsersTable users={this.state.players}/>
                     </div>
                 </div>
             );
         } else {
             comp = (
-                <Redirect to="/MainMenu" />
+                <Redirect to="/MainMenu"/>
             );
 
         }
