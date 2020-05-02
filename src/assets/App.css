@@ -763,6 +763,18 @@ input {
     text-align: left;
 }
 
+thead span.ascending::after {
+    content: '👇';
+    display: inline-block;
+    margin-left: 1em;
+}
+
+thead span.descending::after {
+    content: '☝️';
+    display: inline-block;
+    margin-left: 1em;
+}
+
 @media only screen and (max-width: 800px) {
     .GameWindow {
         width:90%;
